@@ -52,10 +52,25 @@ export default async (knex: Knex): Promise<void> => {
     state: "生成失败",
     reason: "软件退出导致失败",
   });
-  await db("o_video").where("state", "生成中").update({
-    state: "生成失败",
-    errorReason: "软件退出导致失败",
-  });
+  let durableVideoIds: number[] = [];
+  if (await knex.schema.hasTable("generation_tasks")) {
+    const activeDurableTasks = await knex("generation_tasks")
+      .where("type", "video.generate")
+      .whereIn("status", ["queued", "claimed", "submitting", "submitted", "polling", "finalizing", "retry_wait", "blocked", "cancelling"])
+      .select("payload");
+    durableVideoIds = activeDurableTasks
+      .map((row: { payload?: string }) => {
+        try {
+          return JSON.parse(row.payload ?? "{}").videoId;
+        } catch {
+          return null;
+        }
+      })
+      .filter((id: unknown): id is number => typeof id === "number");
+  }
+  const interruptedVideos = db("o_video").where("state", "生成中");
+  if (durableVideoIds.length > 0) interruptedVideos.whereNotIn("id", durableVideoIds);
+  await interruptedVideos.update({ state: "生成失败", errorReason: "软件退出导致失败" });
 
   // 添加新字段
   await addColumn("o_prompt", "useData", "text");

@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "nodes": [
+    {
+      "id": "workflow.novel-to-video",
+      "type": "workflow",
+      "name": "小说到动态镜头",
+      "summary": "从原文、剧本、资产和分镜进入视频生成与人工选片",
+      "user_entry": { "page": "项目大厅", "action": "创建项目后进入剧本和制作工作台" },
+      "source_paths": ["src/routes/novel", "src/routes/script", "src/routes/production"],
+      "relations": [
+        { "type": "uses", "target": "feature.agent-directing" },
+        { "type": "uses", "target": "feature.asset-consistency" },
+        { "type": "uses", "target": "feature.durable-video-batch" }
+      ],
+      "introduced_in": "upstream/v1.1.8",
+      "last_verified_commit": "toon-custom/working-tree-2026-08-08"
+    },
+    {
+      "id": "feature.agent-directing",
+      "type": "feature",
+      "name": "双 Agent 与导演 Skill",
+      "summary": "剧本理解和生产导演分层协作，并以题材 Skill 固化镜头知识",
+      "user_entry": { "page": "剧本 Agent / 生产 Agent", "action": "选择普通或高级模型配置后执行" },
+      "source_paths": ["src/agents/scriptAgent", "src/agents/productionAgent", "data/skills"],
+      "relations": [{ "type": "documented_by", "target": "document.feature-catalog" }],
+      "introduced_in": "upstream/v1.1.8",
+      "last_verified_commit": "toon-custom/working-tree-2026-08-08"
+    },
+    {
+      "id": "feature.asset-consistency",
+      "type": "feature",
+      "name": "资产与分镜一致性",
+      "summary": "角色、场景、道具资产复用并作为分镜和视频模型参考输入",
+      "user_entry": { "page": "资产 / 分镜", "action": "审核资产图并关联到分镜" },
+      "source_paths": ["src/routes/assets", "src/routes/production/storyboard"],
+      "tables": ["o_assets", "o_storyboard"],
+      "relations": [{ "type": "documented_by", "target": "document.feature-catalog" }],
+      "introduced_in": "upstream/v1.1.8",
+      "last_verified_commit": "toon-custom/working-tree-2026-08-08"
+    },
+    {
+      "id": "feature.durable-video-batch",
+      "type": "feature",
+      "name": "持久批量视频任务",
+      "summary": "批量视频生成持久化、有限并发、去重、取消并在重启后安全恢复",
+      "user_entry": { "page": "制作工作台", "action": "批量生成视频" },
+      "source_paths": ["src/services/task-engine", "src/routes/production/workbench/batchGenerateVideo.ts"],
+      "api": ["POST /api/production/workbench/batchGenerateVideo", "POST /api/generationTasks/list"],
+      "tables": ["generation_tasks", "task_dependencies", "project_events"],
+      "config": ["TOONFLOW_TASK_CONCURRENCY"],
+      "relations": [
+        { "type": "writes", "target": "table.generation-tasks" },
+        { "type": "exposed_by", "target": "api.generation-tasks" },
+        { "type": "uses", "target": "concept.worker-lease" },
+        { "type": "troubleshoots", "target": "troubleshooting.unknown-provider-state" }
+      ],
+      "troubleshooting": ["docs/knowledge-hub/troubleshooting.md#任务显示需人工确认"],
+      "introduced_in": "toon-custom/first-absorption-2026-08-08",
+      "last_verified_commit": "toon-custom/working-tree-2026-08-08"
+    },
+    {
+      "id": "api.generation-tasks",
+      "type": "api",
+      "name": "持久任务 API",
+      "summary": "查询、取消和显式确认后重试持久任务",
+      "source_paths": ["src/routes/generationTasks"],
+      "api": ["POST /api/generationTasks/get", "POST /api/generationTasks/list", "POST /api/generationTasks/cancel", "POST /api/generationTasks/retry"],
+      "relations": [{ "type": "reads", "target": "table.generation-tasks" }],
+      "introduced_in": "toon-custom/first-absorption-2026-08-08",
+      "last_verified_commit": "toon-custom/working-tree-2026-08-08"
+    },
+    {
+      "id": "table.generation-tasks",
+      "type": "table",
+      "name": "generation_tasks",
+      "summary": "异步生产任务的 SQLite 事实源",
+      "source_paths": ["src/db/migrations/index.ts"],
+      "tables": ["generation_tasks"],
+      "relations": [{ "type": "documented_by", "target": "document.database-tasks" }],
+      "introduced_in": "toon-custom/first-absorption-2026-08-08",
+      "last_verified_commit": "toon-custom/working-tree-2026-08-08"
+    },
+    {
+      "id": "concept.worker-lease",
+      "type": "config",
+      "name": "Worker lease",
+      "summary": "worker 限时领取任务并用心跳续期，崩溃后按付费边界恢复",
+      "source_paths": ["src/services/task-engine/worker.ts", "src/services/task-engine/repository.ts"],
+      "relations": [{ "type": "writes", "target": "table.generation-tasks" }],
+      "introduced_in": "toon-custom/first-absorption-2026-08-08",
+      "last_verified_commit": "toon-custom/working-tree-2026-08-08"
+    },
+    {
+      "id": "troubleshooting.unknown-provider-state",
+      "type": "troubleshooting",
+      "name": "供应商状态未知",
+      "summary": "越过付费提交边界后停止自动重试，防止重复扣费",
+      "source_paths": ["src/services/task-engine/worker.ts"],
+      "relations": [{ "type": "documented_by", "target": "document.troubleshooting" }],
+      "introduced_in": "toon-custom/first-absorption-2026-08-08",
+      "last_verified_commit": "toon-custom/working-tree-2026-08-08"
+    },
+    {
+      "id": "document.feature-catalog",
+      "type": "document",
+      "name": "功能目录",
+      "summary": "面向用户解释功能价值和入口",
+      "source_paths": ["docs/knowledge-hub/feature-catalog.md"],
+      "relations": [],
+      "introduced_in": "toon-custom/first-absorption-2026-08-08",
+      "last_verified_commit": "toon-custom/working-tree-2026-08-08"
+    },
+    {
+      "id": "document.database-tasks",
+      "type": "document",
+      "name": "数据库与任务说明",
+      "summary": "解释持久任务字段、状态与恢复边界",
+      "source_paths": ["docs/knowledge-hub/database-and-tasks.md"],
+      "relations": [],
+      "introduced_in": "toon-custom/first-absorption-2026-08-08",
+      "last_verified_commit": "toon-custom/working-tree-2026-08-08"
+    },
+    {
+      "id": "document.troubleshooting",
+      "type": "document",
+      "name": "故障排查",
+      "summary": "按任务症状提供安全处理步骤",
+      "source_paths": ["docs/knowledge-hub/troubleshooting.md"],
+      "relations": [],
+      "introduced_in": "toon-custom/first-absorption-2026-08-08",
+      "last_verified_commit": "toon-custom/working-tree-2026-08-08"
+    },
+    {
+      "id": "document.upstream-watch",
+      "type": "document",
+      "name": "参考上游台账",
+      "summary": "记录来源、扫描游标、采纳修订和增量报告",
+      "source_paths": ["docs/upstream-watch/README.md", "docs/upstream-watch/sources.yaml"],
+      "relations": [{ "type": "documented_by", "target": "document.feature-catalog" }],
+      "introduced_in": "toon-custom/first-absorption-2026-08-08",
+      "last_verified_commit": "toon-custom/working-tree-2026-08-08"
+    }
+  ]
+}

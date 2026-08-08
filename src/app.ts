@@ -15,6 +15,7 @@ import jwt from "jsonwebtoken";
 import socketInit from "@/socket/index";
 import { isEletron } from "@/utils/getPath";
 import { ensureThumbnail, ThumbnailSize } from "@/utils/image";
+import { startGenerationTaskEngine, stopGenerationTaskEngine } from "@/services/task-engine";
 
 const app = express();
 const server = http.createServer(app);
@@ -45,6 +46,7 @@ async function checkPermissions() {
 
 export default async function startServe(randomPort: Boolean = false) {
   await checkPermissions();
+  await startGenerationTaskEngine();
 
   await u.writeVersion();
   const io = new Server(server, { cors: { origin: "*" } });
@@ -197,7 +199,8 @@ export default async function startServe(randomPort: Boolean = false) {
 }
 
 // 支持await关闭
-export function closeServe(): Promise<void> {
+export async function closeServe(): Promise<void> {
+  await stopGenerationTaskEngine();
   return new Promise((resolve, reject) => {
     if (server) {
       server.close((err?: Error) => {

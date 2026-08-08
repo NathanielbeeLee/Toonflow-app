@@ -8,6 +8,7 @@ import initDB from "@/lib/initDB";
 import type { DB } from "@/types/database";
 import crypto from "crypto";
 import fixDB from "@/lib/fixDB";
+import runMigrations from "@/db/migrations";
 
 type TableName = keyof DB & string;
 type RowType<TName extends TableName> = DB[TName];
@@ -34,10 +35,11 @@ const db = knex({
   useNullAsDefault: true,
 });
 
-(async () => {
+export const databaseReady = (async () => {
   await initDB(db);
+  await runMigrations(db);
   await fixDB(db);
-  if (process.env.NODE_ENV == "dev") initKnexType(db);
+  if (process.env.NODE_ENV == "dev") await initKnexType(db);
 })();
 
 const dbClient = Object.assign(<TName extends TableName>(table: TName) => db<RowType<TName>, RowType<TName>[]>(table), db);
