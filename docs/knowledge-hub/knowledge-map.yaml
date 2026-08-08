@@ -93,11 +93,12 @@
     {
       "id": "feature.durable-image-tasks",
       "type": "feature",
-      "name": "持久批量图片任务",
-      "summary": "批量资产图和分镜图逐项持久化、去重、限流，并按付费边界恢复",
-      "user_entry": { "page": "资产 / 分镜", "action": "批量生成图片后在任务中心查看 image 通道" },
-      "source_paths": ["src/services/task-engine/enqueueImage.ts", "src/services/task-engine/handlers/imageGeneration.ts", "src/routes/production/assets/batchGenerateAssetsImage.ts", "src/routes/production/storyboard/batchGenerateImage.ts"],
-      "tables": ["generation_tasks", "provider_limits", "o_image", "o_storyboard"],
+      "name": "持久图片任务",
+      "summary": "批量/单张资产图、分镜图和图片画布节点逐项持久化、去重、限流，并按付费边界恢复",
+      "user_entry": { "page": "资产 / 分镜 / 图片编辑画布", "action": "提交图片后在任务中心查看 image 通道；已保存画布可重开恢复" },
+      "source_paths": ["src/services/task-engine/enqueueImage.ts", "src/services/task-engine/enqueueSingleAssetImage.ts", "src/services/task-engine/enqueueWorkflowImage.ts", "src/services/task-engine/handlers/imageGeneration.ts", "src/services/task-engine/handlers/singleAssetImage.ts", "src/services/task-engine/handlers/workflowImage.ts", "src/routes/production/assets/batchGenerateAssetsImage.ts", "src/routes/assetsGenerate/generateAssets.ts", "src/routes/production/storyboard/batchGenerateImage.ts", "src/routes/production/editImage/generateFlowImage.ts"],
+      "api": ["POST /api/assetsGenerate/generateAssets", "POST /api/production/editImage/generateFlowImage"],
+      "tables": ["generation_tasks", "provider_limits", "o_image", "o_storyboard", "o_imageFlow"],
       "relations": [
         { "type": "writes", "target": "table.generation-tasks" },
         { "type": "uses", "target": "feature.provider-limits" },
@@ -105,7 +106,7 @@
         { "type": "visualized_by", "target": "feature.durable-task-center" }
       ],
       "introduced_in": "toon-custom/c4a5c5a0",
-      "last_verified_commit": "toon-custom/c4a5c5a0"
+      "last_verified_commit": "toon-custom/e345aac7"
     },
     {
       "id": "feature.provider-limits",
