@@ -32,7 +32,7 @@
       "last_scanned_release": null,
       "last_scanned_at": "2026-08-08T16:00:00+08:00",
       "last_adopted_commit": "4eab34c5cfcccaa4f1970554928feccce73ee930",
-      "adopted_capabilities": ["renderer-neutral-normalized-timeline", "separated-audio-track-model"]
+      "adopted_capabilities": ["renderer-neutral-normalized-timeline", "separated-audio-track-model", "durable-ffmpeg-low-preview"]
     },
     {
       "id": "huobao-drama",

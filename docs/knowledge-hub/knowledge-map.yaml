@@ -15,7 +15,8 @@
         { "type": "uses", "target": "feature.durable-video-tasks" },
         { "type": "uses", "target": "feature.durable-image-tasks" },
         { "type": "uses", "target": "feature.voice-utterance-studio" },
-        { "type": "uses", "target": "feature.normalized-timeline" }
+        { "type": "uses", "target": "feature.normalized-timeline" },
+        { "type": "uses", "target": "feature.ffmpeg-preview-render" }
       ],
       "introduced_in": "upstream/v1.1.8",
       "last_verified_commit": "toon-custom/d5eca2c"
@@ -160,10 +161,30 @@
       "config": ["FFPROBE_PATH"],
       "relations": [
         { "type": "uses", "target": "feature.voice-utterance-studio" },
+        { "type": "feeds", "target": "feature.ffmpeg-preview-render" },
         { "type": "documented_by", "target": "document.database-tasks" }
       ],
       "introduced_in": "toon-custom/07c229d9",
       "last_verified_commit": "toon-custom/07c229d9"
+    },
+    {
+      "id": "feature.ffmpeg-preview-render",
+      "type": "feature",
+      "name": "持久 FFmpeg 低清预览",
+      "summary": "把固定时间线版本中的多个镜头裁剪、统一横竖屏尺寸并串联成本地 H.264/AAC 预览",
+      "user_entry": { "page": "配音与字幕 / 规范化时间线", "action": "构建时间线后点击生成低清预览，等待后播放或下载" },
+      "source_paths": ["src/services/composition/renderer.ts", "src/services/composition/jobs.ts", "src/services/task-engine/handlers/compositionRender.ts", "frontend/src/views/voiceStudio/index.vue"],
+      "api": ["POST /api/composition/timeline/render", "POST /api/composition/timeline/jobs/latest"],
+      "tables": ["project_timelines", "composition_jobs", "generation_tasks"],
+      "config": ["FFMPEG_PATH", "FFPROBE_PATH"],
+      "relations": [
+        { "type": "reads", "target": "feature.normalized-timeline" },
+        { "type": "writes", "target": "table.generation-tasks" },
+        { "type": "visualized_by", "target": "feature.durable-task-center" },
+        { "type": "documented_by", "target": "document.database-tasks" }
+      ],
+      "introduced_in": "toon-custom/2033240b",
+      "last_verified_commit": "toon-custom/2033240b"
     },
     {
       "id": "feature.durable-task-center",

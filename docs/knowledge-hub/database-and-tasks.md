@@ -25,6 +25,10 @@
 ## 时间线与合成
 
 - `project_timelines`：按项目/剧本保存 renderer-neutral timeline JSON、递增版本、状态和 SHA-256 输入校验和；输入未变化时复用最新版本。
-- `composition_jobs`：预留 FFmpeg/Remotion 渲染器、preset、输出、持久任务和错误归属；本批尚未创建渲染任务。
+- `composition_jobs`：保存时间线版本、renderer、preset、输入/输出校验和、输出路径、媒体时长、结构化渲染日志、持久任务和错误归属。
 
-timeline schema v1 包含画幅、fps、BT.709、48kHz、响度/true peak 目标，以及视频、原生音频、对白、旁白、SFX、环境声、BGM 和字幕轨。媒体工具只用参数数组调用 `ffprobe`/后续 `ffmpeg`，不拼接任意 shell 命令。
+timeline schema v1 包含画幅、fps、BT.709、48kHz、响度/true peak 目标，以及视频、原生音频、对白、旁白、SFX、环境声、BGM 和字幕轨。
+
+`composition.render` 使用 `compose` 通道，由本地 FFmpeg worker 执行。任务固定绑定 timeline ID、版本和校验和；输入变化必须产生新时间线版本，不能在后台悄悄替换。渲染先写 `.partial` 临时文件，成功后原子移动到本地 OSS，并计算 SHA-256；失败或取消会清理半成品。本地任务在 lease 过期后可安全重新排队，不进入付费供应商的人工确认态。
+
+当前 `preview-low` 支持视频裁剪、按时间线顺序串联、横竖屏统一、H.264/AAC MP4 和 faststart。AAC 为静音占位，尚未混入原生声音、逐句配音、BGM 或字幕。媒体工具只通过参数数组启动 `ffprobe`/`ffmpeg`，不拼接任意 shell 命令；可用 `FFPROBE_PATH`、`FFMPEG_PATH` 指定可执行文件。
