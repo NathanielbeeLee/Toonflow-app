@@ -7,4 +7,5 @@
 | 资产与分镜一致性 | 角色、场景、道具资产复用并作为分镜和视频模型参考输入 | feature.asset-consistency |
 | 无限画布生产工作台 | 以可缩放、可平移、可拖动节点的空间界面串联剧本、导演计划、资产、分镜和视频工作台 | feature.infinite-canvas |
 | 持久视频任务 | 单条/批量视频生成持久化、有限并发、去重、取消，并对支持的供应商恢复远端轮询 | feature.durable-video-tasks |
+| 持久任务中心 | 自动刷新并展示持久任务状态、远端 job ID、重试次数和安全人工介入操作 | feature.durable-task-center |
 | 供应商远端任务恢复 | 保存视频供应商 job ID，重启或轮询失败后继续查询原任务 | feature.provider-job-resume |

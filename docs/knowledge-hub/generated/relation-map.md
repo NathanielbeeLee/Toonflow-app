@@ -13,9 +13,13 @@
 | component.frontend-source | documented_by | document.frontend-upstream |
 | feature.durable-video-tasks | writes | table.generation-tasks |
 | feature.durable-video-tasks | exposed_by | api.generation-tasks |
+| feature.durable-video-tasks | visualized_by | feature.durable-task-center |
 | feature.durable-video-tasks | uses | concept.worker-lease |
 | feature.durable-video-tasks | uses | feature.provider-job-resume |
 | feature.durable-video-tasks | troubleshoots | troubleshooting.unknown-provider-state |
+| feature.durable-task-center | reads | table.generation-tasks |
+| feature.durable-task-center | uses | api.generation-tasks |
+| feature.durable-task-center | troubleshoots | troubleshooting.unknown-provider-state |
 | api.generation-tasks | reads | table.generation-tasks |
 | table.generation-tasks | documented_by | document.database-tasks |
 | concept.worker-lease | writes | table.generation-tasks |

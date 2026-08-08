@@ -10,3 +10,5 @@
 - `provider_job_id`：供应商提交后立即保存的远端任务编号。普通火山引擎已支持；其他供应商逐步接入。
 
 状态主线：`queued → claimed → submitting → submitted → polling → finalizing → succeeded`。有远端任务编号时，轮询失败、保存失败或应用重启会重新排队并恢复同一任务；没有编号的付费边界不确定错误进入 `manual_review`。取消使用 `cancelling/cancelled`。
+
+用户可从左侧“任务中心 → 持久任务”查看这些字段的安全摘要，按项目、通道和状态筛选，并执行取消或重试。原 `o_tasks` 记录位于“历史任务”页签。

@@ -76,11 +76,21 @@
 
 验证：`yarn frontend:build`、`yarn frontend:sync`、根目录 `tsc --noEmit` 均通过。构建未调用任何 AI 或付费供应商 API。
 
+## 2026-08-08 第五批：持久任务中心 UI
+
+落地提交：`b4bec68d`。
+
+- 原任务中心增加“持久任务”默认页签，直接读取 `generation_tasks`，原 `o_tasks` 页面保留为“历史任务”。
+- 支持按项目、任务通道和精确状态筛选，每 5 秒在页面可见时自动刷新。
+- 展示任务 ID、资源键、供应商与远端 job ID、尝试次数、错误/恢复说明和创建时间。
+- 支持取消、失败/取消后重新入队，以及 `manual_review` 人工确认后重试；界面明确提示远端取消能力不确定和重复扣费风险。
+- 前端完整构建、同步和根后端 `tsc --noEmit` 通过；未调用付费 API。
+
 ## 下一批优先级
 
-1. 基于已纳入的前端源码制作任务中心 UI，展示排队、重试、取消、人工确认和远端续跑状态。
-2. 把批量图片迁入同一任务引擎，并增加按供应商/模型的并发和 RPM 限流。
-3. 为更多视频供应商实现 `submit/poll/resume/cancel`，不支持远端取消的供应商继续保留本地取消边界。
-4. 再吸收 Huobao 的逐句 TTS/角色音色和 OpenMontage 的规范化时间线、多轨混音与媒体 QA。
+1. 把批量图片迁入同一任务引擎，并增加按供应商/模型的并发和 RPM 限流。
+2. 为更多视频供应商实现 `submit/poll/resume/cancel`，不支持远端取消的供应商继续保留本地取消边界。
+3. 吸收 Huobao 的逐句 TTS/角色音色流程。
+4. 吸收 OpenMontage 的规范化时间线、多轨混音与媒体 QA。
 
 继续工作前先读：`docs/knowledge-hub/AI_ASSISTANT_CONTEXT.md`、`docs/upstream-watch/sources.yaml` 和最新扫描报告。
