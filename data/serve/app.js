@@ -20936,16 +20936,16 @@ var require_router = __commonJS({
         return new Router(options);
       }
       const opts = options || {};
-      function router175(req, res, next) {
-        router175.handle(req, res, next);
+      function router178(req, res, next) {
+        router178.handle(req, res, next);
       }
-      Object.setPrototypeOf(router175, this);
-      router175.caseSensitive = opts.caseSensitive;
-      router175.mergeParams = opts.mergeParams;
-      router175.params = {};
-      router175.strict = opts.strict;
-      router175.stack = [];
-      return router175;
+      Object.setPrototypeOf(router178, this);
+      router178.caseSensitive = opts.caseSensitive;
+      router178.mergeParams = opts.mergeParams;
+      router178.params = {};
+      router178.strict = opts.strict;
+      router178.stack = [];
+      return router178;
     }
     Router.prototype = function() {
     };
@@ -21333,7 +21333,7 @@ var require_application = __commonJS({
     var app2 = exports2 = module2.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router175 = null;
+      var router178 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -21342,13 +21342,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router175 === null) {
-            router175 = new Router({
+          if (router178 === null) {
+            router178 = new Router({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router175;
+          return router178;
         }
       });
     };
@@ -21419,15 +21419,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router175 = this.router;
+      var router178 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router175.use(path34, fn2);
+          return router178.use(path34, fn2);
         }
         debug(".use app under %s", path34);
         fn2.mountpath = path34;
         fn2.parent = this;
-        router175.use(path34, function mounted_app(req, res, next) {
+        router178.use(path34, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -48834,8 +48834,8 @@ var require_lib4 = __commonJS({
         getWss: function getWss() {
           return wsServer;
         },
-        applyTo: function applyTo(router175) {
-          (0, _addWsMethod2.default)(router175);
+        applyTo: function applyTo(router178) {
+          (0, _addWsMethod2.default)(router178);
         }
       };
     }
@@ -56276,16 +56276,16 @@ var require_string2 = __commonJS({
       }
     }
     function arrayToList(array4, finalEscape, ctx) {
-      let sql = "";
+      let sql4 = "";
       for (let i = 0; i < array4.length; i++) {
         const val = array4[i];
         if (Array.isArray(val)) {
-          sql += (i === 0 ? "" : ", ") + "(" + arrayToList(val, finalEscape, ctx) + ")";
+          sql4 += (i === 0 ? "" : ", ") + "(" + arrayToList(val, finalEscape, ctx) + ")";
         } else {
-          sql += (i === 0 ? "" : ", ") + finalEscape(val, ctx);
+          sql4 += (i === 0 ? "" : ", ") + finalEscape(val, ctx);
         }
       }
-      return sql;
+      return sql4;
     }
     function bufferToString(buffer) {
       return "X" + escapeString(buffer.toString("hex"));
@@ -58594,26 +58594,26 @@ var require_ensure_connection_callback = __commonJS({
     function ensureConnectionCallback(runner) {
       runner.client.emit("start", runner.builder);
       runner.builder.emit("start", runner.builder);
-      const sql = runner.builder.toSQL();
+      const sql4 = runner.builder.toSQL();
       if (runner.builder._debug) {
-        runner.client.logger.debug(sql);
+        runner.client.logger.debug(sql4);
       }
-      if (Array.isArray(sql)) {
-        return runner.queryArray(sql);
+      if (Array.isArray(sql4)) {
+        return runner.queryArray(sql4);
       }
-      return runner.query(sql);
+      return runner.query(sql4);
     }
     function ensureConnectionStreamCallback(runner, params) {
       try {
-        const sql = runner.builder.toSQL();
-        if (Array.isArray(sql) && params.hasHandler) {
+        const sql4 = runner.builder.toSQL();
+        if (Array.isArray(sql4) && params.hasHandler) {
           throw new Error(
             "The stream may only be used with a single query statement."
           );
         }
         return runner.client.stream(
           runner.connection,
-          sql,
+          sql4,
           params.stream,
           params.options
         );
@@ -58752,7 +58752,7 @@ var require_runner = __commonJS({
           if (!(error73 instanceof KnexTimeoutError)) {
             return Promise.reject(error73);
           }
-          const { timeout: timeout2, sql, bindings } = obj;
+          const { timeout: timeout2, sql: sql4, bindings } = obj;
           let cancelQuery;
           if (obj.cancelOnTimeout) {
             cancelQuery = this.client.cancelQuery(this.connection);
@@ -58764,14 +58764,14 @@ var require_runner = __commonJS({
             this.connection.__knex__disposed = error73;
             throw Object.assign(cancelError, {
               message: `After query timeout of ${timeout2}ms exceeded, cancelling of query failed.`,
-              sql,
+              sql: sql4,
               bindings,
               timeout: timeout2
             });
           }).then(() => {
             throw Object.assign(error73, {
               message: `Defined query timeout of ${timeout2}ms exceeded when running query.`,
-              sql,
+              sql: sql4,
               bindings,
               timeout: timeout2
             });
@@ -63822,8 +63822,8 @@ var require_transaction = __commonJS({
           this._rejecter(error73);
         });
       }
-      query(conn, sql, status, value) {
-        const q = this.trxClient.query(conn, sql).catch((err) => {
+      query(conn, sql4, status, value) {
+        const q = this.trxClient.query(conn, sql4).catch((err) => {
           status = 2;
           value = err;
           this._completed = true;
@@ -63834,7 +63834,7 @@ var require_transaction = __commonJS({
           }
           if (status === 2) {
             if (value === void 0) {
-              if (this.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql)) {
+              if (this.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql4)) {
                 this._resolver();
                 return;
               }
@@ -64020,8 +64020,8 @@ var require_transaction = __commonJS({
       return trxClient;
     }
     function completedError(trx, obj) {
-      const sql = typeof obj === "string" ? obj : obj && obj.sql;
-      debug("%s: Transaction completed: %s", trx.txid, sql);
+      const sql4 = typeof obj === "string" ? obj : obj && obj.sql;
+      debug("%s: Transaction completed: %s", trx.txid, sql4);
       throw new Error(
         "Transaction query already complete, run with DEBUG=knex:tx for more info"
       );
@@ -64036,12 +64036,12 @@ var require_query_executioner = __commonJS({
     "use strict";
     var _debugQuery = require_src3()("knex:query");
     var debugBindings = require_src3()("knex:bindings");
-    var debugQuery = (sql, txId) => _debugQuery(sql.replace(/%/g, "%%"), txId);
+    var debugQuery = (sql4, txId) => _debugQuery(sql4.replace(/%/g, "%%"), txId);
     var { isString: isString2 } = require_is();
-    function formatQuery(sql, bindings, timeZone, client) {
+    function formatQuery(sql4, bindings, timeZone, client) {
       bindings = bindings == null ? [] : [].concat(bindings);
       let index = 0;
-      return sql.replace(/\\?\?/g, (match) => {
+      return sql4.replace(/\\?\?/g, (match) => {
         if (match === "\\?") {
           return "?";
         }
@@ -65355,8 +65355,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Adds a raw `where` clause to the query.
-      whereRaw(sql, bindings) {
-        const raw = sql.isRawInstance ? sql : this.client.raw(sql, bindings);
+      whereRaw(sql4, bindings) {
+        const raw = sql4.isRawInstance ? sql4 : this.client.raw(sql4, bindings);
         this._statements.push({
           grouping: "where",
           type: "whereRaw",
@@ -65366,8 +65366,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      orWhereRaw(sql, bindings) {
-        return this._bool("or").whereRaw(sql, bindings);
+      orWhereRaw(sql4, bindings) {
+        return this._bool("or").whereRaw(sql4, bindings);
       }
       // Helper for compiling any advanced `where` queries.
       whereWrapped(callback) {
@@ -65525,8 +65525,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Adds a raw `group by` clause to the query.
-      groupByRaw(sql, bindings) {
-        const raw = sql.isRawInstance ? sql : this.client.raw(sql, bindings);
+      groupByRaw(sql4, bindings) {
+        const raw = sql4.isRawInstance ? sql4 : this.client.raw(sql4, bindings);
         this._statements.push({
           grouping: "group",
           type: "groupByRaw",
@@ -65571,8 +65571,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Add a raw `order by` clause to the query.
-      orderByRaw(sql, bindings) {
-        const raw = sql.isRawInstance ? sql : this.client.raw(sql, bindings);
+      orderByRaw(sql4, bindings) {
+        const raw = sql4.isRawInstance ? sql4 : this.client.raw(sql4, bindings);
         this._statements.push({
           grouping: "order",
           type: "orderByRaw",
@@ -65754,8 +65754,8 @@ var require_querybuilder = __commonJS({
         return this._bool("or")._not(true).havingIn(column, values);
       }
       // Adds a raw `having` clause to the query.
-      havingRaw(sql, bindings) {
-        const raw = sql.isRawInstance ? sql : this.client.raw(sql, bindings);
+      havingRaw(sql4, bindings) {
+        const raw = sql4.isRawInstance ? sql4 : this.client.raw(sql4, bindings);
         this._statements.push({
           grouping: "having",
           type: "havingRaw",
@@ -65765,8 +65765,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      orHavingRaw(sql, bindings) {
-        return this._bool("or").havingRaw(sql, bindings);
+      orHavingRaw(sql4, bindings) {
+        return this._bool("or").havingRaw(sql4, bindings);
       }
       // set the skip binding parameter (= insert the raw value in the query) for an attribute.
       _setSkipBinding(attribute, options) {
@@ -66086,8 +66086,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      fromRaw(sql, bindings) {
-        const raw = sql.isRawInstance ? sql : this.client.raw(sql, bindings);
+      fromRaw(sql4, bindings) {
+        const raw = sql4.isRawInstance ? sql4 : this.client.raw(sql4, bindings);
         return this.from(raw);
       }
       // Passes query to provided callback function, useful for e.g. composing
@@ -66734,15 +66734,15 @@ var require_wrappingFormatter = __commonJS({
       return ret.join(", ");
     }
     function outputQuery(compiled, isParameter, builder, client) {
-      let sql = compiled.sql || "";
-      if (sql) {
+      let sql4 = compiled.sql || "";
+      if (sql4) {
         if ((compiled.method === "select" || compiled.method === "first") && (isParameter || compiled.as)) {
-          sql = `(${sql})`;
+          sql4 = `(${sql4})`;
           if (compiled.as)
-            return client.alias(sql, wrapString(compiled.as, builder, client));
+            return client.alias(sql4, wrapString(compiled.as, builder, client));
         }
       }
-      return sql;
+      return sql4;
     }
     function rawOrFn(value, method, builder, client, bindingHolder) {
       if (typeof value === "function") {
@@ -66786,7 +66786,7 @@ var require_rawFormatter = __commonJS({
       const expectedBindings = raw.bindings.length;
       const values = raw.bindings;
       let index = 0;
-      const sql = raw.sql.replace(/\\?\?\??/g, function(match) {
+      const sql4 = raw.sql.replace(/\\?\?\??/g, function(match) {
         if (match === "\\?") {
           return match;
         }
@@ -66801,7 +66801,7 @@ var require_rawFormatter = __commonJS({
       }
       return {
         method: "raw",
-        sql,
+        sql: sql4,
         bindings: bindingsHolder.bindings
       };
     }
@@ -66812,7 +66812,7 @@ var require_rawFormatter = __commonJS({
       const builder = raw;
       const values = raw.bindings;
       const regex = /\\?(:(\w+):(?=::)|:(\w+):(?!:)|:(\w+))/g;
-      const sql = raw.sql.replace(regex, function(match, p1, p22, p3, p4) {
+      const sql4 = raw.sql.replace(regex, function(match, p1, p22, p3, p4) {
         if (match !== p1) {
           return p1;
         }
@@ -66836,7 +66836,7 @@ var require_rawFormatter = __commonJS({
       });
       return {
         method: "raw",
-        sql,
+        sql: sql4,
         bindings: bindingsHolder.bindings
       };
     }
@@ -66907,8 +66907,8 @@ var require_raw2 = __commonJS({
           saveAsyncStack(this, 4);
         }
       }
-      set(sql, bindings) {
-        this.sql = sql;
+      set(sql4, bindings) {
+        this.sql = sql4;
         this.bindings = isObject5(bindings) && !bindings.toSQL || bindings === void 0 ? bindings : [bindings];
         return this;
       }
@@ -67351,7 +67351,7 @@ var require_querycompiler = __commonJS({
       // the component compilers, trimming out the empties, and returning a
       // generated query string.
       select() {
-        let sql = this.with();
+        let sql4 = this.with();
         let unionStatement = "";
         const firstStatements = [];
         const endStatements = [];
@@ -67377,13 +67377,13 @@ var require_querycompiler = __commonJS({
           const statements = compact(firstStatements.concat(endStatements)).join(
             " "
           );
-          sql += unionStatement + (statements ? " " + statements : "");
+          sql4 += unionStatement + (statements ? " " + statements : "");
         } else {
           const allStatements = (wrapMainQuery ? "(" : "") + compact(firstStatements).join(" ") + (wrapMainQuery ? ")" : "");
           const endStat = compact(endStatements).join(" ");
-          sql += allStatements + (unionStatement ? " " + unionStatement : "") + (endStat ? " " + endStat : endStat);
+          sql4 += allStatements + (unionStatement ? " " + unionStatement : "") + (endStat ? " " + endStat : endStat);
         }
-        return sql;
+        return sql4;
       }
       pluck() {
         let toPluck = this.single.pluck;
@@ -67399,55 +67399,55 @@ var require_querycompiler = __commonJS({
       // inserts using a single query statement.
       insert() {
         const insertValues = this.single.insert || [];
-        const sql = this.with() + `insert into ${this.tableName} `;
+        const sql4 = this.with() + `insert into ${this.tableName} `;
         const body = this._insertBody(insertValues);
-        return body === "" ? "" : sql + body;
+        return body === "" ? "" : sql4 + body;
       }
       _onConflictClause(columns) {
         return columns instanceof Raw ? this.formatter.wrap(columns) : `(${this.formatter.columnize(columns)})`;
       }
       _buildInsertValues(insertData) {
-        let sql = "";
+        let sql4 = "";
         let i = -1;
         while (++i < insertData.values.length) {
-          if (i !== 0) sql += "), (";
-          sql += this.client.parameterize(
+          if (i !== 0) sql4 += "), (";
+          sql4 += this.client.parameterize(
             insertData.values[i],
             this.client.valueForUndefined,
             this.builder,
             this.bindingsHolder
           );
         }
-        return sql;
+        return sql4;
       }
       _insertBody(insertValues) {
-        let sql = "";
+        let sql4 = "";
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
             return "";
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
-          return sql + this._emptyInsertValue;
+          return sql4 + this._emptyInsertValue;
         }
         const insertData = this._prepInsert(insertValues);
         if (typeof insertData === "string") {
-          sql += insertData;
+          sql4 += insertData;
         } else {
           if (insertData.columns.length) {
-            sql += `(${columnize_(
+            sql4 += `(${columnize_(
               insertData.columns,
               this.builder,
               this.client,
               this.bindingsHolder
             )}`;
-            sql += ") values (" + this._buildInsertValues(insertData) + ")";
+            sql4 += ") values (" + this._buildInsertValues(insertData) + ")";
           } else if (insertValues.length === 1 && insertValues[0]) {
-            sql += this._emptyInsertValue;
+            sql4 += this._emptyInsertValue;
           } else {
-            sql = "";
+            sql4 = "";
           }
         }
-        return sql;
+        return sql4;
       }
       // Compiles the "update" query.
       update() {
@@ -67469,7 +67469,7 @@ var require_querycompiler = __commonJS({
         if (this.onlyUnions()) return "";
         const hints = this._hintComments();
         const columns = this.grouped.columns || [];
-        let i = -1, sql = [];
+        let i = -1, sql4 = [];
         if (columns) {
           while (++i < columns.length) {
             const stmt = columns[i];
@@ -67479,15 +67479,15 @@ var require_querycompiler = __commonJS({
               continue;
             }
             if (stmt.type === "aggregate") {
-              sql.push(...this.aggregate(stmt));
+              sql4.push(...this.aggregate(stmt));
             } else if (stmt.type === "aggregateRaw") {
-              sql.push(this.aggregateRaw(stmt));
+              sql4.push(this.aggregateRaw(stmt));
             } else if (stmt.type === "analytic") {
-              sql.push(this.analytic(stmt));
+              sql4.push(this.analytic(stmt));
             } else if (stmt.type === "json") {
-              sql.push(this.json(stmt));
+              sql4.push(this.json(stmt));
             } else if (stmt.value && stmt.value.length > 0) {
-              sql.push(
+              sql4.push(
                 columnize_(
                   stmt.value,
                   this.builder,
@@ -67498,9 +67498,9 @@ var require_querycompiler = __commonJS({
             }
           }
         }
-        if (sql.length === 0) sql = ["*"];
+        if (sql4.length === 0) sql4 = ["*"];
         const select = this.onlyJson() ? "" : "select ";
-        return `${select}${hints}${distinctClause}` + sql.join(", ") + (this.tableName ? ` from ${this.single.only ? "only " : ""}${this.tableName}` : "");
+        return `${select}${hints}${distinctClause}` + sql4.join(", ") + (this.tableName ? ` from ${this.single.only ? "only " : ""}${this.tableName}` : "");
       }
       // Add comments to the query
       comments() {
@@ -67583,16 +67583,16 @@ var require_querycompiler = __commonJS({
       // Compiles all each of the `join` clauses on the query,
       // including any nested join queries.
       join() {
-        let sql = "";
+        let sql4 = "";
         let i = -1;
         const joins = this.grouped.join;
         if (!joins) return "";
         while (++i < joins.length) {
           const join2 = joins[i];
           const table = this._joinTable(join2);
-          if (i > 0) sql += " ";
+          if (i > 0) sql4 += " ";
           if (join2.joinType === "raw") {
-            sql += unwrapRaw_(
+            sql4 += unwrapRaw_(
               join2.table,
               void 0,
               this.builder,
@@ -67600,7 +67600,7 @@ var require_querycompiler = __commonJS({
               this.bindingsHolder
             );
           } else {
-            sql += join2.joinType + " join " + wrap_(
+            sql4 += join2.joinType + " join " + wrap_(
               table,
               void 0,
               this.builder,
@@ -67611,18 +67611,18 @@ var require_querycompiler = __commonJS({
             while (++ii < join2.clauses.length) {
               const clause = join2.clauses[ii];
               if (ii > 0) {
-                sql += ` ${clause.bool} `;
+                sql4 += ` ${clause.bool} `;
               } else {
-                sql += ` ${clause.type === "onUsing" ? "using" : "on"} `;
+                sql4 += ` ${clause.type === "onUsing" ? "using" : "on"} `;
               }
               const val = this[clause.type](clause);
               if (val) {
-                sql += val;
+                sql4 += val;
               }
             }
           }
         }
-        return sql;
+        return sql4;
       }
       onBetween(statement) {
         return wrap_(
@@ -67679,29 +67679,29 @@ var require_querycompiler = __commonJS({
         ) + " " + this._not(statement, "in ") + this.wrap(values);
       }
       multiOnIn(statement) {
-        let i = -1, sql = `(${columnize_(
+        let i = -1, sql4 = `(${columnize_(
           statement.column,
           this.builder,
           this.client,
           this.bindingsHolder
         )}) `;
-        sql += this._not(statement, "in ") + "((";
+        sql4 += this._not(statement, "in ") + "((";
         while (++i < statement.value.length) {
-          if (i !== 0) sql += "),(";
-          sql += this.client.parameterize(
+          if (i !== 0) sql4 += "),(";
+          sql4 += this.client.parameterize(
             statement.value[i],
             void 0,
             this.builder,
             this.bindingsHolder
           );
         }
-        return sql + "))";
+        return sql4 + "))";
       }
       // Compiles all `where` statements on the query.
       where() {
         const wheres = this.grouped.where;
         if (!wheres) return;
-        const sql = [];
+        const sql4 = [];
         let i = -1;
         while (++i < wheres.length) {
           const stmt = wheres[i];
@@ -67711,15 +67711,15 @@ var require_querycompiler = __commonJS({
           }
           const val = this[stmt.type](stmt);
           if (val) {
-            if (sql.length === 0) {
-              sql[0] = "where";
+            if (sql4.length === 0) {
+              sql4[0] = "where";
             } else {
-              sql.push(stmt.bool);
+              sql4.push(stmt.bool);
             }
-            sql.push(val);
+            sql4.push(val);
           }
         }
-        return sql.length > 1 ? sql.join(" ") : "";
+        return sql4.length > 1 ? sql4.join(" ") : "";
       }
       group() {
         return this._groupsOrders("group");
@@ -67731,21 +67731,21 @@ var require_querycompiler = __commonJS({
       having() {
         const havings = this.grouped.having;
         if (!havings) return "";
-        const sql = ["having"];
+        const sql4 = ["having"];
         for (let i = 0, l = havings.length; i < l; i++) {
           const s = havings[i];
           const val = this[s.type](s);
           if (val) {
-            if (sql.length === 0) {
-              sql[0] = "where";
+            if (sql4.length === 0) {
+              sql4[0] = "where";
             }
-            if (sql.length > 1 || sql.length === 1 && sql[0] !== "having") {
-              sql.push(s.bool);
+            if (sql4.length > 1 || sql4.length === 1 && sql4[0] !== "having") {
+              sql4.push(s.bool);
             }
-            sql.push(val);
+            sql4.push(val);
           }
         }
-        return sql.length > 1 ? sql.join(" ") : "";
+        return sql4.length > 1 ? sql4.join(" ") : "";
       }
       havingRaw(statement) {
         return this._not(statement, "") + unwrapRaw_(
@@ -67834,11 +67834,11 @@ var require_querycompiler = __commonJS({
         const onlyUnions = this.onlyUnions();
         const unions = this.grouped.union;
         if (!unions) return "";
-        let sql = "";
+        let sql4 = "";
         for (let i = 0, l = unions.length; i < l; i++) {
           const union3 = unions[i];
-          if (i > 0) sql += " ";
-          if (i > 0 || !onlyUnions) sql += union3.clause + " ";
+          if (i > 0) sql4 += " ";
+          if (i > 0 || !onlyUnions) sql4 += union3.clause + " ";
           const statement = rawOrFn_(
             union3.value,
             void 0,
@@ -67848,12 +67848,12 @@ var require_querycompiler = __commonJS({
           );
           if (statement) {
             const wrap = union3.wrap;
-            if (wrap) sql += "(";
-            sql += statement;
-            if (wrap) sql += ")";
+            if (wrap) sql4 += "(";
+            sql4 += statement;
+            if (wrap) sql4 += ")";
           }
         }
-        return sql;
+        return sql4;
       }
       // If we haven't specified any columns or a `tableName`, we're assuming this
       // is only being used for unions.
@@ -67928,19 +67928,19 @@ var require_querycompiler = __commonJS({
         const self2 = this;
         const wrapJoin = new JoinClause();
         clause.value.call(wrapJoin, wrapJoin);
-        let sql = "";
+        let sql4 = "";
         for (let ii = 0; ii < wrapJoin.clauses.length; ii++) {
           const wrapClause = wrapJoin.clauses[ii];
           if (ii > 0) {
-            sql += ` ${wrapClause.bool} `;
+            sql4 += ` ${wrapClause.bool} `;
           }
           const val = self2[wrapClause.type](wrapClause);
           if (val) {
-            sql += val;
+            sql4 += val;
           }
         }
-        if (sql.length) {
-          return `(${sql})`;
+        if (sql4.length) {
+          return `(${sql4})`;
         }
         return "";
       }
@@ -68141,32 +68141,32 @@ var require_querycompiler = __commonJS({
         return this[stmt.method](stmt.params);
       }
       analytic(stmt) {
-        let sql = "";
+        let sql4 = "";
         const self2 = this;
-        sql += stmt.method + "() over (";
+        sql4 += stmt.method + "() over (";
         if (stmt.raw) {
-          sql += stmt.raw;
+          sql4 += stmt.raw;
         } else {
           if (stmt.partitions.length) {
-            sql += "partition by ";
-            sql += map3(stmt.partitions, function(partition) {
+            sql4 += "partition by ";
+            sql4 += map3(stmt.partitions, function(partition) {
               if (isString2(partition)) {
                 return self2.formatter.columnize(partition);
               } else return self2.formatter.columnize(partition.column) + (partition.order ? " " + partition.order : "");
             }).join(", ") + " ";
           }
-          sql += "order by ";
-          sql += map3(stmt.order, function(order) {
+          sql4 += "order by ";
+          sql4 += map3(stmt.order, function(order) {
             if (isString2(order)) {
               return self2.formatter.columnize(order);
             } else return self2.formatter.columnize(order.column) + (order.order ? " " + order.order : "");
           }).join(", ");
         }
-        sql += ")";
+        sql4 += ")";
         if (stmt.alias) {
-          sql += " as " + stmt.alias;
+          sql4 += " as " + stmt.alias;
         }
-        return sql;
+        return sql4;
       }
       // Compiles all `with` statements on the query.
       with() {
@@ -68175,7 +68175,7 @@ var require_querycompiler = __commonJS({
         }
         const withs = this.grouped.with;
         if (!withs) return;
-        const sql = [];
+        const sql4 = [];
         let i = -1;
         let isRecursive = false;
         while (++i < withs.length) {
@@ -68184,9 +68184,9 @@ var require_querycompiler = __commonJS({
             isRecursive = true;
           }
           const val = this[stmt.type](stmt);
-          sql.push(val);
+          sql4.push(val);
         }
-        return `with ${isRecursive ? "recursive " : ""}${sql.join(", ")} `;
+        return `with ${isRecursive ? "recursive " : ""}${sql4.join(", ")} `;
       }
       withWrapped(statement) {
         const val = rawOrFn_(
@@ -68358,10 +68358,10 @@ var require_querycompiler = __commonJS({
       _groupsOrders(type) {
         const items = this.grouped[type];
         if (!items) return "";
-        const sql = items.map((item) => {
+        const sql4 = items.map((item) => {
           return this._groupOrder(item, type);
         });
-        return sql.length ? type + " by " + sql.join(", ") : "";
+        return sql4.length ? type + " by " + sql4.join(", ") : "";
       }
       // Get the table name, wrapping it if necessary.
       // Implemented as a property to prevent ordering issues as described in #704.
@@ -68699,8 +68699,8 @@ var require_compiler = __commonJS({
           (materialized ? this.dropMaterializedViewPrefix : this.dropViewPrefix) + (ifExists ? "if exists " : "") + this.formatter.wrap(prefixedTableName(this.schema, viewName))
         );
       }
-      raw(sql, bindings) {
-        this.sequence.push(this.client.raw(sql, bindings).toSQL());
+      raw(sql4, bindings) {
+        this.sequence.push(this.client.raw(sql4, bindings).toSQL());
       }
       toSQL() {
         const sequence = this.builder._sequence;
@@ -68743,9 +68743,9 @@ var require_compiler = __commonJS({
         builder.queryContext(queryContext);
       }
       builder.setSchema(this.schema);
-      const sql = builder.toSQL();
-      for (let i = 0, l = sql.length; i < l; i++) {
-        this.sequence.push(sql[i]);
+      const sql4 = builder.toSQL();
+      for (let i = 0, l = sql4.length; i < l; i++) {
+        this.sequence.push(sql4[i]);
       }
     }
     function buildTable(type) {
@@ -69404,8 +69404,8 @@ var require_tablecompiler = __commonJS({
               const nullableType2 = nullable3 ? "null" : "not null";
               const columnType = columnInfo.type + (columnInfo.maxLength ? `(${columnInfo.maxLength})` : "");
               const defaultValue = columnInfo.defaultValue !== null && columnInfo.defaultValue !== void 0 ? `default '${columnInfo.defaultValue}'` : "";
-              const sql = `alter table ${tableName} ${alterColumnPrefix} ${columnName} ${columnType} ${nullableType2} ${defaultValue}`;
-              return this.client.raw(sql);
+              const sql4 = `alter table ${tableName} ${alterColumnPrefix} ${columnName} ${columnType} ${nullableType2} ${defaultValue}`;
+              return this.client.raw(sql4);
             });
           }
         });
@@ -69420,8 +69420,8 @@ var require_tablecompiler = __commonJS({
         if (checkConstraintNames === void 0) return "";
         checkConstraintNames = normalizeArr(checkConstraintNames);
         const tableName = this.tableName();
-        const sql = `alter table ${tableName} ${checkConstraintNames.map((constraint) => `drop constraint ${constraint}`).join(", ")}`;
-        this.pushQuery(sql);
+        const sql4 = `alter table ${tableName} ${checkConstraintNames.map((constraint) => `drop constraint ${constraint}`).join(", ")}`;
+        this.pushQuery(sql4);
       }
       check(checkPredicate, bindings, constraintName) {
         const tableName = this.tableName();
@@ -69430,8 +69430,8 @@ var require_tablecompiler = __commonJS({
           this.checksCount++;
           checkConstraint = tableName + "_" + this.checksCount;
         }
-        const sql = `alter table ${tableName} add constraint ${checkConstraint} check(${checkPredicate})`;
-        this.pushQuery(sql);
+        const sql4 = `alter table ${tableName} add constraint ${checkConstraint} check(${checkPredicate})`;
+        this.pushQuery(sql4);
       }
       _addChecks() {
         if (this.grouped.checks) {
@@ -69875,8 +69875,8 @@ var require_ref2 = __commonJS({
         const string5 = this._schema ? `${this._schema}.${this.ref}` : this.ref;
         const formatter = this.client.formatter(this);
         const ref = formatter.columnize(string5);
-        const sql = this._alias ? `${ref} as ${formatter.wrap(this._alias)}` : ref;
-        this.set(sql, []);
+        const sql4 = this._alias ? `${ref} as ${formatter.wrap(this._alias)}` : ref;
+        this.set(sql4, []);
         return super.toSQL(...arguments);
       }
     };
@@ -70047,24 +70047,24 @@ var require_viewcompiler = __commonJS({
           this.client,
           this.bindingsHolder
         ) + ")" : "";
-        let sql = createStatement + this.viewName() + columnList;
-        sql += " as ";
-        sql += selectQuery.toString();
+        let sql4 = createStatement + this.viewName() + columnList;
+        sql4 += " as ";
+        sql4 += selectQuery.toString();
         switch (this.single.checkOption) {
           case "default_option":
-            sql += " with check option";
+            sql4 += " with check option";
             break;
           case "local":
-            sql += " with local check option";
+            sql4 += " with local check option";
             break;
           case "cascaded":
-            sql += " with cascaded check option";
+            sql4 += " with cascaded check option";
             break;
           default:
             break;
         }
         this.pushQuery({
-          sql
+          sql: sql4
         });
       }
       renameView(from, to) {
@@ -70250,8 +70250,8 @@ var require_client2 = __commonJS({
       prepBindings(bindings) {
         return bindings;
       }
-      positionBindings(sql) {
-        return sql;
+      positionBindings(sql4) {
+        return sql4;
       }
       postProcessResponse(resp, queryContext) {
         if (this.config.postProcessResponse) {
@@ -70935,24 +70935,24 @@ var require_sqlite_querycompiler = __commonJS({
       // then join them all together with select unions to complete the queries.
       insert() {
         const insertValues = this.single.insert || [];
-        let sql = this.with() + `insert into ${this.tableName} `;
+        let sql4 = this.with() + `insert into ${this.tableName} `;
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
             return "";
           } else if (insertValues.length === 1 && insertValues[0] && isEmpty(insertValues[0])) {
             return {
-              sql: sql + this._emptyInsertValue
+              sql: sql4 + this._emptyInsertValue
             };
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql + this._emptyInsertValue
+            sql: sql4 + this._emptyInsertValue
           };
         }
         const insertData = this._prepInsert(insertValues);
         if (isString2(insertData)) {
           return {
-            sql: sql + insertData
+            sql: sql4 + insertData
           };
         }
         if (insertData.columns.length === 0) {
@@ -70960,7 +70960,7 @@ var require_sqlite_querycompiler = __commonJS({
             sql: ""
           };
         }
-        sql += `(${this.formatter.columnize(insertData.columns)})`;
+        sql4 += `(${this.formatter.columnize(insertData.columns)})`;
         if (this.client.valueForUndefined !== null) {
           insertData.values.forEach((bindings) => {
             each(bindings, (binding) => {
@@ -70978,20 +70978,20 @@ var require_sqlite_querycompiler = __commonJS({
             this.builder,
             this.bindingsHolder
           );
-          sql += ` values (${parameters})`;
+          sql4 += ` values (${parameters})`;
           const { onConflict: onConflict2, ignore: ignore2, merge: merge5 } = this.single;
-          if (onConflict2 && ignore2) sql += this._ignore(onConflict2);
+          if (onConflict2 && ignore2) sql4 += this._ignore(onConflict2);
           else if (onConflict2 && merge5) {
-            sql += this._merge(merge5.updates, onConflict2, insertValues);
+            sql4 += this._merge(merge5.updates, onConflict2, insertValues);
             const wheres = this.where();
-            if (wheres) sql += ` ${wheres}`;
+            if (wheres) sql4 += ` ${wheres}`;
           }
           const { returning: returning2 } = this.single;
           if (returning2) {
-            sql += this._returning(returning2);
+            sql4 += this._returning(returning2);
           }
           return {
-            sql,
+            sql: sql4,
             returning: returning2
           };
         }
@@ -71016,16 +71016,16 @@ var require_sqlite_querycompiler = __commonJS({
           }
           blocks[i] = block.join(", ");
         }
-        sql += " select " + blocks.join(" union all select ");
+        sql4 += " select " + blocks.join(" union all select ");
         const { onConflict, ignore, merge: merge4 } = this.single;
-        if (onConflict && ignore) sql += " where true" + this._ignore(onConflict);
+        if (onConflict && ignore) sql4 += " where true" + this._ignore(onConflict);
         else if (onConflict && merge4) {
-          sql += " where true" + this._merge(merge4.updates, onConflict, insertValues);
+          sql4 += " where true" + this._merge(merge4.updates, onConflict, insertValues);
         }
         const { returning } = this.single;
-        if (returning) sql += this._returning(returning);
+        if (returning) sql4 += this._returning(returning);
         return {
-          sql,
+          sql: sql4,
           returning
         };
       }
@@ -71047,9 +71047,9 @@ var require_sqlite_querycompiler = __commonJS({
         return ` on conflict ${this._onConflictClause(columns)} do nothing`;
       }
       _merge(updates, columns, insert) {
-        let sql = ` on conflict ${this._onConflictClause(columns)} do update set `;
+        let sql4 = ` on conflict ${this._onConflictClause(columns)} do update set `;
         if (updates && Array.isArray(updates)) {
-          sql += updates.map(
+          sql4 += updates.map(
             (column) => wrapString(
               column.split(".").pop(),
               this.formatter.builder,
@@ -71057,15 +71057,15 @@ var require_sqlite_querycompiler = __commonJS({
               this.formatter
             )
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql;
+          return sql4;
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
           if (typeof updateData === "string") {
-            sql += updateData;
+            sql4 += updateData;
           } else {
-            sql += updateData.join(",");
+            sql4 += updateData.join(",");
           }
-          return sql;
+          return sql4;
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -71073,10 +71073,10 @@ var require_sqlite_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          sql += insertData.columns.map(
+          sql4 += insertData.columns.map(
             (column) => wrapString(column.split(".").pop(), this.builder, this.client)
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql;
+          return sql4;
         }
       }
       _returning(value) {
@@ -71230,12 +71230,12 @@ var require_sqlite_compiler = __commonJS({
       }
       // Compile the query to determine if a table exists.
       hasTable(tableName) {
-        const sql = `select * from sqlite_master where type = 'table' and name = ${this.client.parameter(
+        const sql4 = `select * from sqlite_master where type = 'table' and name = ${this.client.parameter(
           this.formatter.wrap(tableName).replace(/`/g, ""),
           this.builder,
           this.bindingsHolder
         )}`;
-        this.pushQuery({ sql, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql4, output: (resp) => resp.length > 0 });
       }
       // Compile the query to determine if a column exists.
       hasColumn(tableName, column) {
@@ -71357,17 +71357,17 @@ var require_sqlite_tablecompiler = __commonJS({
       // Create a new table.
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
-        let sql = createStatement + this.tableName();
+        let sql4 = createStatement + this.tableName();
         if (like && this.tableNameLike()) {
-          sql += " as select * from " + this.tableNameLike() + " where 0=1";
+          sql4 += " as select * from " + this.tableNameLike() + " where 0=1";
         } else {
-          sql += " (" + columns.sql.join(", ");
-          sql += this.foreignKeys() || "";
-          sql += this.primaryKeys() || "";
-          sql += this._addChecks();
-          sql += ")";
+          sql4 += " (" + columns.sql.join(", ");
+          sql4 += this.foreignKeys() || "";
+          sql4 += this.primaryKeys() || "";
+          sql4 += this._addChecks();
+          sql4 += ")";
         }
-        this.pushQuery(sql);
+        this.pushQuery(sql4);
         if (like) {
           this.addColumns(columns, this.addColumnsPrefix);
         }
@@ -71563,7 +71563,7 @@ var require_sqlite_tablecompiler = __commonJS({
         }
       }
       foreignKeys() {
-        let sql = "";
+        let sql4 = "";
         const foreignKeys = filter6(this.grouped.alterTable || [], {
           method: "foreign"
         });
@@ -71576,11 +71576,11 @@ var require_sqlite_tablecompiler = __commonJS({
           if (constraintName) {
             constraintName = " constraint " + this.formatter.wrap(constraintName);
           }
-          sql += `,${constraintName} foreign key(${column}) references ${foreignTable}(${references})`;
-          if (foreign.onDelete) sql += ` on delete ${foreign.onDelete}`;
-          if (foreign.onUpdate) sql += ` on update ${foreign.onUpdate}`;
+          sql4 += `,${constraintName} foreign key(${column}) references ${foreignTable}(${references})`;
+          if (foreign.onDelete) sql4 += ` on delete ${foreign.onDelete}`;
+          if (foreign.onUpdate) sql4 += ` on update ${foreign.onUpdate}`;
         }
-        return sql;
+        return sql4;
       }
       createTableBlock() {
         return this.getColumns().concat().join(",");
@@ -71836,20 +71836,20 @@ var require_parser = __commonJS({
       operator: /-|\(|\)|;|\+|\*|\/|%|==|=|<=|<>|<<|<|>=|>>|>|!=|,|&|~|\|\||\||\./,
       _ws: /\s+/
     };
-    function parseCreateTable(sql) {
-      const result = createTable({ input: tokenize(sql, TOKENS) });
+    function parseCreateTable(sql4) {
+      const result = createTable({ input: tokenize(sql4, TOKENS) });
       if (!result.success) {
         throw new Error(
-          `Parsing CREATE TABLE failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql}"`
+          `Parsing CREATE TABLE failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql4}"`
         );
       }
       return result.ast;
     }
-    function parseCreateIndex(sql) {
-      const result = createIndex({ input: tokenize(sql, TOKENS) });
+    function parseCreateIndex(sql4) {
+      const result = createIndex({ input: tokenize(sql4, TOKENS) });
       if (!result.success) {
         throw new Error(
-          `Parsing CREATE INDEX failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql}"`
+          `Parsing CREATE INDEX failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql4}"`
         );
       }
       return result.ast;
@@ -72912,16 +72912,16 @@ var require_ddl = __commonJS({
         );
       }
       async generateAlterCommands(newSql, createIndices, columns) {
-        const sql = [];
+        const sql4 = [];
         const pre = [];
         const post = [];
         let check3 = null;
-        sql.push(newSql);
-        sql.push(copyData(this.tableName(), this.alteredName, columns));
-        sql.push(dropOriginal(this.tableName()));
-        sql.push(renameTable(this.alteredName, this.tableName()));
+        sql4.push(newSql);
+        sql4.push(copyData(this.tableName(), this.alteredName, columns));
+        sql4.push(dropOriginal(this.tableName()));
+        sql4.push(renameTable(this.alteredName, this.tableName()));
         for (const createIndex of createIndices) {
-          sql.push(createIndex);
+          sql4.push(createIndex);
         }
         const isForeignCheckEnabled2 = await this.isForeignCheckEnabled();
         if (isForeignCheckEnabled2) {
@@ -72929,7 +72929,7 @@ var require_ddl = __commonJS({
           post.push(setForeignCheck(true));
           check3 = executeForeignCheck();
         }
-        return { pre, sql, check: check3, post };
+        return { pre, sql: sql4, check: check3, post };
       }
     };
     module2.exports = SQLite3_DDL;
@@ -73316,18 +73316,18 @@ var require_pg_querycompiler = __commonJS({
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        let sql = super.insert();
-        if (sql === "") return sql;
+        let sql4 = super.insert();
+        if (sql4 === "") return sql4;
         const { returning, onConflict, ignore, merge: merge4, insert } = this.single;
-        if (onConflict && ignore) sql += this._ignore(onConflict);
+        if (onConflict && ignore) sql4 += this._ignore(onConflict);
         if (onConflict && merge4) {
-          sql += this._merge(merge4.updates, onConflict, insert);
+          sql4 += this._merge(merge4.updates, onConflict, insert);
           const wheres = this.where();
-          if (wheres) sql += ` ${wheres}`;
+          if (wheres) sql4 += ` ${wheres}`;
         }
-        if (returning) sql += this._returning(returning);
+        if (returning) sql4 += this._returning(returning);
         return {
-          sql,
+          sql: sql4,
           returning
         };
       }
@@ -73345,15 +73345,15 @@ var require_pg_querycompiler = __commonJS({
       using() {
         const usingTables = this.single.using;
         if (!usingTables) return;
-        let sql = "using ";
+        let sql4 = "using ";
         if (Array.isArray(usingTables)) {
-          sql += usingTables.map((table) => {
+          sql4 += usingTables.map((table) => {
             return this.formatter.wrap(table);
           }).join(",");
         } else {
-          sql += this.formatter.wrap(usingTables);
+          sql4 += this.formatter.wrap(usingTables);
         }
-        return sql;
+        return sql4;
       }
       // Compiles an `delete` query, allowing for a return value.
       del() {
@@ -73393,10 +73393,10 @@ var require_pg_querycompiler = __commonJS({
             using += (using ? "," : "using ") + tableJoins.join(",");
           }
         }
-        const sql = withSQL + `delete from ${this.single.only ? "only " : ""}${tableName}` + (using ? ` ${using}` : "") + (wheres ? ` ${wheres}` : "");
+        const sql4 = withSQL + `delete from ${this.single.only ? "only " : ""}${tableName}` + (using ? ` ${using}` : "") + (wheres ? ` ${wheres}` : "");
         const { returning } = this.single;
         return {
-          sql: sql + this._returning(returning),
+          sql: sql4 + this._returning(returning),
           returning
         };
       }
@@ -73416,9 +73416,9 @@ var require_pg_querycompiler = __commonJS({
         return ` on conflict ${this._onConflictClause(columns)} do nothing`;
       }
       _merge(updates, columns, insert) {
-        let sql = ` on conflict ${this._onConflictClause(columns)} do update set `;
+        let sql4 = ` on conflict ${this._onConflictClause(columns)} do update set `;
         if (updates && Array.isArray(updates)) {
-          sql += updates.map(
+          sql4 += updates.map(
             (column) => wrapString(
               column.split(".").pop(),
               this.formatter.builder,
@@ -73426,15 +73426,15 @@ var require_pg_querycompiler = __commonJS({
               this.formatter
             )
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql;
+          return sql4;
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
           if (typeof updateData === "string") {
-            sql += updateData;
+            sql4 += updateData;
           } else {
-            sql += updateData.join(",");
+            sql4 += updateData.join(",");
           }
-          return sql;
+          return sql4;
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -73442,26 +73442,26 @@ var require_pg_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          sql += insertData.columns.map(
+          sql4 += insertData.columns.map(
             (column) => wrapString(column.split(".").pop(), this.builder, this.client)
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql;
+          return sql4;
         }
       }
       // Join array of table names and apply default schema.
       _tableNames(tables) {
         const schemaName = this.single.schema;
-        const sql = [];
+        const sql4 = [];
         for (let i = 0; i < tables.length; i++) {
           let tableName = tables[i];
           if (tableName) {
             if (schemaName) {
               tableName = `${schemaName}.${tableName}`;
             }
-            sql.push(this.formatter.wrap(tableName));
+            sql4.push(this.formatter.wrap(tableName));
           }
         }
-        return sql.join(", ");
+        return sql4.join(", ");
       }
       _lockingClause(lockMode) {
         const tables = this.single.lockTables || [];
@@ -73496,19 +73496,19 @@ var require_pg_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        const sql = "select * from information_schema.columns where table_name = ? and table_catalog = current_database()";
+        const sql4 = "select * from information_schema.columns where table_name = ? and table_catalog = current_database()";
         const bindings = [table];
-        return this._buildColumnInfoQuery(schema, sql, bindings, column);
+        return this._buildColumnInfoQuery(schema, sql4, bindings, column);
       }
-      _buildColumnInfoQuery(schema, sql, bindings, column) {
+      _buildColumnInfoQuery(schema, sql4, bindings, column) {
         if (schema) {
-          sql += " and table_schema = ?";
+          sql4 += " and table_schema = ?";
           bindings.push(schema);
         } else {
-          sql += " and table_schema = current_schema()";
+          sql4 += " and table_schema = current_schema()";
         }
         return {
-          sql,
+          sql: sql4,
           bindings,
           output(resp) {
             const out = reduce(
@@ -73798,11 +73798,11 @@ var require_pg_tablecompiler = __commonJS({
       }
       _setNullableState(column, isNullable) {
         const constraintAction = isNullable ? "drop not null" : "set not null";
-        const sql = `alter table ${this.tableName()} alter column ${this.formatter.wrap(
+        const sql4 = `alter table ${this.tableName()} alter column ${this.formatter.wrap(
           column
         )} ${constraintAction}`;
         return this.pushQuery({
-          sql
+          sql: sql4
         });
       }
       compileAdd(builder) {
@@ -73816,11 +73816,11 @@ var require_pg_tablecompiler = __commonJS({
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
         const columnsSql = ` (${columns.sql.join(", ")}${this.primaryKeys() || ""}${this._addChecks()})`;
-        let sql = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + " including all" + (columns.sql.length ? ", " + columns.sql.join(", ") : "") + ")" : columnsSql);
+        let sql4 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + " including all" + (columns.sql.length ? ", " + columns.sql.join(", ") : "") + ")" : columnsSql);
         if (this.single.inherits)
-          sql += ` inherits (${this.formatter.wrap(this.single.inherits)})`;
+          sql4 += ` inherits (${this.formatter.wrap(this.single.inherits)})`;
         this.pushQuery({
-          sql,
+          sql: sql4,
           bindings: columns.bindings
         });
         const hasComment = has(this.single, "comment");
@@ -74080,16 +74080,16 @@ var require_pg_compiler = __commonJS({
       }
       // Check whether the current table
       hasTable(tableName) {
-        let sql = "select * from information_schema.tables where table_name = ?";
+        let sql4 = "select * from information_schema.tables where table_name = ?";
         const bindings = [tableName];
         if (this.schema) {
-          sql += " and table_schema = ?";
+          sql4 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql += " and table_schema = current_schema()";
+          sql4 += " and table_schema = current_schema()";
         }
         this.pushQuery({
-          sql,
+          sql: sql4,
           bindings,
           output(resp) {
             return resp.rows.length > 0;
@@ -74098,16 +74098,16 @@ var require_pg_compiler = __commonJS({
       }
       // Compile the query to determine if a column exists in a table.
       hasColumn(tableName, columnName) {
-        let sql = "select * from information_schema.columns where table_name = ? and column_name = ?";
+        let sql4 = "select * from information_schema.columns where table_name = ? and column_name = ?";
         const bindings = [tableName, columnName];
         if (this.schema) {
-          sql += " and table_schema = ?";
+          sql4 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql += " and table_schema = current_schema()";
+          sql4 += " and table_schema = current_schema()";
         }
         this.pushQuery({
-          sql,
+          sql: sql4,
           bindings,
           output(resp) {
             return resp.rows.length > 0;
@@ -74294,9 +74294,9 @@ var require_postgres = __commonJS({
       }
       // Position the bindings for the query. The escape sequence for question mark
       // is \? (e.g. knex.raw("\\?") since javascript requires '\' to be escaped too...)
-      positionBindings(sql) {
+      positionBindings(sql4) {
         let questionCount = 0;
-        return sql.replace(/(\\*)(\?)/g, function(match, escapes) {
+        return sql4.replace(/(\\*)(\?)/g, function(match, escapes) {
           if (escapes.length % 2) {
             return "?";
           } else {
@@ -74348,10 +74348,10 @@ var require_postgres = __commonJS({
             throw e;
           }
         }
-        const sql = obj.sql;
+        const sql4 = obj.sql;
         return new Promise(function(resolver, rejecter) {
           const queryStream = connection.query(
-            new PGQueryStream(sql, obj.bindings, options)
+            new PGQueryStream(sql4, obj.bindings, options)
           );
           queryStream.on("error", function(error73) {
             rejecter(error73);
@@ -74509,20 +74509,20 @@ var require_crdb_querycompiler = __commonJS({
         return `truncate ${this.tableName}`;
       }
       upsert() {
-        let sql = this._upsert();
-        if (sql === "") return sql;
+        let sql4 = this._upsert();
+        if (sql4 === "") return sql4;
         const { returning } = this.single;
-        if (returning) sql += this._returning(returning);
+        if (returning) sql4 += this._returning(returning);
         return {
-          sql,
+          sql: sql4,
           returning
         };
       }
       _upsert() {
         const upsertValues = this.single.upsert || [];
-        const sql = this.with() + `upsert into ${this.tableName} `;
+        const sql4 = this.with() + `upsert into ${this.tableName} `;
         const body = this._insertBody(upsertValues);
-        return body === "" ? "" : sql + body;
+        return body === "" ? "" : sql4 + body;
       }
       _groupOrder(item, type) {
         return this._basicGroupOrder(item, type);
@@ -75013,9 +75013,9 @@ var require_mssql_querycompiler = __commonJS({
         return result;
       }
       select() {
-        const sql = this.with();
+        const sql4 = this.with();
         const statements = components.map((component) => this[component](this));
-        return sql + compact(statements).join(" ");
+        return sql4 + compact(statements).join(" ");
       }
       //#region Insert
       // Compiles an "insert" query, allowing for multiple
@@ -75030,7 +75030,7 @@ var require_mssql_querycompiler = __commonJS({
       insertWithTriggers() {
         const insertValues = this.single.insert || [];
         const { returning } = this.single;
-        let sql = this.with() + `${this._buildTempTable(returning)}insert into ${this.tableName} `;
+        let sql4 = this.with() + `${this._buildTempTable(returning)}insert into ${this.tableName} `;
         const returningSql = returning ? this._returning("insert", returning, true) + " " : "";
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
@@ -75038,39 +75038,39 @@ var require_mssql_querycompiler = __commonJS({
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql + returningSql + this._emptyInsertValue + this._buildReturningSelect(returning),
+            sql: sql4 + returningSql + this._emptyInsertValue + this._buildReturningSelect(returning),
             returning
           };
         }
-        sql += this._buildInsertData(insertValues, returningSql);
+        sql4 += this._buildInsertData(insertValues, returningSql);
         if (returning) {
-          sql += this._buildReturningSelect(returning);
+          sql4 += this._buildReturningSelect(returning);
         }
         return {
-          sql,
+          sql: sql4,
           returning
         };
       }
       _buildInsertData(insertValues, returningSql) {
-        let sql = "";
+        let sql4 = "";
         const insertData = this._prepInsert(insertValues);
         if (typeof insertData === "string") {
-          sql += insertData;
+          sql4 += insertData;
         } else {
           if (insertData.columns.length) {
-            sql += `(${this.formatter.columnize(insertData.columns)}`;
-            sql += `) ${returningSql}values (` + this._buildInsertValues(insertData) + ")";
+            sql4 += `(${this.formatter.columnize(insertData.columns)}`;
+            sql4 += `) ${returningSql}values (` + this._buildInsertValues(insertData) + ")";
           } else if (insertValues.length === 1 && insertValues[0]) {
-            sql += returningSql + this._emptyInsertValue;
+            sql4 += returningSql + this._emptyInsertValue;
           } else {
             return "";
           }
         }
-        return sql;
+        return sql4;
       }
       standardInsert() {
         const insertValues = this.single.insert || [];
-        let sql = this.with() + `insert into ${this.tableName} `;
+        let sql4 = this.with() + `insert into ${this.tableName} `;
         const { returning } = this.single;
         const returningSql = returning ? this._returning("insert", returning) + " " : "";
         if (Array.isArray(insertValues)) {
@@ -75079,13 +75079,13 @@ var require_mssql_querycompiler = __commonJS({
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql + returningSql + this._emptyInsertValue,
+            sql: sql4 + returningSql + this._emptyInsertValue,
             returning
           };
         }
-        sql += this._buildInsertData(insertValues, returningSql);
+        sql4 += this._buildInsertData(insertValues, returningSql);
         return {
-          sql,
+          sql: sql4,
           returning
         };
       }
@@ -75184,7 +75184,7 @@ var require_mssql_querycompiler = __commonJS({
         const top = this.top();
         const hints = this._hintComments();
         const columns = this.grouped.columns || [];
-        let i = -1, sql = [];
+        let i = -1, sql4 = [];
         if (columns) {
           while (++i < columns.length) {
             const stmt = columns[i];
@@ -75194,21 +75194,21 @@ var require_mssql_querycompiler = __commonJS({
               continue;
             }
             if (stmt.type === "aggregate") {
-              sql.push(...this.aggregate(stmt));
+              sql4.push(...this.aggregate(stmt));
             } else if (stmt.type === "aggregateRaw") {
-              sql.push(this.aggregateRaw(stmt));
+              sql4.push(this.aggregateRaw(stmt));
             } else if (stmt.type === "analytic") {
-              sql.push(this.analytic(stmt));
+              sql4.push(this.analytic(stmt));
             } else if (stmt.type === "json") {
-              sql.push(this.json(stmt));
+              sql4.push(this.json(stmt));
             } else if (stmt.value && stmt.value.length > 0) {
-              sql.push(this.formatter.columnize(stmt.value));
+              sql4.push(this.formatter.columnize(stmt.value));
             }
           }
         }
-        if (sql.length === 0) sql = ["*"];
+        if (sql4.length === 0) sql4 = ["*"];
         const select = this.onlyJson() ? "" : "select ";
-        return `${select}${hints}${distinctClause}` + (top ? top + " " : "") + sql.join(", ") + (this.tableName ? ` from ${this.tableName}` : "");
+        return `${select}${hints}${distinctClause}` + (top ? top + " " : "") + sql4.join(", ") + (this.tableName ? ` from ${this.tableName}` : "");
       }
       _returning(method, value, withTrigger) {
         switch (method) {
@@ -75229,10 +75229,10 @@ var require_mssql_querycompiler = __commonJS({
           } else {
             selections = `[t].${this.formatter.columnize(values)}`;
           }
-          let sql = `select top(0) ${selections} into #out `;
-          sql += `from ${this.tableName} as t `;
-          sql += `left join ${this.tableName} on 0=1;`;
-          return sql;
+          let sql4 = `select top(0) ${selections} into #out `;
+          sql4 += `from ${this.tableName} as t `;
+          sql4 += `left join ${this.tableName} on 0=1;`;
+          return sql4;
         }
         return "";
       }
@@ -75244,9 +75244,9 @@ var require_mssql_querycompiler = __commonJS({
           } else {
             selections = this.formatter.columnize(values);
           }
-          let sql = `; select ${selections} from #out; `;
-          sql += `drop table #out;`;
-          return sql;
+          let sql4 = `; select ${selections} from #out; `;
+          sql4 += `drop table #out;`;
+          return sql4;
         }
         return "";
       }
@@ -75268,16 +75268,16 @@ var require_mssql_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        let sql = `select [COLUMN_NAME], [COLUMN_DEFAULT], [DATA_TYPE], [CHARACTER_MAXIMUM_LENGTH], [IS_NULLABLE] from INFORMATION_SCHEMA.COLUMNS where table_name = ? and table_catalog = ?`;
+        let sql4 = `select [COLUMN_NAME], [COLUMN_DEFAULT], [DATA_TYPE], [CHARACTER_MAXIMUM_LENGTH], [IS_NULLABLE] from INFORMATION_SCHEMA.COLUMNS where table_name = ? and table_catalog = ?`;
         const bindings = [table, this.client.database()];
         if (schema) {
-          sql += " and table_schema = ?";
+          sql4 += " and table_schema = ?";
           bindings.push(schema);
         } else {
-          sql += ` and table_schema = 'dbo'`;
+          sql4 += ` and table_schema = 'dbo'`;
         }
         return {
-          sql,
+          sql: sql4,
           bindings,
           output(resp) {
             const out = resp.reduce((columns, val) => {
@@ -75433,12 +75433,12 @@ var require_mssql_compiler = __commonJS({
           this.bindingsHolder
         );
         const bindings = [tableName];
-        let sql = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ${formattedTable}`;
+        let sql4 = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ${formattedTable}`;
         if (this.schema) {
-          sql += " AND TABLE_SCHEMA = ?";
+          sql4 += " AND TABLE_SCHEMA = ?";
           bindings.push(this.schema);
         }
-        this.pushQuery({ sql, bindings, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql4, bindings, output: (resp) => resp.length > 0 });
       }
       // Check whether a column exists on the schema.
       hasColumn(tableName, column) {
@@ -75452,8 +75452,8 @@ var require_mssql_compiler = __commonJS({
           this.builder,
           this.bindingsHolder
         );
-        const sql = `select object_id from sys.columns where name = ${formattedColumn} and object_id = object_id(${formattedTable})`;
-        this.pushQuery({ sql, output: (resp) => resp.length > 0 });
+        const sql4 = `select object_id from sys.columns where name = ${formattedColumn} and object_id = object_id(${formattedTable})`;
+        this.pushQuery({ sql: sql4, output: (resp) => resp.length > 0 });
       }
     };
     SchemaCompiler_MSSQL.prototype.dropTablePrefix = "DROP TABLE ";
@@ -75547,9 +75547,9 @@ ELSE
             this.pushQuery(baseQuery);
           }
         }
-        columns.sql.forEach((sql) => {
+        columns.sql.forEach((sql4) => {
           this.pushQuery({
-            sql: (this.lowerCase ? "alter table " : "ALTER TABLE ") + this.tableName() + " " + (this.lowerCase ? this.alterColumnPrefix.toLowerCase() : this.alterColumnPrefix) + sql,
+            sql: (this.lowerCase ? "alter table " : "ALTER TABLE ") + this.tableName() + " " + (this.lowerCase ? this.alterColumnPrefix.toLowerCase() : this.alterColumnPrefix) + sql4,
             bindings: columns.bindings
           });
         });
@@ -75769,18 +75769,18 @@ var require_mssql_viewcompiler = __commonJS({
       }
       createQuery(columns, selectQuery, materialized, replace) {
         const createStatement = "CREATE " + (replace ? "OR ALTER " : "") + "VIEW ";
-        let sql = createStatement + this.viewName();
+        let sql4 = createStatement + this.viewName();
         const columnList = columns ? " (" + columnize_(
           columns,
           this.viewBuilder,
           this.client,
           this.bindingsHolder
         ) + ")" : "";
-        sql += columnList;
-        sql += " AS ";
-        sql += selectQuery.toString();
+        sql4 += columnList;
+        sql4 += " AS ";
+        sql4 += selectQuery.toString();
         this.pushQuery({
-          sql
+          sql: sql4
         });
       }
       renameColumn(from, to) {
@@ -76103,9 +76103,9 @@ var require_mssql = __commonJS({
         });
       }
       // Position the bindings for the query.
-      positionBindings(sql) {
+      positionBindings(sql4) {
         let questionCount = -1;
-        return sql.replace(/\\?\?/g, (match) => {
+        return sql4.replace(/\\?\?/g, (match) => {
           if (match === "\\?") {
             return "?";
           }
@@ -76131,11 +76131,11 @@ var require_mssql = __commonJS({
       }
       _makeRequest(query, callback) {
         const Driver = this._driver();
-        const sql = typeof query === "string" ? query : query.sql;
+        const sql4 = typeof query === "string" ? query : query.sql;
         let rowCount = 0;
-        if (!sql) throw new Error("The query is empty");
-        debug("request::request sql=%s", sql);
-        const request = new Driver.Request(sql, (err, remoteRowCount) => {
+        if (!sql4) throw new Error("The query is empty");
+        debug("request::request sql=%s", sql4);
+        const request = new Driver.Request(sql4, (err, remoteRowCount) => {
           if (err) {
             debug("request::error message=%s", err.message);
             return callback(err);
@@ -76392,9 +76392,9 @@ var require_transaction3 = __commonJS({
     var Debug = require_src3();
     var debug = Debug("knex:tx");
     var Transaction_MySQL = class extends Transaction {
-      query(conn, sql, status, value) {
+      query(conn, sql4, status, value) {
         const t = this;
-        const q = this.trxClient.query(conn, sql).catch((err) => {
+        const q = this.trxClient.query(conn, sql4).catch((err) => {
           if (err.errno === 1305) {
             this.trxClient.logger.warn(
               "Transaction was implicitly committed, do not mix transactions and DDL with MySQL (#805)"
@@ -76409,7 +76409,7 @@ var require_transaction3 = __commonJS({
           if (status === 1) t._resolver(value);
           if (status === 2) {
             if (value === void 0) {
-              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql)) {
+              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql4)) {
                 t._resolver();
                 return;
               }
@@ -76476,22 +76476,22 @@ var require_mysql_querycompiler = __commonJS({
       }
       // Compiles an `delete` allowing comments
       del() {
-        const sql = super.del();
-        if (sql === "") return sql;
+        const sql4 = super.del();
+        if (sql4 === "") return sql4;
         const comments = this.comments();
-        return (comments === "" ? "" : comments + " ") + sql;
+        return (comments === "" ? "" : comments + " ") + sql4;
       }
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        let sql = super.insert();
-        if (sql === "") return sql;
+        let sql4 = super.insert();
+        if (sql4 === "") return sql4;
         const comments = this.comments();
-        sql = (comments === "" ? "" : comments + " ") + sql;
+        sql4 = (comments === "" ? "" : comments + " ") + sql4;
         const { ignore, merge: merge4, insert } = this.single;
-        if (ignore) sql = sql.replace("insert into", "insert ignore into");
+        if (ignore) sql4 = sql4.replace("insert into", "insert ignore into");
         if (merge4) {
-          sql += this._merge(merge4.updates, insert);
+          sql4 += this._merge(merge4.updates, insert);
           const wheres = this.where();
           if (wheres) {
             throw new Error(
@@ -76499,24 +76499,24 @@ var require_mysql_querycompiler = __commonJS({
             );
           }
         }
-        return sql;
+        return sql4;
       }
       upsert() {
         const upsertValues = this.single.upsert || [];
-        const sql = this.with() + `replace into ${this.tableName} `;
+        const sql4 = this.with() + `replace into ${this.tableName} `;
         const body = this._insertBody(upsertValues);
-        return body === "" ? "" : sql + body;
+        return body === "" ? "" : sql4 + body;
       }
       // Compiles merge for onConflict, allowing for different merge strategies
       _merge(updates, insert) {
-        const sql = " on duplicate key update ";
+        const sql4 = " on duplicate key update ";
         if (updates && Array.isArray(updates)) {
-          return sql + updates.map(
+          return sql4 + updates.map(
             (column) => wrapAsIdentifier(column, this.formatter.builder, this.client)
           ).map((column) => `${column} = values(${column})`).join(", ");
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
-          return sql + updateData.join(",");
+          return sql4 + updateData.join(",");
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -76524,7 +76524,7 @@ var require_mysql_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          return sql + insertData.columns.map((column) => wrapAsIdentifier(column, this.builder, this.client)).map((column) => `${column} = values(${column})`).join(", ");
+          return sql4 + insertData.columns.map((column) => wrapAsIdentifier(column, this.builder, this.client)).map((column) => `${column} = values(${column})`).join(", ");
         }
       }
       // Update method, including joins, wheres, order & limits.
@@ -76693,16 +76693,16 @@ var require_mysql_compiler = __commonJS({
       }
       // Check whether a table exists on the query.
       hasTable(tableName) {
-        let sql = "select * from information_schema.tables where table_name = ?";
+        let sql4 = "select * from information_schema.tables where table_name = ?";
         const bindings = [tableName];
         if (this.schema) {
-          sql += " and table_schema = ?";
+          sql4 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql += " and table_schema = database()";
+          sql4 += " and table_schema = database()";
         }
         this.pushQuery({
-          sql,
+          sql: sql4,
           bindings,
           output: function output(resp) {
             return resp.length > 0;
@@ -76743,16 +76743,16 @@ var require_mysql_tablecompiler = __commonJS({
         columnsSql += this.primaryKeys() || "";
         columnsSql += this._addChecks();
         columnsSql += ")";
-        let sql = createStatement + this.tableName() + (like && this.tableNameLike() ? " like " + this.tableNameLike() : columnsSql);
+        let sql4 = createStatement + this.tableName() + (like && this.tableNameLike() ? " like " + this.tableNameLike() : columnsSql);
         if (client.connectionSettings) {
           conn = client.connectionSettings;
         }
         const charset = this.single.charset || conn.charset || "";
         const collation = this.single.collate || conn.collate || "";
         const engine = this.single.engine || "";
-        if (charset && !like) sql += ` default character set ${charset}`;
-        if (collation) sql += ` collate ${collation}`;
-        if (engine) sql += ` engine = ${engine}`;
+        if (charset && !like) sql4 += ` default character set ${charset}`;
+        if (collation) sql4 += ` collate ${collation}`;
+        if (engine) sql4 += ` engine = ${engine}`;
         if (this.single.comment) {
           const comment = this.single.comment || "";
           const MAX_COMMENT_LENGTH = 1024;
@@ -76760,9 +76760,9 @@ var require_mysql_tablecompiler = __commonJS({
             this.client.logger.warn(
               `The max length for a table comment is ${MAX_COMMENT_LENGTH} characters`
             );
-          sql += ` comment = '${comment}'`;
+          sql4 += ` comment = '${comment}'`;
         }
-        this.pushQuery(sql);
+        this.pushQuery(sql4);
         if (like) {
           this.addColumns(columns, this.addColumnsPrefix);
         }
@@ -76794,23 +76794,23 @@ var require_mysql_tablecompiler = __commonJS({
                   reject(e);
                 }
               }).then(function() {
-                let sql = `alter table ${table} change ${wrapped} ${column.Type}`;
+                let sql4 = `alter table ${table} change ${wrapped} ${column.Type}`;
                 if (String(column.Null).toUpperCase() !== "YES") {
-                  sql += ` NOT NULL`;
+                  sql4 += ` NOT NULL`;
                 } else {
-                  sql += ` NULL`;
+                  sql4 += ` NULL`;
                 }
                 if (column.Default !== void 0 && column.Default !== null) {
-                  sql += ` DEFAULT '${column.Default}'`;
+                  sql4 += ` DEFAULT '${column.Default}'`;
                 }
                 if (column.Collation !== void 0 && column.Collation !== null) {
-                  sql += ` COLLATE '${column.Collation}'`;
+                  sql4 += ` COLLATE '${column.Collation}'`;
                 }
                 if (column.Extra == "auto_increment") {
-                  sql += ` AUTO_INCREMENT`;
+                  sql4 += ` AUTO_INCREMENT`;
                 }
                 return runner.query({
-                  sql
+                  sql: sql4
                 });
               }).then(function() {
                 if (!refs.length) {
@@ -76872,7 +76872,7 @@ var require_mysql_tablecompiler = __commonJS({
         const bindingsHolder = {
           bindings: []
         };
-        const sql = "SELECT KCU.CONSTRAINT_NAME, KCU.TABLE_NAME, KCU.COLUMN_NAME,        KCU.REFERENCED_TABLE_NAME, KCU.REFERENCED_COLUMN_NAME,        RC.UPDATE_RULE, RC.DELETE_RULE FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC        USING(CONSTRAINT_NAME) WHERE KCU.REFERENCED_TABLE_NAME = " + this.client.parameter(
+        const sql4 = "SELECT KCU.CONSTRAINT_NAME, KCU.TABLE_NAME, KCU.COLUMN_NAME,        KCU.REFERENCED_TABLE_NAME, KCU.REFERENCED_COLUMN_NAME,        RC.UPDATE_RULE, RC.DELETE_RULE FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC        USING(CONSTRAINT_NAME) WHERE KCU.REFERENCED_TABLE_NAME = " + this.client.parameter(
           this.tableNameRaw,
           this.tableBuilder,
           bindingsHolder
@@ -76886,7 +76886,7 @@ var require_mysql_tablecompiler = __commonJS({
           bindingsHolder
         );
         return runner.query({
-          sql,
+          sql: sql4,
           bindings: bindingsHolder.bindings
         });
       }
@@ -77510,9 +77510,9 @@ var require_transaction4 = __commonJS({
     var Transaction = require_transaction();
     var debug = require_src3()("knex:tx");
     var Transaction_MySQL2 = class extends Transaction {
-      query(conn, sql, status, value) {
+      query(conn, sql4, status, value) {
         const t = this;
-        const q = this.trxClient.query(conn, sql).catch((err) => {
+        const q = this.trxClient.query(conn, sql4).catch((err) => {
           if (err.code === "ER_SP_DOES_NOT_EXIST") {
             this.trxClient.logger.warn(
               "Transaction was implicitly committed, do not mix transactions and DDL with MySQL (#805)"
@@ -77527,7 +77527,7 @@ var require_transaction4 = __commonJS({
           if (status === 1) t._resolver(value);
           if (status === 2) {
             if (value === void 0) {
-              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql)) {
+              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql4)) {
                 t._resolver();
                 return;
               }
@@ -77622,8 +77622,8 @@ var require_utils10 = __commonJS({
         return result;
       }
     };
-    function wrapSqlWithCatch(sql, errorNumberToCatch) {
-      return `begin execute immediate '${sql.replace(/'/g, "''")}'; exception when others then if sqlcode != ${errorNumberToCatch} then raise; end if; end;`;
+    function wrapSqlWithCatch(sql4, errorNumberToCatch) {
+      return `begin execute immediate '${sql4.replace(/'/g, "''")}'; exception when others then if sqlcode != ${errorNumberToCatch} then raise; end if; end;`;
     }
     function ReturningHelper(columnName) {
       this.columnName = columnName;
@@ -77807,7 +77807,7 @@ var require_oracle_compiler = __commonJS({
       }
       // Check whether a column exists on the schema.
       hasColumn(tableName, column) {
-        const sql = `select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = ${this.client.parameter(
+        const sql4 = `select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = ${this.client.parameter(
           tableName,
           this.builder,
           this.bindingsHolder
@@ -77816,7 +77816,7 @@ var require_oracle_compiler = __commonJS({
           this.builder,
           this.bindingsHolder
         )}`;
-        this.pushQuery({ sql, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql4, output: (resp) => resp.length > 0 });
       }
       dropSequenceIfExists(sequenceName) {
         const prefix = this.schema ? `"${this.schema}".` : "";
@@ -78127,14 +78127,14 @@ var require_oracle_tablecompiler = __commonJS({
           prefix = prefix || this.addColumnsPrefix;
           const columnSql = columns.sql;
           const alter = this.lowerCase ? "alter table " : "ALTER TABLE ";
-          let sql = `${alter}${this.tableName()} ${prefix}`;
+          let sql4 = `${alter}${this.tableName()} ${prefix}`;
           if (columns.sql.length > 1) {
-            sql += `(${columnSql.join(", ")})`;
+            sql4 += `(${columnSql.join(", ")})`;
           } else {
-            sql += columnSql.join(", ");
+            sql4 += columnSql.join(", ");
           }
           this.pushQuery({
-            sql,
+            sql: sql4,
             bindings: columns.bindings
           });
         }
@@ -78157,10 +78157,10 @@ var require_oracle_tablecompiler = __commonJS({
       // Adds the "create" query to the query sequence.
       createQuery(columns, ifNot, like) {
         const columnsSql = like && this.tableNameLike() ? " as (select * from " + this.tableNameLike() + " where 0=1)" : " (" + columns.sql.join(", ") + this._addChecks() + ")";
-        const sql = `create table ${this.tableName()}${columnsSql}`;
+        const sql4 = `create table ${this.tableName()}${columnsSql}`;
         this.pushQuery({
           // catch "name is already used by an existing object" for workaround for "if not exists"
-          sql: ifNot ? utils.wrapSqlWithCatch(sql, -955) : sql,
+          sql: ifNot ? utils.wrapSqlWithCatch(sql4, -955) : sql4,
           bindings: columns.bindings
         });
         if (this.single.comment) this.comment(this.single.comment);
@@ -78300,9 +78300,9 @@ var require_oracle = __commonJS({
         return this.connectionSettings.database;
       }
       // Position the bindings for the query.
-      positionBindings(sql) {
+      positionBindings(sql4) {
         let questionCount = 0;
-        return sql.replace(/\?/g, function() {
+        return sql4.replace(/\?/g, function() {
           questionCount += 1;
           return `:${questionCount}`;
         });
@@ -78406,7 +78406,7 @@ var require_oracle_querycompiler = __commonJS({
           return "";
         }
         const insertData = this._prepInsert(insertValues);
-        const sql = {};
+        const sql4 = {};
         if (isString2(insertData)) {
           return this._addReturningToSqlAndConvert(
             `insert into ${this.tableName} ${insertData}`,
@@ -78428,7 +78428,7 @@ var require_oracle_querycompiler = __commonJS({
           );
         }
         const insertDefaultsOnly = insertData.columns.length === 0;
-        sql.sql = "begin " + insertData.values.map((value) => {
+        sql4.sql = "begin " + insertData.values.map((value) => {
           let returningHelper;
           const parameterizedValues = !insertDefaultsOnly ? this.client.parameterize(
             value,
@@ -78440,7 +78440,7 @@ var require_oracle_querycompiler = __commonJS({
           let subSql = `insert into ${this.tableName} `;
           if (returning) {
             returningHelper = new ReturningHelper(returningValues.join(":"));
-            sql.outParams = (sql.outParams || []).concat(returningHelper);
+            sql4.outParams = (sql4.outParams || []).concat(returningHelper);
           }
           if (insertDefaultsOnly) {
             subSql += `(${this.formatter.wrap(
@@ -78461,24 +78461,24 @@ var require_oracle_querycompiler = __commonJS({
           return `execute immediate '${subSql.replace(/'/g, "''")}` + (parameterizedValuesWithoutDefault || returning ? "' using " : "") + parameterizedValuesWithoutDefault + (parameterizedValuesWithoutDefault && returning ? ", " : "") + (returning ? "out ?" : "") + ";";
         }).join(" ") + "end;";
         if (returning) {
-          sql.returning = returning;
-          sql.returningSql = `select ${this.formatter.columnize(returning)} from ` + this.tableName + " where ROWID in (" + sql.outParams.map((v, i) => `:${i + 1}`).join(", ") + ") order by case ROWID " + sql.outParams.map((v, i) => `when CHARTOROWID(:${i + 1}) then ${i}`).join(" ") + " end";
+          sql4.returning = returning;
+          sql4.returningSql = `select ${this.formatter.columnize(returning)} from ` + this.tableName + " where ROWID in (" + sql4.outParams.map((v, i) => `:${i + 1}`).join(", ") + ") order by case ROWID " + sql4.outParams.map((v, i) => `when CHARTOROWID(:${i + 1}) then ${i}`).join(" ") + " end";
         }
-        return sql;
+        return sql4;
       }
       // Update method, including joins, wheres, order & limits.
       update() {
         const updates = this._prepUpdate(this.single.update);
         const where = this.where();
         let { returning } = this.single;
-        const sql = `update ${this.tableName} set ` + updates.join(", ") + (where ? ` ${where}` : "");
+        const sql4 = `update ${this.tableName} set ` + updates.join(", ") + (where ? ` ${where}` : "");
         if (!returning) {
-          return sql;
+          return sql4;
         }
         if (!Array.isArray(returning)) {
           returning = [returning];
         }
-        return this._addReturningToSqlAndConvert(sql, returning, this.tableName);
+        return this._addReturningToSqlAndConvert(sql4, returning, this.tableName);
       }
       // Compiles a `truncate` query.
       truncate() {
@@ -78497,7 +78497,7 @@ var require_oracle_querycompiler = __commonJS({
       columnInfo() {
         const column = this.single.columnInfo;
         const table = this.client.customWrapIdentifier(this.single.table, identity2);
-        const sql = `select * from xmltable( '/ROWSET/ROW'
+        const sql4 = `select * from xmltable( '/ROWSET/ROW'
       passing dbms_xmlgen.getXMLType('
       select char_col_decl_length, column_name, data_type, data_default, nullable
       from all_tab_columns where table_name = ''${table}'' ')
@@ -78505,7 +78505,7 @@ var require_oracle_querycompiler = __commonJS({
       CHAR_COL_DECL_LENGTH number, COLUMN_NAME varchar2(200), DATA_TYPE varchar2(106),
       DATA_DEFAULT clob, NULLABLE varchar2(1))`;
         return {
-          sql,
+          sql: sql4,
           output(resp) {
             const out = reduce(
               resp,
@@ -78536,16 +78536,16 @@ var require_oracle_querycompiler = __commonJS({
         return this._aggregate(stmt, { aliasSeparator: " " });
       }
       // for single commands only
-      _addReturningToSqlAndConvert(sql, returning, tableName) {
+      _addReturningToSqlAndConvert(sql4, returning, tableName) {
         const res = {
-          sql
+          sql: sql4
         };
         if (!returning) {
           return res;
         }
         const returningValues = Array.isArray(returning) ? returning : [returning];
         const returningHelper = new ReturningHelper(returningValues.join(":"));
-        res.sql = sql + " returning ROWID into " + this.client.parameter(returningHelper, this.builder, this.bindingsHolder);
+        res.sql = sql4 + " returning ROWID into " + this.client.parameter(returningHelper, this.builder, this.bindingsHolder);
         res.returningSql = `select ${this.formatter.columnize(
           returning
         )} from ${tableName} where ROWID = :1`;
@@ -78654,7 +78654,7 @@ var require_utils11 = __commonJS({
           });
         });
       };
-      const fetchAsync = promisify(function(sql, bindParams, options, cb) {
+      const fetchAsync = promisify(function(sql4, bindParams, options, cb) {
         options = options || {};
         options.outFormat = client.driver.OUT_FORMAT_OBJECT || client.driver.OBJECT;
         if (!options.outFormat) {
@@ -78662,7 +78662,7 @@ var require_utils11 = __commonJS({
         }
         if (options.resultSet) {
           connection.execute(
-            sql,
+            sql4,
             bindParams || [],
             options,
             function(err, result) {
@@ -78705,7 +78705,7 @@ var require_utils11 = __commonJS({
           );
         } else {
           connection.execute(
-            sql,
+            sql4,
             bindParams || [],
             options,
             function(err, result) {
@@ -78722,8 +78722,8 @@ var require_utils11 = __commonJS({
           );
         }
       });
-      connection.executeAsync = function(sql, bindParams, options) {
-        return fetchAsync(sql, bindParams, options).then(async (results) => {
+      connection.executeAsync = function(sql4, bindParams, options) {
+        return fetchAsync(sql4, bindParams, options).then(async (results) => {
           const closeResultSet = () => {
             return results.resultSet ? promisify(results.resultSet.close).call(results.resultSet) : Promise.resolve();
           };
@@ -78800,7 +78800,7 @@ var require_oracledb_querycompiler = __commonJS({
           return "";
         }
         const insertData = this._prepInsert(insertValues);
-        const sql = {};
+        const sql4 = {};
         if (isString2(insertData)) {
           return this._addReturningToSqlAndConvert(
             "insert into " + this.tableName + " " + insertData,
@@ -78823,8 +78823,8 @@ var require_oracledb_querycompiler = __commonJS({
           );
         }
         const insertDefaultsOnly = insertData.columns.length === 0;
-        sql.returning = returning;
-        sql.sql = "begin " + insertData.values.map(function(value, index) {
+        sql4.returning = returning;
+        sql4.sql = "begin " + insertData.values.map(function(value, index) {
           const parameterizedValues = !insertDefaultsOnly ? self2.client.parameterize(
             value,
             self2.client.valueForUndefined,
@@ -78867,9 +78867,9 @@ var require_oracledb_querycompiler = __commonJS({
           const parameterizedValuesWithoutDefaultAndBlob = parameterizedValues.replace(/DEFAULT, /g, "").replace(/, DEFAULT/g, "").replace("EMPTY_BLOB(), ", "").replace(", EMPTY_BLOB()", "");
           return "execute immediate '" + subSql.replace(/'/g, "''") + (parameterizedValuesWithoutDefaultAndBlob || value ? "' using " : "") + parameterizedValuesWithoutDefaultAndBlob + (parameterizedValuesWithoutDefaultAndBlob && outClause ? "," : "") + outClause + ";";
         }).join(" ") + "end;";
-        sql.outBinding = outBinding;
+        sql4.outBinding = outBinding;
         if (returning[0] === "*") {
-          sql.returningSql = function() {
+          sql4.returningSql = function() {
             return "select * from " + self2.tableName + " where ROWID in (" + this.outBinding.map(function(v, i) {
               return ":" + (i + 1);
             }).join(", ") + ") order by case ROWID " + this.outBinding.map(function(v, i) {
@@ -78877,7 +78877,7 @@ var require_oracledb_querycompiler = __commonJS({
             }).join(" ") + " end";
           };
         }
-        return sql;
+        return sql4;
       }
       with() {
         const undoList = [];
@@ -78895,10 +78895,10 @@ var require_oracledb_querycompiler = __commonJS({
         }
         return result;
       }
-      _addReturningToSqlAndConvert(sql, outBinding, tableName, returning) {
+      _addReturningToSqlAndConvert(sql4, outBinding, tableName, returning) {
         const self2 = this;
         const res = {
-          sql
+          sql: sql4
         };
         if (!outBinding) {
           return res;
@@ -78915,7 +78915,7 @@ var require_oracledb_querycompiler = __commonJS({
           }
           self2.formatter.bindings.push(new ReturningHelper(columnName));
         });
-        res.sql = sql;
+        res.sql = sql4;
         returningClause = returningClause.slice(0, -1);
         intoClause = intoClause.slice(0, -1);
         if (returningClause && intoClause) {
@@ -78972,7 +78972,7 @@ var require_oracledb_querycompiler = __commonJS({
       }
       update() {
         const self2 = this;
-        const sql = {};
+        const sql4 = {};
         const outBindPrep = this._prepOutbindings(
           this.single.update || this.single.counter,
           this.single.returning
@@ -78999,15 +78999,15 @@ var require_oracledb_querycompiler = __commonJS({
         });
         returningClause = returningClause.slice(0, -1);
         intoClause = intoClause.slice(0, -1);
-        sql.outBinding = outBinding;
-        sql.returning = returning;
-        sql.sql = "update " + this.tableName + " set " + updates.join(", ") + (where ? " " + where : "");
+        sql4.outBinding = outBinding;
+        sql4.returning = returning;
+        sql4.sql = "update " + this.tableName + " set " + updates.join(", ") + (where ? " " + where : "");
         if (outBinding.length && !isEmpty(outBinding[0])) {
-          sql.sql += " returning " + returningClause + " into" + intoClause;
+          sql4.sql += " returning " + returningClause + " into" + intoClause;
         }
         if (returning[0] === "*") {
-          sql.returningSql = function() {
-            let sql2 = "select * from " + self2.tableName;
+          sql4.returningSql = function() {
+            let sql5 = "select * from " + self2.tableName;
             const modifiedRowsCount = this.rowsAffected.length || this.rowsAffected;
             let returningSqlIn = " where ROWID in (";
             let returningSqlOrderBy = ") order by case ROWID ";
@@ -79022,10 +79022,10 @@ var require_oracledb_querycompiler = __commonJS({
               returningSqlIn = returningSqlIn.slice(0, -2);
               returningSqlOrderBy = returningSqlOrderBy.slice(0, -1);
             }
-            return sql2 += returningSqlIn + returningSqlOrderBy + " end";
+            return sql5 += returningSqlIn + returningSqlOrderBy + " end";
           };
         }
-        return sql;
+        return sql4;
       }
       _jsonPathWrap(extraction) {
         return `'${extraction.path || extraction[1]}'`;
@@ -79114,11 +79114,11 @@ var require_oracledb_tablecompiler = __commonJS({
       }
       _setNullableState(column, isNullable) {
         const nullability = isNullable ? "NULL" : "NOT NULL";
-        const sql = `alter table ${this.tableName()} modify (${this.formatter.wrap(
+        const sql4 = `alter table ${this.tableName()} modify (${this.formatter.wrap(
           column
         )} ${nullability})`;
         return this.pushQuery({
-          sql
+          sql: sql4
         });
       }
     };
@@ -79715,27 +79715,27 @@ var require_redshift_querycompiler = __commonJS({
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        const sql = QueryCompiler.prototype.insert.apply(this, arguments);
-        if (sql === "") return sql;
+        const sql4 = QueryCompiler.prototype.insert.apply(this, arguments);
+        if (sql4 === "") return sql4;
         this._slightReturn();
         return {
-          sql
+          sql: sql4
         };
       }
       // Compiles an `update` query, warning on unsupported returning
       update() {
-        const sql = QueryCompiler.prototype.update.apply(this, arguments);
+        const sql4 = QueryCompiler.prototype.update.apply(this, arguments);
         this._slightReturn();
         return {
-          sql
+          sql: sql4
         };
       }
       // Compiles an `delete` query, warning on unsupported returning
       del() {
-        const sql = QueryCompiler.prototype.del.apply(this, arguments);
+        const sql4 = QueryCompiler.prototype.del.apply(this, arguments);
         this._slightReturn();
         return {
-          sql
+          sql: sql4
         };
       }
       // simple: if trying to return, warn
@@ -79774,12 +79774,12 @@ var require_redshift_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        const sql = "select * from information_schema.columns where table_name = ? and table_catalog = ?";
+        const sql4 = "select * from information_schema.columns where table_name = ? and table_catalog = ?";
         const bindings = [
           table.toLowerCase(),
           this.client.database().toLowerCase()
         ];
-        return this._buildColumnInfoQuery(schema, sql, bindings, column);
+        return this._buildColumnInfoQuery(schema, sql4, bindings, column);
       }
       jsonExtract(params) {
         let extractions;
@@ -79951,11 +79951,11 @@ var require_redshift_tablecompiler = __commonJS({
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
         const columnsSql = " (" + columns.sql.join(", ") + this._addChecks() + ")";
-        let sql = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + ")" : columnsSql);
+        let sql4 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + ")" : columnsSql);
         if (this.single.inherits)
-          sql += ` like (${this.formatter.wrap(this.single.inherits)})`;
+          sql4 += ` like (${this.formatter.wrap(this.single.inherits)})`;
         this.pushQuery({
-          sql,
+          sql: sql4,
           bindings: columns.bindings
         });
         const hasComment = has(this.single, "comment");
@@ -106781,6 +106781,74 @@ var init_migrations = __esm({
             });
           }
         }
+      },
+      {
+        id: "20260808_002_voice_utterances",
+        up: async (db2) => {
+          if (!await db2.schema.hasTable("voice_cast")) {
+            await db2.schema.createTable("voice_cast", (table) => {
+              table.text("id").primary();
+              table.integer("project_id").notNullable();
+              table.integer("role_asset_id");
+              table.text("name").notNullable();
+              table.text("provider").notNullable();
+              table.text("model").notNullable();
+              table.text("voice").notNullable();
+              table.float("speech_rate").notNullable().defaultTo(1);
+              table.float("pitch_rate").notNullable().defaultTo(0);
+              table.float("volume").notNullable().defaultTo(1);
+              table.text("emotion");
+              table.integer("is_default").notNullable().defaultTo(0);
+              table.integer("preview_asset_id");
+              table.integer("created_at").notNullable();
+              table.integer("updated_at").notNullable();
+              table.unique(["project_id", "name"], "voice_cast_project_name_unique");
+              table.index(["project_id", "role_asset_id"], "voice_cast_role_idx");
+            });
+          }
+          if (!await db2.schema.hasTable("utterances")) {
+            await db2.schema.createTable("utterances", (table) => {
+              table.text("id").primary();
+              table.integer("project_id").notNullable();
+              table.integer("script_id");
+              table.integer("storyboard_id");
+              table.integer("ordinal").notNullable();
+              table.text("kind").notNullable();
+              table.integer("role_asset_id");
+              table.text("speaker").notNullable();
+              table.text("text").notNullable();
+              table.text("voice_cast_id");
+              table.text("audio_path");
+              table.text("cache_key");
+              table.integer("duration_ms");
+              table.text("status").notNullable().defaultTo("draft");
+              table.text("error_message");
+              table.integer("locked").notNullable().defaultTo(0);
+              table.integer("created_at").notNullable();
+              table.integer("updated_at").notNullable();
+              table.index(["project_id", "script_id", "ordinal"], "utterances_script_idx");
+              table.index(["storyboard_id", "ordinal"], "utterances_storyboard_idx");
+              table.index(["voice_cast_id", "status"], "utterances_cast_idx");
+            });
+          }
+          if (!await db2.schema.hasTable("subtitle_cues")) {
+            await db2.schema.createTable("subtitle_cues", (table) => {
+              table.text("id").primary();
+              table.integer("project_id").notNullable();
+              table.text("utterance_id").notNullable();
+              table.integer("ordinal").notNullable().defaultTo(0);
+              table.integer("start_ms").notNullable();
+              table.integer("end_ms").notNullable();
+              table.text("text").notNullable();
+              table.text("style");
+              table.integer("locked").notNullable().defaultTo(0);
+              table.integer("created_at").notNullable();
+              table.integer("updated_at").notNullable();
+              table.unique(["utterance_id", "ordinal"], "subtitle_cues_utterance_ordinal_unique");
+              table.index(["project_id", "start_ms"], "subtitle_cues_timeline_idx");
+            });
+          }
+        }
       }
     ];
   }
@@ -106978,7 +107046,7 @@ async function getAllEnums(db2, config3) {
   return await getTableEnums(db2, config3);
 }
 async function getAllTables(db2, schemas) {
-  const sql = `
+  const sql4 = `
     SELECT
       TABLE_NAME AS name,
       TABLE_SCHEMA AS 'schema',
@@ -106986,10 +107054,10 @@ async function getAllTables(db2, schemas) {
     FROM INFORMATION_SCHEMA.TABLES
     WHERE TABLE_SCHEMA NOT IN('mysql', 'information_schema', 'performance_schema', 'sys')
     ${schemas.length > 0 ? " AND TABLE_SCHEMA IN (:schemas)" : ""}`;
-  return (await db2.raw(sql, { schemas }))[0];
+  return (await db2.raw(sql4, { schemas }))[0];
 }
 async function getAllColumns(db2, config3, table, schema) {
-  const sql = `
+  const sql4 = `
     SELECT
       column_name as name,
       is_nullable as isNullable,
@@ -107010,7 +107078,7 @@ async function getAllColumns(db2, config3, table, schema) {
       AND c.TABLE_SCHEMA = :schema
       ORDER BY ORDINAL_POSITION
     `;
-  return (await db2.raw(sql, { table, schema }))[0].map((c) => ({
+  return (await db2.raw(sql4, { table, schema }))[0].map((c) => ({
     name: c.name,
     type: c.fullType == "tinyint(1)" ? c.fullType : c.type,
     // tinyint(1) typically aliased as a boolean
@@ -107054,7 +107122,7 @@ var init_mssql = __esm({
         return await getTableEnums(db2, config3);
       },
       async getAllTables(db2, schemas) {
-        const sql = `
+        const sql4 = `
       SELECT
         TABLE_NAME name,
         TABLE_SCHEMA [schema],
@@ -107066,10 +107134,10 @@ var init_mssql = __esm({
           SELECT TOP 1 value FROM fn_listextendedproperty (NULL, 'schema', TABLE_SCHEMA, 'view', TABLE_NAME, null, null) EP WHERE EP.name = 'MS_Description'
         ) EP 
       ${schemas.length > 0 ? `WHERE TABLE_SCHEMA IN (${schemas.map((_) => "?").join(",")})` : ""}`;
-        return await db2.raw(sql, schemas);
+        return await db2.raw(sql4, schemas);
       },
       async getAllColumns(db2, config3, table, schema) {
-        const sql = `
+        const sql4 = `
       SELECT
 				COLUMN_NAME as name,
 				IS_NULLABLE AS isNullable,
@@ -107093,7 +107161,7 @@ var init_mssql = __esm({
         WHERE c.TABLE_NAME = :table
         AND c.TABLE_SCHEMA = :schema
       `;
-        return (await db2.raw(sql, { table, schema })).map((c) => ({
+        return (await db2.raw(sql4, { table, schema })).map((c) => ({
           name: c.name,
           type: c.type,
           nullable: c.isNullable === "YES",
@@ -109513,7 +109581,7 @@ var init_postgres = __esm({
     init_SharedAdapterTasks();
     postgres_default = {
       async getAllEnums(db2, config3) {
-        const sql = `
+        const sql4 = `
     SELECT 
       pg_namespace.nspname AS schema, 
       pg_enum.enumsortorder AS order, 
@@ -109524,7 +109592,7 @@ var init_postgres = __esm({
     JOIN pg_namespace ON pg_namespace.oid = pg_type.typnamespace
     ${config3.schemas.length > 0 ? ` WHERE pg_namespace.nspname = ANY(:schemas)` : ""}
     `;
-        const ungroupedEnums = (await db2.raw(sql, { schemas: config3.schemas })).rows;
+        const ungroupedEnums = (await db2.raw(sql4, { schemas: config3.schemas })).rows;
         const groupedEnums = uniqBy_default(ungroupedEnums, (e) => `${e.name}.${e.schema}`).map((row) => ({
           name: row.name,
           schema: row.schema,
@@ -109534,7 +109602,7 @@ var init_postgres = __esm({
         return groupedEnums.concat(tableEnums);
       },
       async getAllTables(db2, schemas) {
-        const sql = `
+        const sql4 = `
       WITH schemas AS (
         SELECT nspname AS name, oid AS oid
         FROM pg_namespace
@@ -109549,11 +109617,11 @@ var init_postgres = __esm({
         WHERE pg_class.relkind IN ('r', 'p', 'v', 'm')
         AND NOT pg_class.relispartition
     `;
-        const results = await db2.raw(sql, { schemas });
+        const results = await db2.raw(sql4, { schemas });
         return results.rows;
       },
       async getAllColumns(db2, config3, table, schema) {
-        const sql = `
+        const sql4 = `
       SELECT
         typns.nspname typeschema,
         pg_type.typname,
@@ -109584,7 +109652,7 @@ var init_postgres = __esm({
       AND pg_class.relname = :table
       AND pg_namespace.nspname = :schema
     `;
-        return (await db2.raw(sql, { table, schema })).rows.map((c) => ({
+        return (await db2.raw(sql4, { table, schema })).rows.map((c) => ({
           name: c.name,
           type: c.typname,
           nullable: !c.notnullable,
@@ -109611,12 +109679,12 @@ var init_sqlite = __esm({
         return await getTableEnums(db2, config3);
       },
       async getAllTables(db2, schemas) {
-        const sql = `
+        const sql4 = `
       SELECT tbl_name from sqlite_master
       WHERE tbl_name <> 'sqlite_sequence'
       AND type IN ('table', 'view')
     `;
-        return (await db2.raw(sql)).map((t) => ({ name: t.tbl_name, schema: "main", comment: "" }));
+        return (await db2.raw(sql4)).map((t) => ({ name: t.tbl_name, schema: "main", comment: "" }));
       },
       async getAllColumns(db2, config3, table, schema) {
         return (await db2.raw(`pragma table_info(${table})`)).map((c) => ({
@@ -116456,7 +116524,12 @@ var init_oss = __esm({
           ".tiff": "image/tiff",
           ".tif": "image/tiff",
           ".mp4": "video/mp4",
-          ".mp3": "audio/mpeg"
+          ".mp3": "audio/mpeg",
+          ".wav": "audio/wav",
+          ".m4a": "audio/mp4",
+          ".aac": "audio/aac",
+          ".flac": "audio/flac",
+          ".ogg": "audio/ogg"
         };
         const mimeType = mimeTypes[ext];
         if (!mimeType) {
@@ -198873,13 +198946,13 @@ var require_dist9 = __commonJS({
       };
     }
     var import_provider_utils210 = require_dist8();
-    var import_zod156 = require_zod();
-    var qwenErrorDataSchema = import_zod156.z.object({
-      object: import_zod156.z.literal("error"),
-      message: import_zod156.z.string(),
-      type: import_zod156.z.string(),
-      param: import_zod156.z.string().nullable(),
-      code: import_zod156.z.string().nullable()
+    var import_zod159 = require_zod();
+    var qwenErrorDataSchema = import_zod159.z.object({
+      object: import_zod159.z.literal("error"),
+      message: import_zod159.z.string(),
+      type: import_zod159.z.string(),
+      param: import_zod159.z.string().nullable(),
+      code: import_zod159.z.string().nullable()
     });
     var qwenFailedResponseHandler = (0, import_provider_utils210.createJsonErrorResponseHandler)({
       errorSchema: qwenErrorDataSchema,
@@ -237082,7 +237155,7 @@ async function urlToBase642(url4, retries = 3, delay2 = 1e3) {
 function referenceList2imageBase642(id, input) {
   const version3 = utils_default.vendor.getVendor(id).version;
   if (!version3 || isNaN(parseFloat(version3)) || parseFloat(version3) < 2) {
-    input.imageBase64 = input.referenceList.map((item) => item.base64);
+    input.imageBase64 = (input.referenceList ?? []).map((item) => item.base64);
     return input;
   }
   return input;
@@ -237259,14 +237332,12 @@ var init_ai = __esm({
       async run(input, taskRecord2) {
         const modelName = await resolveModelName(this.key);
         const exec2 = async (mn) => {
-          try {
-            const fn = await getVendorTemplateFn("ttsRequest", mn);
-            await referenceList2imageBase642(mn.split(/:(.+)/)[0], input);
-            this.result = await fn(input);
-            if (this.result.startsWith("http")) this.result = await urlToBase642(this.result);
-            return this;
-          } catch (e) {
-          }
+          const fn = await getVendorTemplateFn("ttsRequest", mn);
+          await referenceList2imageBase642(mn.split(/:(.+)/)[0], input);
+          this.result = await fn(input);
+          if (!this.result) throw new Error(`\u4F9B\u5E94\u5546 ${mn.split(/:(.+)/)[0]} \u672A\u8FD4\u56DE\u97F3\u9891\u6570\u636E`);
+          if (this.result.startsWith("http")) this.result = await urlToBase642(this.result);
+          return this;
         };
         if (taskRecord2) {
           return withTaskRecord(this.key, taskRecord2.taskClass, taskRecord2.describe, taskRecord2.relatedObjects, taskRecord2.projectId, exec2);
@@ -237713,14 +237784,14 @@ var init_repository = __esm({
         const row = await db("generation_tasks").where("id", id).first();
         return row ? mapRow(row) : null;
       }
-      async list(filters) {
-        const page = Math.max(1, filters.page ?? 1);
-        const limit = Math.min(100, Math.max(1, filters.limit ?? 20));
+      async list(filters2) {
+        const page = Math.max(1, filters2.page ?? 1);
+        const limit = Math.min(100, Math.max(1, filters2.limit ?? 20));
         const apply = (query) => {
-          if (filters.projectId != null) query.where("project_id", filters.projectId);
-          if (filters.lane) query.where("lane", filters.lane);
-          if (filters.status) query.where("status", filters.status);
-          if (filters.type) query.where("type", filters.type);
+          if (filters2.projectId != null) query.where("project_id", filters2.projectId);
+          if (filters2.lane) query.where("lane", filters2.lane);
+          if (filters2.status) query.where("status", filters2.status);
+          if (filters2.type) query.where("type", filters2.type);
           return query;
         };
         const rows = await apply(db("generation_tasks").select("*")).orderBy("created_at", "desc").offset((page - 1) * limit).limit(limit);
@@ -237951,6 +238022,31 @@ var init_repository = __esm({
             await db("o_storyboard").where("id", payload.storyboardId).update({
               state: imageState,
               reason: task.errorMessage
+            });
+          }
+        }
+        if (task.type === "tts.utterance.generate") {
+          const payload = task.payload;
+          if (payload?.utteranceId) {
+            const utteranceStateMap = {
+              queued: "queued",
+              claimed: "generating",
+              submitting: "generating",
+              submitted: "generating",
+              polling: "generating",
+              finalizing: "generating",
+              retry_wait: "retry_wait",
+              blocked: "blocked",
+              cancelling: "cancelling",
+              cancelled: "cancelled",
+              succeeded: "succeeded",
+              failed: "failed",
+              manual_review: "manual_review"
+            };
+            await db("utterances").where("id", payload.utteranceId).update({
+              status: utteranceStateMap[task.status] ?? task.status,
+              error_message: task.errorMessage,
+              updated_at: Date.now()
             });
           }
         }
@@ -243514,6 +243610,21 @@ var init_delProject = __esm({
         }
         await utils_default.db("o_script").where("projectId", id).delete();
         await utils_default.db("o_tasks").where("projectId", id).delete();
+        const utteranceRows = await utils_default.db("utterances").where("project_id", id).select("id");
+        if (utteranceRows.length > 0) {
+          await utils_default.db("subtitle_cues").whereIn("utterance_id", utteranceRows.map((item) => item.id)).delete();
+        }
+        await utils_default.db("utterances").where("project_id", id).delete();
+        await utils_default.db("voice_cast").where("project_id", id).delete();
+        await utils_default.db("subtitle_cues").where("project_id", id).delete();
+        const generationTaskRows = await utils_default.db("generation_tasks").where("project_id", id).select("id");
+        if (generationTaskRows.length > 0) {
+          const generationTaskIds = generationTaskRows.map((item) => item.id);
+          await utils_default.db("task_dependencies").whereIn("task_id", generationTaskIds).orWhereIn("depends_on_task_id", generationTaskIds).delete();
+          await utils_default.db("usage_ledger").whereIn("task_id", generationTaskIds).delete();
+          await utils_default.db("generation_tasks").whereIn("id", generationTaskIds).delete();
+        }
+        await utils_default.db("project_events").where("project_id", id).delete();
         const storyboardData = await utils_default.db("o_storyboard").where("projectId", id).select("id");
         const storyboardIds = storyboardData.map((item) => item.id);
         if (storyboardIds.length > 0) {
@@ -256880,6 +256991,613 @@ var init_test = __esm({
   }
 });
 
+// src/services/voice-studio/dialogue.ts
+function normalizeLabel(value) {
+  return value.trim().replace(/^\[|\]$/g, "").toLocaleLowerCase();
+}
+function classifySpeaker(speaker) {
+  const normalized = normalizeLabel(speaker);
+  if (narrationLabels.has(normalized)) return "narration";
+  if (chorusLabels.has(normalized)) return "chorus";
+  return "dialogue";
+}
+function cleanLine(value) {
+  return value.trim().replace(/^[-*]\s+/, "").trim();
+}
+function parseDialogue(content, roleAssets) {
+  const roleByName = new Map(roleAssets.map((asset) => [normalizeLabel(asset.name), asset.id]));
+  const parsed = [];
+  for (const rawLine of content.replace(/\r\n?/g, "\n").split("\n")) {
+    const line = cleanLine(rawLine);
+    if (!line || /^#{1,6}\s/.test(line)) continue;
+    const match = line.match(/^([^：:]{1,32})[：:]\s*(.+)$/);
+    if (match) {
+      const speaker = match[1].trim();
+      const text2 = match[2].trim();
+      if (!text2) continue;
+      const kind = classifySpeaker(speaker);
+      parsed.push({
+        kind,
+        speaker: kind === "narration" ? "\u65C1\u767D" : kind === "chorus" ? "\u7FA4\u58F0" : speaker,
+        text: text2,
+        roleAssetId: kind === "dialogue" ? roleByName.get(normalizeLabel(speaker)) ?? null : null
+      });
+      continue;
+    }
+    const previous = parsed.at(-1);
+    if (previous && previous.kind !== "narration") {
+      previous.text = `${previous.text}
+${line}`;
+    } else {
+      parsed.push({ kind: "narration", speaker: "\u65C1\u767D", text: line, roleAssetId: null });
+    }
+  }
+  return parsed.map((item, ordinal) => ({ ...item, ordinal }));
+}
+function formatSubtitleTime(milliseconds, separator) {
+  const safe = Math.max(0, Math.round(milliseconds));
+  const hours = Math.floor(safe / 36e5);
+  const minutes = Math.floor(safe % 36e5 / 6e4);
+  const seconds = Math.floor(safe % 6e4 / 1e3);
+  const millis = safe % 1e3;
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}${separator}${String(millis).padStart(3, "0")}`;
+}
+function serializeSubtitles(cues, format) {
+  const body = cues.map((cue, index) => {
+    const separator = format === "srt" ? "," : ".";
+    const timing = `${formatSubtitleTime(cue.startMs, separator)} --> ${formatSubtitleTime(cue.endMs, separator)}`;
+    return format === "srt" ? `${index + 1}
+${timing}
+${cue.text}` : `${timing}
+${cue.text}`;
+  }).join("\n\n");
+  return format === "vtt" ? `WEBVTT
+
+${body}
+` : `${body}
+`;
+}
+var narrationLabels, chorusLabels;
+var init_dialogue = __esm({
+  "src/services/voice-studio/dialogue.ts"() {
+    "use strict";
+    narrationLabels = /* @__PURE__ */ new Set(["\u65C1\u767D", "\u753B\u5916\u97F3", "\u89E3\u8BF4", "\u53D9\u8FF0", "narrator"]);
+    chorusLabels = /* @__PURE__ */ new Set(["\u7FA4\u58F0", "\u4F17\u4EBA", "\u6240\u6709\u4EBA", "\u5408\u58F0", "chorus"]);
+  }
+});
+
+// src/services/voice-studio/repository.ts
+function mapVoiceCast(row) {
+  return {
+    id: row.id,
+    projectId: row.project_id,
+    roleAssetId: row.role_asset_id ?? null,
+    name: row.name,
+    provider: row.provider,
+    model: row.model,
+    voice: row.voice,
+    speechRate: row.speech_rate,
+    pitchRate: row.pitch_rate,
+    volume: row.volume,
+    emotion: row.emotion ?? null,
+    isDefault: row.is_default === 1,
+    previewAssetId: row.preview_asset_id ?? null,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+function mapUtterance(row) {
+  return {
+    id: row.id,
+    projectId: row.project_id,
+    scriptId: row.script_id ?? null,
+    storyboardId: row.storyboard_id ?? null,
+    ordinal: row.ordinal,
+    kind: row.kind,
+    roleAssetId: row.role_asset_id ?? null,
+    speaker: row.speaker,
+    text: row.text,
+    voiceCastId: row.voice_cast_id ?? null,
+    audioPath: row.audio_path ?? null,
+    cacheKey: row.cache_key ?? null,
+    durationMs: row.duration_ms ?? null,
+    status: row.status,
+    errorMessage: row.error_message ?? null,
+    locked: row.locked === 1,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+function mapCue(row) {
+  let style = null;
+  try {
+    style = row.style ? JSON.parse(row.style) : null;
+  } catch {
+    style = null;
+  }
+  return {
+    id: row.id,
+    projectId: row.project_id,
+    utteranceId: row.utterance_id,
+    ordinal: row.ordinal,
+    startMs: row.start_ms,
+    endMs: row.end_ms,
+    text: row.text,
+    style,
+    locked: row.locked === 1,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+function normalizeName(value) {
+  return value.trim().toLocaleLowerCase();
+}
+var sql2, VoiceStudioRepository, voiceStudioRepository;
+var init_repository2 = __esm({
+  "src/services/voice-studio/repository.ts"() {
+    "use strict";
+    init_dist_node();
+    init_db();
+    init_dialogue();
+    sql2 = db;
+    VoiceStudioRepository = class {
+      async listVoiceCasts(projectId) {
+        const rows = await sql2("voice_cast").where("project_id", projectId).orderBy("is_default", "desc").orderBy("name", "asc");
+        return rows.map(mapVoiceCast);
+      }
+      async upsertVoiceCast(input) {
+        const now2 = Date.now();
+        const existing = input.id ? await sql2("voice_cast").where({ id: input.id, project_id: input.projectId }).first() : await sql2("voice_cast").where({ project_id: input.projectId, name: input.name }).first();
+        const id = existing?.id ?? input.id ?? v4_default();
+        const row = {
+          id,
+          project_id: input.projectId,
+          role_asset_id: input.roleAssetId ?? null,
+          name: input.name.trim(),
+          provider: input.provider.trim(),
+          model: input.model.trim(),
+          voice: input.voice.trim(),
+          speech_rate: input.speechRate ?? 1,
+          pitch_rate: input.pitchRate ?? 0,
+          volume: input.volume ?? 1,
+          emotion: input.emotion ?? null,
+          is_default: input.isDefault ? 1 : 0,
+          preview_asset_id: input.previewAssetId ?? null,
+          created_at: existing?.created_at ?? now2,
+          updated_at: now2
+        };
+        await sql2.transaction(async (trx) => {
+          if (input.isDefault) {
+            await trx("voice_cast").where("project_id", input.projectId).whereNot("id", id).update({ is_default: 0, updated_at: now2 });
+          }
+          await trx("voice_cast").insert(row).onConflict("id").merge(row);
+          await trx("utterances").where("project_id", input.projectId).whereNull("voice_cast_id").andWhere((query) => {
+            if (input.roleAssetId != null) query.where("role_asset_id", input.roleAssetId);
+            else query.whereRaw("lower(speaker) = lower(?)", [input.name.trim()]);
+          }).update({ voice_cast_id: id, status: "ready", updated_at: now2 });
+        });
+        return mapVoiceCast(await sql2("voice_cast").where("id", id).first());
+      }
+      async importScript(input) {
+        const script = await sql2("o_script").where({ id: input.scriptId, projectId: input.projectId }).first();
+        if (!script) throw new Error("\u5267\u672C\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
+        const roleRows = await sql2("o_assets").leftJoin("o_scriptAssets", "o_assets.id", "o_scriptAssets.assetId").where("o_scriptAssets.scriptId", input.scriptId).where("o_assets.type", "role").select("o_assets.id", "o_assets.name");
+        const fallbackRoles = roleRows.length ? roleRows : await sql2("o_assets").where({ projectId: input.projectId, type: "role" }).select("id", "name");
+        const casts = await this.listVoiceCasts(input.projectId);
+        const castByRole = new Map(casts.filter((item) => item.roleAssetId != null).map((item) => [item.roleAssetId, item.id]));
+        const castByName = new Map(casts.map((item) => [normalizeName(item.name), item.id]));
+        const defaultCast = casts.find((item) => item.isDefault)?.id ?? null;
+        const sources = [{ content: script.content ?? "", storyboardId: null }];
+        if (input.includeStoryboardDescriptions) {
+          const storyboards = await sql2("o_storyboard").where({ projectId: input.projectId, scriptId: input.scriptId }).whereNotNull("videoDesc").orderBy("index", "asc");
+          sources.push(...storyboards.map((item) => ({ content: item.videoDesc, storyboardId: item.id })));
+        }
+        const parsed = sources.flatMap(
+          (source) => parseDialogue(source.content, fallbackRoles).map((item) => ({ ...item, storyboardId: source.storyboardId }))
+        );
+        const now2 = Date.now();
+        const existingLocked = await sql2("utterances").where({ project_id: input.projectId, script_id: input.scriptId, locked: 1 });
+        const lockedSignatures = new Set(existingLocked.map((item) => `${item.storyboard_id ?? ""}\0${item.speaker}\0${item.text}`));
+        const imported = parsed.filter((item) => !lockedSignatures.has(`${item.storyboardId ?? ""}\0${item.speaker}\0${item.text}`));
+        await sql2.transaction(async (trx) => {
+          const removable = await trx("utterances").where({ project_id: input.projectId, script_id: input.scriptId, locked: 0 }).select("id");
+          if (removable.length) {
+            await trx("subtitle_cues").whereIn("utterance_id", removable.map((item) => item.id)).where("locked", 0).delete();
+            await trx("utterances").whereIn("id", removable.map((item) => item.id)).delete();
+          }
+          if (imported.length) {
+            await trx("utterances").insert(
+              imported.map((item, index) => {
+                const voiceCastId = item.roleAssetId != null ? castByRole.get(item.roleAssetId) ?? castByName.get(normalizeName(item.speaker)) ?? defaultCast : castByName.get(normalizeName(item.speaker)) ?? defaultCast;
+                return {
+                  id: v4_default(),
+                  project_id: input.projectId,
+                  script_id: input.scriptId,
+                  storyboard_id: item.storyboardId,
+                  ordinal: index,
+                  kind: item.kind,
+                  role_asset_id: item.roleAssetId,
+                  speaker: item.speaker,
+                  text: item.text,
+                  voice_cast_id: voiceCastId,
+                  status: voiceCastId ? "ready" : "draft",
+                  locked: 0,
+                  created_at: now2,
+                  updated_at: now2
+                };
+              })
+            );
+          }
+        });
+        await this.rebuildCues({ projectId: input.projectId, scriptId: input.scriptId });
+        return { imported: imported.length, preservedLocked: existingLocked.length, data: await this.listUtterances(input) };
+      }
+      async listUtterances(filters2) {
+        const query = sql2("utterances").where("project_id", filters2.projectId);
+        if (filters2.scriptId != null) query.where("script_id", filters2.scriptId);
+        if (filters2.storyboardId != null) query.where("storyboard_id", filters2.storyboardId);
+        return (await query.orderBy("ordinal", "asc").orderBy("created_at", "asc")).map(mapUtterance);
+      }
+      async updateUtterance(input) {
+        const existing = await sql2("utterances").where({ id: input.id, project_id: input.projectId }).first();
+        if (!existing) throw new Error("\u53F0\u8BCD\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
+        const changedContent = input.text !== void 0 && input.text !== existing.text;
+        const updates = { updated_at: Date.now() };
+        if (input.speaker !== void 0) updates.speaker = input.speaker.trim();
+        if (input.text !== void 0) updates.text = input.text.trim();
+        if (input.kind !== void 0) updates.kind = input.kind;
+        if (input.roleAssetId !== void 0) updates.role_asset_id = input.roleAssetId;
+        if (input.voiceCastId !== void 0) updates.voice_cast_id = input.voiceCastId;
+        if (input.durationMs !== void 0) updates.duration_ms = input.durationMs;
+        if (input.locked !== void 0) updates.locked = input.locked ? 1 : 0;
+        if (changedContent || input.voiceCastId !== void 0) {
+          updates.audio_path = null;
+          updates.cache_key = null;
+          updates.error_message = null;
+          updates.status = input.voiceCastId ?? existing.voice_cast_id ? "ready" : "draft";
+        }
+        await sql2("utterances").where("id", input.id).update(updates);
+        await sql2("subtitle_cues").where({ utterance_id: input.id, locked: 0 }).update({
+          text: updates.text ?? existing.text,
+          updated_at: Date.now()
+        });
+        return mapUtterance(await sql2("utterances").where("id", input.id).first());
+      }
+      async rebuildCues(filters2) {
+        const utterances = await this.listUtterances(filters2);
+        const ids = utterances.map((item) => item.id);
+        if (!ids.length) return [];
+        const lockedRows = await sql2("subtitle_cues").whereIn("utterance_id", ids).where("locked", 1);
+        const lockedByUtterance = new Map(lockedRows.map((row) => [row.utterance_id, row]));
+        const now2 = Date.now();
+        let cursor = 0;
+        await sql2.transaction(async (trx) => {
+          await trx("subtitle_cues").whereIn("utterance_id", ids).where("locked", 0).delete();
+          const rows = [];
+          for (const utterance of utterances) {
+            const locked = lockedByUtterance.get(utterance.id);
+            if (locked) {
+              cursor = Math.max(cursor, locked.end_ms + 120);
+              continue;
+            }
+            const duration4 = utterance.durationMs ?? Math.max(1200, Math.min(12e3, utterance.text.length * 180));
+            rows.push({
+              id: v4_default(),
+              project_id: filters2.projectId,
+              utterance_id: utterance.id,
+              ordinal: 0,
+              start_ms: cursor,
+              end_ms: cursor + duration4,
+              text: utterance.text,
+              style: null,
+              locked: 0,
+              created_at: now2,
+              updated_at: now2
+            });
+            cursor += duration4 + 120;
+          }
+          if (rows.length) await trx("subtitle_cues").insert(rows);
+        });
+        return this.listCues(filters2);
+      }
+      async listCues(filters2) {
+        const query = sql2("subtitle_cues").leftJoin("utterances", "utterances.id", "subtitle_cues.utterance_id").where("subtitle_cues.project_id", filters2.projectId).select("subtitle_cues.*");
+        if (filters2.scriptId != null) query.where("utterances.script_id", filters2.scriptId);
+        return (await query.orderBy("subtitle_cues.start_ms", "asc").orderBy("subtitle_cues.ordinal", "asc")).map(mapCue);
+      }
+      async updateCue(input) {
+        const existing = await sql2("subtitle_cues").where({ id: input.id, project_id: input.projectId }).first();
+        if (!existing) throw new Error("\u5B57\u5E55 cue \u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
+        const startMs = input.startMs ?? existing.start_ms;
+        const endMs = input.endMs ?? existing.end_ms;
+        if (endMs <= startMs) throw new Error("\u5B57\u5E55\u7ED3\u675F\u65F6\u95F4\u5FC5\u987B\u665A\u4E8E\u5F00\u59CB\u65F6\u95F4");
+        const updates = { start_ms: startMs, end_ms: endMs, updated_at: Date.now() };
+        if (input.text !== void 0) updates.text = input.text.trim();
+        if (input.style !== void 0) updates.style = input.style == null ? null : JSON.stringify(input.style);
+        if (input.locked !== void 0) updates.locked = input.locked ? 1 : 0;
+        await sql2("subtitle_cues").where("id", input.id).update(updates);
+        return mapCue(await sql2("subtitle_cues").where("id", input.id).first());
+      }
+      async exportSubtitles(filters2) {
+        const cues = await this.listCues(filters2);
+        return serializeSubtitles(cues, filters2.format);
+      }
+    };
+    voiceStudioRepository = new VoiceStudioRepository();
+  }
+});
+
+// src/routes/voiceStudio/casts.ts
+var import_express175, router175, casts_default;
+var init_casts = __esm({
+  "src/routes/voiceStudio/casts.ts"() {
+    "use strict";
+    import_express175 = __toESM(require_express2());
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_repository2();
+    router175 = import_express175.default.Router();
+    router175.post(
+      "/list",
+      validateFields({ projectId: external_exports.number().int().positive() }),
+      async (req, res) => {
+        res.status(200).send(success3(await voiceStudioRepository.listVoiceCasts(req.body.projectId)));
+      }
+    );
+    router175.post(
+      "/upsert",
+      validateFields({
+        id: external_exports.string().uuid().optional(),
+        projectId: external_exports.number().int().positive(),
+        roleAssetId: external_exports.number().int().positive().nullable().optional(),
+        name: external_exports.string().trim().min(1).max(80),
+        provider: external_exports.string().trim().min(1),
+        model: external_exports.string().trim().min(1),
+        voice: external_exports.string().trim().min(1),
+        speechRate: external_exports.number().min(0.25).max(4).optional(),
+        pitchRate: external_exports.number().min(-12).max(12).optional(),
+        volume: external_exports.number().min(0).max(4).optional(),
+        emotion: external_exports.string().trim().max(80).nullable().optional(),
+        isDefault: external_exports.boolean().optional(),
+        previewAssetId: external_exports.number().int().positive().nullable().optional()
+      }),
+      async (req, res) => {
+        res.status(200).send(success3(await voiceStudioRepository.upsertVoiceCast(req.body)));
+      }
+    );
+    casts_default = router175;
+  }
+});
+
+// src/routes/voiceStudio/cues.ts
+var import_express176, router176, filters, cues_default;
+var init_cues = __esm({
+  "src/routes/voiceStudio/cues.ts"() {
+    "use strict";
+    import_express176 = __toESM(require_express2());
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_repository2();
+    router176 = import_express176.default.Router();
+    filters = {
+      projectId: external_exports.number().int().positive(),
+      scriptId: external_exports.number().int().positive().optional()
+    };
+    router176.post("/list", validateFields(filters), async (req, res) => {
+      res.status(200).send(success3(await voiceStudioRepository.listCues(req.body)));
+    });
+    router176.post("/rebuild", validateFields(filters), async (req, res) => {
+      res.status(200).send(success3(await voiceStudioRepository.rebuildCues(req.body)));
+    });
+    router176.post(
+      "/update",
+      validateFields({
+        id: external_exports.string().uuid(),
+        projectId: external_exports.number().int().positive(),
+        startMs: external_exports.number().int().min(0).optional(),
+        endMs: external_exports.number().int().positive().optional(),
+        text: external_exports.string().trim().min(1).optional(),
+        style: external_exports.record(external_exports.string(), external_exports.unknown()).nullable().optional(),
+        locked: external_exports.boolean().optional()
+      }),
+      async (req, res) => {
+        res.status(200).send(success3(await voiceStudioRepository.updateCue(req.body)));
+      }
+    );
+    router176.post(
+      "/export",
+      validateFields({ ...filters, format: external_exports.enum(["srt", "vtt"]) }),
+      async (req, res) => {
+        const content = await voiceStudioRepository.exportSubtitles(req.body);
+        res.status(200).send(success3({ format: req.body.format, content }));
+      }
+    );
+    cues_default = router176;
+  }
+});
+
+// src/services/task-engine/enqueueUtteranceTts.ts
+async function enqueueUtteranceTts(input) {
+  const utterance = await sql3("utterances").where({ id: input.utteranceId, project_id: input.projectId }).first();
+  if (!utterance) throw new Error("\u53F0\u8BCD\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
+  if (!utterance.voice_cast_id) throw new Error("\u8BF7\u5148\u4E3A\u8FD9\u53E5\u53F0\u8BCD\u5206\u914D\u89D2\u8272\u97F3\u8272");
+  const voiceCast = await sql3("voice_cast").where({ id: utterance.voice_cast_id, project_id: input.projectId }).first();
+  if (!voiceCast) throw new Error("\u53F0\u8BCD\u7ED1\u5B9A\u7684\u89D2\u8272\u97F3\u8272\u4E0D\u5B58\u5728");
+  const model = `${voiceCast.provider}:${voiceCast.model}`;
+  const cacheKey = stableIdempotencyKey({
+    text: utterance.text,
+    model,
+    voice: voiceCast.voice,
+    speechRate: voiceCast.speech_rate,
+    pitchRate: voiceCast.pitch_rate,
+    volume: voiceCast.volume,
+    emotion: voiceCast.emotion ?? null,
+    previewAssetId: voiceCast.preview_asset_id ?? null
+  });
+  if (utterance.status === "succeeded" && utterance.audio_path && utterance.cache_key === cacheKey) {
+    return { task: null, payload: null, deduped: true, cached: true, audioPath: utterance.audio_path };
+  }
+  let referenceAudioPath;
+  if (voiceCast.preview_asset_id) {
+    const reference = await sql3("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", voiceCast.preview_asset_id).select("o_image.filePath").first();
+    referenceAudioPath = reference?.filePath ?? void 0;
+  }
+  const resourceKey = `audio:utterance:${input.utteranceId}`;
+  const savePath = `/${input.projectId}/audio/utterances/${input.utteranceId}-${cacheKey.slice(0, 12)}.mp3`;
+  const payload = {
+    projectId: input.projectId,
+    utteranceId: input.utteranceId,
+    model,
+    text: utterance.text,
+    voice: voiceCast.voice,
+    speechRate: voiceCast.speech_rate,
+    pitchRate: voiceCast.pitch_rate,
+    volume: voiceCast.volume,
+    emotion: voiceCast.emotion ?? void 0,
+    referenceAudioPath,
+    savePath,
+    cacheKey
+  };
+  const [legacyTaskId] = await sql3("o_tasks").insert({
+    projectId: input.projectId,
+    taskClass: "\u9010\u53E5\u914D\u97F3",
+    relatedObjects: JSON.stringify({ utteranceId: input.utteranceId }),
+    model: voiceCast.model,
+    describe: `\u6301\u4E45\u961F\u5217\uFF1A${utterance.speaker} - ${String(utterance.text).slice(0, 40)}`,
+    state: "\u6392\u961F\u4E2D",
+    startTime: Date.now()
+  });
+  const result = await generationTaskRepository.enqueue({
+    projectId: input.projectId,
+    legacyTaskId,
+    lane: "audio",
+    type: "tts.utterance.generate",
+    resourceKey,
+    payload,
+    provider: voiceCast.provider,
+    idempotencyKey: stableIdempotencyKey({ type: "tts.utterance.generate", cacheKey, requestId: input.requestId }),
+    maxAttempts: 2
+  });
+  if (result.deduped) {
+    await sql3("o_tasks").where("id", legacyTaskId).delete();
+    const existingResult = result.task.result;
+    if (result.task.status === "succeeded" && existingResult?.audioPath) {
+      await sql3("utterances").where("id", input.utteranceId).update({
+        audio_path: existingResult.audioPath,
+        cache_key: cacheKey,
+        status: "succeeded",
+        error_message: null,
+        updated_at: Date.now()
+      });
+    }
+  } else {
+    await sql3("utterances").where("id", input.utteranceId).update({
+      status: "queued",
+      cache_key: cacheKey,
+      error_message: null,
+      updated_at: Date.now()
+    });
+  }
+  return { task: result.task, payload: result.task.payload, deduped: result.deduped, cached: false };
+}
+var sql3;
+var init_enqueueUtteranceTts = __esm({
+  "src/services/task-engine/enqueueUtteranceTts.ts"() {
+    "use strict";
+    init_db();
+    init_repository();
+    sql3 = db;
+  }
+});
+
+// src/routes/voiceStudio/utterances.ts
+var import_express177, router177, utteranceKinds, utterances_default;
+var init_utterances = __esm({
+  "src/routes/voiceStudio/utterances.ts"() {
+    "use strict";
+    import_express177 = __toESM(require_express2());
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_repository2();
+    init_enqueueUtteranceTts();
+    router177 = import_express177.default.Router();
+    utteranceKinds = ["dialogue", "narration", "chorus"];
+    router177.post(
+      "/import",
+      validateFields({
+        projectId: external_exports.number().int().positive(),
+        scriptId: external_exports.number().int().positive(),
+        includeStoryboardDescriptions: external_exports.boolean().optional()
+      }),
+      async (req, res) => {
+        res.status(200).send(success3(await voiceStudioRepository.importScript(req.body)));
+      }
+    );
+    router177.post(
+      "/list",
+      validateFields({
+        projectId: external_exports.number().int().positive(),
+        scriptId: external_exports.number().int().positive().optional(),
+        storyboardId: external_exports.number().int().positive().optional()
+      }),
+      async (req, res) => {
+        res.status(200).send(success3(await voiceStudioRepository.listUtterances(req.body)));
+      }
+    );
+    router177.post(
+      "/update",
+      validateFields({
+        id: external_exports.string().uuid(),
+        projectId: external_exports.number().int().positive(),
+        speaker: external_exports.string().trim().min(1).max(80).optional(),
+        text: external_exports.string().trim().min(1).optional(),
+        kind: external_exports.enum(utteranceKinds).optional(),
+        roleAssetId: external_exports.number().int().positive().nullable().optional(),
+        voiceCastId: external_exports.string().uuid().nullable().optional(),
+        durationMs: external_exports.number().int().positive().nullable().optional(),
+        locked: external_exports.boolean().optional()
+      }),
+      async (req, res) => {
+        res.status(200).send(success3(await voiceStudioRepository.updateUtterance(req.body)));
+      }
+    );
+    router177.post(
+      "/generate",
+      validateFields({
+        projectId: external_exports.number().int().positive(),
+        utteranceId: external_exports.string().uuid(),
+        requestId: external_exports.string().trim().min(1)
+      }),
+      async (req, res) => {
+        res.status(200).send(success3(await enqueueUtteranceTts(req.body)));
+      }
+    );
+    router177.post(
+      "/batchGenerate",
+      validateFields({
+        projectId: external_exports.number().int().positive(),
+        utteranceIds: external_exports.array(external_exports.string().uuid()).min(1).max(500),
+        requestId: external_exports.string().trim().min(1)
+      }),
+      async (req, res) => {
+        const data = [];
+        for (const [index, utteranceId] of req.body.utteranceIds.entries()) {
+          data.push(await enqueueUtteranceTts({
+            projectId: req.body.projectId,
+            utteranceId,
+            requestId: `${req.body.requestId}:${index}`
+          }));
+        }
+        res.status(200).send(success3(data));
+      }
+    );
+    utterances_default = router177;
+  }
+});
+
 // src/router.ts
 var router_exports = {};
 __export(router_exports, {
@@ -257063,6 +257781,9 @@ var init_router = __esm({
     init_getTaskCategories();
     init_taskDetails();
     init_test();
+    init_casts();
+    init_cues();
+    init_utterances();
     router_default = async (app2) => {
       app2.use("/api/agents/clearMemory", clearMemory_default);
       app2.use("/api/agents/getMemory", getMemory_default);
@@ -257238,6 +257959,9 @@ var init_router = __esm({
       app2.use("/api/task/getTaskCategories", getTaskCategories_default);
       app2.use("/api/task/taskDetails", taskDetails_default);
       app2.use("/api/test/test", test_default);
+      app2.use("/api/voiceStudio/casts", casts_default);
+      app2.use("/api/voiceStudio/cues", cues_default);
+      app2.use("/api/voiceStudio/utterances", utterances_default);
     };
   }
 });
@@ -257293,7 +258017,7 @@ if (!env) {
 }
 
 // src/app.ts
-var import_express175 = __toESM(require_express2());
+var import_express178 = __toESM(require_express2());
 
 // node_modules/socket.io/wrapper.mjs
 var import_dist = __toESM(require_dist3(), 1);
@@ -259907,6 +260631,52 @@ var storyboardImageTaskHandler = {
   }
 };
 
+// src/services/task-engine/handlers/utteranceTts.ts
+init_utils3();
+init_db();
+init_generationTask();
+var sql = db;
+var utteranceTtsTaskHandler = {
+  async execute(task, context2) {
+    const payload = task.payload;
+    const utterance = await sql("utterances").where({ id: payload.utteranceId, project_id: payload.projectId }).first();
+    if (!utterance) {
+      throw new TaskExecutionError("\u5F85\u914D\u97F3\u53F0\u8BCD\u4E0D\u5B58\u5728", "UTTERANCE_NOT_FOUND", false, true);
+    }
+    const referenceList = payload.referenceAudioPath ? [{ type: "audio", base64: await utils_default.oss.getImageBase64(payload.referenceAudioPath) }] : void 0;
+    await context2.throwIfCancelled();
+    await context2.transitionToSubmitting();
+    await sql("utterances").where("id", payload.utteranceId).update({
+      status: "generating",
+      error_message: null,
+      updated_at: Date.now()
+    });
+    const audio = await utils_default.Ai.Audio(payload.model).run({
+      text: payload.text,
+      voice: payload.voice,
+      speechRate: payload.speechRate,
+      pitchRate: payload.pitchRate,
+      volume: payload.volume,
+      emotion: payload.emotion,
+      referenceList
+    });
+    await context2.transitionToFinalizing();
+    try {
+      await audio.save(payload.savePath);
+    } catch (error73) {
+      throw new TaskExecutionError(utils_default.error(error73).message, "AUDIO_SAVE_FAILED", false, true);
+    }
+    await sql("utterances").where("id", payload.utteranceId).update({
+      audio_path: payload.savePath,
+      cache_key: payload.cacheKey,
+      status: "succeeded",
+      error_message: null,
+      updated_at: Date.now()
+    });
+    return { utteranceId: payload.utteranceId, audioPath: payload.savePath, cacheKey: payload.cacheKey };
+  }
+};
+
 // src/services/task-engine/index.ts
 var initialized = false;
 async function startGenerationTaskEngine() {
@@ -259915,6 +260685,7 @@ async function startGenerationTaskEngine() {
     registerTaskHandler("video.generate", videoGenerationTaskHandler);
     registerTaskHandler("asset.image.generate", assetImageTaskHandler);
     registerTaskHandler("storyboard.image.generate", storyboardImageTaskHandler);
+    registerTaskHandler("tts.utterance.generate", utteranceTtsTaskHandler);
     initialized = true;
   }
   await generationTaskWorker.start();
@@ -259924,7 +260695,7 @@ async function stopGenerationTaskEngine() {
 }
 
 // src/app.ts
-var app = (0, import_express175.default)();
+var app = (0, import_express178.default)();
 var server = import_node_http.default.createServer(app);
 async function checkPermissions() {
   if (!isEletron()) return true;
@@ -259962,8 +260733,8 @@ async function startServe(randomPort = false) {
   (0, import_express_ws.default)(app);
   app.use((0, import_morgan.default)("dev"));
   app.use((0, import_cors.default)({ origin: "*" }));
-  app.use(import_express175.default.json({ limit: "100mb" }));
-  app.use(import_express175.default.urlencoded({ extended: true, limit: "100mb" }));
+  app.use(import_express178.default.json({ limit: "100mb" }));
+  app.use(import_express178.default.urlencoded({ extended: true, limit: "100mb" }));
   const ossDir = utils_default.getPath("oss");
   if (!import_fs19.default.existsSync(ossDir)) {
     import_fs19.default.mkdirSync(ossDir, { recursive: true });
@@ -259990,7 +260761,7 @@ async function startServe(randomPort = false) {
           sizeSubDir = `${percentMatch[1]}p`;
           sizeOpts = { type: "percentage", value: pct };
         } else {
-          import_express175.default.static(ossDir, { acceptRanges: false })(req, res, next);
+          import_express178.default.static(ossDir, { acceptRanges: false })(req, res, next);
           return;
         }
         const ext = import_path29.default.extname(req.path);
@@ -260001,14 +260772,14 @@ async function startServe(randomPort = false) {
           if (thumbnailPath) {
             res.sendFile(thumbnailPath);
           } else {
-            import_express175.default.static(ossDir, { acceptRanges: false })(req, res, next);
+            import_express178.default.static(ossDir, { acceptRanges: false })(req, res, next);
           }
         });
         return;
       }
       next();
     },
-    import_express175.default.static(ossDir, { acceptRanges: false })
+    import_express178.default.static(ossDir, { acceptRanges: false })
   );
   const skillsDir = utils_default.getPath("skills");
   if (!import_fs19.default.existsSync(skillsDir)) {
@@ -260020,18 +260791,18 @@ async function startServe(randomPort = false) {
     (req, res, next) => {
       /\.(jpe?g|png|gif|webp|svg|ico|bmp)$/i.test(req.path) ? next() : res.status(403).end();
     },
-    import_express175.default.static(skillsDir, { acceptRanges: false })
+    import_express178.default.static(skillsDir, { acceptRanges: false })
   );
   const assetsDir = utils_default.getPath("assets");
   if (!import_fs19.default.existsSync(assetsDir)) {
     import_fs19.default.mkdirSync(assetsDir, { recursive: true });
   }
   console.log("\u6587\u4EF6\u76EE\u5F55:", assetsDir);
-  app.use("/assets", import_express175.default.static(assetsDir, { acceptRanges: false }));
+  app.use("/assets", import_express178.default.static(assetsDir, { acceptRanges: false }));
   const webDir = utils_default.getPath("web");
   if (import_fs19.default.existsSync(webDir)) {
     console.log("\u9759\u6001\u7F51\u7AD9\u76EE\u5F55:", webDir);
-    app.use(import_express175.default.static(webDir, { acceptRanges: false }));
+    app.use(import_express178.default.static(webDir, { acceptRanges: false }));
   } else {
     console.warn("\u9759\u6001\u7F51\u7AD9\u76EE\u5F55\u4E0D\u5B58\u5728:", webDir);
   }
@@ -260051,8 +260822,8 @@ async function startServe(randomPort = false) {
       return res.status(401).send({ message: "\u65E0\u6548\u7684token" });
     }
   });
-  const router175 = await Promise.resolve().then(() => (init_router(), router_exports));
-  await router175.default(app);
+  const router178 = await Promise.resolve().then(() => (init_router(), router_exports));
+  await router178.default(app);
   app.use((_, res, next) => {
     return res.status(404).send({ message: "API 404 Not Found" });
   });

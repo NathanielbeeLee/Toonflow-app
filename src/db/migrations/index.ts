@@ -100,6 +100,76 @@ const migrations: Migration[] = [
       }
     },
   },
+  {
+    id: "20260808_002_voice_utterances",
+    up: async (db) => {
+      if (!(await db.schema.hasTable("voice_cast"))) {
+        await db.schema.createTable("voice_cast", (table) => {
+          table.text("id").primary();
+          table.integer("project_id").notNullable();
+          table.integer("role_asset_id");
+          table.text("name").notNullable();
+          table.text("provider").notNullable();
+          table.text("model").notNullable();
+          table.text("voice").notNullable();
+          table.float("speech_rate").notNullable().defaultTo(1);
+          table.float("pitch_rate").notNullable().defaultTo(0);
+          table.float("volume").notNullable().defaultTo(1);
+          table.text("emotion");
+          table.integer("is_default").notNullable().defaultTo(0);
+          table.integer("preview_asset_id");
+          table.integer("created_at").notNullable();
+          table.integer("updated_at").notNullable();
+          table.unique(["project_id", "name"], "voice_cast_project_name_unique");
+          table.index(["project_id", "role_asset_id"], "voice_cast_role_idx");
+        });
+      }
+
+      if (!(await db.schema.hasTable("utterances"))) {
+        await db.schema.createTable("utterances", (table) => {
+          table.text("id").primary();
+          table.integer("project_id").notNullable();
+          table.integer("script_id");
+          table.integer("storyboard_id");
+          table.integer("ordinal").notNullable();
+          table.text("kind").notNullable();
+          table.integer("role_asset_id");
+          table.text("speaker").notNullable();
+          table.text("text").notNullable();
+          table.text("voice_cast_id");
+          table.text("audio_path");
+          table.text("cache_key");
+          table.integer("duration_ms");
+          table.text("status").notNullable().defaultTo("draft");
+          table.text("error_message");
+          table.integer("locked").notNullable().defaultTo(0);
+          table.integer("created_at").notNullable();
+          table.integer("updated_at").notNullable();
+          table.index(["project_id", "script_id", "ordinal"], "utterances_script_idx");
+          table.index(["storyboard_id", "ordinal"], "utterances_storyboard_idx");
+          table.index(["voice_cast_id", "status"], "utterances_cast_idx");
+        });
+      }
+
+      if (!(await db.schema.hasTable("subtitle_cues"))) {
+        await db.schema.createTable("subtitle_cues", (table) => {
+          table.text("id").primary();
+          table.integer("project_id").notNullable();
+          table.text("utterance_id").notNullable();
+          table.integer("ordinal").notNullable().defaultTo(0);
+          table.integer("start_ms").notNullable();
+          table.integer("end_ms").notNullable();
+          table.text("text").notNullable();
+          table.text("style");
+          table.integer("locked").notNullable().defaultTo(0);
+          table.integer("created_at").notNullable();
+          table.integer("updated_at").notNullable();
+          table.unique(["utterance_id", "ordinal"], "subtitle_cues_utterance_ordinal_unique");
+          table.index(["project_id", "start_ms"], "subtitle_cues_timeline_idx");
+        });
+      }
+    },
+  },
 ];
 
 export default async function runMigrations(db: Knex): Promise<void> {

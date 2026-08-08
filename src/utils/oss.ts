@@ -100,6 +100,11 @@ class OSS {
       ".tif": "image/tiff",
       ".mp4": "video/mp4",
       ".mp3": "audio/mpeg",
+      ".wav": "audio/wav",
+      ".m4a": "audio/mp4",
+      ".aac": "audio/aac",
+      ".flac": "audio/flac",
+      ".ogg": "audio/ogg",
     };
 
     const mimeType = mimeTypes[ext];

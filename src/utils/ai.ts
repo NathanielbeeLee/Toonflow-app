@@ -240,7 +240,7 @@ class AiText {
 function referenceList2imageBase642(id: string, input: any) {
   const version = u.vendor.getVendor(id).version;
   if (!version || isNaN(parseFloat(version)) || parseFloat(version) < 2.0) {
-    input.imageBase64 = input.referenceList.map((item: any) => item.base64);
+    input.imageBase64 = (input.referenceList ?? []).map((item: any) => item.base64);
     return input;
   }
   return input;
@@ -253,6 +253,16 @@ interface ImageConfig {
   referenceList?: Extract<ReferenceList, { type: "image" }>[];
   size: "1K" | "2K" | "4K";
   aspectRatio: `${number}:${number}`;
+}
+
+export interface TTSConfig {
+  text: string;
+  voice: string;
+  speechRate: number;
+  pitchRate: number;
+  volume: number;
+  emotion?: string;
+  referenceList?: Extract<ReferenceList, { type: "audio" }>[];
 }
 
 interface TaskRecord {
@@ -384,17 +394,15 @@ class AiAudio {
   constructor(key: `${string}:${string}`) {
     this.key = key;
   }
-  async run(input: VideoConfig, taskRecord?: TaskRecord) {
+  async run(input: TTSConfig, taskRecord?: TaskRecord) {
     const modelName = await resolveModelName(this.key);
     const exec = async (mn: `${string}:${string}`) => {
-      try {
-        const fn = await getVendorTemplateFn("ttsRequest", mn);
-        await referenceList2imageBase642(mn.split(/:(.+)/)[0], input);
-        this.result = await fn(input);
-
-        if (this.result.startsWith("http")) this.result = await urlToBase64(this.result);
-        return this;
-      } catch (e) {}
+      const fn = await getVendorTemplateFn("ttsRequest", mn);
+      await referenceList2imageBase642(mn.split(/:(.+)/)[0], input);
+      this.result = await fn(input);
+      if (!this.result) throw new Error(`供应商 ${mn.split(/:(.+)/)[0]} 未返回音频数据`);
+      if (this.result.startsWith("http")) this.result = await urlToBase64(this.result);
+      return this;
     };
     if (taskRecord) {
       return withTaskRecord(this.key, taskRecord.taskClass, taskRecord.describe, taskRecord.relatedObjects, taskRecord.projectId, exec);

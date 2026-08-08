@@ -441,6 +441,31 @@ class GenerationTaskRepository {
         });
       }
     }
+    if (task.type === "tts.utterance.generate") {
+      const payload = task.payload as { utteranceId?: string } | null;
+      if (payload?.utteranceId) {
+        const utteranceStateMap: Partial<Record<GenerationTaskStatus, string>> = {
+          queued: "queued",
+          claimed: "generating",
+          submitting: "generating",
+          submitted: "generating",
+          polling: "generating",
+          finalizing: "generating",
+          retry_wait: "retry_wait",
+          blocked: "blocked",
+          cancelling: "cancelling",
+          cancelled: "cancelled",
+          succeeded: "succeeded",
+          failed: "failed",
+          manual_review: "manual_review",
+        };
+        await (db as any)("utterances").where("id", payload.utteranceId).update({
+          status: utteranceStateMap[task.status] ?? task.status,
+          error_message: task.errorMessage,
+          updated_at: Date.now(),
+        });
+      }
+    }
   }
 }
 

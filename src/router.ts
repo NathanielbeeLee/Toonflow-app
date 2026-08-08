@@ -1,4 +1,4 @@
-// @routes-hash 707201b248a5265f3d0fbe6132ed56a5
+// @routes-hash 6bbd6631ad3729bce4b61ee8bb50de0c
 import { Express } from "express";
 
 import route1 from "./routes/agents/clearMemory";
@@ -175,6 +175,9 @@ import route171 from "./routes/task/getTaskApi";
 import route172 from "./routes/task/getTaskCategories";
 import route173 from "./routes/task/taskDetails";
 import route174 from "./routes/test/test";
+import route175 from "./routes/voiceStudio/casts";
+import route176 from "./routes/voiceStudio/cues";
+import route177 from "./routes/voiceStudio/utterances";
 
 export default async (app: Express) => {
   app.use("/api/agents/clearMemory", route1);
@@ -351,4 +354,7 @@ export default async (app: Express) => {
   app.use("/api/task/getTaskCategories", route172);
   app.use("/api/task/taskDetails", route173);
   app.use("/api/test/test", route174);
+  app.use("/api/voiceStudio/casts", route175);
+  app.use("/api/voiceStudio/cues", route176);
+  app.use("/api/voiceStudio/utterances", route177);
 }

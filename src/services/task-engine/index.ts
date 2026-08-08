@@ -2,6 +2,7 @@ import { databaseReady } from "@/utils/db";
 import { registerTaskHandler, generationTaskWorker } from "@/services/task-engine/worker";
 import { videoGenerationTaskHandler } from "@/services/task-engine/handlers/videoGeneration";
 import { assetImageTaskHandler, storyboardImageTaskHandler } from "@/services/task-engine/handlers/imageGeneration";
+import { utteranceTtsTaskHandler } from "@/services/task-engine/handlers/utteranceTts";
 
 let initialized = false;
 
@@ -11,6 +12,7 @@ export async function startGenerationTaskEngine(): Promise<void> {
     registerTaskHandler("video.generate", videoGenerationTaskHandler);
     registerTaskHandler("asset.image.generate", assetImageTaskHandler);
     registerTaskHandler("storyboard.image.generate", storyboardImageTaskHandler);
+    registerTaskHandler("tts.utterance.generate", utteranceTtsTaskHandler);
     initialized = true;
   }
   await generationTaskWorker.start();

@@ -27,6 +27,24 @@ export default router.post(
     await u.db("o_script").where("projectId", id).delete();
     // 删除项目下的任务
     await u.db("o_tasks").where("projectId", id).delete();
+    const utteranceRows = await (u.db as any)("utterances").where("project_id", id).select("id");
+    if (utteranceRows.length > 0) {
+      await (u.db as any)("subtitle_cues").whereIn("utterance_id", utteranceRows.map((item: any) => item.id)).delete();
+    }
+    await (u.db as any)("utterances").where("project_id", id).delete();
+    await (u.db as any)("voice_cast").where("project_id", id).delete();
+    await (u.db as any)("subtitle_cues").where("project_id", id).delete();
+    const generationTaskRows = await (u.db as any)("generation_tasks").where("project_id", id).select("id");
+    if (generationTaskRows.length > 0) {
+      const generationTaskIds = generationTaskRows.map((item: any) => item.id);
+      await (u.db as any)("task_dependencies")
+        .whereIn("task_id", generationTaskIds)
+        .orWhereIn("depends_on_task_id", generationTaskIds)
+        .delete();
+      await (u.db as any)("usage_ledger").whereIn("task_id", generationTaskIds).delete();
+      await (u.db as any)("generation_tasks").whereIn("id", generationTaskIds).delete();
+    }
+    await (u.db as any)("project_events").where("project_id", id).delete();
     // 删除项目下的分镜
     const storyboardData = await u.db("o_storyboard").where("projectId", id).select("id");
     const storyboardIds = storyboardData.map((item: any) => item.id);
