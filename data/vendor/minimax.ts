@@ -95,6 +95,11 @@ interface PollResult {
   data?: string;
   error?: string;
 }
+interface VideoProviderPollResult {
+  status: "pending" | "succeeded" | "failed" | "cancelled";
+  data?: string;
+  error?: string;
+}
 
 // ============================================================
 // 全局声明
@@ -123,6 +128,8 @@ declare const exports: {
   uploadReference: (base64: string, fileType: "image" | "audio" | "video") => Promise<ReferenceList>;
   imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;
   videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;
+  videoSubmit: (c: VideoConfig, m: VideoModel) => Promise<{ jobId: string }>;
+  videoPoll: (c: { jobId: string }, m: VideoModel) => Promise<VideoProviderPollResult>;
   ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;
   checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;
   updateVendor?: () => Promise<string>;
@@ -134,7 +141,7 @@ declare const exports: {
 
 const vendor: VendorConfig = {
   id: "minimax",
-  version: "2.1",
+  version: "2.2",
   author: "Toonflow",
   name: "MiniMax(海螺AI)",
   description: "MiniMax官方接口适配，支持M系列推理文本模型、文生图/图生图、视频生成（文生视频、图生视频、首尾帧生成）能力 \n [前往平台](https://minimaxi.com/)",
@@ -280,12 +287,8 @@ const imageRequest = async (config: ImageConfig, model: ImageModel): Promise<str
   return imgBase64.startsWith("data:") ? imgBase64 : `data:image/png;base64,${imgBase64}`;
 };
 
-const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {
-  if (!vendor.inputValues.apiKey) throw new Error("缺少API Key");
-  const baseUrl = getBaseUrl();
-  const headers = getHeaders();
-
-  const reqBody: any = {
+const buildVideoRequestBody = async (config: VideoConfig, model: VideoModel): Promise<Record<string, any>> => {
+  const reqBody: Record<string, any> = {
     model: model.modelName,
     prompt: config.prompt,
     duration: config.duration,
@@ -293,19 +296,13 @@ const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<str
     aigc_watermark: false,
     prompt_optimizer: true,
   };
-
-  // 提取图片类型的引用
-  const imageRefs = (config.referenceList || []).filter((r) => r.type === "image");
-
+  const imageRefs = (config.referenceList || []).filter((ref) => ref.type === "image");
   if (imageRefs.length > 0) {
-    // 压缩图片到20MB以内
     const compressedImages: string[] = [];
     for (const ref of imageRefs) {
       const base64 = extractBase64WithHead(ref);
-      const compressed = await zipImage(base64, 20 * 1024);
-      compressedImages.push(compressed);
+      compressedImages.push(await zipImage(base64, 20 * 1024));
     }
-
     if (config.mode.includes("startEndRequired")) {
       if (compressedImages.length < 2) throw new Error("首尾帧模式需要上传两张图片");
       reqBody.first_frame_image = compressedImages[0];
@@ -314,33 +311,62 @@ const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<str
       reqBody.first_frame_image = compressedImages[0];
     }
   }
+  return reqBody;
+};
 
+const videoSubmit = async (config: VideoConfig, model: VideoModel): Promise<{ jobId: string }> => {
+  if (!vendor.inputValues.apiKey) throw new Error("缺少API Key");
+  const baseUrl = getBaseUrl();
+  const headers = getHeaders();
+  const reqBody = await buildVideoRequestBody(config, model);
   logger("开始提交MiniMax视频生成任务");
   const submitResp = await axios.post(`${baseUrl}/v1/video_generation`, reqBody, { headers });
   if (submitResp.data.base_resp.status_code !== 0) {
     throw new Error(`任务提交失败：${submitResp.data.base_resp.status_msg}`);
   }
   const taskId = submitResp.data.task_id;
+  if (!taskId) throw new Error("MiniMax任务提交成功但没有返回任务ID");
   logger(`视频任务提交成功，任务ID: ${taskId}`);
+  return { jobId: String(taskId) };
+};
 
-  // 轮询任务状态
+const videoPoll = async ({ jobId }: { jobId: string }, _model: VideoModel): Promise<VideoProviderPollResult> => {
+  if (!vendor.inputValues.apiKey) throw new Error("缺少API Key");
+  const baseUrl = getBaseUrl();
+  const queryResp = await axios.get(`${baseUrl}/v1/query/video_generation`, {
+    headers: getHeaders(),
+    params: { task_id: jobId },
+  });
+  if (queryResp.data.base_resp.status_code !== 0) {
+    return { status: "failed", error: queryResp.data.base_resp.status_msg || "MiniMax任务查询失败" };
+  }
+  const status = queryResp.data.status;
+  if (status === "Fail") return { status: "failed", error: "MiniMax视频生成失败" };
+  if (status !== "Success") {
+    logger(`视频任务生成中，当前状态：${status}`);
+    return { status: "pending" };
+  }
+  const fileId = queryResp.data.file_id;
+  if (!fileId) return { status: "failed", error: "MiniMax任务完成但没有返回文件ID" };
+  const fileResp = await axios.get(`${baseUrl}/v1/files/retrieve`, {
+    headers: getHeaders(),
+    params: { file_id: fileId },
+  });
+  if (fileResp.data.base_resp.status_code !== 0) {
+    return { status: "failed", error: `获取文件地址失败：${fileResp.data.base_resp.status_msg}` };
+  }
+  const downloadUrl = fileResp.data.file?.download_url;
+  if (!downloadUrl) return { status: "failed", error: "MiniMax文件查询成功但没有下载地址" };
+  return { status: "succeeded", data: downloadUrl };
+};
+
+const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {
+  const { jobId } = await videoSubmit(config, model);
   const pollResult = await pollTask(
     async () => {
-      const queryResp = await axios.get(`${baseUrl}/v1/query/video_generation`, {
-        headers: getHeaders(),
-        params: { task_id: taskId },
-      });
-      if (queryResp.data.base_resp.status_code !== 0) {
-        return { completed: true, error: queryResp.data.base_resp.status_msg };
-      }
-      const status = queryResp.data.status;
-      if (status === "Success") {
-        return { completed: true, data: queryResp.data.file_id };
-      }
-      if (status === "Fail") {
-        return { completed: true, error: "视频生成失败" };
-      }
-      logger(`视频任务生成中，当前状态：${status}`);
+      const result = await videoPoll({ jobId }, model);
+      if (result.status === "succeeded") return { completed: true, data: result.data };
+      if (result.status === "failed" || result.status === "cancelled") return { completed: true, error: result.error || "MiniMax视频生成失败" };
       return { completed: false };
     },
     5000,
@@ -348,21 +374,8 @@ const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<str
   );
 
   if (pollResult.error) throw new Error(pollResult.error);
-  const fileId = pollResult.data!;
-  logger(`视频任务生成成功，文件ID: ${fileId}`);
-
-  // 获取下载地址
-  const fileResp = await axios.get(`${baseUrl}/v1/files/retrieve`, {
-    headers: getHeaders(),
-    params: { file_id: fileId },
-  });
-  if (fileResp.data.base_resp.status_code !== 0) {
-    throw new Error(`获取文件地址失败：${fileResp.data.base_resp.status_msg}`);
-  }
-  const downloadUrl = fileResp.data.file.download_url;
-  logger(`视频下载地址获取成功，开始转Base64`);
-
-  return await urlToBase64(downloadUrl);
+  if (!pollResult.data) throw new Error("MiniMax视频任务完成但没有下载地址");
+  return await urlToBase64(pollResult.data);
 };
 
 const ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {
@@ -372,7 +385,7 @@ const ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> =
 const checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {
   return {
     hasUpdate: false,
-    latestVersion: "2.0",
+    latestVersion: "2.2",
     notice:
       "## 新版本更新公告\n1. 适配新版模板架构，支持 ReferenceList 统一引用类型\n2. 新增 uploadReference 前置处理器\n3. 优化图片压缩和引用提取逻辑",
   };
@@ -391,6 +404,8 @@ exports.textRequest = textRequest;
 exports.uploadReference = uploadReference;
 exports.imageRequest = imageRequest;
 exports.videoRequest = videoRequest;
+exports.videoSubmit = videoSubmit;
+exports.videoPoll = videoPoll;
 exports.ttsRequest = ttsRequest;
 exports.checkForUpdates = checkForUpdates;
 exports.updateVendor = updateVendor;
