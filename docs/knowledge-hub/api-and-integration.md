@@ -10,6 +10,7 @@
 | `POST /api/production/editImage/generateFlowImage` | 图片编辑画布节点入队，返回节点应保存的持久任务 ID |
 | `POST /api/script/importNovel/preview` | 校验 AI Novel 小说/短剧 JSON 或本机 API，仅返回预览和计划动作 |
 | `POST /api/script/importNovel/commit` | 按所选外部章节执行版本化幂等导入 |
+| `POST /api/script/extractAssets` | 校验当前项目所选剧本并创建持久资产提取任务，返回任务身份 |
 | `POST /api/generationTasks/list` | 按项目、lane、状态、类型分页查询 |
 | `POST /api/generationTasks/get` | 查询单个持久任务 |
 | `POST /api/generationTasks/cancel` | 请求取消任务 |

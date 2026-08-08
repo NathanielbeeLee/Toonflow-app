@@ -7,6 +7,8 @@
 | POST /api/generationTasks/list | 持久视频任务 | feature.durable-video-tasks |
 | POST /api/assetsGenerate/generateAssets | 持久图片任务 | feature.durable-image-tasks |
 | POST /api/production/editImage/generateFlowImage | 持久图片任务 | feature.durable-image-tasks |
+| POST /api/script/extractAssets | 持久剧本资产提取 | feature.durable-script-asset-extraction |
+| POST /api/generationTasks/list | 持久剧本资产提取 | feature.durable-script-asset-extraction |
 | POST /api/script/importNovel/preview | AI Novel 成品版本化导入 | feature.ai-novel-import |
 | POST /api/script/importNovel/commit | AI Novel 成品版本化导入 | feature.ai-novel-import |
 | POST /api/generationTasks/limits/list | 供应商与模型限流 | feature.provider-limits |

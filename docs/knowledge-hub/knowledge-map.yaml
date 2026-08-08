@@ -14,6 +14,7 @@
         { "type": "uses", "target": "feature.infinite-canvas" },
         { "type": "uses", "target": "feature.durable-video-tasks" },
         { "type": "uses", "target": "feature.durable-image-tasks" },
+        { "type": "uses", "target": "feature.durable-script-asset-extraction" },
         { "type": "uses", "target": "feature.ai-novel-import" },
         { "type": "uses", "target": "feature.voice-utterance-studio" },
         { "type": "uses", "target": "feature.normalized-timeline" },
@@ -46,7 +47,7 @@
       "tables": ["o_assets", "o_storyboard"],
       "relations": [{ "type": "documented_by", "target": "document.feature-catalog" }],
       "introduced_in": "upstream/v1.1.8",
-      "last_verified_commit": "toon-custom/35e65591"
+      "last_verified_commit": "toon-custom/13e9787e"
     },
     {
       "id": "feature.infinite-canvas",
@@ -111,6 +112,25 @@
       ],
       "introduced_in": "toon-custom/c4a5c5a0",
       "last_verified_commit": "toon-custom/e345aac7"
+    },
+    {
+      "id": "feature.durable-script-asset-extraction",
+      "type": "feature",
+      "name": "持久剧本资产提取",
+      "summary": "按当前项目和所选剧本持久执行资产提取，限制模型关联 ID，并按付费边界安全恢复",
+      "user_entry": { "page": "剧本", "action": "选择一集或多集后点击提取资产，并在任务中心查看 text 通道" },
+      "source_paths": ["src/services/script-assets/extraction.ts", "src/services/task-engine/handlers/scriptAssetExtraction.ts", "src/routes/script/extractAssets.ts", "frontend/src/views/script/index.vue"],
+      "api": ["POST /api/script/extractAssets", "POST /api/generationTasks/list"],
+      "tables": ["generation_tasks", "o_script", "o_assets", "o_scriptAssets"],
+      "relations": [
+        { "type": "writes", "target": "table.generation-tasks" },
+        { "type": "uses", "target": "feature.asset-consistency" },
+        { "type": "visualized_by", "target": "feature.durable-task-center" },
+        { "type": "uses", "target": "concept.worker-lease" },
+        { "type": "documented_by", "target": "document.database-tasks" }
+      ],
+      "introduced_in": "toon-custom/13e9787e",
+      "last_verified_commit": "toon-custom/13e9787e"
     },
     {
       "id": "feature.ai-novel-import",
@@ -264,7 +284,7 @@
         { "type": "documented_by", "target": "document.database-tasks" }
       ],
       "introduced_in": "toon-custom/d6bccc66",
-      "last_verified_commit": "toon-custom/d6bccc66"
+      "last_verified_commit": "toon-custom/13e9787e"
     },
     {
       "id": "feature.local-security-diagnostics",

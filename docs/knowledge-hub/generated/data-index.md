@@ -12,6 +12,10 @@
 | o_image | 持久图片任务 | feature.durable-image-tasks |
 | o_storyboard | 持久图片任务 | feature.durable-image-tasks |
 | o_imageFlow | 持久图片任务 | feature.durable-image-tasks |
+| generation_tasks | 持久剧本资产提取 | feature.durable-script-asset-extraction |
+| o_script | 持久剧本资产提取 | feature.durable-script-asset-extraction |
+| o_assets | 持久剧本资产提取 | feature.durable-script-asset-extraction |
+| o_scriptAssets | 持久剧本资产提取 | feature.durable-script-asset-extraction |
 | script_import_batches | AI Novel 成品版本化导入 | feature.ai-novel-import |
 | script_import_items | AI Novel 成品版本化导入 | feature.ai-novel-import |
 | o_script | AI Novel 成品版本化导入 | feature.ai-novel-import |
