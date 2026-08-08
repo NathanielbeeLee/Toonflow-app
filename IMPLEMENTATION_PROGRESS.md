@@ -135,11 +135,23 @@
 
 验证：根 TypeScript、后端构建、迁移重复执行、确定性解析和 SRT 序列化通过；未调用付费 API。
 
+## 2026-08-08 第十批：OpenAI 真实逐句 TTS
+
+落地提交：`f5f2f80f`。
+
+- 按 OpenAI 官方 `POST /audio/speech` 契约实现同步 TTS，支持 GPT-4o mini TTS、TTS-1 和 TTS-1 HD、内置音色、自定义 voice ID、MP3 返回和 0.25–4 倍语速。
+- GPT-4o mini TTS 会把角色音色中的情绪、音高和音量目标编译为声音 instructions；旧 TTS-1 系列只发送其支持的字段。
+- “配音与字幕”角色音色表会从已配置供应商读取 TTS 模型和音色下拉项，同时保留手工输入兼容私有代理或自定义 voice ID。
+- OpenAI 模板升级到 2.3，应用启动时自动更新内置模板但保留用户的 API Key、地址、启用状态和额外模型配置。
+- 页面明确披露音频由 AI 合成，不是真人录音；其他空 TTS 供应商仍明确失败。
+
+验证：官方文档核对、本地 OpenAI/CLIProxyAPI Mock、根 TypeScript、前端类型检查、完整前后端构建和产物同步通过；未调用真实或付费 TTS API。
+
 ## 下一批优先级
 
-1. 接通首个真实 TTS 供应商；没有供应商 task ID 时继续使用人工确认保护。
+1. 为逐句音频读取真实时长并回写字幕 cue；没有供应商 task ID 时继续使用人工确认保护。
 2. 将单张图片编辑/生成入口迁入持久任务，清理剩余页面级后台 Promise。
 3. 吸收 OpenMontage 的规范化时间线、多轨混音与媒体 QA。
-4. 为其余供应商逐个核对真实远端任务/取消 API，不猜测未公开契约。
+4. 为火山等其余供应商逐个核对真实 TTS/远端任务/取消 API，不猜测未公开契约。
 
 继续工作前先读：`docs/knowledge-hub/AI_ASSISTANT_CONTEXT.md`、`docs/upstream-watch/sources.yaml` 和最新扫描报告。

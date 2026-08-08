@@ -14,6 +14,8 @@ MiniMax 2.2 使用 `/v1/video_generation` 创建任务、`/v1/query/video_genera
 
 ## TTS 当前边界
 
-供应商模板契约包含 `ttsRequest`，但当前火山引擎、MiniMax、OpenAI 等仓库内实现都只返回空字符串，不能视为真实 TTS 支持。逐句 TTS 已进入持久 `audio` 通道；在接入任一真实供应商前，空结果会明确失败，不会写出伪音频或把台词标记成功。
+OpenAI 标准供应商 2.3 按官方 [`POST /audio/speech`](https://developers.openai.com/api/docs/guides/text-to-speech) 契约支持 GPT-4o mini TTS、TTS-1 和 TTS-1 HD，输出 MP3，并支持官方 0.25–4 倍语速。GPT-4o mini TTS 会接收情绪、音高和音量目标组成的 instructions；OpenAI 要求向用户明确披露语音由 AI 合成，页面已提示。
+
+CLIProxyAPI 或其他 OpenAI 兼容地址只有在实际转发 `/audio/speech` 且有相应凭据时才可用，不能仅凭文本/图片模型列表宣称 TTS 已实测。火山、MiniMax 等模板的 `ttsRequest` 仍为空占位；它们会明确失败，不会写出伪音频或把台词标记成功。
 
 当前限制：`volcengineSd2` 等其他 vendor 仍在一次调用中完成；它们尚不能自动恢复远端轮询。OpenAI 图片适配当前只开放文生图，参考图编辑需后续实现 multipart `/images/edits`。后续还需补齐参数预检、费用估算、取消和统一结果规范。

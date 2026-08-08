@@ -99,6 +99,7 @@
       "relations": [
         { "type": "writes", "target": "table.generation-tasks" },
         { "type": "uses", "target": "feature.provider-limits" },
+        { "type": "uses", "target": "provider.openai-compatible" },
         { "type": "visualized_by", "target": "feature.durable-task-center" }
       ],
       "introduced_in": "toon-custom/c4a5c5a0",
@@ -133,7 +134,7 @@
         { "type": "documented_by", "target": "document.feature-catalog" }
       ],
       "introduced_in": "toon-custom/f6f5b0eb",
-      "last_verified_commit": "toon-custom/b01b1a28"
+      "last_verified_commit": "toon-custom/f5f2f80f"
     },
     {
       "id": "api.voice-studio",
@@ -228,14 +229,14 @@
       "id": "provider.openai-compatible",
       "type": "provider",
       "name": "OpenAI / CLIProxyAPI 兼容供应商",
-      "summary": "支持 GPT Image 与可恢复 OpenAI Videos API；CLIProxyAPI 视频能力取决于代理侧凭据",
+      "summary": "支持 GPT Image、可恢复 OpenAI Videos API 与 Audio Speech TTS；CLIProxyAPI 能力取决于代理侧凭据和路由",
       "source_paths": ["data/vendor/openai.ts", "scripts/verify-openai-compatible-provider.ts"],
       "relations": [
         { "type": "uses", "target": "feature.provider-job-resume" },
         { "type": "documented_by", "target": "document.providers-models" }
       ],
       "introduced_in": "toon-custom/c4a5c5a0",
-      "last_verified_commit": "toon-custom/c4a5c5a0"
+      "last_verified_commit": "toon-custom/f5f2f80f"
     },
     {
       "id": "provider.minimax",

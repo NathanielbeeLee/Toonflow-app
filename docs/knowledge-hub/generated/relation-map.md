@@ -21,6 +21,7 @@
 | feature.durable-video-tasks | troubleshoots | troubleshooting.unknown-provider-state |
 | feature.durable-image-tasks | writes | table.generation-tasks |
 | feature.durable-image-tasks | uses | feature.provider-limits |
+| feature.durable-image-tasks | uses | provider.openai-compatible |
 | feature.durable-image-tasks | visualized_by | feature.durable-task-center |
 | feature.provider-limits | protects | feature.durable-video-tasks |
 | feature.voice-utterance-studio | writes | table.generation-tasks |
