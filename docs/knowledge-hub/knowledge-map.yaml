@@ -122,8 +122,8 @@
       "type": "feature",
       "name": "角色音色、逐句台词与字幕 cue",
       "summary": "把剧本确定性拆成可编辑、可锁定、可单句生成的台词，并保存独立字幕时间片",
-      "user_entry": { "page": "配音/字幕（页面待接入）", "action": "导入剧本台词、分配角色音色、逐句生成并校准字幕" },
-      "source_paths": ["src/services/voice-studio", "src/routes/voiceStudio", "src/services/task-engine/handlers/utteranceTts.ts"],
+      "user_entry": { "page": "配音与字幕", "action": "导入剧本台词、分配角色音色、逐句生成并校准字幕" },
+      "source_paths": ["frontend/src/views/voiceStudio/index.vue", "src/services/voice-studio", "src/routes/voiceStudio", "src/services/task-engine/handlers/utteranceTts.ts"],
       "api": ["POST /api/voiceStudio/casts/list", "POST /api/voiceStudio/utterances/import", "POST /api/voiceStudio/utterances/generate", "POST /api/voiceStudio/cues/export"],
       "tables": ["voice_cast", "utterances", "subtitle_cues", "generation_tasks"],
       "relations": [
@@ -133,7 +133,7 @@
         { "type": "documented_by", "target": "document.feature-catalog" }
       ],
       "introduced_in": "toon-custom/f6f5b0eb",
-      "last_verified_commit": "toon-custom/f6f5b0eb"
+      "last_verified_commit": "toon-custom/b01b1a28"
     },
     {
       "id": "api.voice-studio",
