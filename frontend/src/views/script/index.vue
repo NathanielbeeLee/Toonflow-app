@@ -15,6 +15,7 @@
           <template #icon><i-plus /></template>
           {{ $t("workbench.script.batchAddScript") }}
         </t-button>
+        <t-button theme="primary" variant="outline" @click="novelImportShow = true">导入 AI Novel 成品</t-button>
       </div>
       <div class="actionBar-right f ac w" v-if="scripts.length">
         <t-button :theme="isAllSelected ? 'default' : 'primary'" variant="outline" @click="toggleSelectAll(!isAllSelected)">
@@ -70,6 +71,7 @@
     <editScript v-model="detailsShow" :item="selectedScript" @searchScripts="searchScripts" />
     <addScript v-model="addScriptShow" @searchScripts="searchScripts" />
     <batchAddScript v-model="batchScriptShow" @select="searchScripts" />
+    <importNovelProject v-model="novelImportShow" @imported="searchScripts" />
   </div>
 </template>
 
@@ -78,6 +80,7 @@ import axios from "@/utils/axios";
 import editScript from "./components/editScript.vue";
 import addScript from "./components/addScript.vue";
 import batchAddScript from "./components/batchAddScript.vue";
+import importNovelProject from "./components/importNovelProject.vue";
 import projectStore from "@/stores/project";
 import settingStore from "@/stores/setting";
 import imageListCacheStore from "@/stores/imageListCache";
@@ -108,6 +111,7 @@ const addScriptShow = ref(false);
 const selectedIds = ref<number[]>([]);
 const scriptLoad = ref(false);
 const batchScriptShow = ref(false);
+const novelImportShow = ref(false);
 const isAllSelected = computed(() => scripts.value.length > 0 && selectedIds.value.length === scripts.value.length);
 function toggleSelect(id: number) {
   const idx = selectedIds.value.indexOf(id);

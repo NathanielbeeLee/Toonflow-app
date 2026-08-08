@@ -328,6 +328,48 @@ const migrations: Migration[] = [
       await db("o_user").where("password", "admin123").update({ must_change_password: 1 });
     },
   },
+  {
+    id: "20260808_010_script_import_history",
+    up: async (db) => {
+      if (!(await db.schema.hasTable("script_import_batches"))) {
+        await db.schema.createTable("script_import_batches", (table) => {
+          table.text("id").primary();
+          table.integer("project_id").notNullable();
+          table.text("source_type").notNullable();
+          table.text("external_project_id").notNullable();
+          table.text("external_version");
+          table.text("source_checksum").notNullable();
+          table.text("selection_checksum").notNullable();
+          table.text("importer_version").notNullable();
+          table.text("status").notNullable();
+          table.text("report").notNullable();
+          table.integer("created_at").notNullable();
+          table.unique(["project_id", "source_type", "external_project_id", "source_checksum", "selection_checksum"], "script_import_batches_idempotency_unique");
+          table.index(["project_id", "external_project_id", "created_at"], "script_import_batches_project_idx");
+        });
+      }
+      if (!(await db.schema.hasTable("script_import_items"))) {
+        await db.schema.createTable("script_import_items", (table) => {
+          table.text("id").primary();
+          table.text("batch_id").notNullable();
+          table.integer("project_id").notNullable();
+          table.text("source_type").notNullable();
+          table.text("external_project_id").notNullable();
+          table.text("external_chapter_id").notNullable();
+          table.integer("external_order").notNullable();
+          table.text("script_name").notNullable();
+          table.text("script_content").notNullable();
+          table.text("content_checksum").notNullable();
+          table.integer("script_id").notNullable();
+          table.text("action").notNullable();
+          table.integer("created_at").notNullable();
+          table.unique(["batch_id", "external_chapter_id"], "script_import_items_batch_chapter_unique");
+          table.index(["project_id", "source_type", "external_project_id", "external_chapter_id", "created_at"], "script_import_items_external_idx");
+          table.index(["script_id", "created_at"], "script_import_items_script_idx");
+        });
+      }
+    },
+  },
 ];
 
 export default async function runMigrations(db: Knex): Promise<void> {
