@@ -112,8 +112,16 @@
           <div class="timelineHeader">
             <t-alert
               theme="info"
-              message="时间线只保存结构化版本，不会立即渲染或调用付费 API。原生音频、对白、旁白、SFX、环境声和 BGM 始终分轨。" />
-            <t-button :disabled="!selectedScriptId" :loading="buildingTimeline" @click="buildTimeline">构建新版本</t-button>
+              message="时间线按版本保存。低清预览在本机用 FFmpeg 渲染，不调用付费 API；当前先串联画面并生成静音 AAC，分轨混音将在下一阶段接入。" />
+            <t-space>
+              <t-button variant="outline" :disabled="!selectedScriptId" :loading="buildingTimeline" @click="buildTimeline">构建新版本</t-button>
+              <t-button
+                :disabled="!canRenderPreview"
+                :loading="renderingPreview || compositionJobActive"
+                @click="generatePreview">
+                生成低清预览
+              </t-button>
+            </t-space>
           </div>
           <t-empty v-if="!timeline" description="尚未构建时间线" />
           <template v-else>
@@ -132,6 +140,28 @@
               :message="warning"
               class="timelineWarning" />
             <t-table row-key="id" :columns="timelineColumns" :data="timelineTrackRows" size="small" hover stripe />
+            <div v-if="compositionJob" class="renderResult">
+              <div class="renderResultHeader">
+                <div>
+                  <strong>低清预览 · 时间线 v{{ compositionJob.timelineVersion }}</strong>
+                  <span>FFmpeg / H.264 + AAC</span>
+                </div>
+                <t-tag :theme="compositionStatusTheme(compositionJob.status)" variant="light">
+                  {{ compositionStatusLabel(compositionJob.status) }}
+                </t-tag>
+              </div>
+              <t-alert v-if="compositionJob.errorMessage" theme="error" :message="compositionJob.errorMessage" />
+              <template v-if="compositionJob.status === 'succeeded' && compositionJob.outputUrl">
+                <video class="previewVideo" :src="compositionJob.outputUrl" controls preload="metadata" />
+                <div class="previewMeta">
+                  <span v-if="compositionJob.durationMs">时长 {{ formatMilliseconds(compositionJob.durationMs) }}</span>
+                  <t-tooltip v-if="compositionJob.outputChecksum" :content="compositionJob.outputChecksum">
+                    <span>输出校验和 {{ compositionJob.outputChecksum.slice(0, 12) }}…</span>
+                  </t-tooltip>
+                  <a :href="compositionJob.outputUrl" download>下载 MP4</a>
+                </div>
+              </template>
+            </div>
           </template>
         </t-tab-panel>
       </t-tabs>
@@ -272,6 +302,18 @@ interface TimelineRecord {
   };
 }
 
+interface CompositionJob {
+  id: string;
+  timelineId: string;
+  timelineVersion: number;
+  status: string;
+  outputUrl: string | null;
+  outputChecksum: string | null;
+  durationMs: number | null;
+  taskId: string | null;
+  errorMessage: string | null;
+}
+
 const { project } = storeToRefs(projectStore());
 const projectId = computed(() => (project.value?.id ? Number(project.value.id) : 0));
 const activeTab = ref("utterances");
@@ -281,6 +323,7 @@ const importing = ref(false);
 const generating = ref(false);
 const savingCast = ref(false);
 const buildingTimeline = ref(false);
+const renderingPreview = ref(false);
 const selectedScriptId = ref<number>();
 const includeStoryboardDescriptions = ref(false);
 const scriptOptions = ref<Array<{ label: string; value: number }>>([]);
@@ -291,6 +334,7 @@ const vendors = ref<VendorItem[]>([]);
 const utterances = ref<Utterance[]>([]);
 const cues = ref<Cue[]>([]);
 const timeline = ref<TimelineRecord | null>(null);
+const compositionJob = ref<CompositionJob | null>(null);
 const selectedUtteranceIds = ref<Array<string | number>>([]);
 const castDialogVisible = ref(false);
 const utteranceDialogVisible = ref(false);
@@ -365,6 +409,11 @@ const timelineTrackRows = computed(() => {
     ...timeline.value.payload.subtitleTracks.map((track) => ({ id: track.id, name: track.id, kind: "subtitle", count: track.cues.length })),
   ];
 });
+const compositionJobActive = computed(() => Boolean(compositionJob.value && ["queued", "rendering"].includes(compositionJob.value.status)));
+const canRenderPreview = computed(() => {
+  if (!timeline.value || compositionJobActive.value) return false;
+  return timeline.value.payload.videoTracks.some((track) => track.clips.length > 0);
+});
 const kindOptions = [
   { label: "对白", value: "dialogue" },
   { label: "旁白", value: "narration" },
@@ -438,18 +487,21 @@ async function loadWorkspace(showLoading = true) {
     utterances.value = [];
     cues.value = [];
     timeline.value = null;
+    compositionJob.value = null;
     return;
   }
   if (showLoading) loading.value = true;
   try {
-    const [{ data: utteranceData }, { data: cueData }, { data: timelineData }] = await Promise.all([
+    const [{ data: utteranceData }, { data: cueData }, { data: timelineData }, { data: jobData }] = await Promise.all([
       axios.post("/voiceStudio/utterances/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/voiceStudio/cues/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/composition/timeline/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
+      axios.post("/composition/timeline/jobs/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
     ]);
     utterances.value = utteranceData;
     cues.value = cueData;
     timeline.value = timelineData;
+    compositionJob.value = jobData;
   } catch (error) {
     showError(error, "获取配音工作区失败");
   } finally {
@@ -466,12 +518,41 @@ async function buildTimeline() {
       scriptId: selectedScriptId.value,
     });
     timeline.value = data.timeline;
+    if (compositionJob.value?.timelineId !== data.timeline.id) compositionJob.value = null;
     window.$message.success(data.deduped ? "输入未变化，已复用最新时间线版本" : `已构建时间线 v${data.timeline.version}`);
   } catch (error) {
     showError(error, "构建时间线失败");
   } finally {
     buildingTimeline.value = false;
   }
+}
+
+async function generatePreview() {
+  if (!timeline.value || !selectedScriptId.value) return;
+  renderingPreview.value = true;
+  try {
+    const { data } = await axios.post("/composition/timeline/render", {
+      projectId: projectId.value,
+      scriptId: selectedScriptId.value,
+      timelineId: timeline.value.id,
+      preset: "preview-low",
+      requestId: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`,
+    });
+    compositionJob.value = data.job;
+    window.$message.success(data.cached ? "已复用相同时间线的预览文件" : data.deduped ? "预览已经在队列中" : "低清预览已进入本地渲染队列");
+  } catch (error) {
+    showError(error, "创建低清预览失败");
+  } finally {
+    renderingPreview.value = false;
+  }
+}
+
+function compositionStatusLabel(status: string) {
+  return ({ queued: "排队中", rendering: "渲染中", succeeded: "已完成", failed: "失败", cancelled: "已取消" } as Record<string, string>)[status] || status;
+}
+
+function compositionStatusTheme(status: string) {
+  return ({ queued: "warning", rendering: "primary", succeeded: "success", failed: "danger", cancelled: "default" } as Record<string, any>)[status] || "default";
 }
 
 async function importUtterances() {
@@ -797,6 +878,13 @@ function showError(error: any, fallback: string) {
   strong { font-size: 15px; }
 }
 .timelineWarning { margin-bottom: 8px; }
+.renderResult { margin-top: 16px; padding: 16px; border: 1px solid #e7e7e7; border-radius: 10px; background: #fafbfc; }
+.renderResultHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.renderResultHeader > div { display: flex; flex-direction: column; gap: 4px; }
+.renderResultHeader span, .previewMeta { color: #6b7280; font-size: 12px; }
+.previewVideo { display: block; width: min(100%, 854px); max-height: 520px; margin-top: 12px; border-radius: 8px; background: #000; }
+.previewMeta { display: flex; gap: 16px; margin-top: 10px; }
+.previewMeta a { color: var(--td-brand-color); }
 .dialogGrid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;

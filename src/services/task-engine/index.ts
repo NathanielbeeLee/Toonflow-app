@@ -3,6 +3,7 @@ import { registerTaskHandler, generationTaskWorker } from "@/services/task-engin
 import { videoGenerationTaskHandler } from "@/services/task-engine/handlers/videoGeneration";
 import { assetImageTaskHandler, storyboardImageTaskHandler } from "@/services/task-engine/handlers/imageGeneration";
 import { utteranceTtsTaskHandler } from "@/services/task-engine/handlers/utteranceTts";
+import { compositionRenderTaskHandler } from "@/services/task-engine/handlers/compositionRender";
 
 let initialized = false;
 
@@ -13,6 +14,7 @@ export async function startGenerationTaskEngine(): Promise<void> {
     registerTaskHandler("asset.image.generate", assetImageTaskHandler);
     registerTaskHandler("storyboard.image.generate", storyboardImageTaskHandler);
     registerTaskHandler("tts.utterance.generate", utteranceTtsTaskHandler);
+    registerTaskHandler("composition.render", compositionRenderTaskHandler);
     initialized = true;
   }
   await generationTaskWorker.start();

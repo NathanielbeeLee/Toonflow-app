@@ -352,7 +352,7 @@ class GenerationTaskRepository {
       if (task.cancelRequested || task.status === "cancelling") {
         await this.finish(task.id, "cancelled", { errorCode: "CANCELLED_DURING_RESTART", errorMessage: "应用退出前正在取消" });
         cancelled++;
-      } else if (task.status === "claimed" || (task.providerJobId && ["submitted", "polling", "finalizing"].includes(task.status))) {
+      } else if (task.status === "claimed" || task.provider === "local" || (task.providerJobId && ["submitted", "polling", "finalizing"].includes(task.status))) {
         await db("generation_tasks").where("id", task.id).update({
           status: "queued",
           lease_owner: null,
@@ -378,7 +378,30 @@ class GenerationTaskRepository {
   }
 
   private async syncLegacyTask(task: GenerationTask | null): Promise<void> {
-    if (!task?.legacyTaskId) return;
+    if (!task) return;
+    if (task.type === "composition.render") {
+      const payload = task.payload as { compositionJobId?: string } | null;
+      if (payload?.compositionJobId) {
+        const statusMap: Partial<Record<GenerationTaskStatus, string>> = {
+          queued: "queued",
+          claimed: "rendering",
+          polling: "rendering",
+          finalizing: "rendering",
+          retry_wait: "queued",
+          cancelling: "rendering",
+          cancelled: "cancelled",
+          succeeded: "succeeded",
+          failed: "failed",
+          manual_review: "failed",
+        };
+        await db("composition_jobs").where("id", payload.compositionJobId).update({
+          status: statusMap[task.status] ?? task.status,
+          error_message: task.errorMessage,
+          updated_at: Date.now(),
+        });
+      }
+    }
+    if (!task.legacyTaskId) return;
     const stateMap: Partial<Record<GenerationTaskStatus, string>> = {
       queued: "排队中",
       claimed: "进行中",

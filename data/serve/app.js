@@ -15627,11 +15627,11 @@ var require_mime_types = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path34) {
-      if (!path34 || typeof path34 !== "string") {
+    function lookup(path35) {
+      if (!path35 || typeof path35 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path34).toLowerCase().slice(1);
+      var extension2 = extname("x." + path35).toLowerCase().slice(1);
       if (!extension2) {
         return false;
       }
@@ -19105,13 +19105,13 @@ var require_view = __commonJS({
   "node_modules/express/lib/view.js"(exports2, module2) {
     "use strict";
     var debug = require_src()("express:view");
-    var path34 = require("node:path");
-    var fs36 = require("node:fs");
-    var dirname2 = path34.dirname;
-    var basename = path34.basename;
-    var extname = path34.extname;
-    var join2 = path34.join;
-    var resolve3 = path34.resolve;
+    var path35 = require("node:path");
+    var fs37 = require("node:fs");
+    var dirname2 = path35.dirname;
+    var basename = path35.basename;
+    var extname = path35.extname;
+    var join2 = path35.join;
+    var resolve3 = path35.resolve;
     module2.exports = View;
     function View(name28, options) {
       var opts = options || {};
@@ -19140,17 +19140,17 @@ var require_view = __commonJS({
       this.path = this.lookup(fileName);
     }
     View.prototype.lookup = function lookup(name28) {
-      var path35;
+      var path36;
       var roots = [].concat(this.root);
       debug('lookup "%s"', name28);
-      for (var i = 0; i < roots.length && !path35; i++) {
+      for (var i = 0; i < roots.length && !path36; i++) {
         var root2 = roots[i];
         var loc = resolve3(root2, name28);
         var dir = dirname2(loc);
         var file3 = basename(loc);
-        path35 = this.resolve(dir, file3);
+        path36 = this.resolve(dir, file3);
       }
-      return path35;
+      return path36;
     };
     View.prototype.render = function render(options, callback) {
       var sync = true;
@@ -19172,21 +19172,21 @@ var require_view = __commonJS({
     };
     View.prototype.resolve = function resolve4(dir, file3) {
       var ext = this.ext;
-      var path35 = join2(dir, file3);
-      var stat = tryStat(path35);
+      var path36 = join2(dir, file3);
+      var stat = tryStat(path36);
       if (stat && stat.isFile()) {
-        return path35;
+        return path36;
       }
-      path35 = join2(dir, basename(file3, ext), "index" + ext);
-      stat = tryStat(path35);
+      path36 = join2(dir, basename(file3, ext), "index" + ext);
+      stat = tryStat(path36);
       if (stat && stat.isFile()) {
-        return path35;
+        return path36;
       }
     };
-    function tryStat(path35) {
-      debug('stat "%s"', path35);
+    function tryStat(path36) {
+      debug('stat "%s"', path36);
       try {
-        return fs36.statSync(path35);
+        return fs37.statSync(path36);
       } catch (e) {
         return void 0;
       }
@@ -19199,14 +19199,14 @@ var require_etag = __commonJS({
   "node_modules/etag/index.js"(exports2, module2) {
     "use strict";
     module2.exports = etag;
-    var crypto8 = require("crypto");
+    var crypto9 = require("crypto");
     var Stats = require("fs").Stats;
     var toString4 = Object.prototype.toString;
     function entitytag(entity) {
       if (entity.length === 0) {
         return '"0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"';
       }
-      var hash3 = crypto8.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
+      var hash3 = crypto9.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
       var len = typeof entity === "string" ? Buffer.byteLength(entity, "utf8") : entity.length;
       return '"' + len.toString(16) + "-" + hash3 + '"';
     }
@@ -20376,15 +20376,15 @@ var require_dist = __commonJS({
           if (token.type === endType)
             break;
           if (token.type === "char" || token.type === "escape") {
-            let path34 = token.value;
+            let path35 = token.value;
             let cur = tokens[pos];
             while (cur.type === "char" || cur.type === "escape") {
-              path34 += cur.value;
+              path35 += cur.value;
               cur = tokens[++pos];
             }
             output.push({
               type: "text",
-              value: encodePath(path34)
+              value: encodePath(path35)
             });
             continue;
           }
@@ -20408,16 +20408,16 @@ var require_dist = __commonJS({
       }
       return new TokenData(consumeUntil("end"), str);
     }
-    function compile(path34, options = {}) {
+    function compile(path35, options = {}) {
       const { encode: encode6 = encodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
-      const data = typeof path34 === "object" ? path34 : parse4(path34, options);
+      const data = typeof path35 === "object" ? path35 : parse4(path35, options);
       const fn = tokensToFunction(data.tokens, delimiter, encode6);
-      return function path35(params = {}) {
-        const [path36, ...missing] = fn(params);
+      return function path36(params = {}) {
+        const [path37, ...missing] = fn(params);
         if (missing.length) {
           throw new TypeError(`Missing parameters: ${missing.join(", ")}`);
         }
-        return path36;
+        return path37;
       };
     }
     function tokensToFunction(tokens, delimiter, encode6) {
@@ -20473,9 +20473,9 @@ var require_dist = __commonJS({
         return [encodeValue(value)];
       };
     }
-    function match(path34, options = {}) {
+    function match(path35, options = {}) {
       const { decode: decode4 = decodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
-      const { regexp, keys: keys2 } = pathToRegexp(path34, options);
+      const { regexp, keys: keys2 } = pathToRegexp(path35, options);
       const decoders = keys2.map((key) => {
         if (decode4 === false)
           return NOOP_VALUE;
@@ -20487,7 +20487,7 @@ var require_dist = __commonJS({
         const m = regexp.exec(input);
         if (!m)
           return false;
-        const path35 = m[0];
+        const path36 = m[0];
         const params = /* @__PURE__ */ Object.create(null);
         for (let i = 1; i < m.length; i++) {
           if (m[i] === void 0)
@@ -20496,22 +20496,22 @@ var require_dist = __commonJS({
           const decoder = decoders[i - 1];
           params[key.name] = decoder(m[i]);
         }
-        return { path: path35, params };
+        return { path: path36, params };
       };
     }
-    function pathToRegexp(path34, options = {}) {
+    function pathToRegexp(path35, options = {}) {
       const { delimiter = DEFAULT_DELIMITER, end = true, sensitive = false, trailing = true } = options;
       const keys2 = [];
       const sources = [];
-      const paths = [path34];
+      const paths = [path35];
       let combinations = 0;
       while (paths.length) {
-        const path35 = paths.shift();
-        if (Array.isArray(path35)) {
-          paths.push(...path35);
+        const path36 = paths.shift();
+        if (Array.isArray(path36)) {
+          paths.push(...path36);
           continue;
         }
-        const data = typeof path35 === "object" ? path35 : parse4(path35, options);
+        const data = typeof path36 === "object" ? path36 : parse4(path36, options);
         flatten(data.tokens, 0, [], (tokens) => {
           if (combinations++ >= 256) {
             throw new PathError("Too many path combinations", data.originalPath);
@@ -20656,18 +20656,18 @@ var require_layer = __commonJS({
     var TRAILING_SLASH_REGEXP = /\/+$/;
     var MATCHING_GROUP_REGEXP = /\((?:\?<(.*?)>)?(?!\?)/g;
     module2.exports = Layer;
-    function Layer(path34, options, fn) {
+    function Layer(path35, options, fn) {
       if (!(this instanceof Layer)) {
-        return new Layer(path34, options, fn);
+        return new Layer(path35, options, fn);
       }
-      debug("new %o", path34);
+      debug("new %o", path35);
       const opts = options || {};
       this.handle = fn;
       this.keys = [];
       this.name = fn.name || "<anonymous>";
       this.params = void 0;
       this.path = void 0;
-      this.slash = path34 === "/" && opts.end === false;
+      this.slash = path35 === "/" && opts.end === false;
       function matcher(_path) {
         if (_path instanceof RegExp) {
           const keys2 = [];
@@ -20706,7 +20706,7 @@ var require_layer = __commonJS({
           decode: decodeParam
         });
       }
-      this.matchers = Array.isArray(path34) ? path34.map(matcher) : [matcher(path34)];
+      this.matchers = Array.isArray(path35) ? path35.map(matcher) : [matcher(path35)];
     }
     Layer.prototype.handleError = function handleError(error73, req, res, next) {
       const fn = this.handle;
@@ -20746,9 +20746,9 @@ var require_layer = __commonJS({
         next(err);
       }
     };
-    Layer.prototype.match = function match(path34) {
+    Layer.prototype.match = function match(path35) {
       let match2;
-      if (path34 != null) {
+      if (path35 != null) {
         if (this.slash) {
           this.params = {};
           this.path = "";
@@ -20756,7 +20756,7 @@ var require_layer = __commonJS({
         }
         let i = 0;
         while (!match2 && i < this.matchers.length) {
-          match2 = this.matchers[i](path34);
+          match2 = this.matchers[i](path35);
           i++;
         }
       }
@@ -20784,13 +20784,13 @@ var require_layer = __commonJS({
         throw err;
       }
     }
-    function loosen(path34) {
-      if (path34 instanceof RegExp || path34 === "/") {
-        return path34;
+    function loosen(path35) {
+      if (path35 instanceof RegExp || path35 === "/") {
+        return path35;
       }
-      return Array.isArray(path34) ? path34.map(function(p3) {
+      return Array.isArray(path35) ? path35.map(function(p3) {
         return loosen(p3);
-      }) : String(path34).replace(TRAILING_SLASH_REGEXP, "");
+      }) : String(path35).replace(TRAILING_SLASH_REGEXP, "");
     }
   }
 });
@@ -20806,9 +20806,9 @@ var require_route = __commonJS({
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
     module2.exports = Route;
-    function Route(path34) {
-      debug("new %o", path34);
-      this.path = path34;
+    function Route(path35) {
+      debug("new %o", path35);
+      this.path = path35;
       this.stack = [];
       this.methods = /* @__PURE__ */ Object.create(null);
     }
@@ -21016,8 +21016,8 @@ var require_router = __commonJS({
         if (++sync > 100) {
           return setImmediate(next, err);
         }
-        const path34 = getPathname(req);
-        if (path34 == null) {
+        const path35 = getPathname(req);
+        if (path35 == null) {
           return done(layerError);
         }
         let layer;
@@ -21025,7 +21025,7 @@ var require_router = __commonJS({
         let route;
         while (match !== true && idx < stack.length) {
           layer = stack[idx++];
-          match = matchLayer(layer, path34);
+          match = matchLayer(layer, path35);
           route = layer.route;
           if (typeof match !== "boolean") {
             layerError = layerError || match;
@@ -21063,18 +21063,18 @@ var require_router = __commonJS({
           } else if (route) {
             layer.handleRequest(req, res, next);
           } else {
-            trimPrefix(layer, layerError, layerPath, path34);
+            trimPrefix(layer, layerError, layerPath, path35);
           }
           sync = 0;
         });
       }
-      function trimPrefix(layer, layerError, layerPath, path34) {
+      function trimPrefix(layer, layerError, layerPath, path35) {
         if (layerPath.length !== 0) {
-          if (layerPath !== path34.substring(0, layerPath.length)) {
+          if (layerPath !== path35.substring(0, layerPath.length)) {
             next(layerError);
             return;
           }
-          const c = path34[layerPath.length];
+          const c = path35[layerPath.length];
           if (c && c !== "/") {
             next(layerError);
             return;
@@ -21098,7 +21098,7 @@ var require_router = __commonJS({
     };
     Router.prototype.use = function use(handler) {
       let offset = 0;
-      let path34 = "/";
+      let path35 = "/";
       if (typeof handler !== "function") {
         let arg = handler;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -21106,7 +21106,7 @@ var require_router = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path34 = handler;
+          path35 = handler;
         }
       }
       const callbacks = flatten.call(slice.call(arguments, offset), Infinity);
@@ -21118,8 +21118,8 @@ var require_router = __commonJS({
         if (typeof fn !== "function") {
           throw new TypeError("argument handler must be a function");
         }
-        debug("use %o %s", path34, fn.name || "<anonymous>");
-        const layer = new Layer(path34, {
+        debug("use %o %s", path35, fn.name || "<anonymous>");
+        const layer = new Layer(path35, {
           sensitive: this.caseSensitive,
           strict: false,
           end: false
@@ -21129,9 +21129,9 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router.prototype.route = function route(path34) {
-      const route2 = new Route(path34);
-      const layer = new Layer(path34, {
+    Router.prototype.route = function route(path35) {
+      const route2 = new Route(path35);
+      const layer = new Layer(path35, {
         sensitive: this.caseSensitive,
         strict: this.strict,
         end: true
@@ -21144,8 +21144,8 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router.prototype[method] = function(path34) {
-        const route = this.route(path34);
+      Router.prototype[method] = function(path35) {
+        const route = this.route(path35);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
@@ -21174,9 +21174,9 @@ var require_router = __commonJS({
       const fqdnIndex = url4.substring(0, pathLength).indexOf("://");
       return fqdnIndex !== -1 ? url4.substring(0, url4.indexOf("/", 3 + fqdnIndex)) : void 0;
     }
-    function matchLayer(layer, path34) {
+    function matchLayer(layer, path35) {
       try {
-        return layer.match(path34);
+        return layer.match(path35);
       } catch (err) {
         return err;
       }
@@ -21404,7 +21404,7 @@ var require_application = __commonJS({
     };
     app2.use = function use(fn) {
       var offset = 0;
-      var path34 = "/";
+      var path35 = "/";
       if (typeof fn !== "function") {
         var arg = fn;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -21412,7 +21412,7 @@ var require_application = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path34 = fn;
+          path35 = fn;
         }
       }
       var fns = flatten.call(slice.call(arguments, offset), Infinity);
@@ -21422,12 +21422,12 @@ var require_application = __commonJS({
       var router179 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router179.use(path34, fn2);
+          return router179.use(path35, fn2);
         }
-        debug(".use app under %s", path34);
-        fn2.mountpath = path34;
+        debug(".use app under %s", path35);
+        fn2.mountpath = path35;
         fn2.parent = this;
-        router179.use(path34, function mounted_app(req, res, next) {
+        router179.use(path35, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -21439,8 +21439,8 @@ var require_application = __commonJS({
       }, this);
       return this;
     };
-    app2.route = function route(path34) {
-      return this.router.route(path34);
+    app2.route = function route(path35) {
+      return this.router.route(path35);
     };
     app2.engine = function engine(ext, fn) {
       if (typeof fn !== "function") {
@@ -21483,7 +21483,7 @@ var require_application = __commonJS({
       }
       return this;
     };
-    app2.path = function path34() {
+    app2.path = function path35() {
       return this.parent ? this.parent.path() + this.mountpath : "";
     };
     app2.enabled = function enabled(setting) {
@@ -21499,17 +21499,17 @@ var require_application = __commonJS({
       return this.set(setting, false);
     };
     methods.forEach(function(method) {
-      app2[method] = function(path34) {
+      app2[method] = function(path35) {
         if (method === "get" && arguments.length === 1) {
-          return this.set(path34);
+          return this.set(path35);
         }
-        var route = this.route(path34);
+        var route = this.route(path35);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
     });
-    app2.all = function all3(path34) {
-      var route = this.route(path34);
+    app2.all = function all3(path35) {
+      var route = this.route(path35);
       var args = slice.call(arguments, 1);
       for (var i = 0; i < methods.length; i++) {
         route[methods[i]].apply(route, args);
@@ -22419,7 +22419,7 @@ var require_request = __commonJS({
       var subdomains2 = !isIP(hostname4) ? hostname4.split(".").reverse() : [hostname4];
       return subdomains2.slice(offset);
     });
-    defineGetter(req, "path", function path34() {
+    defineGetter(req, "path", function path35() {
       return parse4(this).pathname;
     });
     defineGetter(req, "host", function host() {
@@ -22636,17 +22636,17 @@ var require_content_disposition = __commonJS({
 var require_cookie_signature = __commonJS({
   "node_modules/cookie-signature/index.js"(exports2) {
     "use strict";
-    var crypto8 = require("crypto");
+    var crypto9 = require("crypto");
     exports2.sign = function(val, secret) {
       if ("string" != typeof val) throw new TypeError("Cookie value must be provided as a string.");
       if (null == secret) throw new TypeError("Secret key must be provided.");
-      return val + "." + crypto8.createHmac("sha256", secret).update(val).digest("base64").replace(/\=+$/, "");
+      return val + "." + crypto9.createHmac("sha256", secret).update(val).digest("base64").replace(/\=+$/, "");
     };
     exports2.unsign = function(input, secret) {
       if ("string" != typeof input) throw new TypeError("Signed cookie string must be provided.");
       if (null == secret) throw new TypeError("Secret key must be provided.");
       var tentativeValue = input.slice(0, input.lastIndexOf(".")), expectedInput = exports2.sign(tentativeValue, secret), expectedBuffer = Buffer.from(expectedInput), inputBuffer = Buffer.from(input);
-      return expectedBuffer.length === inputBuffer.length && crypto8.timingSafeEqual(expectedBuffer, inputBuffer) ? tentativeValue : false;
+      return expectedBuffer.length === inputBuffer.length && crypto9.timingSafeEqual(expectedBuffer, inputBuffer) ? tentativeValue : false;
     };
   }
 });
@@ -22827,32 +22827,32 @@ var require_send = __commonJS({
     var escapeHtml = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
-    var fs36 = require("fs");
+    var fs37 = require("fs");
     var mime = require_mime_types();
     var ms = require_ms();
     var onFinished = require_on_finished();
     var parseRange = require_range_parser();
-    var path34 = require("path");
+    var path35 = require("path");
     var statuses = require_statuses();
     var Stream = require("stream");
     var util4 = require("util");
-    var extname = path34.extname;
-    var join2 = path34.join;
-    var normalize = path34.normalize;
-    var resolve3 = path34.resolve;
-    var sep = path34.sep;
+    var extname = path35.extname;
+    var join2 = path35.join;
+    var normalize = path35.normalize;
+    var resolve3 = path35.resolve;
+    var sep = path35.sep;
     var BYTES_RANGE_REGEXP = /^ *bytes=/;
     var MAX_MAXAGE = 60 * 60 * 24 * 365 * 1e3;
     var UP_PATH_REGEXP = /(?:^|[\\/])\.\.(?:[\\/]|$)/;
     module2.exports = send;
-    function send(req, path35, options) {
-      return new SendStream(req, path35, options);
+    function send(req, path36, options) {
+      return new SendStream(req, path36, options);
     }
-    function SendStream(req, path35, options) {
+    function SendStream(req, path36, options) {
       Stream.call(this);
       var opts = options || {};
       this.options = opts;
-      this.path = path35;
+      this.path = path36;
       this.req = req;
       this._acceptRanges = opts.acceptRanges !== void 0 ? Boolean(opts.acceptRanges) : true;
       this._cacheControl = opts.cacheControl !== void 0 ? Boolean(opts.cacheControl) : true;
@@ -22966,10 +22966,10 @@ var require_send = __commonJS({
       var lastModified = this.res.getHeader("Last-Modified");
       return parseHttpDate(lastModified) <= parseHttpDate(ifRange);
     };
-    SendStream.prototype.redirect = function redirect(path35) {
+    SendStream.prototype.redirect = function redirect(path36) {
       var res = this.res;
       if (hasListeners(this, "directory")) {
-        this.emit("directory", res, path35);
+        this.emit("directory", res, path36);
         return;
       }
       if (this.hasTrailingSlash()) {
@@ -22989,38 +22989,38 @@ var require_send = __commonJS({
     SendStream.prototype.pipe = function pipe3(res) {
       var root2 = this._root;
       this.res = res;
-      var path35 = decode4(this.path);
-      if (path35 === -1) {
+      var path36 = decode4(this.path);
+      if (path36 === -1) {
         this.error(400);
         return res;
       }
-      if (~path35.indexOf("\0")) {
+      if (~path36.indexOf("\0")) {
         this.error(400);
         return res;
       }
       var parts;
       if (root2 !== null) {
-        if (path35) {
-          path35 = normalize("." + sep + path35);
+        if (path36) {
+          path36 = normalize("." + sep + path36);
         }
-        if (UP_PATH_REGEXP.test(path35)) {
-          debug('malicious path "%s"', path35);
+        if (UP_PATH_REGEXP.test(path36)) {
+          debug('malicious path "%s"', path36);
           this.error(403);
           return res;
         }
-        parts = path35.split(sep);
-        path35 = normalize(join2(root2, path35));
+        parts = path36.split(sep);
+        path36 = normalize(join2(root2, path36));
       } else {
-        if (UP_PATH_REGEXP.test(path35)) {
-          debug('malicious path "%s"', path35);
+        if (UP_PATH_REGEXP.test(path36)) {
+          debug('malicious path "%s"', path36);
           this.error(403);
           return res;
         }
-        parts = normalize(path35).split(sep);
-        path35 = resolve3(path35);
+        parts = normalize(path36).split(sep);
+        path36 = resolve3(path36);
       }
       if (containsDotFile(parts)) {
-        debug('%s dotfile "%s"', this._dotfiles, path35);
+        debug('%s dotfile "%s"', this._dotfiles, path36);
         switch (this._dotfiles) {
           case "allow":
             break;
@@ -23034,13 +23034,13 @@ var require_send = __commonJS({
         }
       }
       if (this._index.length && this.hasTrailingSlash()) {
-        this.sendIndex(path35);
+        this.sendIndex(path36);
         return res;
       }
-      this.sendFile(path35);
+      this.sendFile(path36);
       return res;
     };
-    SendStream.prototype.send = function send2(path35, stat) {
+    SendStream.prototype.send = function send2(path36, stat) {
       var len = stat.size;
       var options = this.options;
       var opts = {};
@@ -23052,9 +23052,9 @@ var require_send = __commonJS({
         this.headersAlreadySent();
         return;
       }
-      debug('pipe "%s"', path35);
-      this.setHeader(path35, stat);
-      this.type(path35);
+      debug('pipe "%s"', path36);
+      this.setHeader(path36, stat);
+      this.type(path36);
       if (this.isConditionalGET()) {
         if (this.isPreconditionFailure()) {
           this.error(412);
@@ -23103,30 +23103,30 @@ var require_send = __commonJS({
         res.end();
         return;
       }
-      this.stream(path35, opts);
+      this.stream(path36, opts);
     };
-    SendStream.prototype.sendFile = function sendFile(path35) {
+    SendStream.prototype.sendFile = function sendFile(path36) {
       var i = 0;
       var self2 = this;
-      debug('stat "%s"', path35);
-      fs36.stat(path35, function onstat(err, stat) {
-        var pathEndsWithSep = path35[path35.length - 1] === sep;
-        if (err && err.code === "ENOENT" && !extname(path35) && !pathEndsWithSep) {
+      debug('stat "%s"', path36);
+      fs37.stat(path36, function onstat(err, stat) {
+        var pathEndsWithSep = path36[path36.length - 1] === sep;
+        if (err && err.code === "ENOENT" && !extname(path36) && !pathEndsWithSep) {
           return next(err);
         }
         if (err) return self2.onStatError(err);
-        if (stat.isDirectory()) return self2.redirect(path35);
+        if (stat.isDirectory()) return self2.redirect(path36);
         if (pathEndsWithSep) return self2.error(404);
-        self2.emit("file", path35, stat);
-        self2.send(path35, stat);
+        self2.emit("file", path36, stat);
+        self2.send(path36, stat);
       });
       function next(err) {
         if (self2._extensions.length <= i) {
           return err ? self2.onStatError(err) : self2.error(404);
         }
-        var p3 = path35 + "." + self2._extensions[i++];
+        var p3 = path36 + "." + self2._extensions[i++];
         debug('stat "%s"', p3);
-        fs36.stat(p3, function(err2, stat) {
+        fs37.stat(p3, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self2.emit("file", p3, stat);
@@ -23134,7 +23134,7 @@ var require_send = __commonJS({
         });
       }
     };
-    SendStream.prototype.sendIndex = function sendIndex(path35) {
+    SendStream.prototype.sendIndex = function sendIndex(path36) {
       var i = -1;
       var self2 = this;
       function next(err) {
@@ -23142,9 +23142,9 @@ var require_send = __commonJS({
           if (err) return self2.onStatError(err);
           return self2.error(404);
         }
-        var p3 = join2(path35, self2._index[i]);
+        var p3 = join2(path36, self2._index[i]);
         debug('stat "%s"', p3);
-        fs36.stat(p3, function(err2, stat) {
+        fs37.stat(p3, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self2.emit("file", p3, stat);
@@ -23153,10 +23153,10 @@ var require_send = __commonJS({
       }
       next();
     };
-    SendStream.prototype.stream = function stream4(path35, options) {
+    SendStream.prototype.stream = function stream4(path36, options) {
       var self2 = this;
       var res = this.res;
-      var stream5 = fs36.createReadStream(path35, options);
+      var stream5 = fs37.createReadStream(path36, options);
       this.emit("stream", stream5);
       stream5.pipe(res);
       function cleanup() {
@@ -23171,17 +23171,17 @@ var require_send = __commonJS({
         self2.emit("end");
       });
     };
-    SendStream.prototype.type = function type(path35) {
+    SendStream.prototype.type = function type(path36) {
       var res = this.res;
       if (res.getHeader("Content-Type")) return;
-      var ext = extname(path35);
+      var ext = extname(path36);
       var type2 = mime.contentType(ext) || "application/octet-stream";
       debug("content-type %s", type2);
       res.setHeader("Content-Type", type2);
     };
-    SendStream.prototype.setHeader = function setHeader(path35, stat) {
+    SendStream.prototype.setHeader = function setHeader(path36, stat) {
       var res = this.res;
-      this.emit("headers", res, path35, stat);
+      this.emit("headers", res, path36, stat);
       if (this._acceptRanges && !res.getHeader("Accept-Ranges")) {
         debug("accept ranges");
         res.setHeader("Accept-Ranges", "bytes");
@@ -23239,9 +23239,9 @@ var require_send = __commonJS({
       }
       return err instanceof Error ? createError(status, err, { expose: false }) : createError(status, err);
     }
-    function decode4(path35) {
+    function decode4(path36) {
       try {
-        return decodeURIComponent(path35);
+        return decodeURIComponent(path36);
       } catch (err) {
         return -1;
       }
@@ -23385,7 +23385,7 @@ var require_response = __commonJS({
     var http4 = require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
-    var path34 = require("node:path");
+    var path35 = require("node:path");
     var pathIsAbsolute = require("node:path").isAbsolute;
     var statuses = require_statuses();
     var sign = require_cookie_signature().sign;
@@ -23394,8 +23394,8 @@ var require_response = __commonJS({
     var setCharset = require_utils3().setCharset;
     var cookie = require_cookie();
     var send = require_send();
-    var extname = path34.extname;
-    var resolve3 = path34.resolve;
+    var extname = path35.extname;
+    var resolve3 = path35.resolve;
     var vary = require_vary();
     var { Buffer: Buffer3 } = require("node:buffer");
     var res = Object.create(http4.ServerResponse.prototype);
@@ -23541,26 +23541,26 @@ var require_response = __commonJS({
       this.type("txt");
       return this.send(body);
     };
-    res.sendFile = function sendFile(path35, options, callback) {
+    res.sendFile = function sendFile(path36, options, callback) {
       var done = callback;
       var req = this.req;
       var res2 = this;
       var next = req.next;
       var opts = options || {};
-      if (!path35) {
+      if (!path36) {
         throw new TypeError("path argument is required to res.sendFile");
       }
-      if (typeof path35 !== "string") {
+      if (typeof path36 !== "string") {
         throw new TypeError("path must be a string to res.sendFile");
       }
       if (typeof options === "function") {
         done = options;
         opts = {};
       }
-      if (!opts.root && !pathIsAbsolute(path35)) {
+      if (!opts.root && !pathIsAbsolute(path36)) {
         throw new TypeError("path must be absolute or specify root to res.sendFile");
       }
-      var pathname = encodeURI(path35);
+      var pathname = encodeURI(path36);
       opts.etag = this.app.enabled("etag");
       var file3 = send(req, pathname, opts);
       sendfile(res2, file3, opts, function(err) {
@@ -23571,7 +23571,7 @@ var require_response = __commonJS({
         }
       });
     };
-    res.download = function download2(path35, filename, options, callback) {
+    res.download = function download2(path36, filename, options, callback) {
       var done = callback;
       var name28 = filename;
       var opts = options || null;
@@ -23588,7 +23588,7 @@ var require_response = __commonJS({
         opts = filename;
       }
       var headers = {
-        "Content-Disposition": contentDisposition(name28 || path35)
+        "Content-Disposition": contentDisposition(name28 || path36)
       };
       if (opts && opts.headers) {
         var keys2 = Object.keys(opts.headers);
@@ -23601,7 +23601,7 @@ var require_response = __commonJS({
       }
       opts = Object.create(opts);
       opts.headers = headers;
-      var fullPath = !opts.root ? resolve3(path35) : path35;
+      var fullPath = !opts.root ? resolve3(path36) : path36;
       return this.sendFile(fullPath, opts, done);
     };
     res.contentType = res.type = function contentType(type) {
@@ -23884,11 +23884,11 @@ var require_serve_static = __commonJS({
         }
         var forwardError = !fallthrough;
         var originalUrl = parseUrl2.original(req);
-        var path34 = parseUrl2(req).pathname;
-        if (path34 === "/" && originalUrl.pathname.substr(-1) !== "/") {
-          path34 = "";
+        var path35 = parseUrl2(req).pathname;
+        if (path35 === "/" && originalUrl.pathname.substr(-1) !== "/") {
+          path35 = "";
         }
-        var stream4 = send(req, path34, opts);
+        var stream4 = send(req, path35, opts);
         stream4.on("directory", onDirectory);
         if (setHeaders) {
           stream4.on("headers", setHeaders);
@@ -33080,11 +33080,11 @@ var require_mime_types2 = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path34) {
-      if (!path34 || typeof path34 !== "string") {
+    function lookup(path35) {
+      if (!path35 || typeof path35 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path34).toLowerCase().substr(1);
+      var extension2 = extname("x." + path35).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -33200,7 +33200,7 @@ var require_accepts2 = __commonJS({
 var require_base64id = __commonJS({
   "node_modules/base64id/lib/base64id.js"(exports2, module2) {
     "use strict";
-    var crypto8 = require("crypto");
+    var crypto9 = require("crypto");
     var Base64Id = function() {
     };
     Base64Id.prototype.getRandomBytes = function(bytes) {
@@ -33208,12 +33208,12 @@ var require_base64id = __commonJS({
       var self2 = this;
       bytes = bytes || 12;
       if (bytes > BUFFER_SIZE) {
-        return crypto8.randomBytes(bytes);
+        return crypto9.randomBytes(bytes);
       }
       var bytesInBuffer = parseInt(BUFFER_SIZE / bytes);
       var threshold = parseInt(bytesInBuffer * 0.85);
       if (!threshold) {
-        return crypto8.randomBytes(bytes);
+        return crypto9.randomBytes(bytes);
       }
       if (this.bytesBufferIndex == null) {
         this.bytesBufferIndex = -1;
@@ -33225,14 +33225,14 @@ var require_base64id = __commonJS({
       if (this.bytesBufferIndex == -1 || this.bytesBufferIndex > threshold) {
         if (!this.isGeneratingBytes) {
           this.isGeneratingBytes = true;
-          crypto8.randomBytes(BUFFER_SIZE, function(err, bytes2) {
+          crypto9.randomBytes(BUFFER_SIZE, function(err, bytes2) {
             self2.bytesBuffer = bytes2;
             self2.bytesBufferIndex = 0;
             self2.isGeneratingBytes = false;
           });
         }
         if (this.bytesBufferIndex == -1) {
-          return crypto8.randomBytes(bytes);
+          return crypto9.randomBytes(bytes);
         }
       }
       var result = this.bytesBuffer.slice(bytes * this.bytesBufferIndex, bytes * (this.bytesBufferIndex + 1));
@@ -33246,7 +33246,7 @@ var require_base64id = __commonJS({
       }
       this.sequenceNumber = this.sequenceNumber + 1 | 0;
       rand.writeInt32BE(this.sequenceNumber, 11);
-      if (crypto8.randomBytes) {
+      if (crypto9.randomBytes) {
         this.getRandomBytes(12).copy(rand);
       } else {
         [0, 4, 8].forEach(function(i) {
@@ -39063,11 +39063,11 @@ var require_server = __commonJS({
        * @protected
        */
       _computePath(options) {
-        let path34 = (options.path || "/engine.io").replace(/\/$/, "");
+        let path35 = (options.path || "/engine.io").replace(/\/$/, "");
         if (options.addTrailingSlash !== false) {
-          path34 += "/";
+          path35 += "/";
         }
-        return path34;
+        return path35;
       }
       /**
        * Returns a list of available transports for upgrade given a certain transport.
@@ -39566,10 +39566,10 @@ var require_server = __commonJS({
        * @param {Object} options
        */
       attach(server2, options = {}) {
-        const path34 = this._computePath(options);
+        const path35 = this._computePath(options);
         const destroyUpgradeTimeout = options.destroyUpgradeTimeout || 1e3;
         function check3(req) {
-          return path34 === req.url.slice(0, path34.length);
+          return path35 === req.url.slice(0, path35.length);
         }
         const listeners = server2.listeners("request").slice(0);
         server2.removeAllListeners("request");
@@ -39577,7 +39577,7 @@ var require_server = __commonJS({
         server2.on("listening", this.init.bind(this));
         server2.on("request", (req, res) => {
           if (check3(req)) {
-            debug('intercepting request for path "%s"', path34);
+            debug('intercepting request for path "%s"', path35);
             this.handleRequest(req, res);
           } else {
             let i = 0;
@@ -40416,8 +40416,8 @@ var require_userver = __commonJS({
        * @param options
        */
       attach(app2, options = {}) {
-        const path34 = this._computePath(options);
-        app2.any(path34, this.handleRequest.bind(this)).ws(path34, {
+        const path35 = this._computePath(options);
+        app2.any(path35, this.handleRequest.bind(this)).ws(path35, {
           compression: options.compression,
           idleTimeout: options.idleTimeout,
           maxBackpressure: options.maxBackpressure,
@@ -44843,7 +44843,7 @@ var require_dist3 = __commonJS({
     var zlib_1 = require("zlib");
     var accepts = require_accepts2();
     var stream_1 = require("stream");
-    var path34 = require("path");
+    var path35 = require("path");
     var engine_io_1 = require_engine_io();
     var client_1 = require_client();
     var events_1 = require("events");
@@ -45038,7 +45038,7 @@ var require_dist3 = __commonJS({
             res.writeHeader("cache-control", "public, max-age=0");
             res.writeHeader("content-type", "application/" + (isMap ? "json" : "javascript") + "; charset=utf-8");
             res.writeHeader("etag", expectedEtag);
-            const filepath = path34.join(__dirname, "../client-dist/", filename);
+            const filepath = path35.join(__dirname, "../client-dist/", filename);
             (0, uws_1.serveFile)(res, filepath);
           });
         }
@@ -45120,7 +45120,7 @@ var require_dist3 = __commonJS({
        * @private
        */
       static sendFile(filename, req, res) {
-        const readStream2 = (0, fs_1.createReadStream)(path34.join(__dirname, "../client-dist/", filename));
+        const readStream2 = (0, fs_1.createReadStream)(path35.join(__dirname, "../client-dist/", filename));
         const encoding = accepts(req).encodings(["br", "gzip", "deflate"]);
         const onError = (err) => {
           if (err) {
@@ -49337,8 +49337,8 @@ var require_node2 = __commonJS({
           }
           break;
         case "FILE":
-          var fs36 = require("fs");
-          stream5 = new fs36.SyncWriteStream(fd2, { autoClose: false });
+          var fs37 = require("fs");
+          stream5 = new fs37.SyncWriteStream(fd2, { autoClose: false });
           stream5._type = "fs";
           break;
         case "PIPE":
@@ -49865,7 +49865,7 @@ var require_path = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.convertPosixPathToPattern = exports2.convertWindowsPathToPattern = exports2.convertPathToPattern = exports2.escapePosixPath = exports2.escapeWindowsPath = exports2.escape = exports2.removeLeadingDotSegment = exports2.makeAbsolute = exports2.unixify = void 0;
     var os = require("os");
-    var path34 = require("path");
+    var path35 = require("path");
     var IS_WINDOWS_PLATFORM = os.platform() === "win32";
     var LEADING_DOT_SEGMENT_CHARACTERS_COUNT = 2;
     var POSIX_UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([()*?[\]{|}]|^!|[!+@](?=\()|\\(?![!()*+?@[\]{|}]))/g;
@@ -49877,7 +49877,7 @@ var require_path = __commonJS({
     }
     exports2.unixify = unixify;
     function makeAbsolute(cwd, filepath) {
-      return path34.resolve(cwd, filepath);
+      return path35.resolve(cwd, filepath);
     }
     exports2.makeAbsolute = makeAbsolute;
     function removeLeadingDotSegment(entry) {
@@ -51176,7 +51176,7 @@ var require_braces = __commonJS({
 var require_constants4 = __commonJS({
   "node_modules/picomatch/lib/constants.js"(exports2, module2) {
     "use strict";
-    var path34 = require("path");
+    var path35 = require("path");
     var WIN_SLASH = "\\\\/";
     var WIN_NO_SLASH = `[^${WIN_SLASH}]`;
     var DEFAULT_MAX_EXTGLOB_RECURSION = 0;
@@ -51350,7 +51350,7 @@ var require_constants4 = __commonJS({
       /* | */
       CHAR_ZERO_WIDTH_NOBREAK_SPACE: 65279,
       /* \uFEFF */
-      SEP: path34.sep,
+      SEP: path35.sep,
       /**
        * Create EXTGLOB_CHARS
        */
@@ -51377,7 +51377,7 @@ var require_constants4 = __commonJS({
 var require_utils5 = __commonJS({
   "node_modules/picomatch/lib/utils.js"(exports2) {
     "use strict";
-    var path34 = require("path");
+    var path35 = require("path");
     var win32 = process.platform === "win32";
     var {
       REGEX_BACKSLASH,
@@ -51406,7 +51406,7 @@ var require_utils5 = __commonJS({
       if (options && typeof options.windows === "boolean") {
         return options.windows;
       }
-      return win32 === true || path34.sep === "\\";
+      return win32 === true || path35.sep === "\\";
     };
     exports2.escapeLast = (input, char, lastIdx) => {
       const idx = input.lastIndexOf(char, lastIdx);
@@ -52770,7 +52770,7 @@ var require_parse3 = __commonJS({
 var require_picomatch = __commonJS({
   "node_modules/picomatch/lib/picomatch.js"(exports2, module2) {
     "use strict";
-    var path34 = require("path");
+    var path35 = require("path");
     var scan = require_scan();
     var parse4 = require_parse3();
     var utils = require_utils5();
@@ -52855,7 +52855,7 @@ var require_picomatch = __commonJS({
     };
     picomatch.matchBase = (input, glob, options, posix = utils.isWindows(options)) => {
       const regex = glob instanceof RegExp ? glob : picomatch.makeRe(glob, options);
-      return regex.test(path34.basename(input));
+      return regex.test(path35.basename(input));
     };
     picomatch.isMatch = (str, patterns, options) => picomatch(patterns, options)(str);
     picomatch.parse = (pattern, options) => {
@@ -53082,7 +53082,7 @@ var require_pattern = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.isAbsolute = exports2.partitionAbsoluteAndRelative = exports2.removeDuplicateSlashes = exports2.matchAny = exports2.convertPatternsToRe = exports2.makeRe = exports2.getPatternParts = exports2.expandBraceExpansion = exports2.expandPatternsWithBraceExpansion = exports2.isAffectDepthOfReadingPattern = exports2.endsWithSlashGlobStar = exports2.hasGlobStar = exports2.getBaseDirectory = exports2.isPatternRelatedToParentDirectory = exports2.getPatternsOutsideCurrentDirectory = exports2.getPatternsInsideCurrentDirectory = exports2.getPositivePatterns = exports2.getNegativePatterns = exports2.isPositivePattern = exports2.isNegativePattern = exports2.convertToNegativePattern = exports2.convertToPositivePattern = exports2.isDynamicPattern = exports2.isStaticPattern = void 0;
-    var path34 = require("path");
+    var path35 = require("path");
     var globParent = require_glob_parent();
     var micromatch = require_micromatch();
     var GLOBSTAR = "**";
@@ -53177,7 +53177,7 @@ var require_pattern = __commonJS({
     }
     exports2.endsWithSlashGlobStar = endsWithSlashGlobStar;
     function isAffectDepthOfReadingPattern(pattern) {
-      const basename = path34.basename(pattern);
+      const basename = path35.basename(pattern);
       return endsWithSlashGlobStar(pattern) || isStaticPattern(basename);
     }
     exports2.isAffectDepthOfReadingPattern = isAffectDepthOfReadingPattern;
@@ -53235,7 +53235,7 @@ var require_pattern = __commonJS({
     }
     exports2.partitionAbsoluteAndRelative = partitionAbsoluteAndRelative;
     function isAbsolute(pattern) {
-      return path34.isAbsolute(pattern);
+      return path35.isAbsolute(pattern);
     }
     exports2.isAbsolute = isAbsolute;
   }
@@ -53410,10 +53410,10 @@ var require_utils6 = __commonJS({
     exports2.array = array4;
     var errno = require_errno();
     exports2.errno = errno;
-    var fs36 = require_fs();
-    exports2.fs = fs36;
-    var path34 = require_path();
-    exports2.path = path34;
+    var fs37 = require_fs();
+    exports2.fs = fs37;
+    var path35 = require_path();
+    exports2.path = path35;
     var pattern = require_pattern();
     exports2.pattern = pattern;
     var stream4 = require_stream3();
@@ -53525,8 +53525,8 @@ var require_async = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.read = void 0;
-    function read(path34, settings, callback) {
-      settings.fs.lstat(path34, (lstatError, lstat) => {
+    function read(path35, settings, callback) {
+      settings.fs.lstat(path35, (lstatError, lstat) => {
         if (lstatError !== null) {
           callFailureCallback(callback, lstatError);
           return;
@@ -53535,7 +53535,7 @@ var require_async = __commonJS({
           callSuccessCallback(callback, lstat);
           return;
         }
-        settings.fs.stat(path34, (statError, stat) => {
+        settings.fs.stat(path35, (statError, stat) => {
           if (statError !== null) {
             if (settings.throwErrorOnBrokenSymbolicLink) {
               callFailureCallback(callback, statError);
@@ -53567,13 +53567,13 @@ var require_sync = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.read = void 0;
-    function read(path34, settings) {
-      const lstat = settings.fs.lstatSync(path34);
+    function read(path35, settings) {
+      const lstat = settings.fs.lstatSync(path35);
       if (!lstat.isSymbolicLink() || !settings.followSymbolicLink) {
         return lstat;
       }
       try {
-        const stat = settings.fs.statSync(path34);
+        const stat = settings.fs.statSync(path35);
         if (settings.markSymbolicLink) {
           stat.isSymbolicLink = () => true;
         }
@@ -53595,12 +53595,12 @@ var require_fs2 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createFileSystemAdapter = exports2.FILE_SYSTEM_ADAPTER = void 0;
-    var fs36 = require("fs");
+    var fs37 = require("fs");
     exports2.FILE_SYSTEM_ADAPTER = {
-      lstat: fs36.lstat,
-      stat: fs36.stat,
-      lstatSync: fs36.lstatSync,
-      statSync: fs36.statSync
+      lstat: fs37.lstat,
+      stat: fs37.stat,
+      lstatSync: fs37.lstatSync,
+      statSync: fs37.statSync
     };
     function createFileSystemAdapter(fsMethods) {
       if (fsMethods === void 0) {
@@ -53617,12 +53617,12 @@ var require_settings = __commonJS({
   "node_modules/@nodelib/fs.stat/out/settings.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var fs36 = require_fs2();
+    var fs37 = require_fs2();
     var Settings = class {
       constructor(_options = {}) {
         this._options = _options;
         this.followSymbolicLink = this._getValue(this._options.followSymbolicLink, true);
-        this.fs = fs36.createFileSystemAdapter(this._options.fs);
+        this.fs = fs37.createFileSystemAdapter(this._options.fs);
         this.markSymbolicLink = this._getValue(this._options.markSymbolicLink, false);
         this.throwErrorOnBrokenSymbolicLink = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
       }
@@ -53644,17 +53644,17 @@ var require_out = __commonJS({
     var sync = require_sync();
     var settings_1 = require_settings();
     exports2.Settings = settings_1.default;
-    function stat(path34, optionsOrSettingsOrCallback, callback) {
+    function stat(path35, optionsOrSettingsOrCallback, callback) {
       if (typeof optionsOrSettingsOrCallback === "function") {
-        async.read(path34, getSettings(), optionsOrSettingsOrCallback);
+        async.read(path35, getSettings(), optionsOrSettingsOrCallback);
         return;
       }
-      async.read(path34, getSettings(optionsOrSettingsOrCallback), callback);
+      async.read(path35, getSettings(optionsOrSettingsOrCallback), callback);
     }
     exports2.stat = stat;
-    function statSync(path34, optionsOrSettings) {
+    function statSync(path35, optionsOrSettings) {
       const settings = getSettings(optionsOrSettings);
-      return sync.read(path34, settings);
+      return sync.read(path35, settings);
     }
     exports2.statSync = statSync;
     function getSettings(settingsOrOptions = {}) {
@@ -53779,8 +53779,8 @@ var require_utils7 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.fs = void 0;
-    var fs36 = require_fs3();
-    exports2.fs = fs36;
+    var fs37 = require_fs3();
+    exports2.fs = fs37;
   }
 });
 
@@ -53872,16 +53872,16 @@ var require_async2 = __commonJS({
           return;
         }
         const tasks = names.map((name28) => {
-          const path34 = common.joinPathSegments(directory, name28, settings.pathSegmentSeparator);
+          const path35 = common.joinPathSegments(directory, name28, settings.pathSegmentSeparator);
           return (done) => {
-            fsStat.stat(path34, settings.fsStatSettings, (error73, stats) => {
+            fsStat.stat(path35, settings.fsStatSettings, (error73, stats) => {
               if (error73 !== null) {
                 done(error73);
                 return;
               }
               const entry = {
                 name: name28,
-                path: path34,
+                path: path35,
                 dirent: utils.fs.createDirentFromStats(name28, stats)
               };
               if (settings.stats) {
@@ -53975,14 +53975,14 @@ var require_fs4 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createFileSystemAdapter = exports2.FILE_SYSTEM_ADAPTER = void 0;
-    var fs36 = require("fs");
+    var fs37 = require("fs");
     exports2.FILE_SYSTEM_ADAPTER = {
-      lstat: fs36.lstat,
-      stat: fs36.stat,
-      lstatSync: fs36.lstatSync,
-      statSync: fs36.statSync,
-      readdir: fs36.readdir,
-      readdirSync: fs36.readdirSync
+      lstat: fs37.lstat,
+      stat: fs37.stat,
+      lstatSync: fs37.lstatSync,
+      statSync: fs37.statSync,
+      readdir: fs37.readdir,
+      readdirSync: fs37.readdirSync
     };
     function createFileSystemAdapter(fsMethods) {
       if (fsMethods === void 0) {
@@ -53999,15 +53999,15 @@ var require_settings2 = __commonJS({
   "node_modules/@nodelib/fs.scandir/out/settings.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var path34 = require("path");
+    var path35 = require("path");
     var fsStat = require_out();
-    var fs36 = require_fs4();
+    var fs37 = require_fs4();
     var Settings = class {
       constructor(_options = {}) {
         this._options = _options;
         this.followSymbolicLinks = this._getValue(this._options.followSymbolicLinks, false);
-        this.fs = fs36.createFileSystemAdapter(this._options.fs);
-        this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path34.sep);
+        this.fs = fs37.createFileSystemAdapter(this._options.fs);
+        this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path35.sep);
         this.stats = this._getValue(this._options.stats, false);
         this.throwErrorOnBrokenSymbolicLink = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
         this.fsStatSettings = new fsStat.Settings({
@@ -54034,17 +54034,17 @@ var require_out2 = __commonJS({
     var sync = require_sync2();
     var settings_1 = require_settings2();
     exports2.Settings = settings_1.default;
-    function scandir(path34, optionsOrSettingsOrCallback, callback) {
+    function scandir(path35, optionsOrSettingsOrCallback, callback) {
       if (typeof optionsOrSettingsOrCallback === "function") {
-        async.read(path34, getSettings(), optionsOrSettingsOrCallback);
+        async.read(path35, getSettings(), optionsOrSettingsOrCallback);
         return;
       }
-      async.read(path34, getSettings(optionsOrSettingsOrCallback), callback);
+      async.read(path35, getSettings(optionsOrSettingsOrCallback), callback);
     }
     exports2.scandir = scandir;
-    function scandirSync(path34, optionsOrSettings) {
+    function scandirSync(path35, optionsOrSettings) {
       const settings = getSettings(optionsOrSettings);
-      return sync.read(path34, settings);
+      return sync.read(path35, settings);
     }
     exports2.scandirSync = scandirSync;
     function getSettings(settingsOrOptions = {}) {
@@ -54691,7 +54691,7 @@ var require_settings3 = __commonJS({
   "node_modules/@nodelib/fs.walk/out/settings.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var path34 = require("path");
+    var path35 = require("path");
     var fsScandir = require_out2();
     var Settings = class {
       constructor(_options = {}) {
@@ -54701,7 +54701,7 @@ var require_settings3 = __commonJS({
         this.deepFilter = this._getValue(this._options.deepFilter, null);
         this.entryFilter = this._getValue(this._options.entryFilter, null);
         this.errorFilter = this._getValue(this._options.errorFilter, null);
-        this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path34.sep);
+        this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path35.sep);
         this.fsScandirSettings = new fsScandir.Settings({
           followSymbolicLinks: this._options.followSymbolicLinks,
           fs: this._options.fs,
@@ -54763,7 +54763,7 @@ var require_reader2 = __commonJS({
   "node_modules/fast-glob/out/readers/reader.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var path34 = require("path");
+    var path35 = require("path");
     var fsStat = require_out();
     var utils = require_utils6();
     var Reader = class {
@@ -54776,7 +54776,7 @@ var require_reader2 = __commonJS({
         });
       }
       _getFullEntryPath(filepath) {
-        return path34.resolve(this._settings.cwd, filepath);
+        return path35.resolve(this._settings.cwd, filepath);
       }
       _makeEntry(stats, pattern) {
         const entry = {
@@ -55192,7 +55192,7 @@ var require_provider = __commonJS({
   "node_modules/fast-glob/out/providers/provider.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var path34 = require("path");
+    var path35 = require("path");
     var deep_1 = require_deep();
     var entry_1 = require_entry();
     var error_1 = require_error();
@@ -55206,7 +55206,7 @@ var require_provider = __commonJS({
         this.entryTransformer = new entry_2.default(this._settings);
       }
       _getRootDirectory(task) {
-        return path34.resolve(this._settings.cwd, task.base);
+        return path35.resolve(this._settings.cwd, task.base);
       }
       _getReaderOptions(task) {
         const basePath = task.base === "." ? "" : task.base;
@@ -55387,16 +55387,16 @@ var require_settings4 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DEFAULT_FILE_SYSTEM_ADAPTER = void 0;
-    var fs36 = require("fs");
+    var fs37 = require("fs");
     var os = require("os");
     var CPU_COUNT = Math.max(os.cpus().length, 1);
     exports2.DEFAULT_FILE_SYSTEM_ADAPTER = {
-      lstat: fs36.lstat,
-      lstatSync: fs36.lstatSync,
-      stat: fs36.stat,
-      statSync: fs36.statSync,
-      readdir: fs36.readdir,
-      readdirSync: fs36.readdirSync
+      lstat: fs37.lstat,
+      lstatSync: fs37.lstatSync,
+      stat: fs37.stat,
+      statSync: fs37.statSync,
+      readdir: fs37.readdir,
+      readdirSync: fs37.readdirSync
     };
     var Settings = class {
       constructor(_options = {}) {
@@ -56276,16 +56276,16 @@ var require_string2 = __commonJS({
       }
     }
     function arrayToList(array4, finalEscape, ctx) {
-      let sql5 = "";
+      let sql7 = "";
       for (let i = 0; i < array4.length; i++) {
         const val = array4[i];
         if (Array.isArray(val)) {
-          sql5 += (i === 0 ? "" : ", ") + "(" + arrayToList(val, finalEscape, ctx) + ")";
+          sql7 += (i === 0 ? "" : ", ") + "(" + arrayToList(val, finalEscape, ctx) + ")";
         } else {
-          sql5 += (i === 0 ? "" : ", ") + finalEscape(val, ctx);
+          sql7 += (i === 0 ? "" : ", ") + finalEscape(val, ctx);
         }
       }
-      return sql5;
+      return sql7;
     }
     function bufferToString(buffer) {
       return "X" + escapeString(buffer.toString("hex"));
@@ -58594,26 +58594,26 @@ var require_ensure_connection_callback = __commonJS({
     function ensureConnectionCallback(runner) {
       runner.client.emit("start", runner.builder);
       runner.builder.emit("start", runner.builder);
-      const sql5 = runner.builder.toSQL();
+      const sql7 = runner.builder.toSQL();
       if (runner.builder._debug) {
-        runner.client.logger.debug(sql5);
+        runner.client.logger.debug(sql7);
       }
-      if (Array.isArray(sql5)) {
-        return runner.queryArray(sql5);
+      if (Array.isArray(sql7)) {
+        return runner.queryArray(sql7);
       }
-      return runner.query(sql5);
+      return runner.query(sql7);
     }
     function ensureConnectionStreamCallback(runner, params) {
       try {
-        const sql5 = runner.builder.toSQL();
-        if (Array.isArray(sql5) && params.hasHandler) {
+        const sql7 = runner.builder.toSQL();
+        if (Array.isArray(sql7) && params.hasHandler) {
           throw new Error(
             "The stream may only be used with a single query statement."
           );
         }
         return runner.client.stream(
           runner.connection,
-          sql5,
+          sql7,
           params.stream,
           params.options
         );
@@ -58752,7 +58752,7 @@ var require_runner = __commonJS({
           if (!(error73 instanceof KnexTimeoutError)) {
             return Promise.reject(error73);
           }
-          const { timeout: timeout2, sql: sql5, bindings } = obj;
+          const { timeout: timeout2, sql: sql7, bindings } = obj;
           let cancelQuery;
           if (obj.cancelOnTimeout) {
             cancelQuery = this.client.cancelQuery(this.connection);
@@ -58764,14 +58764,14 @@ var require_runner = __commonJS({
             this.connection.__knex__disposed = error73;
             throw Object.assign(cancelError, {
               message: `After query timeout of ${timeout2}ms exceeded, cancelling of query failed.`,
-              sql: sql5,
+              sql: sql7,
               bindings,
               timeout: timeout2
             });
           }).then(() => {
             throw Object.assign(error73, {
               message: `Defined query timeout of ${timeout2}ms exceeded when running query.`,
-              sql: sql5,
+              sql: sql7,
               bindings,
               timeout: timeout2
             });
@@ -59920,11 +59920,11 @@ var require_baseGet = __commonJS({
     "use strict";
     var castPath2 = require_castPath();
     var toKey2 = require_toKey();
-    function baseGet2(object4, path34) {
-      path34 = castPath2(path34, object4);
-      var index = 0, length = path34.length;
+    function baseGet2(object4, path35) {
+      path35 = castPath2(path35, object4);
+      var index = 0, length = path35.length;
       while (object4 != null && index < length) {
-        object4 = object4[toKey2(path34[index++])];
+        object4 = object4[toKey2(path35[index++])];
       }
       return index && index == length ? object4 : void 0;
     }
@@ -59937,8 +59937,8 @@ var require_get2 = __commonJS({
   "node_modules/lodash/get.js"(exports2, module2) {
     "use strict";
     var baseGet2 = require_baseGet();
-    function get2(object4, path34, defaultValue) {
-      var result = object4 == null ? void 0 : baseGet2(object4, path34);
+    function get2(object4, path35, defaultValue) {
+      var result = object4 == null ? void 0 : baseGet2(object4, path35);
       return result === void 0 ? defaultValue : result;
     }
     module2.exports = get2;
@@ -60525,26 +60525,26 @@ var require_flatten = __commonJS({
 var require_fs5 = __commonJS({
   "node_modules/knex/lib/migrations/util/fs.js"(exports2, module2) {
     "use strict";
-    var fs36 = require("fs");
+    var fs37 = require("fs");
     var flatten = require_flatten();
     var os = require("os");
-    var path34 = require("path");
+    var path35 = require("path");
     var { promisify: promisify2 } = require("util");
-    var stat = promisify2(fs36.stat);
-    var readFile3 = promisify2(fs36.readFile);
-    var writeFile3 = promisify2(fs36.writeFile);
-    var readdir = promisify2(fs36.readdir);
-    var mkdir = promisify2(fs36.mkdir);
-    function existsSync4(path35) {
+    var stat = promisify2(fs37.stat);
+    var readFile3 = promisify2(fs37.readFile);
+    var writeFile3 = promisify2(fs37.writeFile);
+    var readdir = promisify2(fs37.readdir);
+    var mkdir = promisify2(fs37.mkdir);
+    function existsSync4(path36) {
       try {
-        fs36.accessSync(path35);
+        fs37.accessSync(path36);
         return true;
       } catch (e) {
         return false;
       }
     }
     function createTemp() {
-      return promisify2(fs36.mkdtemp)(`${os.tmpdir()}${path34.sep}`);
+      return promisify2(fs37.mkdtemp)(`${os.tmpdir()}${path35.sep}`);
     }
     function ensureDirectoryExists(dir) {
       return stat(dir).catch(() => mkdir(dir, { recursive: true }));
@@ -60554,7 +60554,7 @@ var require_fs5 = __commonJS({
       return flatten(
         await Promise.all(
           pathsList.sort().map(async (currentPath) => {
-            const currentFile = path34.resolve(dir, currentPath);
+            const currentFile = path35.resolve(dir, currentPath);
             const statFile = await stat(currentFile);
             if (statFile && statFile.isDirectory()) {
               if (recursive) {
@@ -61040,11 +61040,11 @@ var require_hasPath = __commonJS({
     var isIndex2 = require_isIndex();
     var isLength2 = require_isLength();
     var toKey2 = require_toKey();
-    function hasPath2(object4, path34, hasFunc) {
-      path34 = castPath2(path34, object4);
-      var index = -1, length = path34.length, result = false;
+    function hasPath2(object4, path35, hasFunc) {
+      path35 = castPath2(path35, object4);
+      var index = -1, length = path35.length, result = false;
       while (++index < length) {
-        var key = toKey2(path34[index]);
+        var key = toKey2(path35[index]);
         if (!(result = object4 != null && hasFunc(object4, key))) {
           break;
         }
@@ -61066,8 +61066,8 @@ var require_hasIn = __commonJS({
     "use strict";
     var baseHasIn2 = require_baseHasIn();
     var hasPath2 = require_hasPath();
-    function hasIn2(object4, path34) {
-      return object4 != null && hasPath2(object4, path34, baseHasIn2);
+    function hasIn2(object4, path35) {
+      return object4 != null && hasPath2(object4, path35, baseHasIn2);
     }
     module2.exports = hasIn2;
   }
@@ -61086,13 +61086,13 @@ var require_baseMatchesProperty = __commonJS({
     var toKey2 = require_toKey();
     var COMPARE_PARTIAL_FLAG7 = 1;
     var COMPARE_UNORDERED_FLAG5 = 2;
-    function baseMatchesProperty2(path34, srcValue) {
-      if (isKey2(path34) && isStrictComparable2(srcValue)) {
-        return matchesStrictComparable2(toKey2(path34), srcValue);
+    function baseMatchesProperty2(path35, srcValue) {
+      if (isKey2(path35) && isStrictComparable2(srcValue)) {
+        return matchesStrictComparable2(toKey2(path35), srcValue);
       }
       return function(object4) {
-        var objValue = get2(object4, path34);
-        return objValue === void 0 && objValue === srcValue ? hasIn2(object4, path34) : baseIsEqual2(srcValue, objValue, COMPARE_PARTIAL_FLAG7 | COMPARE_UNORDERED_FLAG5);
+        var objValue = get2(object4, path35);
+        return objValue === void 0 && objValue === srcValue ? hasIn2(object4, path35) : baseIsEqual2(srcValue, objValue, COMPARE_PARTIAL_FLAG7 | COMPARE_UNORDERED_FLAG5);
       };
     }
     module2.exports = baseMatchesProperty2;
@@ -61117,9 +61117,9 @@ var require_basePropertyDeep = __commonJS({
   "node_modules/lodash/_basePropertyDeep.js"(exports2, module2) {
     "use strict";
     var baseGet2 = require_baseGet();
-    function basePropertyDeep2(path34) {
+    function basePropertyDeep2(path35) {
       return function(object4) {
-        return baseGet2(object4, path34);
+        return baseGet2(object4, path35);
       };
     }
     module2.exports = basePropertyDeep2;
@@ -61134,8 +61134,8 @@ var require_property = __commonJS({
     var basePropertyDeep2 = require_basePropertyDeep();
     var isKey2 = require_isKey();
     var toKey2 = require_toKey();
-    function property2(path34) {
-      return isKey2(path34) ? baseProperty2(toKey2(path34)) : basePropertyDeep2(path34);
+    function property2(path35) {
+      return isKey2(path35) ? baseProperty2(toKey2(path35)) : basePropertyDeep2(path35);
     }
     module2.exports = property2;
   }
@@ -61394,10 +61394,10 @@ var require_sortBy = __commonJS({
 var require_is_node_modules = __commonJS({
   "node_modules/get-package-type/is-node-modules.cjs"(exports2, module2) {
     "use strict";
-    var path34 = require("path");
+    var path35 = require("path");
     function isNodeModules(directory) {
-      let basename = path34.basename(directory);
-      if (path34.sep === "\\") {
+      let basename = path35.basename(directory);
+      if (path35.sep === "\\") {
         basename = basename.toLowerCase();
       }
       return basename === "node_modules";
@@ -61418,7 +61418,7 @@ var require_cache = __commonJS({
 var require_async7 = __commonJS({
   "node_modules/get-package-type/async.cjs"(exports2, module2) {
     "use strict";
-    var path34 = require("path");
+    var path35 = require("path");
     var { promisify: promisify2 } = require("util");
     var readFile3 = promisify2(require("fs").readFile);
     var isNodeModules = require_is_node_modules();
@@ -61429,10 +61429,10 @@ var require_async7 = __commonJS({
         return "commonjs";
       }
       try {
-        return JSON.parse(await readFile3(path34.resolve(directory, "package.json"))).type || "commonjs";
+        return JSON.parse(await readFile3(path35.resolve(directory, "package.json"))).type || "commonjs";
       } catch (_) {
       }
-      const parent = path34.dirname(directory);
+      const parent = path35.dirname(directory);
       if (parent === directory) {
         return "commonjs";
       }
@@ -61453,7 +61453,7 @@ var require_async7 = __commonJS({
       return result;
     }
     function getPackageType(filename) {
-      return getDirectoryType(path34.resolve(path34.dirname(filename)));
+      return getDirectoryType(path35.resolve(path35.dirname(filename)));
     }
     module2.exports = getPackageType;
   }
@@ -61463,7 +61463,7 @@ var require_async7 = __commonJS({
 var require_sync7 = __commonJS({
   "node_modules/get-package-type/sync.cjs"(exports2, module2) {
     "use strict";
-    var path34 = require("path");
+    var path35 = require("path");
     var { readFileSync: readFileSync2 } = require("fs");
     var isNodeModules = require_is_node_modules();
     var resultsCache = require_cache();
@@ -61472,10 +61472,10 @@ var require_sync7 = __commonJS({
         return "commonjs";
       }
       try {
-        return JSON.parse(readFileSync2(path34.resolve(directory, "package.json"))).type || "commonjs";
+        return JSON.parse(readFileSync2(path35.resolve(directory, "package.json"))).type || "commonjs";
       } catch (_) {
       }
-      const parent = path34.dirname(directory);
+      const parent = path35.dirname(directory);
       if (parent === directory) {
         return "commonjs";
       }
@@ -61490,7 +61490,7 @@ var require_sync7 = __commonJS({
       return result;
     }
     function getPackageTypeSync(filename) {
-      return getDirectoryType(path34.resolve(path34.dirname(filename)));
+      return getDirectoryType(path35.resolve(path35.dirname(filename)));
     }
     module2.exports = getPackageTypeSync;
   }
@@ -61533,7 +61533,7 @@ var require_import_file = __commonJS({
 var require_MigrationsLoader = __commonJS({
   "node_modules/knex/lib/migrations/common/MigrationsLoader.js"(exports2, module2) {
     "use strict";
-    var path34 = require("path");
+    var path35 = require("path");
     var DEFAULT_LOAD_EXTENSIONS = Object.freeze([
       ".co",
       ".coffee",
@@ -61555,8 +61555,8 @@ var require_MigrationsLoader = __commonJS({
         this.loadExtensions = loadExtensions || DEFAULT_LOAD_EXTENSIONS;
       }
       getFile(migrationsInfo) {
-        const absoluteDir = path34.resolve(process.cwd(), migrationsInfo.directory);
-        const _path = path34.join(absoluteDir, migrationsInfo.file);
+        const absoluteDir = path35.resolve(process.cwd(), migrationsInfo.directory);
+        const _path = path35.join(absoluteDir, migrationsInfo.file);
         const importFile = require_import_file();
         return importFile(_path);
       }
@@ -61572,7 +61572,7 @@ var require_MigrationsLoader = __commonJS({
 var require_fs_migrations = __commonJS({
   "node_modules/knex/lib/migrations/migrate/sources/fs-migrations.js"(exports2, module2) {
     "use strict";
-    var path34 = require("path");
+    var path35 = require("path");
     var sortBy = require_sortBy();
     var { readdir } = require_fs5();
     var { AbstractMigrationsLoader } = require_MigrationsLoader();
@@ -61583,7 +61583,7 @@ var require_fs_migrations = __commonJS({
        */
       getMigrations(loadExtensions) {
         const readMigrationsPromises = this.migrationsPaths.map((configDir) => {
-          const absoluteDir = path34.resolve(process.cwd(), configDir);
+          const absoluteDir = path35.resolve(process.cwd(), configDir);
           return readdir(absoluteDir).then((files) => ({
             files,
             configDir,
@@ -61624,7 +61624,7 @@ var require_fs_migrations = __commonJS({
     function filterMigrations(migrationSource, migrations2, loadExtensions) {
       return migrations2.filter((migration) => {
         const migrationName = migrationSource.getMigrationName(migration);
-        const extension = path34.extname(migrationName);
+        const extension = path35.extname(migrationName);
         return loadExtensions.includes(extension);
       });
     }
@@ -61986,7 +61986,7 @@ var require_timestamp = __commonJS({
 var require_MigrationGenerator = __commonJS({
   "node_modules/knex/lib/migrations/migrate/MigrationGenerator.js"(exports2, module2) {
     "use strict";
-    var path34 = require("path");
+    var path35 = require("path");
     var { writeJsFileUsingTemplate } = require_template2();
     var { getMergedConfig } = require_migrator_configuration_merger();
     var { ensureDirectoryExists } = require_fs5();
@@ -62015,7 +62015,7 @@ var require_MigrationGenerator = __commonJS({
         return Promise.all(promises6);
       }
       _getStubPath() {
-        return this.config.stub || path34.join(__dirname, "stub", this.config.extension + ".stub");
+        return this.config.stub || path35.join(__dirname, "stub", this.config.extension + ".stub");
       }
       _getNewMigrationName(name28) {
         if (name28[0] === "-") name28 = name28.slice(1);
@@ -62025,7 +62025,7 @@ var require_MigrationGenerator = __commonJS({
         const fileName = this._getNewMigrationName(name28);
         const dirs = this._absoluteConfigDirs();
         const dir = dirs.slice(-1)[0];
-        return path34.join(dir, fileName);
+        return path35.join(dir, fileName);
       }
       // Write a new migration to disk, using the config and generated filename,
       // passing any `variables` given in the config to the template.
@@ -62047,7 +62047,7 @@ var require_MigrationGenerator = __commonJS({
               "Failed to resolve config file, knex cannot determine where to generate migrations"
             );
           }
-          return path34.resolve(process.cwd(), directory);
+          return path35.resolve(process.cwd(), directory);
         });
       }
     };
@@ -62689,13 +62689,13 @@ var require_includes = __commonJS({
 var require_fs_seeds = __commonJS({
   "node_modules/knex/lib/migrations/seed/sources/fs-seeds.js"(exports2, module2) {
     "use strict";
-    var path34 = require("path");
+    var path35 = require("path");
     var flatten = require_flatten();
     var includes = require_includes();
     var { AbstractMigrationsLoader } = require_MigrationsLoader();
     var { getFilepathsInFolder } = require_fs5();
     var filterByLoadExtensions = (extensions) => (value) => {
-      const extension = path34.extname(value);
+      const extension = path35.extname(value);
       return includes(extensions, extension);
     };
     var FsSeeds = class extends AbstractMigrationsLoader {
@@ -62707,7 +62707,7 @@ var require_fs_seeds = __commonJS({
               "Empty value passed as a directory for Seeder, this is not supported."
             );
           }
-          return path34.resolve(process.cwd(), directory);
+          return path35.resolve(process.cwd(), directory);
         });
       }
       async getSeeds(config3) {
@@ -62724,7 +62724,7 @@ var require_fs_seeds = __commonJS({
           files.sort();
         }
         if (specific) {
-          files = files.filter((file3) => path34.basename(file3) === specific);
+          files = files.filter((file3) => path35.basename(file3) === specific);
           if (files.length === 0) {
             throw new Error(
               `Invalid argument provided: the specific seed "${specific}" does not exist.`
@@ -62801,7 +62801,7 @@ var require_seeder_configuration_merger = __commonJS({
 var require_Seeder = __commonJS({
   "node_modules/knex/lib/migrations/seed/Seeder.js"(exports2, module2) {
     "use strict";
-    var path34 = require("path");
+    var path35 = require("path");
     var { ensureDirectoryExists } = require_fs5();
     var { writeJsFileUsingTemplate } = require_template2();
     var { yyyymmddhhmmss } = require_timestamp();
@@ -62852,7 +62852,7 @@ var require_Seeder = __commonJS({
         return filepath;
       }
       _getStubPath() {
-        return this.config.stub || path34.join(__dirname, "stub", this.config.extension + ".stub");
+        return this.config.stub || path35.join(__dirname, "stub", this.config.extension + ".stub");
       }
       _getNewStubFileName(name28) {
         if (name28[0] === "-") name28 = name28.slice(1);
@@ -62867,7 +62867,7 @@ var require_Seeder = __commonJS({
           this.config.logger
         );
         const dir = dirs.slice(-1)[0];
-        return path34.join(dir, fileName);
+        return path35.join(dir, fileName);
       }
       // Write a new seed to disk, using the config and generated filename,
       // passing any `variables` given in the config to the template.
@@ -63822,8 +63822,8 @@ var require_transaction = __commonJS({
           this._rejecter(error73);
         });
       }
-      query(conn, sql5, status, value) {
-        const q = this.trxClient.query(conn, sql5).catch((err) => {
+      query(conn, sql7, status, value) {
+        const q = this.trxClient.query(conn, sql7).catch((err) => {
           status = 2;
           value = err;
           this._completed = true;
@@ -63834,7 +63834,7 @@ var require_transaction = __commonJS({
           }
           if (status === 2) {
             if (value === void 0) {
-              if (this.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql5)) {
+              if (this.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql7)) {
                 this._resolver();
                 return;
               }
@@ -64020,8 +64020,8 @@ var require_transaction = __commonJS({
       return trxClient;
     }
     function completedError(trx, obj) {
-      const sql5 = typeof obj === "string" ? obj : obj && obj.sql;
-      debug("%s: Transaction completed: %s", trx.txid, sql5);
+      const sql7 = typeof obj === "string" ? obj : obj && obj.sql;
+      debug("%s: Transaction completed: %s", trx.txid, sql7);
       throw new Error(
         "Transaction query already complete, run with DEBUG=knex:tx for more info"
       );
@@ -64036,12 +64036,12 @@ var require_query_executioner = __commonJS({
     "use strict";
     var _debugQuery = require_src3()("knex:query");
     var debugBindings = require_src3()("knex:bindings");
-    var debugQuery = (sql5, txId) => _debugQuery(sql5.replace(/%/g, "%%"), txId);
+    var debugQuery = (sql7, txId) => _debugQuery(sql7.replace(/%/g, "%%"), txId);
     var { isString: isString2 } = require_is();
-    function formatQuery(sql5, bindings, timeZone, client) {
+    function formatQuery(sql7, bindings, timeZone, client) {
       bindings = bindings == null ? [] : [].concat(bindings);
       let index = 0;
-      return sql5.replace(/\\?\?/g, (match) => {
+      return sql7.replace(/\\?\?/g, (match) => {
         if (match === "\\?") {
           return "?";
         }
@@ -65355,8 +65355,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Adds a raw `where` clause to the query.
-      whereRaw(sql5, bindings) {
-        const raw = sql5.isRawInstance ? sql5 : this.client.raw(sql5, bindings);
+      whereRaw(sql7, bindings) {
+        const raw = sql7.isRawInstance ? sql7 : this.client.raw(sql7, bindings);
         this._statements.push({
           grouping: "where",
           type: "whereRaw",
@@ -65366,8 +65366,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      orWhereRaw(sql5, bindings) {
-        return this._bool("or").whereRaw(sql5, bindings);
+      orWhereRaw(sql7, bindings) {
+        return this._bool("or").whereRaw(sql7, bindings);
       }
       // Helper for compiling any advanced `where` queries.
       whereWrapped(callback) {
@@ -65525,8 +65525,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Adds a raw `group by` clause to the query.
-      groupByRaw(sql5, bindings) {
-        const raw = sql5.isRawInstance ? sql5 : this.client.raw(sql5, bindings);
+      groupByRaw(sql7, bindings) {
+        const raw = sql7.isRawInstance ? sql7 : this.client.raw(sql7, bindings);
         this._statements.push({
           grouping: "group",
           type: "groupByRaw",
@@ -65571,8 +65571,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Add a raw `order by` clause to the query.
-      orderByRaw(sql5, bindings) {
-        const raw = sql5.isRawInstance ? sql5 : this.client.raw(sql5, bindings);
+      orderByRaw(sql7, bindings) {
+        const raw = sql7.isRawInstance ? sql7 : this.client.raw(sql7, bindings);
         this._statements.push({
           grouping: "order",
           type: "orderByRaw",
@@ -65754,8 +65754,8 @@ var require_querybuilder = __commonJS({
         return this._bool("or")._not(true).havingIn(column, values);
       }
       // Adds a raw `having` clause to the query.
-      havingRaw(sql5, bindings) {
-        const raw = sql5.isRawInstance ? sql5 : this.client.raw(sql5, bindings);
+      havingRaw(sql7, bindings) {
+        const raw = sql7.isRawInstance ? sql7 : this.client.raw(sql7, bindings);
         this._statements.push({
           grouping: "having",
           type: "havingRaw",
@@ -65765,8 +65765,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      orHavingRaw(sql5, bindings) {
-        return this._bool("or").havingRaw(sql5, bindings);
+      orHavingRaw(sql7, bindings) {
+        return this._bool("or").havingRaw(sql7, bindings);
       }
       // set the skip binding parameter (= insert the raw value in the query) for an attribute.
       _setSkipBinding(attribute, options) {
@@ -66086,8 +66086,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      fromRaw(sql5, bindings) {
-        const raw = sql5.isRawInstance ? sql5 : this.client.raw(sql5, bindings);
+      fromRaw(sql7, bindings) {
+        const raw = sql7.isRawInstance ? sql7 : this.client.raw(sql7, bindings);
         return this.from(raw);
       }
       // Passes query to provided callback function, useful for e.g. composing
@@ -66113,11 +66113,11 @@ var require_querybuilder = __commonJS({
       }
       jsonExtract() {
         const column = arguments[0];
-        let path34;
+        let path35;
         let alias;
         let singleValue = true;
         if (arguments.length >= 2) {
-          path34 = arguments[1];
+          path35 = arguments[1];
         }
         if (arguments.length >= 3) {
           alias = arguments[2];
@@ -66130,32 +66130,32 @@ var require_querybuilder = __commonJS({
         }
         return this._json("jsonExtract", {
           column,
-          path: path34,
+          path: path35,
           alias,
           singleValue
           // boolean used only in MSSQL to use function for extract value instead of object/array.
         });
       }
-      jsonSet(column, path34, value, alias) {
+      jsonSet(column, path35, value, alias) {
         return this._json("jsonSet", {
           column,
-          path: path34,
+          path: path35,
           value,
           alias
         });
       }
-      jsonInsert(column, path34, value, alias) {
+      jsonInsert(column, path35, value, alias) {
         return this._json("jsonInsert", {
           column,
-          path: path34,
+          path: path35,
           value,
           alias
         });
       }
-      jsonRemove(column, path34, alias) {
+      jsonRemove(column, path35, alias) {
         return this._json("jsonRemove", {
           column,
-          path: path34,
+          path: path35,
           alias
         });
       }
@@ -66194,12 +66194,12 @@ var require_querybuilder = __commonJS({
       orWhereNotJsonObject(column, value) {
         return this._bool("or").whereNotJsonObject(column, value);
       }
-      whereJsonPath(column, path34, operator, value) {
-        this._whereJsonWrappedValue("whereJsonPath", column, value, operator, path34);
+      whereJsonPath(column, path35, operator, value) {
+        this._whereJsonWrappedValue("whereJsonPath", column, value, operator, path35);
         return this;
       }
-      orWhereJsonPath(column, path34, operator, value) {
-        return this._bool("or").whereJsonPath(column, path34, operator, value);
+      orWhereJsonPath(column, path35, operator, value) {
+        return this._bool("or").whereJsonPath(column, path35, operator, value);
       }
       // Json superset wheres
       whereJsonSupersetOf(column, value) {
@@ -66734,15 +66734,15 @@ var require_wrappingFormatter = __commonJS({
       return ret.join(", ");
     }
     function outputQuery(compiled, isParameter, builder, client) {
-      let sql5 = compiled.sql || "";
-      if (sql5) {
+      let sql7 = compiled.sql || "";
+      if (sql7) {
         if ((compiled.method === "select" || compiled.method === "first") && (isParameter || compiled.as)) {
-          sql5 = `(${sql5})`;
+          sql7 = `(${sql7})`;
           if (compiled.as)
-            return client.alias(sql5, wrapString(compiled.as, builder, client));
+            return client.alias(sql7, wrapString(compiled.as, builder, client));
         }
       }
-      return sql5;
+      return sql7;
     }
     function rawOrFn(value, method, builder, client, bindingHolder) {
       if (typeof value === "function") {
@@ -66786,7 +66786,7 @@ var require_rawFormatter = __commonJS({
       const expectedBindings = raw.bindings.length;
       const values = raw.bindings;
       let index = 0;
-      const sql5 = raw.sql.replace(/\\?\?\??/g, function(match) {
+      const sql7 = raw.sql.replace(/\\?\?\??/g, function(match) {
         if (match === "\\?") {
           return match;
         }
@@ -66801,7 +66801,7 @@ var require_rawFormatter = __commonJS({
       }
       return {
         method: "raw",
-        sql: sql5,
+        sql: sql7,
         bindings: bindingsHolder.bindings
       };
     }
@@ -66812,7 +66812,7 @@ var require_rawFormatter = __commonJS({
       const builder = raw;
       const values = raw.bindings;
       const regex = /\\?(:(\w+):(?=::)|:(\w+):(?!:)|:(\w+))/g;
-      const sql5 = raw.sql.replace(regex, function(match, p1, p22, p3, p4) {
+      const sql7 = raw.sql.replace(regex, function(match, p1, p22, p3, p4) {
         if (match !== p1) {
           return p1;
         }
@@ -66836,7 +66836,7 @@ var require_rawFormatter = __commonJS({
       });
       return {
         method: "raw",
-        sql: sql5,
+        sql: sql7,
         bindings: bindingsHolder.bindings
       };
     }
@@ -66907,8 +66907,8 @@ var require_raw2 = __commonJS({
           saveAsyncStack(this, 4);
         }
       }
-      set(sql5, bindings) {
-        this.sql = sql5;
+      set(sql7, bindings) {
+        this.sql = sql7;
         this.bindings = isObject5(bindings) && !bindings.toSQL || bindings === void 0 ? bindings : [bindings];
         return this;
       }
@@ -67094,8 +67094,8 @@ var require_has = __commonJS({
     "use strict";
     var baseHas = require_baseHas();
     var hasPath2 = require_hasPath();
-    function has(object4, path34) {
-      return object4 != null && hasPath2(object4, path34, baseHas);
+    function has(object4, path35) {
+      return object4 != null && hasPath2(object4, path35, baseHas);
     }
     module2.exports = has;
   }
@@ -67126,14 +67126,14 @@ var require_baseSet = __commonJS({
     var isIndex2 = require_isIndex();
     var isObject5 = require_isObject();
     var toKey2 = require_toKey();
-    function baseSet(object4, path34, value, customizer) {
+    function baseSet(object4, path35, value, customizer) {
       if (!isObject5(object4)) {
         return object4;
       }
-      path34 = castPath2(path34, object4);
-      var index = -1, length = path34.length, lastIndex = length - 1, nested = object4;
+      path35 = castPath2(path35, object4);
+      var index = -1, length = path35.length, lastIndex = length - 1, nested = object4;
       while (nested != null && ++index < length) {
-        var key = toKey2(path34[index]), newValue = value;
+        var key = toKey2(path35[index]), newValue = value;
         if (key === "__proto__" || key === "constructor" || key === "prototype") {
           return object4;
         }
@@ -67141,7 +67141,7 @@ var require_baseSet = __commonJS({
           var objValue = nested[key];
           newValue = customizer ? customizer(objValue, key, nested) : void 0;
           if (newValue === void 0) {
-            newValue = isObject5(objValue) ? objValue : isIndex2(path34[index + 1]) ? [] : {};
+            newValue = isObject5(objValue) ? objValue : isIndex2(path35[index + 1]) ? [] : {};
           }
         }
         assignValue(nested, key, newValue);
@@ -67163,9 +67163,9 @@ var require_basePickBy = __commonJS({
     function basePickBy(object4, paths, predicate) {
       var index = -1, length = paths.length, result = {};
       while (++index < length) {
-        var path34 = paths[index], value = baseGet2(object4, path34);
-        if (predicate(value, path34)) {
-          baseSet(result, castPath2(path34, object4), value);
+        var path35 = paths[index], value = baseGet2(object4, path35);
+        if (predicate(value, path35)) {
+          baseSet(result, castPath2(path35, object4), value);
         }
       }
       return result;
@@ -67190,8 +67190,8 @@ var require_pickBy = __commonJS({
         return [prop];
       });
       predicate = baseIteratee2(predicate);
-      return basePickBy(object4, props, function(value, path34) {
-        return predicate(value, path34[0]);
+      return basePickBy(object4, props, function(value, path35) {
+        return predicate(value, path35[0]);
       });
     }
     module2.exports = pickBy;
@@ -67351,7 +67351,7 @@ var require_querycompiler = __commonJS({
       // the component compilers, trimming out the empties, and returning a
       // generated query string.
       select() {
-        let sql5 = this.with();
+        let sql7 = this.with();
         let unionStatement = "";
         const firstStatements = [];
         const endStatements = [];
@@ -67377,13 +67377,13 @@ var require_querycompiler = __commonJS({
           const statements = compact(firstStatements.concat(endStatements)).join(
             " "
           );
-          sql5 += unionStatement + (statements ? " " + statements : "");
+          sql7 += unionStatement + (statements ? " " + statements : "");
         } else {
           const allStatements = (wrapMainQuery ? "(" : "") + compact(firstStatements).join(" ") + (wrapMainQuery ? ")" : "");
           const endStat = compact(endStatements).join(" ");
-          sql5 += allStatements + (unionStatement ? " " + unionStatement : "") + (endStat ? " " + endStat : endStat);
+          sql7 += allStatements + (unionStatement ? " " + unionStatement : "") + (endStat ? " " + endStat : endStat);
         }
-        return sql5;
+        return sql7;
       }
       pluck() {
         let toPluck = this.single.pluck;
@@ -67399,55 +67399,55 @@ var require_querycompiler = __commonJS({
       // inserts using a single query statement.
       insert() {
         const insertValues = this.single.insert || [];
-        const sql5 = this.with() + `insert into ${this.tableName} `;
+        const sql7 = this.with() + `insert into ${this.tableName} `;
         const body = this._insertBody(insertValues);
-        return body === "" ? "" : sql5 + body;
+        return body === "" ? "" : sql7 + body;
       }
       _onConflictClause(columns) {
         return columns instanceof Raw ? this.formatter.wrap(columns) : `(${this.formatter.columnize(columns)})`;
       }
       _buildInsertValues(insertData) {
-        let sql5 = "";
+        let sql7 = "";
         let i = -1;
         while (++i < insertData.values.length) {
-          if (i !== 0) sql5 += "), (";
-          sql5 += this.client.parameterize(
+          if (i !== 0) sql7 += "), (";
+          sql7 += this.client.parameterize(
             insertData.values[i],
             this.client.valueForUndefined,
             this.builder,
             this.bindingsHolder
           );
         }
-        return sql5;
+        return sql7;
       }
       _insertBody(insertValues) {
-        let sql5 = "";
+        let sql7 = "";
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
             return "";
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
-          return sql5 + this._emptyInsertValue;
+          return sql7 + this._emptyInsertValue;
         }
         const insertData = this._prepInsert(insertValues);
         if (typeof insertData === "string") {
-          sql5 += insertData;
+          sql7 += insertData;
         } else {
           if (insertData.columns.length) {
-            sql5 += `(${columnize_(
+            sql7 += `(${columnize_(
               insertData.columns,
               this.builder,
               this.client,
               this.bindingsHolder
             )}`;
-            sql5 += ") values (" + this._buildInsertValues(insertData) + ")";
+            sql7 += ") values (" + this._buildInsertValues(insertData) + ")";
           } else if (insertValues.length === 1 && insertValues[0]) {
-            sql5 += this._emptyInsertValue;
+            sql7 += this._emptyInsertValue;
           } else {
-            sql5 = "";
+            sql7 = "";
           }
         }
-        return sql5;
+        return sql7;
       }
       // Compiles the "update" query.
       update() {
@@ -67469,7 +67469,7 @@ var require_querycompiler = __commonJS({
         if (this.onlyUnions()) return "";
         const hints = this._hintComments();
         const columns = this.grouped.columns || [];
-        let i = -1, sql5 = [];
+        let i = -1, sql7 = [];
         if (columns) {
           while (++i < columns.length) {
             const stmt = columns[i];
@@ -67479,15 +67479,15 @@ var require_querycompiler = __commonJS({
               continue;
             }
             if (stmt.type === "aggregate") {
-              sql5.push(...this.aggregate(stmt));
+              sql7.push(...this.aggregate(stmt));
             } else if (stmt.type === "aggregateRaw") {
-              sql5.push(this.aggregateRaw(stmt));
+              sql7.push(this.aggregateRaw(stmt));
             } else if (stmt.type === "analytic") {
-              sql5.push(this.analytic(stmt));
+              sql7.push(this.analytic(stmt));
             } else if (stmt.type === "json") {
-              sql5.push(this.json(stmt));
+              sql7.push(this.json(stmt));
             } else if (stmt.value && stmt.value.length > 0) {
-              sql5.push(
+              sql7.push(
                 columnize_(
                   stmt.value,
                   this.builder,
@@ -67498,9 +67498,9 @@ var require_querycompiler = __commonJS({
             }
           }
         }
-        if (sql5.length === 0) sql5 = ["*"];
+        if (sql7.length === 0) sql7 = ["*"];
         const select = this.onlyJson() ? "" : "select ";
-        return `${select}${hints}${distinctClause}` + sql5.join(", ") + (this.tableName ? ` from ${this.single.only ? "only " : ""}${this.tableName}` : "");
+        return `${select}${hints}${distinctClause}` + sql7.join(", ") + (this.tableName ? ` from ${this.single.only ? "only " : ""}${this.tableName}` : "");
       }
       // Add comments to the query
       comments() {
@@ -67583,16 +67583,16 @@ var require_querycompiler = __commonJS({
       // Compiles all each of the `join` clauses on the query,
       // including any nested join queries.
       join() {
-        let sql5 = "";
+        let sql7 = "";
         let i = -1;
         const joins = this.grouped.join;
         if (!joins) return "";
         while (++i < joins.length) {
           const join2 = joins[i];
           const table = this._joinTable(join2);
-          if (i > 0) sql5 += " ";
+          if (i > 0) sql7 += " ";
           if (join2.joinType === "raw") {
-            sql5 += unwrapRaw_(
+            sql7 += unwrapRaw_(
               join2.table,
               void 0,
               this.builder,
@@ -67600,7 +67600,7 @@ var require_querycompiler = __commonJS({
               this.bindingsHolder
             );
           } else {
-            sql5 += join2.joinType + " join " + wrap_(
+            sql7 += join2.joinType + " join " + wrap_(
               table,
               void 0,
               this.builder,
@@ -67611,18 +67611,18 @@ var require_querycompiler = __commonJS({
             while (++ii < join2.clauses.length) {
               const clause = join2.clauses[ii];
               if (ii > 0) {
-                sql5 += ` ${clause.bool} `;
+                sql7 += ` ${clause.bool} `;
               } else {
-                sql5 += ` ${clause.type === "onUsing" ? "using" : "on"} `;
+                sql7 += ` ${clause.type === "onUsing" ? "using" : "on"} `;
               }
               const val = this[clause.type](clause);
               if (val) {
-                sql5 += val;
+                sql7 += val;
               }
             }
           }
         }
-        return sql5;
+        return sql7;
       }
       onBetween(statement) {
         return wrap_(
@@ -67679,29 +67679,29 @@ var require_querycompiler = __commonJS({
         ) + " " + this._not(statement, "in ") + this.wrap(values);
       }
       multiOnIn(statement) {
-        let i = -1, sql5 = `(${columnize_(
+        let i = -1, sql7 = `(${columnize_(
           statement.column,
           this.builder,
           this.client,
           this.bindingsHolder
         )}) `;
-        sql5 += this._not(statement, "in ") + "((";
+        sql7 += this._not(statement, "in ") + "((";
         while (++i < statement.value.length) {
-          if (i !== 0) sql5 += "),(";
-          sql5 += this.client.parameterize(
+          if (i !== 0) sql7 += "),(";
+          sql7 += this.client.parameterize(
             statement.value[i],
             void 0,
             this.builder,
             this.bindingsHolder
           );
         }
-        return sql5 + "))";
+        return sql7 + "))";
       }
       // Compiles all `where` statements on the query.
       where() {
         const wheres = this.grouped.where;
         if (!wheres) return;
-        const sql5 = [];
+        const sql7 = [];
         let i = -1;
         while (++i < wheres.length) {
           const stmt = wheres[i];
@@ -67711,15 +67711,15 @@ var require_querycompiler = __commonJS({
           }
           const val = this[stmt.type](stmt);
           if (val) {
-            if (sql5.length === 0) {
-              sql5[0] = "where";
+            if (sql7.length === 0) {
+              sql7[0] = "where";
             } else {
-              sql5.push(stmt.bool);
+              sql7.push(stmt.bool);
             }
-            sql5.push(val);
+            sql7.push(val);
           }
         }
-        return sql5.length > 1 ? sql5.join(" ") : "";
+        return sql7.length > 1 ? sql7.join(" ") : "";
       }
       group() {
         return this._groupsOrders("group");
@@ -67731,21 +67731,21 @@ var require_querycompiler = __commonJS({
       having() {
         const havings = this.grouped.having;
         if (!havings) return "";
-        const sql5 = ["having"];
+        const sql7 = ["having"];
         for (let i = 0, l = havings.length; i < l; i++) {
           const s = havings[i];
           const val = this[s.type](s);
           if (val) {
-            if (sql5.length === 0) {
-              sql5[0] = "where";
+            if (sql7.length === 0) {
+              sql7[0] = "where";
             }
-            if (sql5.length > 1 || sql5.length === 1 && sql5[0] !== "having") {
-              sql5.push(s.bool);
+            if (sql7.length > 1 || sql7.length === 1 && sql7[0] !== "having") {
+              sql7.push(s.bool);
             }
-            sql5.push(val);
+            sql7.push(val);
           }
         }
-        return sql5.length > 1 ? sql5.join(" ") : "";
+        return sql7.length > 1 ? sql7.join(" ") : "";
       }
       havingRaw(statement) {
         return this._not(statement, "") + unwrapRaw_(
@@ -67834,11 +67834,11 @@ var require_querycompiler = __commonJS({
         const onlyUnions = this.onlyUnions();
         const unions = this.grouped.union;
         if (!unions) return "";
-        let sql5 = "";
+        let sql7 = "";
         for (let i = 0, l = unions.length; i < l; i++) {
           const union3 = unions[i];
-          if (i > 0) sql5 += " ";
-          if (i > 0 || !onlyUnions) sql5 += union3.clause + " ";
+          if (i > 0) sql7 += " ";
+          if (i > 0 || !onlyUnions) sql7 += union3.clause + " ";
           const statement = rawOrFn_(
             union3.value,
             void 0,
@@ -67848,12 +67848,12 @@ var require_querycompiler = __commonJS({
           );
           if (statement) {
             const wrap = union3.wrap;
-            if (wrap) sql5 += "(";
-            sql5 += statement;
-            if (wrap) sql5 += ")";
+            if (wrap) sql7 += "(";
+            sql7 += statement;
+            if (wrap) sql7 += ")";
           }
         }
-        return sql5;
+        return sql7;
       }
       // If we haven't specified any columns or a `tableName`, we're assuming this
       // is only being used for unions.
@@ -67928,19 +67928,19 @@ var require_querycompiler = __commonJS({
         const self2 = this;
         const wrapJoin = new JoinClause();
         clause.value.call(wrapJoin, wrapJoin);
-        let sql5 = "";
+        let sql7 = "";
         for (let ii = 0; ii < wrapJoin.clauses.length; ii++) {
           const wrapClause = wrapJoin.clauses[ii];
           if (ii > 0) {
-            sql5 += ` ${wrapClause.bool} `;
+            sql7 += ` ${wrapClause.bool} `;
           }
           const val = self2[wrapClause.type](wrapClause);
           if (val) {
-            sql5 += val;
+            sql7 += val;
           }
         }
-        if (sql5.length) {
-          return `(${sql5})`;
+        if (sql7.length) {
+          return `(${sql7})`;
         }
         return "";
       }
@@ -68141,32 +68141,32 @@ var require_querycompiler = __commonJS({
         return this[stmt.method](stmt.params);
       }
       analytic(stmt) {
-        let sql5 = "";
+        let sql7 = "";
         const self2 = this;
-        sql5 += stmt.method + "() over (";
+        sql7 += stmt.method + "() over (";
         if (stmt.raw) {
-          sql5 += stmt.raw;
+          sql7 += stmt.raw;
         } else {
           if (stmt.partitions.length) {
-            sql5 += "partition by ";
-            sql5 += map3(stmt.partitions, function(partition) {
+            sql7 += "partition by ";
+            sql7 += map3(stmt.partitions, function(partition) {
               if (isString2(partition)) {
                 return self2.formatter.columnize(partition);
               } else return self2.formatter.columnize(partition.column) + (partition.order ? " " + partition.order : "");
             }).join(", ") + " ";
           }
-          sql5 += "order by ";
-          sql5 += map3(stmt.order, function(order) {
+          sql7 += "order by ";
+          sql7 += map3(stmt.order, function(order) {
             if (isString2(order)) {
               return self2.formatter.columnize(order);
             } else return self2.formatter.columnize(order.column) + (order.order ? " " + order.order : "");
           }).join(", ");
         }
-        sql5 += ")";
+        sql7 += ")";
         if (stmt.alias) {
-          sql5 += " as " + stmt.alias;
+          sql7 += " as " + stmt.alias;
         }
-        return sql5;
+        return sql7;
       }
       // Compiles all `with` statements on the query.
       with() {
@@ -68175,7 +68175,7 @@ var require_querycompiler = __commonJS({
         }
         const withs = this.grouped.with;
         if (!withs) return;
-        const sql5 = [];
+        const sql7 = [];
         let i = -1;
         let isRecursive = false;
         while (++i < withs.length) {
@@ -68184,9 +68184,9 @@ var require_querycompiler = __commonJS({
             isRecursive = true;
           }
           const val = this[stmt.type](stmt);
-          sql5.push(val);
+          sql7.push(val);
         }
-        return `with ${isRecursive ? "recursive " : ""}${sql5.join(", ")} `;
+        return `with ${isRecursive ? "recursive " : ""}${sql7.join(", ")} `;
       }
       withWrapped(statement) {
         const val = rawOrFn_(
@@ -68358,10 +68358,10 @@ var require_querycompiler = __commonJS({
       _groupsOrders(type) {
         const items = this.grouped[type];
         if (!items) return "";
-        const sql5 = items.map((item) => {
+        const sql7 = items.map((item) => {
           return this._groupOrder(item, type);
         });
-        return sql5.length ? type + " by " + sql5.join(", ") : "";
+        return sql7.length ? type + " by " + sql7.join(", ") : "";
       }
       // Get the table name, wrapping it if necessary.
       // Implemented as a property to prevent ordering issues as described in #704.
@@ -68699,8 +68699,8 @@ var require_compiler = __commonJS({
           (materialized ? this.dropMaterializedViewPrefix : this.dropViewPrefix) + (ifExists ? "if exists " : "") + this.formatter.wrap(prefixedTableName(this.schema, viewName))
         );
       }
-      raw(sql5, bindings) {
-        this.sequence.push(this.client.raw(sql5, bindings).toSQL());
+      raw(sql7, bindings) {
+        this.sequence.push(this.client.raw(sql7, bindings).toSQL());
       }
       toSQL() {
         const sequence = this.builder._sequence;
@@ -68743,9 +68743,9 @@ var require_compiler = __commonJS({
         builder.queryContext(queryContext);
       }
       builder.setSchema(this.schema);
-      const sql5 = builder.toSQL();
-      for (let i = 0, l = sql5.length; i < l; i++) {
-        this.sequence.push(sql5[i]);
+      const sql7 = builder.toSQL();
+      for (let i = 0, l = sql7.length; i < l; i++) {
+        this.sequence.push(sql7[i]);
       }
     }
     function buildTable(type) {
@@ -69404,8 +69404,8 @@ var require_tablecompiler = __commonJS({
               const nullableType2 = nullable3 ? "null" : "not null";
               const columnType = columnInfo.type + (columnInfo.maxLength ? `(${columnInfo.maxLength})` : "");
               const defaultValue = columnInfo.defaultValue !== null && columnInfo.defaultValue !== void 0 ? `default '${columnInfo.defaultValue}'` : "";
-              const sql5 = `alter table ${tableName} ${alterColumnPrefix} ${columnName} ${columnType} ${nullableType2} ${defaultValue}`;
-              return this.client.raw(sql5);
+              const sql7 = `alter table ${tableName} ${alterColumnPrefix} ${columnName} ${columnType} ${nullableType2} ${defaultValue}`;
+              return this.client.raw(sql7);
             });
           }
         });
@@ -69420,8 +69420,8 @@ var require_tablecompiler = __commonJS({
         if (checkConstraintNames === void 0) return "";
         checkConstraintNames = normalizeArr(checkConstraintNames);
         const tableName = this.tableName();
-        const sql5 = `alter table ${tableName} ${checkConstraintNames.map((constraint) => `drop constraint ${constraint}`).join(", ")}`;
-        this.pushQuery(sql5);
+        const sql7 = `alter table ${tableName} ${checkConstraintNames.map((constraint) => `drop constraint ${constraint}`).join(", ")}`;
+        this.pushQuery(sql7);
       }
       check(checkPredicate, bindings, constraintName) {
         const tableName = this.tableName();
@@ -69430,8 +69430,8 @@ var require_tablecompiler = __commonJS({
           this.checksCount++;
           checkConstraint = tableName + "_" + this.checksCount;
         }
-        const sql5 = `alter table ${tableName} add constraint ${checkConstraint} check(${checkPredicate})`;
-        this.pushQuery(sql5);
+        const sql7 = `alter table ${tableName} add constraint ${checkConstraint} check(${checkPredicate})`;
+        this.pushQuery(sql7);
       }
       _addChecks() {
         if (this.grouped.checks) {
@@ -69875,8 +69875,8 @@ var require_ref2 = __commonJS({
         const string5 = this._schema ? `${this._schema}.${this.ref}` : this.ref;
         const formatter = this.client.formatter(this);
         const ref = formatter.columnize(string5);
-        const sql5 = this._alias ? `${ref} as ${formatter.wrap(this._alias)}` : ref;
-        this.set(sql5, []);
+        const sql7 = this._alias ? `${ref} as ${formatter.wrap(this._alias)}` : ref;
+        this.set(sql7, []);
         return super.toSQL(...arguments);
       }
     };
@@ -70047,24 +70047,24 @@ var require_viewcompiler = __commonJS({
           this.client,
           this.bindingsHolder
         ) + ")" : "";
-        let sql5 = createStatement + this.viewName() + columnList;
-        sql5 += " as ";
-        sql5 += selectQuery.toString();
+        let sql7 = createStatement + this.viewName() + columnList;
+        sql7 += " as ";
+        sql7 += selectQuery.toString();
         switch (this.single.checkOption) {
           case "default_option":
-            sql5 += " with check option";
+            sql7 += " with check option";
             break;
           case "local":
-            sql5 += " with local check option";
+            sql7 += " with local check option";
             break;
           case "cascaded":
-            sql5 += " with cascaded check option";
+            sql7 += " with cascaded check option";
             break;
           default:
             break;
         }
         this.pushQuery({
-          sql: sql5
+          sql: sql7
         });
       }
       renameView(from, to) {
@@ -70250,8 +70250,8 @@ var require_client2 = __commonJS({
       prepBindings(bindings) {
         return bindings;
       }
-      positionBindings(sql5) {
-        return sql5;
+      positionBindings(sql7) {
+        return sql7;
       }
       postProcessResponse(resp, queryContext) {
         if (this.config.postProcessResponse) {
@@ -70643,15 +70643,15 @@ var require_pg_connection_string = __commonJS({
       if (config3.sslcert || config3.sslkey || config3.sslrootcert || config3.sslmode) {
         config3.ssl = {};
       }
-      const fs36 = config3.sslcert || config3.sslkey || config3.sslrootcert ? require("fs") : null;
+      const fs37 = config3.sslcert || config3.sslkey || config3.sslrootcert ? require("fs") : null;
       if (config3.sslcert) {
-        config3.ssl.cert = fs36.readFileSync(config3.sslcert).toString();
+        config3.ssl.cert = fs37.readFileSync(config3.sslcert).toString();
       }
       if (config3.sslkey) {
-        config3.ssl.key = fs36.readFileSync(config3.sslkey).toString();
+        config3.ssl.key = fs37.readFileSync(config3.sslkey).toString();
       }
       if (config3.sslrootcert) {
-        config3.ssl.ca = fs36.readFileSync(config3.sslrootcert).toString();
+        config3.ssl.ca = fs37.readFileSync(config3.sslrootcert).toString();
       }
       switch (config3.sslmode) {
         case "disable": {
@@ -70935,24 +70935,24 @@ var require_sqlite_querycompiler = __commonJS({
       // then join them all together with select unions to complete the queries.
       insert() {
         const insertValues = this.single.insert || [];
-        let sql5 = this.with() + `insert into ${this.tableName} `;
+        let sql7 = this.with() + `insert into ${this.tableName} `;
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
             return "";
           } else if (insertValues.length === 1 && insertValues[0] && isEmpty(insertValues[0])) {
             return {
-              sql: sql5 + this._emptyInsertValue
+              sql: sql7 + this._emptyInsertValue
             };
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql5 + this._emptyInsertValue
+            sql: sql7 + this._emptyInsertValue
           };
         }
         const insertData = this._prepInsert(insertValues);
         if (isString2(insertData)) {
           return {
-            sql: sql5 + insertData
+            sql: sql7 + insertData
           };
         }
         if (insertData.columns.length === 0) {
@@ -70960,7 +70960,7 @@ var require_sqlite_querycompiler = __commonJS({
             sql: ""
           };
         }
-        sql5 += `(${this.formatter.columnize(insertData.columns)})`;
+        sql7 += `(${this.formatter.columnize(insertData.columns)})`;
         if (this.client.valueForUndefined !== null) {
           insertData.values.forEach((bindings) => {
             each(bindings, (binding) => {
@@ -70978,20 +70978,20 @@ var require_sqlite_querycompiler = __commonJS({
             this.builder,
             this.bindingsHolder
           );
-          sql5 += ` values (${parameters})`;
+          sql7 += ` values (${parameters})`;
           const { onConflict: onConflict2, ignore: ignore2, merge: merge5 } = this.single;
-          if (onConflict2 && ignore2) sql5 += this._ignore(onConflict2);
+          if (onConflict2 && ignore2) sql7 += this._ignore(onConflict2);
           else if (onConflict2 && merge5) {
-            sql5 += this._merge(merge5.updates, onConflict2, insertValues);
+            sql7 += this._merge(merge5.updates, onConflict2, insertValues);
             const wheres = this.where();
-            if (wheres) sql5 += ` ${wheres}`;
+            if (wheres) sql7 += ` ${wheres}`;
           }
           const { returning: returning2 } = this.single;
           if (returning2) {
-            sql5 += this._returning(returning2);
+            sql7 += this._returning(returning2);
           }
           return {
-            sql: sql5,
+            sql: sql7,
             returning: returning2
           };
         }
@@ -71016,16 +71016,16 @@ var require_sqlite_querycompiler = __commonJS({
           }
           blocks[i] = block.join(", ");
         }
-        sql5 += " select " + blocks.join(" union all select ");
+        sql7 += " select " + blocks.join(" union all select ");
         const { onConflict, ignore, merge: merge4 } = this.single;
-        if (onConflict && ignore) sql5 += " where true" + this._ignore(onConflict);
+        if (onConflict && ignore) sql7 += " where true" + this._ignore(onConflict);
         else if (onConflict && merge4) {
-          sql5 += " where true" + this._merge(merge4.updates, onConflict, insertValues);
+          sql7 += " where true" + this._merge(merge4.updates, onConflict, insertValues);
         }
         const { returning } = this.single;
-        if (returning) sql5 += this._returning(returning);
+        if (returning) sql7 += this._returning(returning);
         return {
-          sql: sql5,
+          sql: sql7,
           returning
         };
       }
@@ -71047,9 +71047,9 @@ var require_sqlite_querycompiler = __commonJS({
         return ` on conflict ${this._onConflictClause(columns)} do nothing`;
       }
       _merge(updates, columns, insert) {
-        let sql5 = ` on conflict ${this._onConflictClause(columns)} do update set `;
+        let sql7 = ` on conflict ${this._onConflictClause(columns)} do update set `;
         if (updates && Array.isArray(updates)) {
-          sql5 += updates.map(
+          sql7 += updates.map(
             (column) => wrapString(
               column.split(".").pop(),
               this.formatter.builder,
@@ -71057,15 +71057,15 @@ var require_sqlite_querycompiler = __commonJS({
               this.formatter
             )
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql5;
+          return sql7;
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
           if (typeof updateData === "string") {
-            sql5 += updateData;
+            sql7 += updateData;
           } else {
-            sql5 += updateData.join(",");
+            sql7 += updateData.join(",");
           }
-          return sql5;
+          return sql7;
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -71073,10 +71073,10 @@ var require_sqlite_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          sql5 += insertData.columns.map(
+          sql7 += insertData.columns.map(
             (column) => wrapString(column.split(".").pop(), this.builder, this.client)
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql5;
+          return sql7;
         }
       }
       _returning(value) {
@@ -71230,12 +71230,12 @@ var require_sqlite_compiler = __commonJS({
       }
       // Compile the query to determine if a table exists.
       hasTable(tableName) {
-        const sql5 = `select * from sqlite_master where type = 'table' and name = ${this.client.parameter(
+        const sql7 = `select * from sqlite_master where type = 'table' and name = ${this.client.parameter(
           this.formatter.wrap(tableName).replace(/`/g, ""),
           this.builder,
           this.bindingsHolder
         )}`;
-        this.pushQuery({ sql: sql5, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql7, output: (resp) => resp.length > 0 });
       }
       // Compile the query to determine if a column exists.
       hasColumn(tableName, column) {
@@ -71357,17 +71357,17 @@ var require_sqlite_tablecompiler = __commonJS({
       // Create a new table.
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
-        let sql5 = createStatement + this.tableName();
+        let sql7 = createStatement + this.tableName();
         if (like && this.tableNameLike()) {
-          sql5 += " as select * from " + this.tableNameLike() + " where 0=1";
+          sql7 += " as select * from " + this.tableNameLike() + " where 0=1";
         } else {
-          sql5 += " (" + columns.sql.join(", ");
-          sql5 += this.foreignKeys() || "";
-          sql5 += this.primaryKeys() || "";
-          sql5 += this._addChecks();
-          sql5 += ")";
+          sql7 += " (" + columns.sql.join(", ");
+          sql7 += this.foreignKeys() || "";
+          sql7 += this.primaryKeys() || "";
+          sql7 += this._addChecks();
+          sql7 += ")";
         }
-        this.pushQuery(sql5);
+        this.pushQuery(sql7);
         if (like) {
           this.addColumns(columns, this.addColumnsPrefix);
         }
@@ -71563,7 +71563,7 @@ var require_sqlite_tablecompiler = __commonJS({
         }
       }
       foreignKeys() {
-        let sql5 = "";
+        let sql7 = "";
         const foreignKeys = filter6(this.grouped.alterTable || [], {
           method: "foreign"
         });
@@ -71576,11 +71576,11 @@ var require_sqlite_tablecompiler = __commonJS({
           if (constraintName) {
             constraintName = " constraint " + this.formatter.wrap(constraintName);
           }
-          sql5 += `,${constraintName} foreign key(${column}) references ${foreignTable}(${references})`;
-          if (foreign.onDelete) sql5 += ` on delete ${foreign.onDelete}`;
-          if (foreign.onUpdate) sql5 += ` on update ${foreign.onUpdate}`;
+          sql7 += `,${constraintName} foreign key(${column}) references ${foreignTable}(${references})`;
+          if (foreign.onDelete) sql7 += ` on delete ${foreign.onDelete}`;
+          if (foreign.onUpdate) sql7 += ` on update ${foreign.onUpdate}`;
         }
-        return sql5;
+        return sql7;
       }
       createTableBlock() {
         return this.getColumns().concat().join(",");
@@ -71836,20 +71836,20 @@ var require_parser = __commonJS({
       operator: /-|\(|\)|;|\+|\*|\/|%|==|=|<=|<>|<<|<|>=|>>|>|!=|,|&|~|\|\||\||\./,
       _ws: /\s+/
     };
-    function parseCreateTable(sql5) {
-      const result = createTable({ input: tokenize(sql5, TOKENS) });
+    function parseCreateTable(sql7) {
+      const result = createTable({ input: tokenize(sql7, TOKENS) });
       if (!result.success) {
         throw new Error(
-          `Parsing CREATE TABLE failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql5}"`
+          `Parsing CREATE TABLE failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql7}"`
         );
       }
       return result.ast;
     }
-    function parseCreateIndex(sql5) {
-      const result = createIndex({ input: tokenize(sql5, TOKENS) });
+    function parseCreateIndex(sql7) {
+      const result = createIndex({ input: tokenize(sql7, TOKENS) });
       if (!result.success) {
         throw new Error(
-          `Parsing CREATE INDEX failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql5}"`
+          `Parsing CREATE INDEX failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql7}"`
         );
       }
       return result.ast;
@@ -72912,16 +72912,16 @@ var require_ddl = __commonJS({
         );
       }
       async generateAlterCommands(newSql, createIndices, columns) {
-        const sql5 = [];
+        const sql7 = [];
         const pre = [];
         const post = [];
         let check3 = null;
-        sql5.push(newSql);
-        sql5.push(copyData(this.tableName(), this.alteredName, columns));
-        sql5.push(dropOriginal(this.tableName()));
-        sql5.push(renameTable(this.alteredName, this.tableName()));
+        sql7.push(newSql);
+        sql7.push(copyData(this.tableName(), this.alteredName, columns));
+        sql7.push(dropOriginal(this.tableName()));
+        sql7.push(renameTable(this.alteredName, this.tableName()));
         for (const createIndex of createIndices) {
-          sql5.push(createIndex);
+          sql7.push(createIndex);
         }
         const isForeignCheckEnabled2 = await this.isForeignCheckEnabled();
         if (isForeignCheckEnabled2) {
@@ -72929,7 +72929,7 @@ var require_ddl = __commonJS({
           post.push(setForeignCheck(true));
           check3 = executeForeignCheck();
         }
-        return { pre, sql: sql5, check: check3, post };
+        return { pre, sql: sql7, check: check3, post };
       }
     };
     module2.exports = SQLite3_DDL;
@@ -73316,18 +73316,18 @@ var require_pg_querycompiler = __commonJS({
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        let sql5 = super.insert();
-        if (sql5 === "") return sql5;
+        let sql7 = super.insert();
+        if (sql7 === "") return sql7;
         const { returning, onConflict, ignore, merge: merge4, insert } = this.single;
-        if (onConflict && ignore) sql5 += this._ignore(onConflict);
+        if (onConflict && ignore) sql7 += this._ignore(onConflict);
         if (onConflict && merge4) {
-          sql5 += this._merge(merge4.updates, onConflict, insert);
+          sql7 += this._merge(merge4.updates, onConflict, insert);
           const wheres = this.where();
-          if (wheres) sql5 += ` ${wheres}`;
+          if (wheres) sql7 += ` ${wheres}`;
         }
-        if (returning) sql5 += this._returning(returning);
+        if (returning) sql7 += this._returning(returning);
         return {
-          sql: sql5,
+          sql: sql7,
           returning
         };
       }
@@ -73345,15 +73345,15 @@ var require_pg_querycompiler = __commonJS({
       using() {
         const usingTables = this.single.using;
         if (!usingTables) return;
-        let sql5 = "using ";
+        let sql7 = "using ";
         if (Array.isArray(usingTables)) {
-          sql5 += usingTables.map((table) => {
+          sql7 += usingTables.map((table) => {
             return this.formatter.wrap(table);
           }).join(",");
         } else {
-          sql5 += this.formatter.wrap(usingTables);
+          sql7 += this.formatter.wrap(usingTables);
         }
-        return sql5;
+        return sql7;
       }
       // Compiles an `delete` query, allowing for a return value.
       del() {
@@ -73393,10 +73393,10 @@ var require_pg_querycompiler = __commonJS({
             using += (using ? "," : "using ") + tableJoins.join(",");
           }
         }
-        const sql5 = withSQL + `delete from ${this.single.only ? "only " : ""}${tableName}` + (using ? ` ${using}` : "") + (wheres ? ` ${wheres}` : "");
+        const sql7 = withSQL + `delete from ${this.single.only ? "only " : ""}${tableName}` + (using ? ` ${using}` : "") + (wheres ? ` ${wheres}` : "");
         const { returning } = this.single;
         return {
-          sql: sql5 + this._returning(returning),
+          sql: sql7 + this._returning(returning),
           returning
         };
       }
@@ -73416,9 +73416,9 @@ var require_pg_querycompiler = __commonJS({
         return ` on conflict ${this._onConflictClause(columns)} do nothing`;
       }
       _merge(updates, columns, insert) {
-        let sql5 = ` on conflict ${this._onConflictClause(columns)} do update set `;
+        let sql7 = ` on conflict ${this._onConflictClause(columns)} do update set `;
         if (updates && Array.isArray(updates)) {
-          sql5 += updates.map(
+          sql7 += updates.map(
             (column) => wrapString(
               column.split(".").pop(),
               this.formatter.builder,
@@ -73426,15 +73426,15 @@ var require_pg_querycompiler = __commonJS({
               this.formatter
             )
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql5;
+          return sql7;
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
           if (typeof updateData === "string") {
-            sql5 += updateData;
+            sql7 += updateData;
           } else {
-            sql5 += updateData.join(",");
+            sql7 += updateData.join(",");
           }
-          return sql5;
+          return sql7;
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -73442,26 +73442,26 @@ var require_pg_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          sql5 += insertData.columns.map(
+          sql7 += insertData.columns.map(
             (column) => wrapString(column.split(".").pop(), this.builder, this.client)
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql5;
+          return sql7;
         }
       }
       // Join array of table names and apply default schema.
       _tableNames(tables) {
         const schemaName = this.single.schema;
-        const sql5 = [];
+        const sql7 = [];
         for (let i = 0; i < tables.length; i++) {
           let tableName = tables[i];
           if (tableName) {
             if (schemaName) {
               tableName = `${schemaName}.${tableName}`;
             }
-            sql5.push(this.formatter.wrap(tableName));
+            sql7.push(this.formatter.wrap(tableName));
           }
         }
-        return sql5.join(", ");
+        return sql7.join(", ");
       }
       _lockingClause(lockMode) {
         const tables = this.single.lockTables || [];
@@ -73496,19 +73496,19 @@ var require_pg_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        const sql5 = "select * from information_schema.columns where table_name = ? and table_catalog = current_database()";
+        const sql7 = "select * from information_schema.columns where table_name = ? and table_catalog = current_database()";
         const bindings = [table];
-        return this._buildColumnInfoQuery(schema, sql5, bindings, column);
+        return this._buildColumnInfoQuery(schema, sql7, bindings, column);
       }
-      _buildColumnInfoQuery(schema, sql5, bindings, column) {
+      _buildColumnInfoQuery(schema, sql7, bindings, column) {
         if (schema) {
-          sql5 += " and table_schema = ?";
+          sql7 += " and table_schema = ?";
           bindings.push(schema);
         } else {
-          sql5 += " and table_schema = current_schema()";
+          sql7 += " and table_schema = current_schema()";
         }
         return {
-          sql: sql5,
+          sql: sql7,
           bindings,
           output(resp) {
             const out = reduce(
@@ -73798,11 +73798,11 @@ var require_pg_tablecompiler = __commonJS({
       }
       _setNullableState(column, isNullable) {
         const constraintAction = isNullable ? "drop not null" : "set not null";
-        const sql5 = `alter table ${this.tableName()} alter column ${this.formatter.wrap(
+        const sql7 = `alter table ${this.tableName()} alter column ${this.formatter.wrap(
           column
         )} ${constraintAction}`;
         return this.pushQuery({
-          sql: sql5
+          sql: sql7
         });
       }
       compileAdd(builder) {
@@ -73816,11 +73816,11 @@ var require_pg_tablecompiler = __commonJS({
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
         const columnsSql = ` (${columns.sql.join(", ")}${this.primaryKeys() || ""}${this._addChecks()})`;
-        let sql5 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + " including all" + (columns.sql.length ? ", " + columns.sql.join(", ") : "") + ")" : columnsSql);
+        let sql7 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + " including all" + (columns.sql.length ? ", " + columns.sql.join(", ") : "") + ")" : columnsSql);
         if (this.single.inherits)
-          sql5 += ` inherits (${this.formatter.wrap(this.single.inherits)})`;
+          sql7 += ` inherits (${this.formatter.wrap(this.single.inherits)})`;
         this.pushQuery({
-          sql: sql5,
+          sql: sql7,
           bindings: columns.bindings
         });
         const hasComment = has(this.single, "comment");
@@ -74080,16 +74080,16 @@ var require_pg_compiler = __commonJS({
       }
       // Check whether the current table
       hasTable(tableName) {
-        let sql5 = "select * from information_schema.tables where table_name = ?";
+        let sql7 = "select * from information_schema.tables where table_name = ?";
         const bindings = [tableName];
         if (this.schema) {
-          sql5 += " and table_schema = ?";
+          sql7 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql5 += " and table_schema = current_schema()";
+          sql7 += " and table_schema = current_schema()";
         }
         this.pushQuery({
-          sql: sql5,
+          sql: sql7,
           bindings,
           output(resp) {
             return resp.rows.length > 0;
@@ -74098,16 +74098,16 @@ var require_pg_compiler = __commonJS({
       }
       // Compile the query to determine if a column exists in a table.
       hasColumn(tableName, columnName) {
-        let sql5 = "select * from information_schema.columns where table_name = ? and column_name = ?";
+        let sql7 = "select * from information_schema.columns where table_name = ? and column_name = ?";
         const bindings = [tableName, columnName];
         if (this.schema) {
-          sql5 += " and table_schema = ?";
+          sql7 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql5 += " and table_schema = current_schema()";
+          sql7 += " and table_schema = current_schema()";
         }
         this.pushQuery({
-          sql: sql5,
+          sql: sql7,
           bindings,
           output(resp) {
             return resp.rows.length > 0;
@@ -74294,9 +74294,9 @@ var require_postgres = __commonJS({
       }
       // Position the bindings for the query. The escape sequence for question mark
       // is \? (e.g. knex.raw("\\?") since javascript requires '\' to be escaped too...)
-      positionBindings(sql5) {
+      positionBindings(sql7) {
         let questionCount = 0;
-        return sql5.replace(/(\\*)(\?)/g, function(match, escapes) {
+        return sql7.replace(/(\\*)(\?)/g, function(match, escapes) {
           if (escapes.length % 2) {
             return "?";
           } else {
@@ -74306,26 +74306,26 @@ var require_postgres = __commonJS({
         });
       }
       setSchemaSearchPath(connection, searchPath) {
-        let path34 = searchPath || this.searchPath;
-        if (!path34) return Promise.resolve(true);
-        if (!Array.isArray(path34) && !isString2(path34)) {
+        let path35 = searchPath || this.searchPath;
+        if (!path35) return Promise.resolve(true);
+        if (!Array.isArray(path35) && !isString2(path35)) {
           throw new TypeError(
-            `knex: Expected searchPath to be Array/String, got: ${typeof path34}`
+            `knex: Expected searchPath to be Array/String, got: ${typeof path35}`
           );
         }
-        if (isString2(path34)) {
-          if (path34.includes(",")) {
-            const parts = path34.split(",");
+        if (isString2(path35)) {
+          if (path35.includes(",")) {
+            const parts = path35.split(",");
             const arraySyntax = `[${parts.map((searchPath2) => `'${searchPath2}'`).join(", ")}]`;
             this.logger.warn(
-              `Detected comma in searchPath "${path34}".If you are trying to specify multiple schemas, use Array syntax: ${arraySyntax}`
+              `Detected comma in searchPath "${path35}".If you are trying to specify multiple schemas, use Array syntax: ${arraySyntax}`
             );
           }
-          path34 = [path34];
+          path35 = [path35];
         }
-        path34 = path34.map((schemaName) => `"${schemaName}"`).join(",");
+        path35 = path35.map((schemaName) => `"${schemaName}"`).join(",");
         return new Promise(function(resolver, rejecter) {
-          connection.query(`set search_path to ${path34}`, function(err) {
+          connection.query(`set search_path to ${path35}`, function(err) {
             if (err) return rejecter(err);
             resolver(true);
           });
@@ -74348,10 +74348,10 @@ var require_postgres = __commonJS({
             throw e;
           }
         }
-        const sql5 = obj.sql;
+        const sql7 = obj.sql;
         return new Promise(function(resolver, rejecter) {
           const queryStream = connection.query(
-            new PGQueryStream(sql5, obj.bindings, options)
+            new PGQueryStream(sql7, obj.bindings, options)
           );
           queryStream.on("error", function(error73) {
             rejecter(error73);
@@ -74509,20 +74509,20 @@ var require_crdb_querycompiler = __commonJS({
         return `truncate ${this.tableName}`;
       }
       upsert() {
-        let sql5 = this._upsert();
-        if (sql5 === "") return sql5;
+        let sql7 = this._upsert();
+        if (sql7 === "") return sql7;
         const { returning } = this.single;
-        if (returning) sql5 += this._returning(returning);
+        if (returning) sql7 += this._returning(returning);
         return {
-          sql: sql5,
+          sql: sql7,
           returning
         };
       }
       _upsert() {
         const upsertValues = this.single.upsert || [];
-        const sql5 = this.with() + `upsert into ${this.tableName} `;
+        const sql7 = this.with() + `upsert into ${this.tableName} `;
         const body = this._insertBody(upsertValues);
-        return body === "" ? "" : sql5 + body;
+        return body === "" ? "" : sql7 + body;
       }
       _groupOrder(item, type) {
         return this._basicGroupOrder(item, type);
@@ -75013,9 +75013,9 @@ var require_mssql_querycompiler = __commonJS({
         return result;
       }
       select() {
-        const sql5 = this.with();
+        const sql7 = this.with();
         const statements = components.map((component) => this[component](this));
-        return sql5 + compact(statements).join(" ");
+        return sql7 + compact(statements).join(" ");
       }
       //#region Insert
       // Compiles an "insert" query, allowing for multiple
@@ -75030,7 +75030,7 @@ var require_mssql_querycompiler = __commonJS({
       insertWithTriggers() {
         const insertValues = this.single.insert || [];
         const { returning } = this.single;
-        let sql5 = this.with() + `${this._buildTempTable(returning)}insert into ${this.tableName} `;
+        let sql7 = this.with() + `${this._buildTempTable(returning)}insert into ${this.tableName} `;
         const returningSql = returning ? this._returning("insert", returning, true) + " " : "";
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
@@ -75038,39 +75038,39 @@ var require_mssql_querycompiler = __commonJS({
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql5 + returningSql + this._emptyInsertValue + this._buildReturningSelect(returning),
+            sql: sql7 + returningSql + this._emptyInsertValue + this._buildReturningSelect(returning),
             returning
           };
         }
-        sql5 += this._buildInsertData(insertValues, returningSql);
+        sql7 += this._buildInsertData(insertValues, returningSql);
         if (returning) {
-          sql5 += this._buildReturningSelect(returning);
+          sql7 += this._buildReturningSelect(returning);
         }
         return {
-          sql: sql5,
+          sql: sql7,
           returning
         };
       }
       _buildInsertData(insertValues, returningSql) {
-        let sql5 = "";
+        let sql7 = "";
         const insertData = this._prepInsert(insertValues);
         if (typeof insertData === "string") {
-          sql5 += insertData;
+          sql7 += insertData;
         } else {
           if (insertData.columns.length) {
-            sql5 += `(${this.formatter.columnize(insertData.columns)}`;
-            sql5 += `) ${returningSql}values (` + this._buildInsertValues(insertData) + ")";
+            sql7 += `(${this.formatter.columnize(insertData.columns)}`;
+            sql7 += `) ${returningSql}values (` + this._buildInsertValues(insertData) + ")";
           } else if (insertValues.length === 1 && insertValues[0]) {
-            sql5 += returningSql + this._emptyInsertValue;
+            sql7 += returningSql + this._emptyInsertValue;
           } else {
             return "";
           }
         }
-        return sql5;
+        return sql7;
       }
       standardInsert() {
         const insertValues = this.single.insert || [];
-        let sql5 = this.with() + `insert into ${this.tableName} `;
+        let sql7 = this.with() + `insert into ${this.tableName} `;
         const { returning } = this.single;
         const returningSql = returning ? this._returning("insert", returning) + " " : "";
         if (Array.isArray(insertValues)) {
@@ -75079,13 +75079,13 @@ var require_mssql_querycompiler = __commonJS({
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql5 + returningSql + this._emptyInsertValue,
+            sql: sql7 + returningSql + this._emptyInsertValue,
             returning
           };
         }
-        sql5 += this._buildInsertData(insertValues, returningSql);
+        sql7 += this._buildInsertData(insertValues, returningSql);
         return {
-          sql: sql5,
+          sql: sql7,
           returning
         };
       }
@@ -75184,7 +75184,7 @@ var require_mssql_querycompiler = __commonJS({
         const top = this.top();
         const hints = this._hintComments();
         const columns = this.grouped.columns || [];
-        let i = -1, sql5 = [];
+        let i = -1, sql7 = [];
         if (columns) {
           while (++i < columns.length) {
             const stmt = columns[i];
@@ -75194,21 +75194,21 @@ var require_mssql_querycompiler = __commonJS({
               continue;
             }
             if (stmt.type === "aggregate") {
-              sql5.push(...this.aggregate(stmt));
+              sql7.push(...this.aggregate(stmt));
             } else if (stmt.type === "aggregateRaw") {
-              sql5.push(this.aggregateRaw(stmt));
+              sql7.push(this.aggregateRaw(stmt));
             } else if (stmt.type === "analytic") {
-              sql5.push(this.analytic(stmt));
+              sql7.push(this.analytic(stmt));
             } else if (stmt.type === "json") {
-              sql5.push(this.json(stmt));
+              sql7.push(this.json(stmt));
             } else if (stmt.value && stmt.value.length > 0) {
-              sql5.push(this.formatter.columnize(stmt.value));
+              sql7.push(this.formatter.columnize(stmt.value));
             }
           }
         }
-        if (sql5.length === 0) sql5 = ["*"];
+        if (sql7.length === 0) sql7 = ["*"];
         const select = this.onlyJson() ? "" : "select ";
-        return `${select}${hints}${distinctClause}` + (top ? top + " " : "") + sql5.join(", ") + (this.tableName ? ` from ${this.tableName}` : "");
+        return `${select}${hints}${distinctClause}` + (top ? top + " " : "") + sql7.join(", ") + (this.tableName ? ` from ${this.tableName}` : "");
       }
       _returning(method, value, withTrigger) {
         switch (method) {
@@ -75229,10 +75229,10 @@ var require_mssql_querycompiler = __commonJS({
           } else {
             selections = `[t].${this.formatter.columnize(values)}`;
           }
-          let sql5 = `select top(0) ${selections} into #out `;
-          sql5 += `from ${this.tableName} as t `;
-          sql5 += `left join ${this.tableName} on 0=1;`;
-          return sql5;
+          let sql7 = `select top(0) ${selections} into #out `;
+          sql7 += `from ${this.tableName} as t `;
+          sql7 += `left join ${this.tableName} on 0=1;`;
+          return sql7;
         }
         return "";
       }
@@ -75244,9 +75244,9 @@ var require_mssql_querycompiler = __commonJS({
           } else {
             selections = this.formatter.columnize(values);
           }
-          let sql5 = `; select ${selections} from #out; `;
-          sql5 += `drop table #out;`;
-          return sql5;
+          let sql7 = `; select ${selections} from #out; `;
+          sql7 += `drop table #out;`;
+          return sql7;
         }
         return "";
       }
@@ -75268,16 +75268,16 @@ var require_mssql_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        let sql5 = `select [COLUMN_NAME], [COLUMN_DEFAULT], [DATA_TYPE], [CHARACTER_MAXIMUM_LENGTH], [IS_NULLABLE] from INFORMATION_SCHEMA.COLUMNS where table_name = ? and table_catalog = ?`;
+        let sql7 = `select [COLUMN_NAME], [COLUMN_DEFAULT], [DATA_TYPE], [CHARACTER_MAXIMUM_LENGTH], [IS_NULLABLE] from INFORMATION_SCHEMA.COLUMNS where table_name = ? and table_catalog = ?`;
         const bindings = [table, this.client.database()];
         if (schema) {
-          sql5 += " and table_schema = ?";
+          sql7 += " and table_schema = ?";
           bindings.push(schema);
         } else {
-          sql5 += ` and table_schema = 'dbo'`;
+          sql7 += ` and table_schema = 'dbo'`;
         }
         return {
-          sql: sql5,
+          sql: sql7,
           bindings,
           output(resp) {
             const out = resp.reduce((columns, val) => {
@@ -75433,12 +75433,12 @@ var require_mssql_compiler = __commonJS({
           this.bindingsHolder
         );
         const bindings = [tableName];
-        let sql5 = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ${formattedTable}`;
+        let sql7 = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ${formattedTable}`;
         if (this.schema) {
-          sql5 += " AND TABLE_SCHEMA = ?";
+          sql7 += " AND TABLE_SCHEMA = ?";
           bindings.push(this.schema);
         }
-        this.pushQuery({ sql: sql5, bindings, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql7, bindings, output: (resp) => resp.length > 0 });
       }
       // Check whether a column exists on the schema.
       hasColumn(tableName, column) {
@@ -75452,8 +75452,8 @@ var require_mssql_compiler = __commonJS({
           this.builder,
           this.bindingsHolder
         );
-        const sql5 = `select object_id from sys.columns where name = ${formattedColumn} and object_id = object_id(${formattedTable})`;
-        this.pushQuery({ sql: sql5, output: (resp) => resp.length > 0 });
+        const sql7 = `select object_id from sys.columns where name = ${formattedColumn} and object_id = object_id(${formattedTable})`;
+        this.pushQuery({ sql: sql7, output: (resp) => resp.length > 0 });
       }
     };
     SchemaCompiler_MSSQL.prototype.dropTablePrefix = "DROP TABLE ";
@@ -75547,9 +75547,9 @@ ELSE
             this.pushQuery(baseQuery);
           }
         }
-        columns.sql.forEach((sql5) => {
+        columns.sql.forEach((sql7) => {
           this.pushQuery({
-            sql: (this.lowerCase ? "alter table " : "ALTER TABLE ") + this.tableName() + " " + (this.lowerCase ? this.alterColumnPrefix.toLowerCase() : this.alterColumnPrefix) + sql5,
+            sql: (this.lowerCase ? "alter table " : "ALTER TABLE ") + this.tableName() + " " + (this.lowerCase ? this.alterColumnPrefix.toLowerCase() : this.alterColumnPrefix) + sql7,
             bindings: columns.bindings
           });
         });
@@ -75769,18 +75769,18 @@ var require_mssql_viewcompiler = __commonJS({
       }
       createQuery(columns, selectQuery, materialized, replace) {
         const createStatement = "CREATE " + (replace ? "OR ALTER " : "") + "VIEW ";
-        let sql5 = createStatement + this.viewName();
+        let sql7 = createStatement + this.viewName();
         const columnList = columns ? " (" + columnize_(
           columns,
           this.viewBuilder,
           this.client,
           this.bindingsHolder
         ) + ")" : "";
-        sql5 += columnList;
-        sql5 += " AS ";
-        sql5 += selectQuery.toString();
+        sql7 += columnList;
+        sql7 += " AS ";
+        sql7 += selectQuery.toString();
         this.pushQuery({
-          sql: sql5
+          sql: sql7
         });
       }
       renameColumn(from, to) {
@@ -76103,9 +76103,9 @@ var require_mssql = __commonJS({
         });
       }
       // Position the bindings for the query.
-      positionBindings(sql5) {
+      positionBindings(sql7) {
         let questionCount = -1;
-        return sql5.replace(/\\?\?/g, (match) => {
+        return sql7.replace(/\\?\?/g, (match) => {
           if (match === "\\?") {
             return "?";
           }
@@ -76131,11 +76131,11 @@ var require_mssql = __commonJS({
       }
       _makeRequest(query, callback) {
         const Driver = this._driver();
-        const sql5 = typeof query === "string" ? query : query.sql;
+        const sql7 = typeof query === "string" ? query : query.sql;
         let rowCount = 0;
-        if (!sql5) throw new Error("The query is empty");
-        debug("request::request sql=%s", sql5);
-        const request = new Driver.Request(sql5, (err, remoteRowCount) => {
+        if (!sql7) throw new Error("The query is empty");
+        debug("request::request sql=%s", sql7);
+        const request = new Driver.Request(sql7, (err, remoteRowCount) => {
           if (err) {
             debug("request::error message=%s", err.message);
             return callback(err);
@@ -76392,9 +76392,9 @@ var require_transaction3 = __commonJS({
     var Debug = require_src3();
     var debug = Debug("knex:tx");
     var Transaction_MySQL = class extends Transaction {
-      query(conn, sql5, status, value) {
+      query(conn, sql7, status, value) {
         const t = this;
-        const q = this.trxClient.query(conn, sql5).catch((err) => {
+        const q = this.trxClient.query(conn, sql7).catch((err) => {
           if (err.errno === 1305) {
             this.trxClient.logger.warn(
               "Transaction was implicitly committed, do not mix transactions and DDL with MySQL (#805)"
@@ -76409,7 +76409,7 @@ var require_transaction3 = __commonJS({
           if (status === 1) t._resolver(value);
           if (status === 2) {
             if (value === void 0) {
-              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql5)) {
+              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql7)) {
                 t._resolver();
                 return;
               }
@@ -76476,22 +76476,22 @@ var require_mysql_querycompiler = __commonJS({
       }
       // Compiles an `delete` allowing comments
       del() {
-        const sql5 = super.del();
-        if (sql5 === "") return sql5;
+        const sql7 = super.del();
+        if (sql7 === "") return sql7;
         const comments = this.comments();
-        return (comments === "" ? "" : comments + " ") + sql5;
+        return (comments === "" ? "" : comments + " ") + sql7;
       }
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        let sql5 = super.insert();
-        if (sql5 === "") return sql5;
+        let sql7 = super.insert();
+        if (sql7 === "") return sql7;
         const comments = this.comments();
-        sql5 = (comments === "" ? "" : comments + " ") + sql5;
+        sql7 = (comments === "" ? "" : comments + " ") + sql7;
         const { ignore, merge: merge4, insert } = this.single;
-        if (ignore) sql5 = sql5.replace("insert into", "insert ignore into");
+        if (ignore) sql7 = sql7.replace("insert into", "insert ignore into");
         if (merge4) {
-          sql5 += this._merge(merge4.updates, insert);
+          sql7 += this._merge(merge4.updates, insert);
           const wheres = this.where();
           if (wheres) {
             throw new Error(
@@ -76499,24 +76499,24 @@ var require_mysql_querycompiler = __commonJS({
             );
           }
         }
-        return sql5;
+        return sql7;
       }
       upsert() {
         const upsertValues = this.single.upsert || [];
-        const sql5 = this.with() + `replace into ${this.tableName} `;
+        const sql7 = this.with() + `replace into ${this.tableName} `;
         const body = this._insertBody(upsertValues);
-        return body === "" ? "" : sql5 + body;
+        return body === "" ? "" : sql7 + body;
       }
       // Compiles merge for onConflict, allowing for different merge strategies
       _merge(updates, insert) {
-        const sql5 = " on duplicate key update ";
+        const sql7 = " on duplicate key update ";
         if (updates && Array.isArray(updates)) {
-          return sql5 + updates.map(
+          return sql7 + updates.map(
             (column) => wrapAsIdentifier(column, this.formatter.builder, this.client)
           ).map((column) => `${column} = values(${column})`).join(", ");
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
-          return sql5 + updateData.join(",");
+          return sql7 + updateData.join(",");
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -76524,7 +76524,7 @@ var require_mysql_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          return sql5 + insertData.columns.map((column) => wrapAsIdentifier(column, this.builder, this.client)).map((column) => `${column} = values(${column})`).join(", ");
+          return sql7 + insertData.columns.map((column) => wrapAsIdentifier(column, this.builder, this.client)).map((column) => `${column} = values(${column})`).join(", ");
         }
       }
       // Update method, including joins, wheres, order & limits.
@@ -76693,16 +76693,16 @@ var require_mysql_compiler = __commonJS({
       }
       // Check whether a table exists on the query.
       hasTable(tableName) {
-        let sql5 = "select * from information_schema.tables where table_name = ?";
+        let sql7 = "select * from information_schema.tables where table_name = ?";
         const bindings = [tableName];
         if (this.schema) {
-          sql5 += " and table_schema = ?";
+          sql7 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql5 += " and table_schema = database()";
+          sql7 += " and table_schema = database()";
         }
         this.pushQuery({
-          sql: sql5,
+          sql: sql7,
           bindings,
           output: function output(resp) {
             return resp.length > 0;
@@ -76743,16 +76743,16 @@ var require_mysql_tablecompiler = __commonJS({
         columnsSql += this.primaryKeys() || "";
         columnsSql += this._addChecks();
         columnsSql += ")";
-        let sql5 = createStatement + this.tableName() + (like && this.tableNameLike() ? " like " + this.tableNameLike() : columnsSql);
+        let sql7 = createStatement + this.tableName() + (like && this.tableNameLike() ? " like " + this.tableNameLike() : columnsSql);
         if (client.connectionSettings) {
           conn = client.connectionSettings;
         }
         const charset = this.single.charset || conn.charset || "";
         const collation = this.single.collate || conn.collate || "";
         const engine = this.single.engine || "";
-        if (charset && !like) sql5 += ` default character set ${charset}`;
-        if (collation) sql5 += ` collate ${collation}`;
-        if (engine) sql5 += ` engine = ${engine}`;
+        if (charset && !like) sql7 += ` default character set ${charset}`;
+        if (collation) sql7 += ` collate ${collation}`;
+        if (engine) sql7 += ` engine = ${engine}`;
         if (this.single.comment) {
           const comment = this.single.comment || "";
           const MAX_COMMENT_LENGTH = 1024;
@@ -76760,9 +76760,9 @@ var require_mysql_tablecompiler = __commonJS({
             this.client.logger.warn(
               `The max length for a table comment is ${MAX_COMMENT_LENGTH} characters`
             );
-          sql5 += ` comment = '${comment}'`;
+          sql7 += ` comment = '${comment}'`;
         }
-        this.pushQuery(sql5);
+        this.pushQuery(sql7);
         if (like) {
           this.addColumns(columns, this.addColumnsPrefix);
         }
@@ -76794,23 +76794,23 @@ var require_mysql_tablecompiler = __commonJS({
                   reject(e);
                 }
               }).then(function() {
-                let sql5 = `alter table ${table} change ${wrapped} ${column.Type}`;
+                let sql7 = `alter table ${table} change ${wrapped} ${column.Type}`;
                 if (String(column.Null).toUpperCase() !== "YES") {
-                  sql5 += ` NOT NULL`;
+                  sql7 += ` NOT NULL`;
                 } else {
-                  sql5 += ` NULL`;
+                  sql7 += ` NULL`;
                 }
                 if (column.Default !== void 0 && column.Default !== null) {
-                  sql5 += ` DEFAULT '${column.Default}'`;
+                  sql7 += ` DEFAULT '${column.Default}'`;
                 }
                 if (column.Collation !== void 0 && column.Collation !== null) {
-                  sql5 += ` COLLATE '${column.Collation}'`;
+                  sql7 += ` COLLATE '${column.Collation}'`;
                 }
                 if (column.Extra == "auto_increment") {
-                  sql5 += ` AUTO_INCREMENT`;
+                  sql7 += ` AUTO_INCREMENT`;
                 }
                 return runner.query({
-                  sql: sql5
+                  sql: sql7
                 });
               }).then(function() {
                 if (!refs.length) {
@@ -76872,7 +76872,7 @@ var require_mysql_tablecompiler = __commonJS({
         const bindingsHolder = {
           bindings: []
         };
-        const sql5 = "SELECT KCU.CONSTRAINT_NAME, KCU.TABLE_NAME, KCU.COLUMN_NAME,        KCU.REFERENCED_TABLE_NAME, KCU.REFERENCED_COLUMN_NAME,        RC.UPDATE_RULE, RC.DELETE_RULE FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC        USING(CONSTRAINT_NAME) WHERE KCU.REFERENCED_TABLE_NAME = " + this.client.parameter(
+        const sql7 = "SELECT KCU.CONSTRAINT_NAME, KCU.TABLE_NAME, KCU.COLUMN_NAME,        KCU.REFERENCED_TABLE_NAME, KCU.REFERENCED_COLUMN_NAME,        RC.UPDATE_RULE, RC.DELETE_RULE FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC        USING(CONSTRAINT_NAME) WHERE KCU.REFERENCED_TABLE_NAME = " + this.client.parameter(
           this.tableNameRaw,
           this.tableBuilder,
           bindingsHolder
@@ -76886,7 +76886,7 @@ var require_mysql_tablecompiler = __commonJS({
           bindingsHolder
         );
         return runner.query({
-          sql: sql5,
+          sql: sql7,
           bindings: bindingsHolder.bindings
         });
       }
@@ -77510,9 +77510,9 @@ var require_transaction4 = __commonJS({
     var Transaction = require_transaction();
     var debug = require_src3()("knex:tx");
     var Transaction_MySQL2 = class extends Transaction {
-      query(conn, sql5, status, value) {
+      query(conn, sql7, status, value) {
         const t = this;
-        const q = this.trxClient.query(conn, sql5).catch((err) => {
+        const q = this.trxClient.query(conn, sql7).catch((err) => {
           if (err.code === "ER_SP_DOES_NOT_EXIST") {
             this.trxClient.logger.warn(
               "Transaction was implicitly committed, do not mix transactions and DDL with MySQL (#805)"
@@ -77527,7 +77527,7 @@ var require_transaction4 = __commonJS({
           if (status === 1) t._resolver(value);
           if (status === 2) {
             if (value === void 0) {
-              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql5)) {
+              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql7)) {
                 t._resolver();
                 return;
               }
@@ -77608,7 +77608,7 @@ var require_utils10 = __commonJS({
         }
       }
       generateCombinedName(logger3, postfix, name28, subNames) {
-        const crypto8 = require("crypto");
+        const crypto9 = require("crypto");
         if (!Array.isArray(subNames)) subNames = subNames ? [subNames] : [];
         const table = name28.replace(/\.|-/g, "_");
         const subNamesPart = subNames.join("_");
@@ -77617,13 +77617,13 @@ var require_utils10 = __commonJS({
           logger3.warn(
             `Automatically generated name "${result}" exceeds ${this.limit} character limit for Oracle Database ${this.oracleVersion}. Using base64 encoded sha1 of that name instead.`
           );
-          result = crypto8.createHash("sha1").update(result).digest("base64").replace("=", "");
+          result = crypto9.createHash("sha1").update(result).digest("base64").replace("=", "");
         }
         return result;
       }
     };
-    function wrapSqlWithCatch(sql5, errorNumberToCatch) {
-      return `begin execute immediate '${sql5.replace(/'/g, "''")}'; exception when others then if sqlcode != ${errorNumberToCatch} then raise; end if; end;`;
+    function wrapSqlWithCatch(sql7, errorNumberToCatch) {
+      return `begin execute immediate '${sql7.replace(/'/g, "''")}'; exception when others then if sqlcode != ${errorNumberToCatch} then raise; end if; end;`;
     }
     function ReturningHelper(columnName) {
       this.columnName = columnName;
@@ -77807,7 +77807,7 @@ var require_oracle_compiler = __commonJS({
       }
       // Check whether a column exists on the schema.
       hasColumn(tableName, column) {
-        const sql5 = `select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = ${this.client.parameter(
+        const sql7 = `select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = ${this.client.parameter(
           tableName,
           this.builder,
           this.bindingsHolder
@@ -77816,7 +77816,7 @@ var require_oracle_compiler = __commonJS({
           this.builder,
           this.bindingsHolder
         )}`;
-        this.pushQuery({ sql: sql5, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql7, output: (resp) => resp.length > 0 });
       }
       dropSequenceIfExists(sequenceName) {
         const prefix = this.schema ? `"${this.schema}".` : "";
@@ -78127,14 +78127,14 @@ var require_oracle_tablecompiler = __commonJS({
           prefix = prefix || this.addColumnsPrefix;
           const columnSql = columns.sql;
           const alter = this.lowerCase ? "alter table " : "ALTER TABLE ";
-          let sql5 = `${alter}${this.tableName()} ${prefix}`;
+          let sql7 = `${alter}${this.tableName()} ${prefix}`;
           if (columns.sql.length > 1) {
-            sql5 += `(${columnSql.join(", ")})`;
+            sql7 += `(${columnSql.join(", ")})`;
           } else {
-            sql5 += columnSql.join(", ");
+            sql7 += columnSql.join(", ");
           }
           this.pushQuery({
-            sql: sql5,
+            sql: sql7,
             bindings: columns.bindings
           });
         }
@@ -78157,10 +78157,10 @@ var require_oracle_tablecompiler = __commonJS({
       // Adds the "create" query to the query sequence.
       createQuery(columns, ifNot, like) {
         const columnsSql = like && this.tableNameLike() ? " as (select * from " + this.tableNameLike() + " where 0=1)" : " (" + columns.sql.join(", ") + this._addChecks() + ")";
-        const sql5 = `create table ${this.tableName()}${columnsSql}`;
+        const sql7 = `create table ${this.tableName()}${columnsSql}`;
         this.pushQuery({
           // catch "name is already used by an existing object" for workaround for "if not exists"
-          sql: ifNot ? utils.wrapSqlWithCatch(sql5, -955) : sql5,
+          sql: ifNot ? utils.wrapSqlWithCatch(sql7, -955) : sql7,
           bindings: columns.bindings
         });
         if (this.single.comment) this.comment(this.single.comment);
@@ -78300,9 +78300,9 @@ var require_oracle = __commonJS({
         return this.connectionSettings.database;
       }
       // Position the bindings for the query.
-      positionBindings(sql5) {
+      positionBindings(sql7) {
         let questionCount = 0;
-        return sql5.replace(/\?/g, function() {
+        return sql7.replace(/\?/g, function() {
           questionCount += 1;
           return `:${questionCount}`;
         });
@@ -78406,7 +78406,7 @@ var require_oracle_querycompiler = __commonJS({
           return "";
         }
         const insertData = this._prepInsert(insertValues);
-        const sql5 = {};
+        const sql7 = {};
         if (isString2(insertData)) {
           return this._addReturningToSqlAndConvert(
             `insert into ${this.tableName} ${insertData}`,
@@ -78428,7 +78428,7 @@ var require_oracle_querycompiler = __commonJS({
           );
         }
         const insertDefaultsOnly = insertData.columns.length === 0;
-        sql5.sql = "begin " + insertData.values.map((value) => {
+        sql7.sql = "begin " + insertData.values.map((value) => {
           let returningHelper;
           const parameterizedValues = !insertDefaultsOnly ? this.client.parameterize(
             value,
@@ -78440,7 +78440,7 @@ var require_oracle_querycompiler = __commonJS({
           let subSql = `insert into ${this.tableName} `;
           if (returning) {
             returningHelper = new ReturningHelper(returningValues.join(":"));
-            sql5.outParams = (sql5.outParams || []).concat(returningHelper);
+            sql7.outParams = (sql7.outParams || []).concat(returningHelper);
           }
           if (insertDefaultsOnly) {
             subSql += `(${this.formatter.wrap(
@@ -78461,24 +78461,24 @@ var require_oracle_querycompiler = __commonJS({
           return `execute immediate '${subSql.replace(/'/g, "''")}` + (parameterizedValuesWithoutDefault || returning ? "' using " : "") + parameterizedValuesWithoutDefault + (parameterizedValuesWithoutDefault && returning ? ", " : "") + (returning ? "out ?" : "") + ";";
         }).join(" ") + "end;";
         if (returning) {
-          sql5.returning = returning;
-          sql5.returningSql = `select ${this.formatter.columnize(returning)} from ` + this.tableName + " where ROWID in (" + sql5.outParams.map((v, i) => `:${i + 1}`).join(", ") + ") order by case ROWID " + sql5.outParams.map((v, i) => `when CHARTOROWID(:${i + 1}) then ${i}`).join(" ") + " end";
+          sql7.returning = returning;
+          sql7.returningSql = `select ${this.formatter.columnize(returning)} from ` + this.tableName + " where ROWID in (" + sql7.outParams.map((v, i) => `:${i + 1}`).join(", ") + ") order by case ROWID " + sql7.outParams.map((v, i) => `when CHARTOROWID(:${i + 1}) then ${i}`).join(" ") + " end";
         }
-        return sql5;
+        return sql7;
       }
       // Update method, including joins, wheres, order & limits.
       update() {
         const updates = this._prepUpdate(this.single.update);
         const where = this.where();
         let { returning } = this.single;
-        const sql5 = `update ${this.tableName} set ` + updates.join(", ") + (where ? ` ${where}` : "");
+        const sql7 = `update ${this.tableName} set ` + updates.join(", ") + (where ? ` ${where}` : "");
         if (!returning) {
-          return sql5;
+          return sql7;
         }
         if (!Array.isArray(returning)) {
           returning = [returning];
         }
-        return this._addReturningToSqlAndConvert(sql5, returning, this.tableName);
+        return this._addReturningToSqlAndConvert(sql7, returning, this.tableName);
       }
       // Compiles a `truncate` query.
       truncate() {
@@ -78497,7 +78497,7 @@ var require_oracle_querycompiler = __commonJS({
       columnInfo() {
         const column = this.single.columnInfo;
         const table = this.client.customWrapIdentifier(this.single.table, identity2);
-        const sql5 = `select * from xmltable( '/ROWSET/ROW'
+        const sql7 = `select * from xmltable( '/ROWSET/ROW'
       passing dbms_xmlgen.getXMLType('
       select char_col_decl_length, column_name, data_type, data_default, nullable
       from all_tab_columns where table_name = ''${table}'' ')
@@ -78505,7 +78505,7 @@ var require_oracle_querycompiler = __commonJS({
       CHAR_COL_DECL_LENGTH number, COLUMN_NAME varchar2(200), DATA_TYPE varchar2(106),
       DATA_DEFAULT clob, NULLABLE varchar2(1))`;
         return {
-          sql: sql5,
+          sql: sql7,
           output(resp) {
             const out = reduce(
               resp,
@@ -78536,16 +78536,16 @@ var require_oracle_querycompiler = __commonJS({
         return this._aggregate(stmt, { aliasSeparator: " " });
       }
       // for single commands only
-      _addReturningToSqlAndConvert(sql5, returning, tableName) {
+      _addReturningToSqlAndConvert(sql7, returning, tableName) {
         const res = {
-          sql: sql5
+          sql: sql7
         };
         if (!returning) {
           return res;
         }
         const returningValues = Array.isArray(returning) ? returning : [returning];
         const returningHelper = new ReturningHelper(returningValues.join(":"));
-        res.sql = sql5 + " returning ROWID into " + this.client.parameter(returningHelper, this.builder, this.bindingsHolder);
+        res.sql = sql7 + " returning ROWID into " + this.client.parameter(returningHelper, this.builder, this.bindingsHolder);
         res.returningSql = `select ${this.formatter.columnize(
           returning
         )} from ${tableName} where ROWID = :1`;
@@ -78654,7 +78654,7 @@ var require_utils11 = __commonJS({
           });
         });
       };
-      const fetchAsync = promisify2(function(sql5, bindParams, options, cb) {
+      const fetchAsync = promisify2(function(sql7, bindParams, options, cb) {
         options = options || {};
         options.outFormat = client.driver.OUT_FORMAT_OBJECT || client.driver.OBJECT;
         if (!options.outFormat) {
@@ -78662,7 +78662,7 @@ var require_utils11 = __commonJS({
         }
         if (options.resultSet) {
           connection.execute(
-            sql5,
+            sql7,
             bindParams || [],
             options,
             function(err, result) {
@@ -78705,7 +78705,7 @@ var require_utils11 = __commonJS({
           );
         } else {
           connection.execute(
-            sql5,
+            sql7,
             bindParams || [],
             options,
             function(err, result) {
@@ -78722,8 +78722,8 @@ var require_utils11 = __commonJS({
           );
         }
       });
-      connection.executeAsync = function(sql5, bindParams, options) {
-        return fetchAsync(sql5, bindParams, options).then(async (results) => {
+      connection.executeAsync = function(sql7, bindParams, options) {
+        return fetchAsync(sql7, bindParams, options).then(async (results) => {
           const closeResultSet = () => {
             return results.resultSet ? promisify2(results.resultSet.close).call(results.resultSet) : Promise.resolve();
           };
@@ -78800,7 +78800,7 @@ var require_oracledb_querycompiler = __commonJS({
           return "";
         }
         const insertData = this._prepInsert(insertValues);
-        const sql5 = {};
+        const sql7 = {};
         if (isString2(insertData)) {
           return this._addReturningToSqlAndConvert(
             "insert into " + this.tableName + " " + insertData,
@@ -78823,8 +78823,8 @@ var require_oracledb_querycompiler = __commonJS({
           );
         }
         const insertDefaultsOnly = insertData.columns.length === 0;
-        sql5.returning = returning;
-        sql5.sql = "begin " + insertData.values.map(function(value, index) {
+        sql7.returning = returning;
+        sql7.sql = "begin " + insertData.values.map(function(value, index) {
           const parameterizedValues = !insertDefaultsOnly ? self2.client.parameterize(
             value,
             self2.client.valueForUndefined,
@@ -78867,9 +78867,9 @@ var require_oracledb_querycompiler = __commonJS({
           const parameterizedValuesWithoutDefaultAndBlob = parameterizedValues.replace(/DEFAULT, /g, "").replace(/, DEFAULT/g, "").replace("EMPTY_BLOB(), ", "").replace(", EMPTY_BLOB()", "");
           return "execute immediate '" + subSql.replace(/'/g, "''") + (parameterizedValuesWithoutDefaultAndBlob || value ? "' using " : "") + parameterizedValuesWithoutDefaultAndBlob + (parameterizedValuesWithoutDefaultAndBlob && outClause ? "," : "") + outClause + ";";
         }).join(" ") + "end;";
-        sql5.outBinding = outBinding;
+        sql7.outBinding = outBinding;
         if (returning[0] === "*") {
-          sql5.returningSql = function() {
+          sql7.returningSql = function() {
             return "select * from " + self2.tableName + " where ROWID in (" + this.outBinding.map(function(v, i) {
               return ":" + (i + 1);
             }).join(", ") + ") order by case ROWID " + this.outBinding.map(function(v, i) {
@@ -78877,7 +78877,7 @@ var require_oracledb_querycompiler = __commonJS({
             }).join(" ") + " end";
           };
         }
-        return sql5;
+        return sql7;
       }
       with() {
         const undoList = [];
@@ -78895,10 +78895,10 @@ var require_oracledb_querycompiler = __commonJS({
         }
         return result;
       }
-      _addReturningToSqlAndConvert(sql5, outBinding, tableName, returning) {
+      _addReturningToSqlAndConvert(sql7, outBinding, tableName, returning) {
         const self2 = this;
         const res = {
-          sql: sql5
+          sql: sql7
         };
         if (!outBinding) {
           return res;
@@ -78915,7 +78915,7 @@ var require_oracledb_querycompiler = __commonJS({
           }
           self2.formatter.bindings.push(new ReturningHelper(columnName));
         });
-        res.sql = sql5;
+        res.sql = sql7;
         returningClause = returningClause.slice(0, -1);
         intoClause = intoClause.slice(0, -1);
         if (returningClause && intoClause) {
@@ -78972,7 +78972,7 @@ var require_oracledb_querycompiler = __commonJS({
       }
       update() {
         const self2 = this;
-        const sql5 = {};
+        const sql7 = {};
         const outBindPrep = this._prepOutbindings(
           this.single.update || this.single.counter,
           this.single.returning
@@ -78999,15 +78999,15 @@ var require_oracledb_querycompiler = __commonJS({
         });
         returningClause = returningClause.slice(0, -1);
         intoClause = intoClause.slice(0, -1);
-        sql5.outBinding = outBinding;
-        sql5.returning = returning;
-        sql5.sql = "update " + this.tableName + " set " + updates.join(", ") + (where ? " " + where : "");
+        sql7.outBinding = outBinding;
+        sql7.returning = returning;
+        sql7.sql = "update " + this.tableName + " set " + updates.join(", ") + (where ? " " + where : "");
         if (outBinding.length && !isEmpty(outBinding[0])) {
-          sql5.sql += " returning " + returningClause + " into" + intoClause;
+          sql7.sql += " returning " + returningClause + " into" + intoClause;
         }
         if (returning[0] === "*") {
-          sql5.returningSql = function() {
-            let sql6 = "select * from " + self2.tableName;
+          sql7.returningSql = function() {
+            let sql8 = "select * from " + self2.tableName;
             const modifiedRowsCount = this.rowsAffected.length || this.rowsAffected;
             let returningSqlIn = " where ROWID in (";
             let returningSqlOrderBy = ") order by case ROWID ";
@@ -79022,10 +79022,10 @@ var require_oracledb_querycompiler = __commonJS({
               returningSqlIn = returningSqlIn.slice(0, -2);
               returningSqlOrderBy = returningSqlOrderBy.slice(0, -1);
             }
-            return sql6 += returningSqlIn + returningSqlOrderBy + " end";
+            return sql8 += returningSqlIn + returningSqlOrderBy + " end";
           };
         }
-        return sql5;
+        return sql7;
       }
       _jsonPathWrap(extraction) {
         return `'${extraction.path || extraction[1]}'`;
@@ -79114,11 +79114,11 @@ var require_oracledb_tablecompiler = __commonJS({
       }
       _setNullableState(column, isNullable) {
         const nullability = isNullable ? "NULL" : "NOT NULL";
-        const sql5 = `alter table ${this.tableName()} modify (${this.formatter.wrap(
+        const sql7 = `alter table ${this.tableName()} modify (${this.formatter.wrap(
           column
         )} ${nullability})`;
         return this.pushQuery({
-          sql: sql5
+          sql: sql7
         });
       }
     };
@@ -79715,27 +79715,27 @@ var require_redshift_querycompiler = __commonJS({
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        const sql5 = QueryCompiler.prototype.insert.apply(this, arguments);
-        if (sql5 === "") return sql5;
+        const sql7 = QueryCompiler.prototype.insert.apply(this, arguments);
+        if (sql7 === "") return sql7;
         this._slightReturn();
         return {
-          sql: sql5
+          sql: sql7
         };
       }
       // Compiles an `update` query, warning on unsupported returning
       update() {
-        const sql5 = QueryCompiler.prototype.update.apply(this, arguments);
+        const sql7 = QueryCompiler.prototype.update.apply(this, arguments);
         this._slightReturn();
         return {
-          sql: sql5
+          sql: sql7
         };
       }
       // Compiles an `delete` query, warning on unsupported returning
       del() {
-        const sql5 = QueryCompiler.prototype.del.apply(this, arguments);
+        const sql7 = QueryCompiler.prototype.del.apply(this, arguments);
         this._slightReturn();
         return {
-          sql: sql5
+          sql: sql7
         };
       }
       // simple: if trying to return, warn
@@ -79774,12 +79774,12 @@ var require_redshift_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        const sql5 = "select * from information_schema.columns where table_name = ? and table_catalog = ?";
+        const sql7 = "select * from information_schema.columns where table_name = ? and table_catalog = ?";
         const bindings = [
           table.toLowerCase(),
           this.client.database().toLowerCase()
         ];
-        return this._buildColumnInfoQuery(schema, sql5, bindings, column);
+        return this._buildColumnInfoQuery(schema, sql7, bindings, column);
       }
       jsonExtract(params) {
         let extractions;
@@ -79951,11 +79951,11 @@ var require_redshift_tablecompiler = __commonJS({
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
         const columnsSql = " (" + columns.sql.join(", ") + this._addChecks() + ")";
-        let sql5 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + ")" : columnsSql);
+        let sql7 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + ")" : columnsSql);
         if (this.single.inherits)
-          sql5 += ` like (${this.formatter.wrap(this.single.inherits)})`;
+          sql7 += ` like (${this.formatter.wrap(this.single.inherits)})`;
         this.pushQuery({
-          sql: sql5,
+          sql: sql7,
           bindings: columns.bindings
         });
         const hasComment = has(this.single, "comment");
@@ -93880,8 +93880,8 @@ var require_JSXTransformer = __commonJS({
         }
         if (this.isAutomaticRuntime) {
           if (this.importProcessor) {
-            for (const [path34, resolvedName] of Object.entries(this.cjsAutomaticModuleNameResolutions)) {
-              prefix += `var ${resolvedName} = require("${path34}");`;
+            for (const [path35, resolvedName] of Object.entries(this.cjsAutomaticModuleNameResolutions)) {
+              prefix += `var ${resolvedName} = require("${path35}");`;
             }
           } else {
             const { createElement: createElementResolution, ...otherResolutions } = this.esmAutomaticImportNameResolutions;
@@ -94074,11 +94074,11 @@ var require_JSXTransformer = __commonJS({
       }
       claimAutoImportedName(funcName, importPathSuffix) {
         if (this.importProcessor) {
-          const path34 = this.jsxImportSource + importPathSuffix;
-          if (!this.cjsAutomaticModuleNameResolutions[path34]) {
-            this.cjsAutomaticModuleNameResolutions[path34] = this.importProcessor.getFreeIdentifierForPath(path34);
+          const path35 = this.jsxImportSource + importPathSuffix;
+          if (!this.cjsAutomaticModuleNameResolutions[path35]) {
+            this.cjsAutomaticModuleNameResolutions[path35] = this.importProcessor.getFreeIdentifierForPath(path35);
           }
-          return `${this.cjsAutomaticModuleNameResolutions[path34]}.${funcName}`;
+          return `${this.cjsAutomaticModuleNameResolutions[path35]}.${funcName}`;
         } else {
           if (!this.esmAutomaticImportNameResolutions[funcName]) {
             this.esmAutomaticImportNameResolutions[funcName] = this.nameManager.claimFreeName(
@@ -94514,7 +94514,7 @@ var require_CJSImportProcessor = __commonJS({
        */
       pruneTypeOnlyImports() {
         this.nonTypeIdentifiers = _getNonTypeIdentifiers.getNonTypeIdentifiers.call(void 0, this.tokens, this.options);
-        for (const [path34, importInfo] of this.importInfoByPath.entries()) {
+        for (const [path35, importInfo] of this.importInfoByPath.entries()) {
           if (importInfo.hasBareImport || importInfo.hasStarExport || importInfo.exportStarNames.length > 0 || importInfo.namedExports.length > 0) {
             continue;
           }
@@ -94524,7 +94524,7 @@ var require_CJSImportProcessor = __commonJS({
             ...importInfo.namedImports.map(({ localName }) => localName)
           ];
           if (names.every((name28) => this.shouldAutomaticallyElideImportedName(name28))) {
-            this.importsToReplace.set(path34, "");
+            this.importsToReplace.set(path35, "");
           }
         }
       }
@@ -94532,7 +94532,7 @@ var require_CJSImportProcessor = __commonJS({
         return this.isTypeScriptTransformEnabled && !this.keepUnusedImports && !this.nonTypeIdentifiers.has(name28);
       }
       generateImportReplacements() {
-        for (const [path34, importInfo] of this.importInfoByPath.entries()) {
+        for (const [path35, importInfo] of this.importInfoByPath.entries()) {
           const {
             defaultNames,
             wildcardNames,
@@ -94542,17 +94542,17 @@ var require_CJSImportProcessor = __commonJS({
             hasStarExport
           } = importInfo;
           if (defaultNames.length === 0 && wildcardNames.length === 0 && namedImports.length === 0 && namedExports.length === 0 && exportStarNames.length === 0 && !hasStarExport) {
-            this.importsToReplace.set(path34, `require('${path34}');`);
+            this.importsToReplace.set(path35, `require('${path35}');`);
             continue;
           }
-          const primaryImportName = this.getFreeIdentifierForPath(path34);
+          const primaryImportName = this.getFreeIdentifierForPath(path35);
           let secondaryImportName;
           if (this.enableLegacyTypeScriptModuleInterop) {
             secondaryImportName = primaryImportName;
           } else {
-            secondaryImportName = wildcardNames.length > 0 ? wildcardNames[0] : this.getFreeIdentifierForPath(path34);
+            secondaryImportName = wildcardNames.length > 0 ? wildcardNames[0] : this.getFreeIdentifierForPath(path35);
           }
-          let requireCode = `var ${primaryImportName} = require('${path34}');`;
+          let requireCode = `var ${primaryImportName} = require('${path35}');`;
           if (wildcardNames.length > 0) {
             for (const wildcardName of wildcardNames) {
               const moduleExpr = this.enableLegacyTypeScriptModuleInterop ? primaryImportName : `${this.helperManager.getHelperName("interopRequireWildcard")}(${primaryImportName})`;
@@ -94580,7 +94580,7 @@ var require_CJSImportProcessor = __commonJS({
               "createStarExport"
             )}(${primaryImportName});`;
           }
-          this.importsToReplace.set(path34, requireCode);
+          this.importsToReplace.set(path35, requireCode);
           for (const defaultName of defaultNames) {
             this.identifierReplacements.set(defaultName, `${secondaryImportName}.default`);
           }
@@ -94589,8 +94589,8 @@ var require_CJSImportProcessor = __commonJS({
           }
         }
       }
-      getFreeIdentifierForPath(path34) {
-        const components = path34.split("/");
+      getFreeIdentifierForPath(path35) {
+        const components = path35.split("/");
         const lastComponent = components[components.length - 1];
         const baseName = lastComponent.replace(/\W/g, "");
         return this.nameManager.claimFreeName(`_${baseName}`);
@@ -94635,8 +94635,8 @@ var require_CJSImportProcessor = __commonJS({
         if (!this.tokens.matches1AtIndex(index, _types.TokenType.string)) {
           throw new Error("Expected string token at the end of import statement.");
         }
-        const path34 = this.tokens.stringValueAtIndex(index);
-        const importInfo = this.getImportInfo(path34);
+        const path35 = this.tokens.stringValueAtIndex(index);
+        const importInfo = this.getImportInfo(path35);
         importInfo.defaultNames.push(...defaultNames);
         importInfo.wildcardNames.push(...wildcardNames);
         importInfo.namedImports.push(...namedImports);
@@ -94703,8 +94703,8 @@ var require_CJSImportProcessor = __commonJS({
         if (!this.tokens.matches1AtIndex(index, _types.TokenType.string)) {
           throw new Error("Expected string token at the end of import statement.");
         }
-        const path34 = this.tokens.stringValueAtIndex(index);
-        const importInfo = this.getImportInfo(path34);
+        const path35 = this.tokens.stringValueAtIndex(index);
+        const importInfo = this.getImportInfo(path35);
         importInfo.namedExports.push(...namedImports);
       }
       preprocessExportStarAtIndex(index) {
@@ -94719,8 +94719,8 @@ var require_CJSImportProcessor = __commonJS({
         if (!this.tokens.matches1AtIndex(index, _types.TokenType.string)) {
           throw new Error("Expected string token at the end of star export statement.");
         }
-        const path34 = this.tokens.stringValueAtIndex(index);
-        const importInfo = this.getImportInfo(path34);
+        const path35 = this.tokens.stringValueAtIndex(index);
+        const importInfo = this.getImportInfo(path35);
         if (exportedName !== null) {
           importInfo.exportStarNames.push(exportedName);
         } else {
@@ -94760,8 +94760,8 @@ var require_CJSImportProcessor = __commonJS({
        * Get a mutable import info object for this path, creating one if it doesn't
        * exist yet.
        */
-      getImportInfo(path34) {
-        const existingInfo = this.importInfoByPath.get(path34);
+      getImportInfo(path35) {
+        const existingInfo = this.importInfoByPath.get(path35);
         if (existingInfo) {
           return existingInfo;
         }
@@ -94774,7 +94774,7 @@ var require_CJSImportProcessor = __commonJS({
           exportStarNames: [],
           hasStarExport: false
         };
-        this.importInfoByPath.set(path34, newInfo);
+        this.importInfoByPath.set(path35, newInfo);
         return newInfo;
       }
       addExportBinding(localName, exportedName) {
@@ -95314,16 +95314,16 @@ var require_resolve_uri_umd = __commonJS({
       }
       function parseFileUrl(input) {
         const match = fileRegex.exec(input);
-        const path34 = match[2];
-        return makeUrl("file:", "", match[1] || "", "", isAbsolutePath(path34) ? path34 : "/" + path34, match[3] || "", match[4] || "");
+        const path35 = match[2];
+        return makeUrl("file:", "", match[1] || "", "", isAbsolutePath(path35) ? path35 : "/" + path35, match[3] || "", match[4] || "");
       }
-      function makeUrl(scheme, user, host, port, path34, query, hash3) {
+      function makeUrl(scheme, user, host, port, path35, query, hash3) {
         return {
           scheme,
           user,
           host,
           port,
-          path: path34,
+          path: path35,
           query,
           hash: hash3,
           type: 7
@@ -95353,11 +95353,11 @@ var require_resolve_uri_umd = __commonJS({
         url4.type = input ? input.startsWith("?") ? 3 : input.startsWith("#") ? 2 : 4 : 1;
         return url4;
       }
-      function stripPathFilename(path34) {
-        if (path34.endsWith("/.."))
-          return path34;
-        const index = path34.lastIndexOf("/");
-        return path34.slice(0, index + 1);
+      function stripPathFilename(path35) {
+        if (path35.endsWith("/.."))
+          return path35;
+        const index = path35.lastIndexOf("/");
+        return path35.slice(0, index + 1);
       }
       function mergePaths(url4, base) {
         normalizePath(base, base.type);
@@ -95395,14 +95395,14 @@ var require_resolve_uri_umd = __commonJS({
           pieces[pointer++] = piece;
           positive++;
         }
-        let path34 = "";
+        let path35 = "";
         for (let i = 1; i < pointer; i++) {
-          path34 += "/" + pieces[i];
+          path35 += "/" + pieces[i];
         }
-        if (!path34 || addTrailingSlash && !path34.endsWith("/..")) {
-          path34 += "/";
+        if (!path35 || addTrailingSlash && !path35.endsWith("/..")) {
+          path35 += "/";
         }
-        url4.path = path34;
+        url4.path = path35;
       }
       function resolve3(input, base) {
         if (!input && !base)
@@ -95443,13 +95443,13 @@ var require_resolve_uri_umd = __commonJS({
           case 3:
             return queryHash;
           case 4: {
-            const path34 = url4.path.slice(1);
-            if (!path34)
+            const path35 = url4.path.slice(1);
+            if (!path35)
               return queryHash || ".";
-            if (isRelative(base || input) && !isRelative(path34)) {
-              return "./" + path34 + queryHash;
+            if (isRelative(base || input) && !isRelative(path35)) {
+              return "./" + path35 + queryHash;
             }
-            return path34 + queryHash;
+            return path35 + queryHash;
           }
           case 5:
             return url4.path + queryHash;
@@ -95549,10 +95549,10 @@ var require_trace_mapping_umd = __commonJS({
       module3.exports = __toCommonJS2(trace_mapping_exports);
       var import_sourcemap_codec = __toESM2(require_sourcemap_codec());
       var import_resolve_uri = __toESM2(require_resolve_uri());
-      function stripFilename(path34) {
-        if (!path34) return "";
-        const index = path34.lastIndexOf("/");
-        return path34.slice(0, index + 1);
+      function stripFilename(path35) {
+        if (!path35) return "";
+        const index = path35.lastIndexOf("/");
+        return path35.slice(0, index + 1);
       }
       function resolver(mapUrl, sourceRoot) {
         const from = stripFilename(mapUrl);
@@ -96761,9 +96761,9 @@ var require_util2 = __commonJS({
       /** @class */
       (function(_super) {
         __extends(VError2, _super);
-        function VError2(path34, message) {
+        function VError2(path35, message) {
           var _this = _super.call(this, message) || this;
-          _this.path = path34;
+          _this.path = path35;
           Object.setPrototypeOf(_this, VError2.prototype);
           return _this;
         }
@@ -96823,26 +96823,26 @@ var require_util2 = __commonJS({
             (_b27 = this._messages).push.apply(_b27, best._messages);
           }
         };
-        DetailContext2.prototype.getError = function(path34) {
+        DetailContext2.prototype.getError = function(path35) {
           var msgParts = [];
           for (var i = this._propNames.length - 1; i >= 0; i--) {
             var p3 = this._propNames[i];
-            path34 += typeof p3 === "number" ? "[" + p3 + "]" : p3 ? "." + p3 : "";
+            path35 += typeof p3 === "number" ? "[" + p3 + "]" : p3 ? "." + p3 : "";
             var m = this._messages[i];
             if (m) {
-              msgParts.push(path34 + " " + m);
+              msgParts.push(path35 + " " + m);
             }
           }
-          return new VError(path34, msgParts.join("; "));
+          return new VError(path35, msgParts.join("; "));
         };
-        DetailContext2.prototype.getErrorDetail = function(path34) {
+        DetailContext2.prototype.getErrorDetail = function(path35) {
           var details = [];
           for (var i = this._propNames.length - 1; i >= 0; i--) {
             var p3 = this._propNames[i];
-            path34 += typeof p3 === "number" ? "[" + p3 + "]" : p3 ? "." + p3 : "";
+            path35 += typeof p3 === "number" ? "[" + p3 + "]" : p3 ? "." + p3 : "";
             var message = this._messages[i];
             if (message) {
-              details.push({ path: path34, message });
+              details.push({ path: path35, message });
             }
           }
           var detail = null;
@@ -97655,8 +97655,8 @@ var require_dist4 = __commonJS({
           this.checkerPlain = this.ttype.getChecker(suite, false);
           this.checkerStrict = this.ttype.getChecker(suite, true);
         }
-        Checker2.prototype.setReportedPath = function(path34) {
-          this._path = path34;
+        Checker2.prototype.setReportedPath = function(path35) {
+          this._path = path35;
         };
         Checker2.prototype.check = function(value) {
           return this._doCheck(this.checkerPlain, value);
@@ -103089,9 +103089,9 @@ var require_CJSImportTransformer = __commonJS({
         if (shouldElideImport) {
           this.tokens.removeToken();
         } else {
-          const path34 = this.tokens.stringValue();
-          this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path34));
-          this.tokens.appendCode(this.importProcessor.claimImportCode(path34));
+          const path35 = this.tokens.stringValue();
+          this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path35));
+          this.tokens.appendCode(this.importProcessor.claimImportCode(path35));
         }
         _removeMaybeImportAttributes.removeMaybeImportAttributes.call(void 0, this.tokens);
         if (this.tokens.matches1(_types.TokenType.semi)) {
@@ -103671,8 +103671,8 @@ var require_CJSImportTransformer = __commonJS({
         }
         if (this.tokens.matchesContextual(_keywords.ContextualKeyword._from)) {
           this.tokens.removeToken();
-          const path34 = this.tokens.stringValue();
-          this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path34));
+          const path35 = this.tokens.stringValue();
+          this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path35));
           _removeMaybeImportAttributes.removeMaybeImportAttributes.call(void 0, this.tokens);
         } else {
           this.tokens.appendCode(exportStatements.join(" "));
@@ -103686,8 +103686,8 @@ var require_CJSImportTransformer = __commonJS({
         while (!this.tokens.matches1(_types.TokenType.string)) {
           this.tokens.removeToken();
         }
-        const path34 = this.tokens.stringValue();
-        this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path34));
+        const path35 = this.tokens.stringValue();
+        this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path35));
         _removeMaybeImportAttributes.removeMaybeImportAttributes.call(void 0, this.tokens);
         if (this.tokens.matches1(_types.TokenType.semi)) {
           this.tokens.removeToken();
@@ -106889,6 +106889,20 @@ var init_migrations = __esm({
             });
           }
         }
+      },
+      {
+        id: "20260808_004_composition_render_results",
+        up: async (db2) => {
+          if (!await db2.schema.hasColumn("composition_jobs", "output_checksum")) {
+            await db2.schema.alterTable("composition_jobs", (table) => table.text("output_checksum"));
+          }
+          if (!await db2.schema.hasColumn("composition_jobs", "duration_ms")) {
+            await db2.schema.alterTable("composition_jobs", (table) => table.integer("duration_ms"));
+          }
+          if (!await db2.schema.hasColumn("composition_jobs", "render_log")) {
+            await db2.schema.alterTable("composition_jobs", (table) => table.text("render_log"));
+          }
+        }
       }
     ];
   }
@@ -107086,7 +107100,7 @@ async function getAllEnums(db2, config3) {
   return await getTableEnums(db2, config3);
 }
 async function getAllTables(db2, schemas) {
-  const sql5 = `
+  const sql7 = `
     SELECT
       TABLE_NAME AS name,
       TABLE_SCHEMA AS 'schema',
@@ -107094,10 +107108,10 @@ async function getAllTables(db2, schemas) {
     FROM INFORMATION_SCHEMA.TABLES
     WHERE TABLE_SCHEMA NOT IN('mysql', 'information_schema', 'performance_schema', 'sys')
     ${schemas.length > 0 ? " AND TABLE_SCHEMA IN (:schemas)" : ""}`;
-  return (await db2.raw(sql5, { schemas }))[0];
+  return (await db2.raw(sql7, { schemas }))[0];
 }
 async function getAllColumns(db2, config3, table, schema) {
-  const sql5 = `
+  const sql7 = `
     SELECT
       column_name as name,
       is_nullable as isNullable,
@@ -107118,7 +107132,7 @@ async function getAllColumns(db2, config3, table, schema) {
       AND c.TABLE_SCHEMA = :schema
       ORDER BY ORDINAL_POSITION
     `;
-  return (await db2.raw(sql5, { table, schema }))[0].map((c) => ({
+  return (await db2.raw(sql7, { table, schema }))[0].map((c) => ({
     name: c.name,
     type: c.fullType == "tinyint(1)" ? c.fullType : c.type,
     // tinyint(1) typically aliased as a boolean
@@ -107162,7 +107176,7 @@ var init_mssql = __esm({
         return await getTableEnums(db2, config3);
       },
       async getAllTables(db2, schemas) {
-        const sql5 = `
+        const sql7 = `
       SELECT
         TABLE_NAME name,
         TABLE_SCHEMA [schema],
@@ -107174,10 +107188,10 @@ var init_mssql = __esm({
           SELECT TOP 1 value FROM fn_listextendedproperty (NULL, 'schema', TABLE_SCHEMA, 'view', TABLE_NAME, null, null) EP WHERE EP.name = 'MS_Description'
         ) EP 
       ${schemas.length > 0 ? `WHERE TABLE_SCHEMA IN (${schemas.map((_) => "?").join(",")})` : ""}`;
-        return await db2.raw(sql5, schemas);
+        return await db2.raw(sql7, schemas);
       },
       async getAllColumns(db2, config3, table, schema) {
-        const sql5 = `
+        const sql7 = `
       SELECT
 				COLUMN_NAME as name,
 				IS_NULLABLE AS isNullable,
@@ -107201,7 +107215,7 @@ var init_mssql = __esm({
         WHERE c.TABLE_NAME = :table
         AND c.TABLE_SCHEMA = :schema
       `;
-        return (await db2.raw(sql5, { table, schema })).map((c) => ({
+        return (await db2.raw(sql7, { table, schema })).map((c) => ({
           name: c.name,
           type: c.type,
           nullable: c.isNullable === "YES",
@@ -108529,11 +108543,11 @@ var init_toKey = __esm({
 });
 
 // node_modules/lodash-es/_baseGet.js
-function baseGet(object4, path34) {
-  path34 = castPath_default(path34, object4);
-  var index = 0, length = path34.length;
+function baseGet(object4, path35) {
+  path35 = castPath_default(path35, object4);
+  var index = 0, length = path35.length;
   while (object4 != null && index < length) {
-    object4 = object4[toKey_default(path34[index++])];
+    object4 = object4[toKey_default(path35[index++])];
   }
   return index && index == length ? object4 : void 0;
 }
@@ -108548,8 +108562,8 @@ var init_baseGet = __esm({
 });
 
 // node_modules/lodash-es/get.js
-function get(object4, path34, defaultValue) {
-  var result = object4 == null ? void 0 : baseGet_default(object4, path34);
+function get(object4, path35, defaultValue) {
+  var result = object4 == null ? void 0 : baseGet_default(object4, path35);
   return result === void 0 ? defaultValue : result;
 }
 var get_default;
@@ -109358,11 +109372,11 @@ var init_baseHasIn = __esm({
 });
 
 // node_modules/lodash-es/_hasPath.js
-function hasPath(object4, path34, hasFunc) {
-  path34 = castPath_default(path34, object4);
-  var index = -1, length = path34.length, result = false;
+function hasPath(object4, path35, hasFunc) {
+  path35 = castPath_default(path35, object4);
+  var index = -1, length = path35.length, result = false;
   while (++index < length) {
-    var key = toKey_default(path34[index]);
+    var key = toKey_default(path35[index]);
     if (!(result = object4 != null && hasFunc(object4, key))) {
       break;
     }
@@ -109389,8 +109403,8 @@ var init_hasPath = __esm({
 });
 
 // node_modules/lodash-es/hasIn.js
-function hasIn(object4, path34) {
-  return object4 != null && hasPath_default(object4, path34, baseHasIn_default);
+function hasIn(object4, path35) {
+  return object4 != null && hasPath_default(object4, path35, baseHasIn_default);
 }
 var hasIn_default;
 var init_hasIn = __esm({
@@ -109403,13 +109417,13 @@ var init_hasIn = __esm({
 });
 
 // node_modules/lodash-es/_baseMatchesProperty.js
-function baseMatchesProperty(path34, srcValue) {
-  if (isKey_default(path34) && isStrictComparable_default(srcValue)) {
-    return matchesStrictComparable_default(toKey_default(path34), srcValue);
+function baseMatchesProperty(path35, srcValue) {
+  if (isKey_default(path35) && isStrictComparable_default(srcValue)) {
+    return matchesStrictComparable_default(toKey_default(path35), srcValue);
   }
   return function(object4) {
-    var objValue = get_default(object4, path34);
-    return objValue === void 0 && objValue === srcValue ? hasIn_default(object4, path34) : baseIsEqual_default(srcValue, objValue, COMPARE_PARTIAL_FLAG6 | COMPARE_UNORDERED_FLAG4);
+    var objValue = get_default(object4, path35);
+    return objValue === void 0 && objValue === srcValue ? hasIn_default(object4, path35) : baseIsEqual_default(srcValue, objValue, COMPARE_PARTIAL_FLAG6 | COMPARE_UNORDERED_FLAG4);
   };
 }
 var COMPARE_PARTIAL_FLAG6, COMPARE_UNORDERED_FLAG4, baseMatchesProperty_default;
@@ -109444,9 +109458,9 @@ var init_baseProperty = __esm({
 });
 
 // node_modules/lodash-es/_basePropertyDeep.js
-function basePropertyDeep(path34) {
+function basePropertyDeep(path35) {
   return function(object4) {
-    return baseGet_default(object4, path34);
+    return baseGet_default(object4, path35);
   };
 }
 var basePropertyDeep_default;
@@ -109459,8 +109473,8 @@ var init_basePropertyDeep = __esm({
 });
 
 // node_modules/lodash-es/property.js
-function property(path34) {
-  return isKey_default(path34) ? baseProperty_default(toKey_default(path34)) : basePropertyDeep_default(path34);
+function property(path35) {
+  return isKey_default(path35) ? baseProperty_default(toKey_default(path35)) : basePropertyDeep_default(path35);
 }
 var property_default;
 var init_property = __esm({
@@ -109621,7 +109635,7 @@ var init_postgres = __esm({
     init_SharedAdapterTasks();
     postgres_default = {
       async getAllEnums(db2, config3) {
-        const sql5 = `
+        const sql7 = `
     SELECT 
       pg_namespace.nspname AS schema, 
       pg_enum.enumsortorder AS order, 
@@ -109632,7 +109646,7 @@ var init_postgres = __esm({
     JOIN pg_namespace ON pg_namespace.oid = pg_type.typnamespace
     ${config3.schemas.length > 0 ? ` WHERE pg_namespace.nspname = ANY(:schemas)` : ""}
     `;
-        const ungroupedEnums = (await db2.raw(sql5, { schemas: config3.schemas })).rows;
+        const ungroupedEnums = (await db2.raw(sql7, { schemas: config3.schemas })).rows;
         const groupedEnums = uniqBy_default(ungroupedEnums, (e) => `${e.name}.${e.schema}`).map((row) => ({
           name: row.name,
           schema: row.schema,
@@ -109642,7 +109656,7 @@ var init_postgres = __esm({
         return groupedEnums.concat(tableEnums);
       },
       async getAllTables(db2, schemas) {
-        const sql5 = `
+        const sql7 = `
       WITH schemas AS (
         SELECT nspname AS name, oid AS oid
         FROM pg_namespace
@@ -109657,11 +109671,11 @@ var init_postgres = __esm({
         WHERE pg_class.relkind IN ('r', 'p', 'v', 'm')
         AND NOT pg_class.relispartition
     `;
-        const results = await db2.raw(sql5, { schemas });
+        const results = await db2.raw(sql7, { schemas });
         return results.rows;
       },
       async getAllColumns(db2, config3, table, schema) {
-        const sql5 = `
+        const sql7 = `
       SELECT
         typns.nspname typeschema,
         pg_type.typname,
@@ -109692,7 +109706,7 @@ var init_postgres = __esm({
       AND pg_class.relname = :table
       AND pg_namespace.nspname = :schema
     `;
-        return (await db2.raw(sql5, { table, schema })).rows.map((c) => ({
+        return (await db2.raw(sql7, { table, schema })).rows.map((c) => ({
           name: c.name,
           type: c.typname,
           nullable: !c.notnullable,
@@ -109719,12 +109733,12 @@ var init_sqlite = __esm({
         return await getTableEnums(db2, config3);
       },
       async getAllTables(db2, schemas) {
-        const sql5 = `
+        const sql7 = `
       SELECT tbl_name from sqlite_master
       WHERE tbl_name <> 'sqlite_sequence'
       AND type IN ('table', 'view')
     `;
-        return (await db2.raw(sql5)).map((t) => ({ name: t.tbl_name, schema: "main", comment: "" }));
+        return (await db2.raw(sql7)).map((t) => ({ name: t.tbl_name, schema: "main", comment: "" }));
       },
       async getAllColumns(db2, config3, table, schema) {
         return (await db2.raw(`pragma table_info(${table})`)).map((c) => ({
@@ -111481,13 +111495,13 @@ var require_ast = __commonJS({
         helperExpression: function helperExpression(node) {
           return node.type === "SubExpression" || (node.type === "MustacheStatement" || node.type === "BlockStatement") && !!(node.params && node.params.length || node.hash);
         },
-        scopedId: function scopedId(path34) {
-          return /^\.|this\b/.test(path34.original);
+        scopedId: function scopedId(path35) {
+          return /^\.|this\b/.test(path35.original);
         },
         // an ID is simple if it only has one part, and that part is not
         // `..` or `this`.
-        simpleId: function simpleId(path34) {
-          return path34.parts.length === 1 && !AST.helpers.scopedId(path34) && !path34.depth;
+        simpleId: function simpleId(path35) {
+          return path35.parts.length === 1 && !AST.helpers.scopedId(path35) && !path35.depth;
         }
       }
     };
@@ -112557,12 +112571,12 @@ var require_helpers4 = __commonJS({
         loc
       };
     }
-    function prepareMustache(path34, params, hash3, open, strip, locInfo) {
+    function prepareMustache(path35, params, hash3, open, strip, locInfo) {
       var escapeFlag = open.charAt(3) || open.charAt(2), escaped = escapeFlag !== "{" && escapeFlag !== "&";
       var decorator = /\*/.test(open);
       return {
         type: decorator ? "Decorator" : "MustacheStatement",
-        path: path34,
+        path: path35,
         params,
         hash: hash3,
         escaped,
@@ -112880,9 +112894,9 @@ var require_compiler3 = __commonJS({
       },
       DecoratorBlock: function DecoratorBlock(decorator) {
         var program = decorator.program && this.compileProgram(decorator.program);
-        var params = this.setupFullMustacheParams(decorator, program, void 0), path34 = decorator.path;
+        var params = this.setupFullMustacheParams(decorator, program, void 0), path35 = decorator.path;
         this.useDecorators = true;
-        this.opcode("registerDecorator", params.length, path34.original);
+        this.opcode("registerDecorator", params.length, path35.original);
       },
       PartialStatement: function PartialStatement(partial3) {
         this.usePartial = true;
@@ -112946,46 +112960,46 @@ var require_compiler3 = __commonJS({
         }
       },
       ambiguousSexpr: function ambiguousSexpr(sexpr, program, inverse) {
-        var path34 = sexpr.path, name28 = path34.parts[0], isBlock = program != null || inverse != null;
-        this.opcode("getContext", path34.depth);
+        var path35 = sexpr.path, name28 = path35.parts[0], isBlock = program != null || inverse != null;
+        this.opcode("getContext", path35.depth);
         this.opcode("pushProgram", program);
         this.opcode("pushProgram", inverse);
-        path34.strict = true;
-        this.accept(path34);
+        path35.strict = true;
+        this.accept(path35);
         this.opcode("invokeAmbiguous", name28, isBlock);
       },
       simpleSexpr: function simpleSexpr(sexpr) {
-        var path34 = sexpr.path;
-        path34.strict = true;
-        this.accept(path34);
+        var path35 = sexpr.path;
+        path35.strict = true;
+        this.accept(path35);
         this.opcode("resolvePossibleLambda");
       },
       helperSexpr: function helperSexpr(sexpr, program, inverse) {
-        var params = this.setupFullMustacheParams(sexpr, program, inverse), path34 = sexpr.path, name28 = path34.parts[0];
+        var params = this.setupFullMustacheParams(sexpr, program, inverse), path35 = sexpr.path, name28 = path35.parts[0];
         if (this.options.knownHelpers[name28]) {
           this.opcode("invokeKnownHelper", params.length, name28);
         } else if (this.options.knownHelpersOnly) {
           throw new _exception2["default"]("You specified knownHelpersOnly, but used the unknown helper " + name28, sexpr);
         } else {
-          path34.strict = true;
-          path34.falsy = true;
-          this.accept(path34);
-          this.opcode("invokeHelper", params.length, path34.original, _ast2["default"].helpers.simpleId(path34));
+          path35.strict = true;
+          path35.falsy = true;
+          this.accept(path35);
+          this.opcode("invokeHelper", params.length, path35.original, _ast2["default"].helpers.simpleId(path35));
         }
       },
-      PathExpression: function PathExpression(path34) {
-        this.addDepth(path34.depth);
-        this.opcode("getContext", path34.depth);
-        var name28 = path34.parts[0], scoped = _ast2["default"].helpers.scopedId(path34), blockParamId = !path34.depth && !scoped && this.blockParamIndex(name28);
+      PathExpression: function PathExpression(path35) {
+        this.addDepth(path35.depth);
+        this.opcode("getContext", path35.depth);
+        var name28 = path35.parts[0], scoped = _ast2["default"].helpers.scopedId(path35), blockParamId = !path35.depth && !scoped && this.blockParamIndex(name28);
         if (blockParamId) {
-          this.opcode("lookupBlockParam", blockParamId, path34.parts);
+          this.opcode("lookupBlockParam", blockParamId, path35.parts);
         } else if (!name28) {
           this.opcode("pushContext");
-        } else if (path34.data) {
+        } else if (path35.data) {
           this.options.data = true;
-          this.opcode("lookupData", path34.depth, path34.parts, path34.strict);
+          this.opcode("lookupData", path35.depth, path35.parts, path35.strict);
         } else {
-          this.opcode("lookupOnContext", path34.parts, path34.falsy, path34.strict, scoped);
+          this.opcode("lookupOnContext", path35.parts, path35.falsy, path35.strict, scoped);
         }
       },
       StringLiteral: function StringLiteral(string5) {
@@ -113338,16 +113352,16 @@ var require_util3 = __commonJS({
     }
     exports2.urlGenerate = urlGenerate;
     function normalize(aPath) {
-      var path34 = aPath;
+      var path35 = aPath;
       var url4 = urlParse(aPath);
       if (url4) {
         if (!url4.path) {
           return aPath;
         }
-        path34 = url4.path;
+        path35 = url4.path;
       }
-      var isAbsolute = exports2.isAbsolute(path34);
-      var parts = path34.split(/\/+/);
+      var isAbsolute = exports2.isAbsolute(path35);
+      var parts = path35.split(/\/+/);
       for (var part, up = 0, i = parts.length - 1; i >= 0; i--) {
         part = parts[i];
         if (part === ".") {
@@ -113364,15 +113378,15 @@ var require_util3 = __commonJS({
           }
         }
       }
-      path34 = parts.join("/");
-      if (path34 === "") {
-        path34 = isAbsolute ? "/" : ".";
+      path35 = parts.join("/");
+      if (path35 === "") {
+        path35 = isAbsolute ? "/" : ".";
       }
       if (url4) {
-        url4.path = path34;
+        url4.path = path35;
         return urlGenerate(url4);
       }
-      return path34;
+      return path35;
     }
     exports2.normalize = normalize;
     function join2(aRoot, aPath) {
@@ -116163,8 +116177,8 @@ var require_printer = __commonJS({
       return this.accept(sexpr.path) + " " + params + hash3;
     };
     PrintVisitor.prototype.PathExpression = function(id) {
-      var path34 = id.parts.join("/");
-      return (id.data ? "@" : "") + "PATH:" + path34;
+      var path35 = id.parts.join("/");
+      return (id.data ? "@" : "") + "PATH:" + path35;
     };
     PrintVisitor.prototype.StringLiteral = function(string5) {
       return '"' + string5.value + '"';
@@ -116204,8 +116218,8 @@ var require_lib6 = __commonJS({
     handlebars.print = printer.print;
     module2.exports = handlebars;
     function extension(module3, filename) {
-      var fs36 = require("fs");
-      var templateString = fs36.readFileSync(filename, "utf8");
+      var fs37 = require("fs");
+      var templateString = fs37.readFileSync(filename, "utf8");
       module3.exports = handlebars.compile(templateString);
     }
     if (typeof require !== "undefined" && require.extensions) {
@@ -126061,11 +126075,11 @@ var require_mime_types3 = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path34) {
-      if (!path34 || typeof path34 !== "string") {
+    function lookup(path35) {
+      if (!path35 || typeof path35 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path34).toLowerCase().substr(1);
+      var extension2 = extname("x." + path35).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -126377,13 +126391,13 @@ var require_form_data = __commonJS({
     "use strict";
     var CombinedStream = require_combined_stream();
     var util4 = require("util");
-    var path34 = require("path");
+    var path35 = require("path");
     var http4 = require("http");
     var https2 = require("https");
     var parseUrl2 = require("url").parse;
-    var fs36 = require("fs");
+    var fs37 = require("fs");
     var Stream = require("stream").Stream;
-    var crypto8 = require("crypto");
+    var crypto9 = require("crypto");
     var mime = require_mime_types3();
     var asynckit = require_asynckit();
     var setToStringTag = require_es_set_tostringtag();
@@ -126448,7 +126462,7 @@ var require_form_data = __commonJS({
         if (value.end != void 0 && value.end != Infinity && value.start != void 0) {
           callback(null, value.end + 1 - (value.start ? value.start : 0));
         } else {
-          fs36.stat(value.path, function(err, stat) {
+          fs37.stat(value.path, function(err, stat) {
             if (err) {
               callback(err);
               return;
@@ -126505,11 +126519,11 @@ var require_form_data = __commonJS({
     FormData4.prototype._getContentDisposition = function(value, options) {
       var filename;
       if (typeof options.filepath === "string") {
-        filename = path34.normalize(options.filepath).replace(/\\/g, "/");
+        filename = path35.normalize(options.filepath).replace(/\\/g, "/");
       } else if (options.filename || value && (value.name || value.path)) {
-        filename = path34.basename(options.filename || value && (value.name || value.path));
+        filename = path35.basename(options.filename || value && (value.name || value.path));
       } else if (value && value.readable && hasOwn(value, "httpVersion")) {
-        filename = path34.basename(value.client._httpMessage.path || "");
+        filename = path35.basename(value.client._httpMessage.path || "");
       }
       if (filename) {
         return 'filename="' + filename + '"';
@@ -126589,7 +126603,7 @@ var require_form_data = __commonJS({
       return Buffer.concat([dataBuffer, Buffer.from(this._lastBoundary())]);
     };
     FormData4.prototype._generateBoundary = function() {
-      this._boundary = "--------------------------" + crypto8.randomBytes(12).toString("hex");
+      this._boundary = "--------------------------" + crypto9.randomBytes(12).toString("hex");
     };
     FormData4.prototype.getLengthSync = function() {
       var knownLength = this._overheadLength + this._valueLength;
@@ -126707,9 +126721,9 @@ function isVisitable(thing) {
 function removeBrackets(key) {
   return utils_default2.endsWith(key, "[]") ? key.slice(0, -2) : key;
 }
-function renderKey(path34, key, dots) {
-  if (!path34) return key;
-  return path34.concat(key).map(function each(token, i) {
+function renderKey(path35, key, dots) {
+  if (!path35) return key;
+  return path35.concat(key).map(function each(token, i) {
     token = removeBrackets(token);
     return !dots && i ? "[" + token + "]" : token;
   }).join(dots ? "." : "");
@@ -126759,13 +126773,13 @@ function toFormData(obj, formData, options) {
     }
     return value;
   }
-  function defaultVisitor(value, key, path34) {
+  function defaultVisitor(value, key, path35) {
     let arr = value;
     if (utils_default2.isReactNative(formData) && utils_default2.isReactNativeBlob(value)) {
-      formData.append(renderKey(path34, key, dots), convertValue(value));
+      formData.append(renderKey(path35, key, dots), convertValue(value));
       return false;
     }
-    if (value && !path34 && typeof value === "object") {
+    if (value && !path35 && typeof value === "object") {
       if (utils_default2.endsWith(key, "{}")) {
         key = metaTokens ? key : key.slice(0, -2);
         value = JSON.stringify(value);
@@ -126784,7 +126798,7 @@ function toFormData(obj, formData, options) {
     if (isVisitable(value)) {
       return true;
     }
-    formData.append(renderKey(path34, key, dots), convertValue(value));
+    formData.append(renderKey(path35, key, dots), convertValue(value));
     return false;
   }
   const stack = [];
@@ -126793,16 +126807,16 @@ function toFormData(obj, formData, options) {
     convertValue,
     isVisitable
   });
-  function build(value, path34) {
+  function build(value, path35) {
     if (utils_default2.isUndefined(value)) return;
     if (stack.indexOf(value) !== -1) {
-      throw Error("Circular reference detected in " + path34.join("."));
+      throw Error("Circular reference detected in " + path35.join("."));
     }
     stack.push(value);
     utils_default2.forEach(value, function each(el, key) {
-      const result = !(utils_default2.isUndefined(el) || el === null) && visitor.call(formData, el, utils_default2.isString(key) ? key.trim() : key, path34, exposedHelpers);
+      const result = !(utils_default2.isUndefined(el) || el === null) && visitor.call(formData, el, utils_default2.isString(key) ? key.trim() : key, path35, exposedHelpers);
       if (result === true) {
-        build(el, path34 ? path34.concat(key) : [key]);
+        build(el, path35 ? path35.concat(key) : [key]);
       }
     });
     stack.pop();
@@ -127079,7 +127093,7 @@ var init_platform = __esm({
 // node_modules/axios/lib/helpers/toURLEncodedForm.js
 function toURLEncodedForm(data, options) {
   return toFormData_default(data, new platform_default.classes.URLSearchParams(), {
-    visitor: function(value, key, path34, helpers) {
+    visitor: function(value, key, path35, helpers) {
       if (platform_default.isNode && utils_default2.isBuffer(value)) {
         this.append(key, value.toString("base64"));
         return false;
@@ -127117,11 +127131,11 @@ function arrayToObject(arr) {
   return obj;
 }
 function formDataToJSON(formData) {
-  function buildPath(path34, value, target, index) {
-    let name28 = path34[index++];
+  function buildPath(path35, value, target, index) {
+    let name28 = path35[index++];
     if (name28 === "__proto__") return true;
     const isNumericKey = Number.isFinite(+name28);
-    const isLast = index >= path34.length;
+    const isLast = index >= path35.length;
     name28 = !name28 && utils_default2.isArray(target) ? target.length : name28;
     if (isLast) {
       if (utils_default2.hasOwnProp(target, name28)) {
@@ -127134,7 +127148,7 @@ function formDataToJSON(formData) {
     if (!target[name28] || !utils_default2.isObject(target[name28])) {
       target[name28] = [];
     }
-    const result = buildPath(path34, value, target[name28], index);
+    const result = buildPath(path35, value, target[name28], index);
     if (result && utils_default2.isArray(target[name28])) {
       target[name28] = arrayToObject(target[name28]);
     }
@@ -129282,9 +129296,9 @@ var init_http = __esm({
           auth = urlUsername + ":" + urlPassword;
         }
         auth && headers.delete("authorization");
-        let path34;
+        let path35;
         try {
-          path34 = buildURL(
+          path35 = buildURL(
             parsed.pathname + parsed.search,
             config3.params,
             config3.paramsSerializer
@@ -129302,7 +129316,7 @@ var init_http = __esm({
           false
         );
         const options = {
-          path: path34,
+          path: path35,
           method,
           headers: headers.toJSON(),
           agents: { http: config3.httpAgent, https: config3.httpsAgent },
@@ -129566,14 +129580,14 @@ var init_cookies = __esm({
     cookies_default = platform_default.hasStandardBrowserEnv ? (
       // Standard browser envs support document.cookie
       {
-        write(name28, value, expires, path34, domain3, secure, sameSite) {
+        write(name28, value, expires, path35, domain3, secure, sameSite) {
           if (typeof document === "undefined") return;
           const cookie = [`${name28}=${encodeURIComponent(value)}`];
           if (utils_default2.isNumber(expires)) {
             cookie.push(`expires=${new Date(expires).toUTCString()}`);
           }
-          if (utils_default2.isString(path34)) {
-            cookie.push(`path=${path34}`);
+          if (utils_default2.isString(path35)) {
+            cookie.push(`path=${path35}`);
           }
           if (utils_default2.isString(domain3)) {
             cookie.push(`domain=${domain3}`);
@@ -131694,10 +131708,10 @@ function mergeDefs(...defs) {
 function cloneDef(schema) {
   return mergeDefs(schema._zod.def);
 }
-function getElementAtPath(obj, path34) {
-  if (!path34)
+function getElementAtPath(obj, path35) {
+  if (!path35)
     return obj;
-  return path34.reduce((acc, key) => acc?.[key], obj);
+  return path35.reduce((acc, key) => acc?.[key], obj);
 }
 function promiseAllObject(promisesObj) {
   const keys2 = Object.keys(promisesObj);
@@ -132009,11 +132023,11 @@ function aborted(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues(path34, issues) {
+function prefixIssues(path35, issues) {
   return issues.map((iss) => {
     var _a31;
     (_a31 = iss).path ?? (_a31.path = []);
-    iss.path.unshift(path34);
+    iss.path.unshift(path35);
     return iss;
   });
 }
@@ -132256,7 +132270,7 @@ function formatError(error73, mapper = (issue3) => issue3.message) {
 }
 function treeifyError(error73, mapper = (issue3) => issue3.message) {
   const result = { errors: [] };
-  const processError = (error74, path34 = []) => {
+  const processError = (error74, path35 = []) => {
     var _a31, _b27;
     for (const issue3 of error74.issues) {
       if (issue3.code === "invalid_union" && issue3.errors.length) {
@@ -132266,7 +132280,7 @@ function treeifyError(error73, mapper = (issue3) => issue3.message) {
       } else if (issue3.code === "invalid_element") {
         processError({ issues: issue3.issues }, issue3.path);
       } else {
-        const fullpath = [...path34, ...issue3.path];
+        const fullpath = [...path35, ...issue3.path];
         if (fullpath.length === 0) {
           result.errors.push(mapper(issue3));
           continue;
@@ -132298,8 +132312,8 @@ function treeifyError(error73, mapper = (issue3) => issue3.message) {
 }
 function toDotPath(_path) {
   const segs = [];
-  const path34 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-  for (const seg of path34) {
+  const path35 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+  for (const seg of path35) {
     if (typeof seg === "number")
       segs.push(`[${seg}]`);
     else if (typeof seg === "symbol")
@@ -145063,13 +145077,13 @@ function resolveRef(ref, ctx) {
   if (!ref.startsWith("#")) {
     throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
   }
-  const path34 = ref.slice(1).split("/").filter(Boolean);
-  if (path34.length === 0) {
+  const path35 = ref.slice(1).split("/").filter(Boolean);
+  if (path35.length === 0) {
     return ctx.rootSchema;
   }
   const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-  if (path34[0] === defsKey) {
-    const key = path34[1];
+  if (path35[0] === defsKey) {
+    const key = path35[1];
     if (!key || !ctx.defs[key]) {
       throw new Error(`Reference not found: ${ref}`);
     }
@@ -146251,8 +146265,8 @@ var init_parseUtil = __esm({
     init_errors3();
     init_en2();
     makeIssue = (params) => {
-      const { data, path: path34, errorMaps, issueData } = params;
-      const fullPath = [...path34, ...issueData.path || []];
+      const { data, path: path35, errorMaps, issueData } = params;
+      const fullPath = [...path35, ...issueData.path || []];
       const fullIssue = {
         ...issueData,
         path: fullPath
@@ -146535,11 +146549,11 @@ var init_types = __esm({
     init_parseUtil();
     init_util2();
     ParseInputLazyPath = class {
-      constructor(parent, value, path34, key) {
+      constructor(parent, value, path35, key) {
         this._cachedPath = [];
         this.parent = parent;
         this.data = value;
-        this._path = path34;
+        this._path = path35;
         this._key = key;
       }
       get path() {
@@ -153842,37 +153856,37 @@ function createOpenAI(options = {}) {
   );
   const createChatModel = (modelId) => new OpenAIChatLanguageModel(modelId, {
     provider: `${providerName}.chat`,
-    url: ({ path: path34 }) => `${baseURL}${path34}`,
+    url: ({ path: path35 }) => `${baseURL}${path35}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createCompletionModel = (modelId) => new OpenAICompletionLanguageModel(modelId, {
     provider: `${providerName}.completion`,
-    url: ({ path: path34 }) => `${baseURL}${path34}`,
+    url: ({ path: path35 }) => `${baseURL}${path35}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createEmbeddingModel = (modelId) => new OpenAIEmbeddingModel(modelId, {
     provider: `${providerName}.embedding`,
-    url: ({ path: path34 }) => `${baseURL}${path34}`,
+    url: ({ path: path35 }) => `${baseURL}${path35}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createImageModel = (modelId) => new OpenAIImageModel(modelId, {
     provider: `${providerName}.image`,
-    url: ({ path: path34 }) => `${baseURL}${path34}`,
+    url: ({ path: path35 }) => `${baseURL}${path35}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createTranscriptionModel = (modelId) => new OpenAITranscriptionModel(modelId, {
     provider: `${providerName}.transcription`,
-    url: ({ path: path34 }) => `${baseURL}${path34}`,
+    url: ({ path: path35 }) => `${baseURL}${path35}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createSpeechModel = (modelId) => new OpenAISpeechModel(modelId, {
     provider: `${providerName}.speech`,
-    url: ({ path: path34 }) => `${baseURL}${path34}`,
+    url: ({ path: path35 }) => `${baseURL}${path35}`,
     headers: getHeaders,
     fetch: options.fetch
   });
@@ -153887,7 +153901,7 @@ function createOpenAI(options = {}) {
   const createResponsesModel = (modelId) => {
     return new OpenAIResponsesLanguageModel(modelId, {
       provider: `${providerName}.responses`,
-      url: ({ path: path34 }) => `${baseURL}${path34}`,
+      url: ({ path: path35 }) => `${baseURL}${path35}`,
       headers: getHeaders,
       fetch: options.fetch,
       fileIdPrefixes: ["file-"]
@@ -159230,7 +159244,7 @@ function createDeepSeek(options = {}) {
   const createLanguageModel = (modelId) => {
     return new DeepSeekChatLanguageModel(modelId, {
       provider: `deepseek.chat`,
-      url: ({ path: path34 }) => `${baseURL}${path34}`,
+      url: ({ path: path35 }) => `${baseURL}${path35}`,
       headers: getHeaders,
       fetch: options.fetch
     });
@@ -160748,10 +160762,10 @@ function mergeDefs2(...defs) {
 function cloneDef2(schema) {
   return mergeDefs2(schema._zod.def);
 }
-function getElementAtPath2(obj, path34) {
-  if (!path34)
+function getElementAtPath2(obj, path35) {
+  if (!path35)
     return obj;
-  return path34.reduce((acc, key) => acc == null ? void 0 : acc[key], obj);
+  return path35.reduce((acc, key) => acc == null ? void 0 : acc[key], obj);
 }
 function promiseAllObject2(promisesObj) {
   const keys2 = Object.keys(promisesObj);
@@ -161064,12 +161078,12 @@ function aborted2(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues2(path34, issues) {
+function prefixIssues2(path35, issues) {
   return issues.map((iss) => {
     var _a47;
     var _a37;
     (_a47 = (_a37 = iss).path) != null ? _a47 : _a37.path = [];
-    iss.path.unshift(path34);
+    iss.path.unshift(path35);
     return iss;
   });
 }
@@ -161229,7 +161243,7 @@ function formatError2(error482, mapper = (issue22) => issue22.message) {
 }
 function treeifyError2(error482, mapper = (issue22) => issue22.message) {
   const result = { errors: [] };
-  const processError = (error492, path34 = []) => {
+  const processError = (error492, path35 = []) => {
     var _a47, _b27, _c, _d;
     var _a37, _b28;
     for (const issue22 of error492.issues) {
@@ -161240,7 +161254,7 @@ function treeifyError2(error482, mapper = (issue22) => issue22.message) {
       } else if (issue22.code === "invalid_element") {
         processError({ issues: issue22.issues }, issue22.path);
       } else {
-        const fullpath = [...path34, ...issue22.path];
+        const fullpath = [...path35, ...issue22.path];
         if (fullpath.length === 0) {
           result.errors.push(mapper(issue22));
           continue;
@@ -161272,8 +161286,8 @@ function treeifyError2(error482, mapper = (issue22) => issue22.message) {
 }
 function toDotPath2(_path) {
   const segs = [];
-  const path34 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-  for (const seg of path34) {
+  const path35 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+  for (const seg of path35) {
     if (typeof seg === "number")
       segs.push(`[${seg}]`);
     else if (typeof seg === "symbol")
@@ -163893,13 +163907,13 @@ function resolveRef2(ref, ctx) {
   if (!ref.startsWith("#")) {
     throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
   }
-  const path34 = ref.slice(1).split("/").filter(Boolean);
-  if (path34.length === 0) {
+  const path35 = ref.slice(1).split("/").filter(Boolean);
+  if (path35.length === 0) {
     return ctx.rootSchema;
   }
   const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-  if (path34[0] === defsKey) {
-    const key = path34[1];
+  if (path35[0] === defsKey) {
+    const key = path35[1];
     if (!key || !ctx.defs[key]) {
       throw new Error(`Reference not found: ${ref}`);
     }
@@ -164464,7 +164478,7 @@ function createZhipu(options = {}) {
   });
   const createImageModel = (modelId) => new ZhipuImageModel(modelId, {
     provider: "zhipu.image",
-    url: ({ path: path34 }) => `${baseURL}${path34}`,
+    url: ({ path: path35 }) => `${baseURL}${path35}`,
     headers: getHeaders,
     fetch: options.fetch,
     _internal: {
@@ -176001,10 +176015,10 @@ var require_util4 = __commonJS({
     function cloneDef3(schema) {
       return mergeDefs3(schema._zod.def);
     }
-    function getElementAtPath3(obj, path34) {
-      if (!path34)
+    function getElementAtPath3(obj, path35) {
+      if (!path35)
         return obj;
-      return path34.reduce((acc, key) => acc?.[key], obj);
+      return path35.reduce((acc, key) => acc?.[key], obj);
     }
     function promiseAllObject3(promisesObj) {
       const keys2 = Object.keys(promisesObj);
@@ -176388,11 +176402,11 @@ var require_util4 = __commonJS({
       }
       return false;
     }
-    function prefixIssues3(path34, issues) {
+    function prefixIssues3(path35, issues) {
       return issues.map((iss) => {
         var _a31;
         (_a31 = iss).path ?? (_a31.path = []);
-        iss.path.unshift(path34);
+        iss.path.unshift(path35);
         return iss;
       });
     }
@@ -176617,7 +176631,7 @@ var require_errors = __commonJS({
     }
     function treeifyError3(error73, mapper = (issue3) => issue3.message) {
       const result = { errors: [] };
-      const processError = (error74, path34 = []) => {
+      const processError = (error74, path35 = []) => {
         var _a31, _b27;
         for (const issue3 of error74.issues) {
           if (issue3.code === "invalid_union" && issue3.errors.length) {
@@ -176627,7 +176641,7 @@ var require_errors = __commonJS({
           } else if (issue3.code === "invalid_element") {
             processError({ issues: issue3.issues }, issue3.path);
           } else {
-            const fullpath = [...path34, ...issue3.path];
+            const fullpath = [...path35, ...issue3.path];
             if (fullpath.length === 0) {
               result.errors.push(mapper(issue3));
               continue;
@@ -176659,8 +176673,8 @@ var require_errors = __commonJS({
     }
     function toDotPath3(_path) {
       const segs = [];
-      const path34 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-      for (const seg of path34) {
+      const path35 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+      for (const seg of path35) {
         if (typeof seg === "number")
           segs.push(`[${seg}]`);
         else if (typeof seg === "symbol")
@@ -191161,13 +191175,13 @@ var require_from_json_schema = __commonJS({
       if (!ref.startsWith("#")) {
         throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
       }
-      const path34 = ref.slice(1).split("/").filter(Boolean);
-      if (path34.length === 0) {
+      const path35 = ref.slice(1).split("/").filter(Boolean);
+      if (path35.length === 0) {
         return ctx.rootSchema;
       }
       const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-      if (path34[0] === defsKey) {
-        const key = path34[1];
+      if (path35[0] === defsKey) {
+        const key = path35[1];
         if (!key || !ctx.defs[key]) {
           throw new Error(`Reference not found: ${ref}`);
         }
@@ -192212,8 +192226,8 @@ var require_parseUtil = __commonJS({
     var errors_js_1 = require_errors3();
     var en_js_1 = __importDefault(require_en2());
     var makeIssue2 = (params) => {
-      const { data, path: path34, errorMaps, issueData } = params;
-      const fullPath = [...path34, ...issueData.path || []];
+      const { data, path: path35, errorMaps, issueData } = params;
+      const fullPath = [...path35, ...issueData.path || []];
       const fullIssue = {
         ...issueData,
         path: fullPath
@@ -192367,11 +192381,11 @@ var require_types4 = __commonJS({
     var parseUtil_js_1 = require_parseUtil();
     var util_js_1 = require_util5();
     var ParseInputLazyPath2 = class {
-      constructor(parent, value, path34, key) {
+      constructor(parent, value, path35, key) {
         this._cachedPath = [];
         this.parent = parent;
         this.data = value;
-        this._path = path34;
+        this._path = path35;
         this._key = key;
       }
       get path() {
@@ -200366,8 +200380,8 @@ ${user}:`]
       });
       const getCommonModelConfig = (modelType) => ({
         provider: `qwen.${modelType}`,
-        url: ({ path: path34 }) => {
-          const url4 = new URL(`${baseURL}${path34}`);
+        url: ({ path: path35 }) => {
+          const url4 = new URL(`${baseURL}${path35}`);
           if (options.queryParams) {
             url4.search = new URLSearchParams(options.queryParams).toString();
           }
@@ -208433,8 +208447,8 @@ function createOpenAICompatible(options) {
   const getHeaders = () => withUserAgentSuffix(headers, `ai-sdk/openai-compatible/${VERSION9}`);
   const getCommonModelConfig = (modelType) => ({
     provider: `${providerName}.${modelType}`,
-    url: ({ path: path34 }) => {
-      const url4 = new URL(`${baseURL}${path34}`);
+    url: ({ path: path35 }) => {
+      const url4 = new URL(`${baseURL}${path35}`);
       if (options.queryParams) {
         url4.search = new URLSearchParams(options.queryParams).toString();
       }
@@ -221018,7 +221032,7 @@ function createMinimax(options = {}) {
   const createLanguageModel = (modelId) => {
     return new MinimaxChatLanguageModel(modelId, {
       provider: `minimax.chat`,
-      url: ({ path: path34 }) => `${baseURL}${path34}`,
+      url: ({ path: path35 }) => `${baseURL}${path35}`,
       headers: getHeaders,
       fetch: options.fetch
     });
@@ -221920,14 +221934,14 @@ var require_jwa = __commonJS({
   "node_modules/jwa/index.js"(exports2, module2) {
     "use strict";
     var Buffer3 = require_safe_buffer2().Buffer;
-    var crypto8 = require("crypto");
+    var crypto9 = require("crypto");
     var formatEcdsa = require_ecdsa_sig_formatter();
     var util4 = require("util");
     var MSG_INVALID_ALGORITHM = '"%s" is not a valid algorithm.\n  Supported algorithms are:\n  "HS256", "HS384", "HS512", "RS256", "RS384", "RS512", "PS256", "PS384", "PS512", "ES256", "ES384", "ES512" and "none".';
     var MSG_INVALID_SECRET = "secret must be a string or buffer";
     var MSG_INVALID_VERIFIER_KEY = "key must be a string or a buffer";
     var MSG_INVALID_SIGNER_KEY = "key must be a string, a buffer or an object";
-    var supportsKeyObjects = typeof crypto8.createPublicKey === "function";
+    var supportsKeyObjects = typeof crypto9.createPublicKey === "function";
     if (supportsKeyObjects) {
       MSG_INVALID_VERIFIER_KEY += " or a KeyObject";
       MSG_INVALID_SECRET += "or a KeyObject";
@@ -222017,17 +222031,17 @@ var require_jwa = __commonJS({
       return function sign(thing, secret) {
         checkIsSecretKey(secret);
         thing = normalizeInput(thing);
-        var hmac = crypto8.createHmac("sha" + bits, secret);
+        var hmac = crypto9.createHmac("sha" + bits, secret);
         var sig = (hmac.update(thing), hmac.digest("base64"));
         return fromBase64(sig);
       };
     }
     var bufferEqual;
-    var timingSafeEqual = "timingSafeEqual" in crypto8 ? function timingSafeEqual2(a, b) {
+    var timingSafeEqual = "timingSafeEqual" in crypto9 ? function timingSafeEqual2(a, b) {
       if (a.byteLength !== b.byteLength) {
         return false;
       }
-      return crypto8.timingSafeEqual(a, b);
+      return crypto9.timingSafeEqual(a, b);
     } : function timingSafeEqual2(a, b) {
       if (!bufferEqual) {
         bufferEqual = require_buffer_equal_constant_time();
@@ -222044,7 +222058,7 @@ var require_jwa = __commonJS({
       return function sign(thing, privateKey) {
         checkIsPrivateKey(privateKey);
         thing = normalizeInput(thing);
-        var signer = crypto8.createSign("RSA-SHA" + bits);
+        var signer = crypto9.createSign("RSA-SHA" + bits);
         var sig = (signer.update(thing), signer.sign(privateKey, "base64"));
         return fromBase64(sig);
       };
@@ -222054,7 +222068,7 @@ var require_jwa = __commonJS({
         checkIsPublicKey(publicKey);
         thing = normalizeInput(thing);
         signature = toBase64(signature);
-        var verifier = crypto8.createVerify("RSA-SHA" + bits);
+        var verifier = crypto9.createVerify("RSA-SHA" + bits);
         verifier.update(thing);
         return verifier.verify(publicKey, signature, "base64");
       };
@@ -222063,11 +222077,11 @@ var require_jwa = __commonJS({
       return function sign(thing, privateKey) {
         checkIsPrivateKey(privateKey);
         thing = normalizeInput(thing);
-        var signer = crypto8.createSign("RSA-SHA" + bits);
+        var signer = crypto9.createSign("RSA-SHA" + bits);
         var sig = (signer.update(thing), signer.sign({
           key: privateKey,
-          padding: crypto8.constants.RSA_PKCS1_PSS_PADDING,
-          saltLength: crypto8.constants.RSA_PSS_SALTLEN_DIGEST
+          padding: crypto9.constants.RSA_PKCS1_PSS_PADDING,
+          saltLength: crypto9.constants.RSA_PSS_SALTLEN_DIGEST
         }, "base64"));
         return fromBase64(sig);
       };
@@ -222077,12 +222091,12 @@ var require_jwa = __commonJS({
         checkIsPublicKey(publicKey);
         thing = normalizeInput(thing);
         signature = toBase64(signature);
-        var verifier = crypto8.createVerify("RSA-SHA" + bits);
+        var verifier = crypto9.createVerify("RSA-SHA" + bits);
         verifier.update(thing);
         return verifier.verify({
           key: publicKey,
-          padding: crypto8.constants.RSA_PKCS1_PSS_PADDING,
-          saltLength: crypto8.constants.RSA_PSS_SALTLEN_DIGEST
+          padding: crypto9.constants.RSA_PKCS1_PSS_PADDING,
+          saltLength: crypto9.constants.RSA_PSS_SALTLEN_DIGEST
         }, signature, "base64");
       };
     }
@@ -225808,8 +225822,8 @@ var require_auth_config = __commonJS({
       writeAuthConfig: () => writeAuthConfig
     });
     module2.exports = __toCommonJS2(auth_config_exports);
-    var fs36 = __toESM2(require("fs"));
-    var path34 = __toESM2(require("path"));
+    var fs37 = __toESM2(require("fs"));
+    var path35 = __toESM2(require("path"));
     var import_token_util = require_token_util();
     function getAuthConfigPath() {
       const dataDir = (0, import_token_util.getVercelDataDir)();
@@ -225818,15 +225832,15 @@ var require_auth_config = __commonJS({
           `Unable to find Vercel CLI data directory. Your platform: ${process.platform}. Supported: darwin, linux, win32.`
         );
       }
-      return path34.join(dataDir, "auth.json");
+      return path35.join(dataDir, "auth.json");
     }
     function readAuthConfig() {
       try {
         const authPath = getAuthConfigPath();
-        if (!fs36.existsSync(authPath)) {
+        if (!fs37.existsSync(authPath)) {
           return null;
         }
-        const content = fs36.readFileSync(authPath, "utf8");
+        const content = fs37.readFileSync(authPath, "utf8");
         if (!content) {
           return null;
         }
@@ -225837,11 +225851,11 @@ var require_auth_config = __commonJS({
     }
     function writeAuthConfig(config3) {
       const authPath = getAuthConfigPath();
-      const authDir = path34.dirname(authPath);
-      if (!fs36.existsSync(authDir)) {
-        fs36.mkdirSync(authDir, { mode: 504, recursive: true });
+      const authDir = path35.dirname(authPath);
+      if (!fs37.existsSync(authDir)) {
+        fs37.mkdirSync(authDir, { mode: 504, recursive: true });
       }
-      fs36.writeFileSync(authPath, JSON.stringify(config3, null, 2), { mode: 384 });
+      fs37.writeFileSync(authPath, JSON.stringify(config3, null, 2), { mode: 384 });
     }
     function isValidAccessToken(authConfig) {
       if (!authConfig.token)
@@ -225987,8 +226001,8 @@ var require_token_util = __commonJS({
       saveToken: () => saveToken
     });
     module2.exports = __toCommonJS2(token_util_exports);
-    var path34 = __toESM2(require("path"));
-    var fs36 = __toESM2(require("fs"));
+    var path35 = __toESM2(require("path"));
+    var fs37 = __toESM2(require("fs"));
     var import_token_error = require_token_error();
     var import_token_io = require_token_io();
     var import_auth_config = require_auth_config();
@@ -225999,7 +226013,7 @@ var require_token_util = __commonJS({
       if (!dataDir) {
         return null;
       }
-      return path34.join(dataDir, vercelFolder);
+      return path35.join(dataDir, vercelFolder);
     }
     async function getVercelCliToken() {
       const authConfig = (0, import_auth_config.readAuthConfig)();
@@ -226072,13 +226086,13 @@ var require_token_util = __commonJS({
           "Unable to find project root directory. Have you linked your project with `vc link?`"
         );
       }
-      const prjPath = path34.join(dir, ".vercel", "project.json");
-      if (!fs36.existsSync(prjPath)) {
+      const prjPath = path35.join(dir, ".vercel", "project.json");
+      if (!fs37.existsSync(prjPath)) {
         throw new import_token_error.VercelOidcTokenError(
           "project.json not found, have you linked your project with `vc link?`"
         );
       }
-      const prj = JSON.parse(fs36.readFileSync(prjPath, "utf8"));
+      const prj = JSON.parse(fs37.readFileSync(prjPath, "utf8"));
       if (typeof prj.projectId !== "string" && typeof prj.orgId !== "string") {
         throw new TypeError(
           "Expected a string-valued projectId property. Try running `vc link` to re-link your project."
@@ -226093,11 +226107,11 @@ var require_token_util = __commonJS({
           "Unable to find user data directory. Please reach out to Vercel support."
         );
       }
-      const tokenPath = path34.join(dir, "com.vercel.token", `${projectId}.json`);
+      const tokenPath = path35.join(dir, "com.vercel.token", `${projectId}.json`);
       const tokenJson = JSON.stringify(token);
-      fs36.mkdirSync(path34.dirname(tokenPath), { mode: 504, recursive: true });
-      fs36.writeFileSync(tokenPath, tokenJson);
-      fs36.chmodSync(tokenPath, 432);
+      fs37.mkdirSync(path35.dirname(tokenPath), { mode: 504, recursive: true });
+      fs37.writeFileSync(tokenPath, tokenJson);
+      fs37.chmodSync(tokenPath, 432);
       return;
     }
     function loadToken(projectId) {
@@ -226107,11 +226121,11 @@ var require_token_util = __commonJS({
           "Unable to find user data directory. Please reach out to Vercel support."
         );
       }
-      const tokenPath = path34.join(dir, "com.vercel.token", `${projectId}.json`);
-      if (!fs36.existsSync(tokenPath)) {
+      const tokenPath = path35.join(dir, "com.vercel.token", `${projectId}.json`);
+      if (!fs37.existsSync(tokenPath)) {
         return null;
       }
-      const token = JSON.parse(fs36.readFileSync(tokenPath, "utf8"));
+      const token = JSON.parse(fs37.readFileSync(tokenPath, "utf8"));
       assertVercelOidcTokenResponse(token);
       return token;
     }
@@ -237296,8 +237310,8 @@ var init_ai = __esm({
         await exec2(modelName);
         return this;
       }
-      async save(path34) {
-        await utils_default.oss.writeFile(path34, this.result);
+      async save(path35) {
+        await utils_default.oss.writeFile(path35, this.result);
         return this;
       }
     };
@@ -237363,8 +237377,8 @@ var init_ai = __esm({
           throw e;
         }
       }
-      async save(path34) {
-        await utils_default.oss.writeFile(path34, this.result);
+      async save(path35) {
+        await utils_default.oss.writeFile(path35, this.result);
         return this;
       }
     };
@@ -237389,8 +237403,8 @@ var init_ai = __esm({
         }
         return await exec2(modelName);
       }
-      async save(path34) {
-        await utils_default.oss.writeFile(path34, this.result);
+      async save(path35) {
+        await utils_default.oss.writeFile(path35, this.result);
         return this;
       }
     };
@@ -237984,7 +237998,7 @@ var init_repository = __esm({
           if (task.cancelRequested || task.status === "cancelling") {
             await this.finish(task.id, "cancelled", { errorCode: "CANCELLED_DURING_RESTART", errorMessage: "\u5E94\u7528\u9000\u51FA\u524D\u6B63\u5728\u53D6\u6D88" });
             cancelled++;
-          } else if (task.status === "claimed" || task.providerJobId && ["submitted", "polling", "finalizing"].includes(task.status)) {
+          } else if (task.status === "claimed" || task.provider === "local" || task.providerJobId && ["submitted", "polling", "finalizing"].includes(task.status)) {
             await db("generation_tasks").where("id", task.id).update({
               status: "queued",
               lease_owner: null,
@@ -238007,7 +238021,30 @@ var init_repository = __esm({
         return { requeued, manualReview, cancelled };
       }
       async syncLegacyTask(task) {
-        if (!task?.legacyTaskId) return;
+        if (!task) return;
+        if (task.type === "composition.render") {
+          const payload = task.payload;
+          if (payload?.compositionJobId) {
+            const statusMap = {
+              queued: "queued",
+              claimed: "rendering",
+              polling: "rendering",
+              finalizing: "rendering",
+              retry_wait: "queued",
+              cancelling: "rendering",
+              cancelled: "cancelled",
+              succeeded: "succeeded",
+              failed: "failed",
+              manual_review: "failed"
+            };
+            await db("composition_jobs").where("id", payload.compositionJobId).update({
+              status: statusMap[task.status] ?? task.status,
+              error_message: task.errorMessage,
+              updated_at: Date.now()
+            });
+          }
+        }
+        if (!task.legacyTaskId) return;
         const stateMap = {
           queued: "\u6392\u961F\u4E2D",
           claimed: "\u8FDB\u884C\u4E2D",
@@ -238101,6 +238138,35 @@ var init_repository = __esm({
   }
 });
 
+// src/services/media/probe.ts
+async function probeMedia(userPath) {
+  const absolutePath = await utils_default.oss.getAbsolutePath(userPath);
+  const executable = process.env.FFPROBE_PATH?.trim() || "ffprobe";
+  try {
+    const { stdout } = await execFileAsync(
+      executable,
+      ["-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", absolutePath],
+      { timeout: 15e3, maxBuffer: 64 * 1024 }
+    );
+    const seconds2 = Number(stdout.trim());
+    if (!Number.isFinite(seconds2) || seconds2 <= 0) return null;
+    return { durationMs: Math.max(1, Math.round(seconds2 * 1e3)) };
+  } catch (error73) {
+    console.warn("[\u5A92\u4F53\u63A2\u6D4B] ffprobe \u4E0D\u53EF\u7528\u6216\u6587\u4EF6\u65E0\u6CD5\u63A2\u6D4B:", error73 instanceof Error ? error73.message : String(error73));
+    return null;
+  }
+}
+var import_node_child_process, import_node_util, execFileAsync;
+var init_probe = __esm({
+  "src/services/media/probe.ts"() {
+    "use strict";
+    import_node_child_process = require("node:child_process");
+    import_node_util = require("node:util");
+    init_utils3();
+    execFileAsync = (0, import_node_util.promisify)(import_node_child_process.execFile);
+  }
+});
+
 // src/services/voice-studio/dialogue.ts
 function normalizeLabel(value) {
   return value.trim().replace(/^\[|\]$/g, "").toLocaleLowerCase();
@@ -238148,9 +238214,9 @@ function formatSubtitleTime(milliseconds, separator) {
   const safe = Math.max(0, Math.round(milliseconds));
   const hours = Math.floor(safe / 36e5);
   const minutes = Math.floor(safe % 36e5 / 6e4);
-  const seconds = Math.floor(safe % 6e4 / 1e3);
+  const seconds2 = Math.floor(safe % 6e4 / 1e3);
   const millis = safe % 1e3;
-  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}${separator}${String(millis).padStart(3, "0")}`;
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds2).padStart(2, "0")}${separator}${String(millis).padStart(3, "0")}`;
 }
 function serializeSubtitles(cues, format) {
   const body = cues.map((cue, index) => {
@@ -238434,6 +238500,173 @@ var init_repository2 = __esm({
       }
     };
     voiceStudioRepository = new VoiceStudioRepository();
+  }
+});
+
+// src/services/composition/renderer.ts
+function seconds(milliseconds) {
+  return (Math.max(1, milliseconds) / 1e3).toFixed(3);
+}
+function previewDimensions(timeline) {
+  return timeline.settings.height > timeline.settings.width ? { width: 480, height: 854 } : { width: 854, height: 480 };
+}
+async function sha256File(filePath) {
+  const hash3 = import_node_crypto5.default.createHash("sha256");
+  await new Promise((resolve3, reject) => {
+    const stream4 = (0, import_node_fs2.createReadStream)(filePath);
+    stream4.on("data", (chunk) => hash3.update(chunk));
+    stream4.on("error", reject);
+    stream4.on("end", resolve3);
+  });
+  return hash3.digest("hex");
+}
+async function runFfmpeg(executable, args, shouldCancel) {
+  return new Promise((resolve3, reject) => {
+    const child = (0, import_node_child_process2.spawn)(executable, args, { stdio: ["ignore", "ignore", "pipe"], shell: false });
+    let stderrTail = "";
+    let cancelCheckRunning = false;
+    let cancelled = false;
+    const appendTail = (value) => {
+      stderrTail = `${stderrTail}${value}`.slice(-32e3);
+    };
+    child.stderr.on("data", (chunk) => appendTail(String(chunk)));
+    const cancelTimer = setInterval(() => {
+      if (cancelCheckRunning || child.exitCode != null) return;
+      cancelCheckRunning = true;
+      void shouldCancel().then((requested) => {
+        if (!requested || child.exitCode != null) return;
+        cancelled = true;
+        child.kill("SIGTERM");
+      }).finally(() => {
+        cancelCheckRunning = false;
+      });
+    }, 1e3);
+    cancelTimer.unref?.();
+    child.on("error", (error73) => {
+      clearInterval(cancelTimer);
+      reject(error73);
+    });
+    child.on("close", (code, signal) => {
+      clearInterval(cancelTimer);
+      if (cancelled) return reject(new Error("\u6E32\u67D3\u5DF2\u53D6\u6D88"));
+      if (code !== 0) {
+        return reject(new Error(`FFmpeg \u6E32\u67D3\u5931\u8D25\uFF08exit=${code ?? "null"}, signal=${signal ?? "none"}\uFF09\uFF1A${stderrTail.slice(-2e3)}`));
+      }
+      resolve3({ stderrTail });
+    });
+  });
+}
+async function renderTimelinePreview(input) {
+  if (input.preset !== "preview-low") throw new Error(`\u4E0D\u652F\u6301\u7684\u6E32\u67D3\u9884\u8BBE: ${input.preset}`);
+  const clips = input.timeline.videoTracks.flatMap((track) => track.clips).sort((a, b) => a.startMs - b.startMs);
+  if (clips.length === 0) throw new Error("\u65F6\u95F4\u7EBF\u6CA1\u6709\u53EF\u6E32\u67D3\u7684\u89C6\u9891\u7247\u6BB5\uFF0C\u8BF7\u5148\u5728\u5236\u4F5C\u5DE5\u4F5C\u53F0\u5B8C\u6210\u9009\u7247\u5E76\u91CD\u65B0\u6784\u5EFA\u65F6\u95F4\u7EBF");
+  const absoluteInputs = [];
+  for (const clip of clips) {
+    const absolutePath = await utils_default.oss.getAbsolutePath(clip.path);
+    const stat = await import_promises5.default.stat(absolutePath).catch(() => null);
+    if (!stat?.isFile()) throw new Error(`\u89C6\u9891\u7247\u6BB5\u4E0D\u5B58\u5728: ${clip.path}`);
+    absoluteInputs.push(absolutePath);
+  }
+  const absoluteOutput = await utils_default.oss.getAbsolutePath(input.outputPath);
+  await import_promises5.default.mkdir(import_node_path6.default.dirname(absoluteOutput), { recursive: true });
+  const partialOutput = `${absoluteOutput}.partial-${input.taskId}.mp4`;
+  await import_promises5.default.rm(partialOutput, { force: true });
+  const dimensions = previewDimensions(input.timeline);
+  const filterParts = clips.map(
+    (clip, index) => `[${index}:v]scale=${dimensions.width}:${dimensions.height}:force_original_aspect_ratio=decrease,pad=${dimensions.width}:${dimensions.height}:(ow-iw)/2:(oh-ih)/2:color=black,fps=${input.timeline.settings.fps},setsar=1,format=yuv420p,settb=AVTB,setpts=PTS-STARTPTS[v${index}]`
+  );
+  filterParts.push(`${clips.map((_, index) => `[v${index}]`).join("")}concat=n=${clips.length}:v=1:a=0[vout]`);
+  const args = ["-hide_banner", "-nostdin", "-y"];
+  clips.forEach((clip, index) => {
+    args.push("-ss", seconds(clip.inMs), "-t", seconds(clip.durationMs), "-i", absoluteInputs[index]);
+  });
+  const durationMs = clips.reduce((total, clip) => total + clip.durationMs, 0);
+  const silentAudioIndex = clips.length;
+  args.push(
+    "-f",
+    "lavfi",
+    "-t",
+    seconds(durationMs),
+    "-i",
+    `anullsrc=channel_layout=stereo:sample_rate=${input.timeline.settings.audioSampleRate}`,
+    "-filter_complex",
+    filterParts.join(";"),
+    "-map",
+    "[vout]",
+    "-map",
+    `${silentAudioIndex}:a:0`,
+    "-c:v",
+    "libx264",
+    "-preset",
+    "veryfast",
+    "-crf",
+    "30",
+    "-pix_fmt",
+    "yuv420p",
+    "-c:a",
+    "aac",
+    "-b:a",
+    "96k",
+    "-ar",
+    String(input.timeline.settings.audioSampleRate),
+    "-shortest",
+    "-movflags",
+    "+faststart",
+    partialOutput
+  );
+  const executable = process.env.FFMPEG_PATH?.trim() || "ffmpeg";
+  console.info("[composition.render]", JSON.stringify({
+    event: "ffmpeg_started",
+    taskId: input.taskId,
+    preset: input.preset,
+    clipCount: clips.length,
+    durationMs,
+    width: dimensions.width,
+    height: dimensions.height
+  }));
+  try {
+    const processResult = await runFfmpeg(executable, args, input.shouldCancel);
+    await import_promises5.default.rename(partialOutput, absoluteOutput);
+    const [outputChecksum, media] = await Promise.all([sha256File(absoluteOutput), probeMedia(input.outputPath)]);
+    console.info("[composition.render]", JSON.stringify({
+      event: "ffmpeg_succeeded",
+      taskId: input.taskId,
+      outputPath: input.outputPath,
+      outputChecksum,
+      durationMs: media?.durationMs ?? durationMs
+    }));
+    return {
+      outputPath: input.outputPath,
+      outputChecksum,
+      durationMs: media?.durationMs ?? durationMs,
+      width: dimensions.width,
+      height: dimensions.height,
+      clipCount: clips.length,
+      renderLog: {
+        renderer: "ffmpeg",
+        executable,
+        preset: input.preset,
+        clipCount: clips.length,
+        stderrTail: processResult.stderrTail.slice(-4e3)
+      }
+    };
+  } catch (error73) {
+    await import_promises5.default.rm(partialOutput, { force: true }).catch(() => void 0);
+    throw error73;
+  }
+}
+var import_node_crypto5, import_node_fs2, import_promises5, import_node_path6, import_node_child_process2, compositionRenderPresets;
+var init_renderer = __esm({
+  "src/services/composition/renderer.ts"() {
+    "use strict";
+    import_node_crypto5 = __toESM(require("node:crypto"));
+    import_node_fs2 = require("node:fs");
+    import_promises5 = __toESM(require("node:fs/promises"));
+    import_node_path6 = __toESM(require("node:path"));
+    import_node_child_process2 = require("node:child_process");
+    init_utils3();
+    init_probe();
+    compositionRenderPresets = ["preview-low"];
   }
 });
 
@@ -239971,9 +240204,9 @@ var init_generateAssets = __esm({
           model: model.split(/:(.+)/)[1],
           resolution
         });
-        const path34 = await utils_default.oss.getSmallImageUrl(imagePath);
+        const path35 = await utils_default.oss.getSmallImageUrl(imagePath);
         await utils_default.db("o_assets").where("id", id).update({ imageId });
-        return res.status(200).send(success3({ path: path34, assetsId: id }));
+        return res.status(200).send(success3({ path: path35, assetsId: id }));
       } catch (e) {
         await utils_default.db("o_image").where("id", imageId).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(e).message });
         return res.status(400).send(error50(utils_default.error(e).message || "\u56FE\u7247\u751F\u6210\u5931\u8D25"));
@@ -240115,15 +240348,15 @@ function safeStyle(value) {
 }
 async function buildNormalizedTimeline(input) {
   const [project, script] = await Promise.all([
-    sql3("o_project").where("id", input.projectId).first(),
-    sql3("o_script").where({ id: input.scriptId, projectId: input.projectId }).first()
+    sql4("o_project").where("id", input.projectId).first(),
+    sql4("o_script").where({ id: input.scriptId, projectId: input.projectId }).first()
   ]);
   if (!project || !script) throw new Error("\u9879\u76EE\u6216\u5267\u672C\u4E0D\u5B58\u5728");
   const [tracks, storyboards, utterances, cueRows] = await Promise.all([
-    sql3("o_videoTrack").where({ projectId: input.projectId, scriptId: input.scriptId }),
-    sql3("o_storyboard").where({ projectId: input.projectId, scriptId: input.scriptId }).orderBy("index", "asc"),
-    sql3("utterances").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("ordinal", "asc"),
-    sql3("subtitle_cues").leftJoin("utterances", "utterances.id", "subtitle_cues.utterance_id").where("subtitle_cues.project_id", input.projectId).where("utterances.script_id", input.scriptId).select("subtitle_cues.*").orderBy("subtitle_cues.start_ms", "asc")
+    sql4("o_videoTrack").where({ projectId: input.projectId, scriptId: input.scriptId }),
+    sql4("o_storyboard").where({ projectId: input.projectId, scriptId: input.scriptId }).orderBy("index", "asc"),
+    sql4("utterances").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("ordinal", "asc"),
+    sql4("subtitle_cues").leftJoin("utterances", "utterances.id", "subtitle_cues.utterance_id").where("subtitle_cues.project_id", input.projectId).where("utterances.script_id", input.scriptId).select("subtitle_cues.*").orderBy("subtitle_cues.start_ms", "asc")
   ]);
   const firstStoryboardIndex = /* @__PURE__ */ new Map();
   for (const storyboard of storyboards) {
@@ -240135,7 +240368,7 @@ async function buildNormalizedTimeline(input) {
     (a, b) => (firstStoryboardIndex.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (firstStoryboardIndex.get(b.id) ?? Number.MAX_SAFE_INTEGER)
   );
   const selectedIds = tracks.map((track) => track.videoId).filter((id2) => typeof id2 === "number");
-  const videos = selectedIds.length ? await sql3("o_video").whereIn("id", selectedIds) : [];
+  const videos = selectedIds.length ? await sql4("o_video").whereIn("id", selectedIds) : [];
   const videoById = new Map(videos.map((video) => [video.id, video]));
   const warnings = [];
   const videoClips = [];
@@ -240237,12 +240470,12 @@ async function buildNormalizedTimeline(input) {
     warnings
   };
   const serialized = JSON.stringify(payload);
-  const checksum = import_node_crypto5.default.createHash("sha256").update(serialized).digest("hex");
-  const latest = await sql3("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
+  const checksum = import_node_crypto6.default.createHash("sha256").update(serialized).digest("hex");
+  const latest = await sql4("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
   if (latest?.checksum === checksum) return { timeline: mapTimelineRow(latest), deduped: true };
   const now2 = Date.now();
   const id = v4_default();
-  await sql3("project_timelines").insert({
+  await sql4("project_timelines").insert({
     id,
     project_id: input.projectId,
     script_id: input.scriptId,
@@ -240253,24 +240486,154 @@ async function buildNormalizedTimeline(input) {
     created_at: now2,
     updated_at: now2
   });
-  return { timeline: mapTimelineRow(await sql3("project_timelines").where("id", id).first()), deduped: false };
+  return { timeline: mapTimelineRow(await sql4("project_timelines").where("id", id).first()), deduped: false };
 }
 async function getLatestTimeline(input) {
-  const row = await sql3("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
+  const row = await sql4("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
   return row ? mapTimelineRow(row) : null;
 }
 async function listTimelines(input) {
-  const rows = await sql3("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc");
+  const rows = await sql4("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc");
   return rows.map(mapTimelineRow);
 }
-var import_node_crypto5, sql3;
+var import_node_crypto6, sql4;
 var init_timeline = __esm({
   "src/services/composition/timeline.ts"() {
     "use strict";
-    import_node_crypto5 = __toESM(require("node:crypto"));
+    import_node_crypto6 = __toESM(require("node:crypto"));
     init_dist_node();
     init_db();
-    sql3 = db;
+    sql4 = db;
+  }
+});
+
+// src/services/composition/jobs.ts
+async function mapJob(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    projectId: row.project_id,
+    scriptId: row.script_id,
+    timelineId: row.timeline_id,
+    timelineVersion: row.timeline_version,
+    renderer: row.renderer,
+    preset: row.preset,
+    status: row.status,
+    outputPath: row.output_path ?? null,
+    outputUrl: row.output_path ? await utils_default.oss.getFileUrl(row.output_path) : null,
+    inputChecksum: row.input_checksum,
+    outputChecksum: row.output_checksum ?? null,
+    durationMs: row.duration_ms ?? null,
+    taskId: row.task_id ?? null,
+    errorMessage: row.error_message ?? null,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+async function getLatestCompositionJob(input) {
+  const row = await sql5("composition_jobs").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first();
+  return mapJob(row);
+}
+async function enqueueCompositionRender(input) {
+  const timeline = await sql5("project_timelines").where({ id: input.timelineId, project_id: input.projectId, script_id: input.scriptId }).first();
+  if (!timeline) throw new Error("\u65F6\u95F4\u7EBF\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u5267\u672C");
+  const payload = JSON.parse(timeline.payload);
+  const clipCount = (payload.videoTracks || []).reduce((total, track) => total + (track.clips?.length || 0), 0);
+  if (clipCount === 0) throw new Error("\u65F6\u95F4\u7EBF\u6CA1\u6709\u5DF2\u9009\u89C6\u9891\uFF0C\u8BF7\u5148\u5B8C\u6210\u9009\u7247\u5E76\u91CD\u65B0\u6784\u5EFA\u65F6\u95F4\u7EBF");
+  const inputChecksum = stableIdempotencyKey({
+    renderer: "ffmpeg",
+    rendererVersion: 1,
+    preset: input.preset,
+    timelineChecksum: timeline.checksum
+  });
+  const previous = await sql5("composition_jobs").where({ timeline_id: timeline.id, preset: input.preset, input_checksum: inputChecksum }).orderBy("created_at", "desc").first();
+  if (previous?.status === "succeeded" && previous.output_path && await utils_default.oss.fileExists(previous.output_path)) {
+    return { job: await mapJob(previous), task: previous.task_id ? await generationTaskRepository.get(previous.task_id) : null, cached: true, deduped: true };
+  }
+  if (previous && ["queued", "rendering"].includes(previous.status) && previous.task_id) {
+    const task = await generationTaskRepository.get(previous.task_id);
+    if (task && !["cancelled", "succeeded", "failed"].includes(task.status)) {
+      return { job: await mapJob(previous), task, cached: false, deduped: true };
+    }
+  }
+  const jobId = v4_default();
+  const outputPath = `/${input.projectId}/composition/${input.scriptId}/timeline-v${timeline.version}-${timeline.checksum.slice(0, 12)}-${input.preset}.mp4`;
+  const now2 = Date.now();
+  await sql5("composition_jobs").insert({
+    id: jobId,
+    project_id: input.projectId,
+    script_id: input.scriptId,
+    timeline_id: timeline.id,
+    timeline_version: timeline.version,
+    renderer: "ffmpeg",
+    preset: input.preset,
+    status: "queued",
+    output_path: null,
+    input_checksum: inputChecksum,
+    task_id: null,
+    error_message: null,
+    created_at: now2,
+    updated_at: now2
+  });
+  const [legacyTaskId] = await sql5("o_tasks").insert({
+    projectId: input.projectId,
+    taskClass: "\u89C6\u9891\u5408\u6210",
+    relatedObjects: JSON.stringify({ compositionJobId: jobId, timelineId: timeline.id }),
+    model: "ffmpeg",
+    describe: `\u672C\u5730\u4F4E\u6E05\u9884\u89C8\uFF1A\u65F6\u95F4\u7EBF v${timeline.version}\uFF0C${clipCount} \u4E2A\u7247\u6BB5`,
+    state: "\u6392\u961F\u4E2D",
+    startTime: now2
+  });
+  const taskPayload = {
+    projectId: input.projectId,
+    scriptId: input.scriptId,
+    compositionJobId: jobId,
+    timelineId: timeline.id,
+    timelineVersion: timeline.version,
+    timelineChecksum: timeline.checksum,
+    preset: input.preset,
+    outputPath,
+    model: "local:ffmpeg"
+  };
+  try {
+    const result = await generationTaskRepository.enqueue({
+      projectId: input.projectId,
+      legacyTaskId,
+      lane: "compose",
+      type: "composition.render",
+      resourceKey: `composition:timeline:${timeline.id}:${input.preset}`,
+      payload: taskPayload,
+      provider: "local",
+      idempotencyKey: stableIdempotencyKey({ type: "composition.render", inputChecksum, requestId: input.requestId }),
+      maxAttempts: 2
+    });
+    if (result.deduped) {
+      await Promise.all([
+        sql5("composition_jobs").where("id", jobId).delete(),
+        sql5("o_tasks").where("id", legacyTaskId).delete()
+      ]);
+      const existingJob = await sql5("composition_jobs").where("task_id", result.task.id).first();
+      return { job: await mapJob(existingJob), task: result.task, cached: false, deduped: true };
+    }
+    await sql5("composition_jobs").where("id", jobId).update({ task_id: result.task.id, updated_at: Date.now() });
+    return { job: await mapJob(await sql5("composition_jobs").where("id", jobId).first()), task: result.task, cached: false, deduped: false };
+  } catch (error73) {
+    await Promise.all([
+      sql5("composition_jobs").where("id", jobId).delete(),
+      sql5("o_tasks").where("id", legacyTaskId).delete()
+    ]);
+    throw error73;
+  }
+}
+var sql5;
+var init_jobs = __esm({
+  "src/services/composition/jobs.ts"() {
+    "use strict";
+    init_dist_node();
+    init_utils3();
+    init_db();
+    init_repository();
+    sql5 = db;
   }
 });
 
@@ -240284,6 +240647,8 @@ var init_timeline2 = __esm({
     init_responseFormat();
     init_middleware();
     init_timeline();
+    init_jobs();
+    init_renderer();
     router28 = import_express28.default.Router();
     filters = {
       projectId: external_exports.number().int().positive(),
@@ -240298,6 +240663,25 @@ var init_timeline2 = __esm({
     router28.post("/list", validateFields(filters), async (req, res) => {
       res.status(200).send(success3(await listTimelines(req.body)));
     });
+    router28.post("/jobs/latest", validateFields(filters), async (req, res) => {
+      res.status(200).send(success3(await getLatestCompositionJob(req.body)));
+    });
+    router28.post(
+      "/render",
+      validateFields({
+        ...filters,
+        timelineId: external_exports.string().uuid(),
+        preset: external_exports.enum(compositionRenderPresets),
+        requestId: external_exports.string().trim().min(1)
+      }),
+      async (req, res) => {
+        try {
+          res.status(200).send(success3(await enqueueCompositionRender(req.body)));
+        } catch (cause) {
+          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
+        }
+      }
+    );
     timeline_default = router28;
   }
 });
@@ -242790,7 +243174,7 @@ var init_addTrack = __esm({
 });
 
 // src/routes/production/workbench/batchGeneratePrompt.ts
-var import_express83, import_promises5, import_path12, router83, batchGeneratePrompt_default;
+var import_express83, import_promises6, import_path12, router83, batchGeneratePrompt_default;
 var init_batchGeneratePrompt = __esm({
   "src/routes/production/workbench/batchGeneratePrompt.ts"() {
     "use strict";
@@ -242800,7 +243184,7 @@ var init_batchGeneratePrompt = __esm({
     init_zod();
     init_responseFormat();
     init_middleware();
-    import_promises5 = __toESM(require("fs/promises"));
+    import_promises6 = __toESM(require("fs/promises"));
     import_path12 = __toESM(require("path"));
     router83 = import_express83.default.Router();
     batchGeneratePrompt_default = router83.post(
@@ -242835,7 +243219,7 @@ var init_batchGeneratePrompt = __esm({
             const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
             try {
               const fullPath = import_path12.default.join(modelPromptRoot, modelPromptData?.path);
-              const content = await import_promises5.default.readFile(fullPath, "utf-8");
+              const content = await import_promises6.default.readFile(fullPath, "utf-8");
               videoPromptGeneration = content ?? "";
             } catch {
             }
@@ -242857,7 +243241,7 @@ var init_batchGeneratePrompt = __esm({
             if (fileName) {
               try {
                 const fullPath = import_path12.default.join(videoPromptDir, fileName);
-                videoPromptGeneration = await import_promises5.default.readFile(fullPath, "utf-8");
+                videoPromptGeneration = await import_promises6.default.readFile(fullPath, "utf-8");
               } catch {
               }
             }
@@ -243291,7 +243675,7 @@ var init_generateVideo = __esm({
 });
 
 // src/routes/production/workbench/generateVideoPrompt.ts
-var import_express90, import_promises6, import_path13, router90, generateVideoPrompt_default;
+var import_express90, import_promises7, import_path13, router90, generateVideoPrompt_default;
 var init_generateVideoPrompt = __esm({
   "src/routes/production/workbench/generateVideoPrompt.ts"() {
     "use strict";
@@ -243300,7 +243684,7 @@ var init_generateVideoPrompt = __esm({
     init_zod();
     init_responseFormat();
     init_middleware();
-    import_promises6 = __toESM(require("fs/promises"));
+    import_promises7 = __toESM(require("fs/promises"));
     import_path13 = __toESM(require("path"));
     router90 = import_express90.default.Router();
     generateVideoPrompt_default = router90.post(
@@ -243381,7 +243765,7 @@ var init_generateVideoPrompt = __esm({
           const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
           try {
             const fullPath = import_path13.default.join(modelPromptRoot, modelPromptData?.path);
-            const content2 = await import_promises6.default.readFile(fullPath, "utf-8");
+            const content2 = await import_promises7.default.readFile(fullPath, "utf-8");
             videoPromptGeneration = content2 ?? "";
           } catch {
           }
@@ -243403,7 +243787,7 @@ var init_generateVideoPrompt = __esm({
           if (fileName) {
             try {
               const fullPath = import_path13.default.join(videoPromptDir, fileName);
-              videoPromptGeneration = await import_promises6.default.readFile(fullPath, "utf-8");
+              videoPromptGeneration = await import_promises7.default.readFile(fullPath, "utf-8");
             } catch {
             }
           }
@@ -244089,13 +244473,13 @@ var init_addVisualManual = __esm({
 });
 
 // src/routes/project/deleteDirectorManual.ts
-var import_express101, import_promises7, router101, deleteDirectorManual_default;
+var import_express101, import_promises8, router101, deleteDirectorManual_default;
 var init_deleteDirectorManual = __esm({
   "src/routes/project/deleteDirectorManual.ts"() {
     "use strict";
     import_express101 = __toESM(require_express2());
     init_utils3();
-    import_promises7 = __toESM(require("node:fs/promises"));
+    import_promises8 = __toESM(require("node:fs/promises"));
     init_zod();
     init_responseFormat();
     init_middleware();
@@ -244114,11 +244498,11 @@ var init_deleteDirectorManual = __esm({
           }
           const artPromptsDir = utils_default.getPath(["skills", "story_skills", name28]);
           try {
-            const stat = await import_promises7.default.stat(artPromptsDir);
+            const stat = await import_promises8.default.stat(artPromptsDir);
             if (!stat.isDirectory()) {
               throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
             }
-            await import_promises7.default.rm(artPromptsDir, { recursive: true, force: true });
+            await import_promises8.default.rm(artPromptsDir, { recursive: true, force: true });
           } catch (e) {
             console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
           }
@@ -244132,13 +244516,13 @@ var init_deleteDirectorManual = __esm({
 });
 
 // src/routes/project/deleteVisualManual.ts
-var import_express102, import_promises8, router102, deleteVisualManual_default;
+var import_express102, import_promises9, router102, deleteVisualManual_default;
 var init_deleteVisualManual = __esm({
   "src/routes/project/deleteVisualManual.ts"() {
     "use strict";
     import_express102 = __toESM(require_express2());
     init_utils3();
-    import_promises8 = __toESM(require("node:fs/promises"));
+    import_promises9 = __toESM(require("node:fs/promises"));
     init_zod();
     init_responseFormat();
     init_middleware();
@@ -244157,11 +244541,11 @@ var init_deleteVisualManual = __esm({
           }
           const artPromptsDir = utils_default.getPath(["skills", "art_skills", name28]);
           try {
-            const stat = await import_promises8.default.stat(artPromptsDir);
+            const stat = await import_promises9.default.stat(artPromptsDir);
             if (!stat.isDirectory()) {
               throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
             }
-            await import_promises8.default.rm(artPromptsDir, { recursive: true, force: true });
+            await import_promises9.default.rm(artPromptsDir, { recursive: true, force: true });
           } catch (e) {
             console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
           }
@@ -244878,13 +245262,13 @@ var init_delScript = __esm({
 var require_utils13 = __commonJS({
   "node_modules/compressing/lib/utils.js"(exports2) {
     "use strict";
-    var fs36 = require("fs");
-    var path34 = require("path");
+    var fs37 = require("fs");
+    var path35 = require("path");
     var { pipeline: pump } = require("stream");
     function isPathWithinParent(childPath, parentPath) {
-      const normalizedChild = path34.resolve(childPath);
-      const normalizedParent = path34.resolve(parentPath);
-      const parentWithSep = normalizedParent.endsWith(path34.sep) ? normalizedParent : normalizedParent + path34.sep;
+      const normalizedChild = path35.resolve(childPath);
+      const normalizedParent = path35.resolve(parentPath);
+      const parentWithSep = normalizedParent.endsWith(path35.sep) ? normalizedParent : normalizedParent + path35.sep;
       return normalizedChild === normalizedParent || normalizedChild.startsWith(parentWithSep);
     }
     exports2.sourceType = (source) => {
@@ -244928,14 +245312,14 @@ var require_utils13 = __commonJS({
       return (source, dest, opts) => {
         opts = opts || {};
         opts.source = source;
-        const destStream = destType(dest) === "path" ? fs36.createWriteStream(dest) : dest;
+        const destStream = destType(dest) === "path" ? fs37.createWriteStream(dest) : dest;
         const compressStream = new StreamClass(opts);
         return safePipe([compressStream, destStream]);
       };
     };
     exports2.makeCompressDirFn = (StreamClass) => {
       return (dir, dest, opts) => {
-        const destStream = destType(dest) === "path" ? fs36.createWriteStream(dest) : dest;
+        const destStream = destType(dest) === "path" ? fs37.createWriteStream(dest) : dest;
         const compressStream = new StreamClass();
         compressStream.addEntry(dir, opts);
         return safePipe([compressStream, destStream]);
@@ -244958,9 +245342,9 @@ var require_utils13 = __commonJS({
         const strip = opts.strip ? Number(opts.strip) : 0;
         delete opts.strip;
         return new Promise((resolve3, reject) => {
-          fs36.mkdir(destDir, { recursive: true }, (err) => {
+          fs37.mkdir(destDir, { recursive: true }, (err) => {
             if (err) return reject(err);
-            const resolvedDestDir = path34.resolve(destDir);
+            const resolvedDestDir = path35.resolve(destDir);
             let entryCount = 0;
             let successCount = 0;
             let isFinish = false;
@@ -244972,44 +245356,44 @@ var require_utils13 = __commonJS({
               done();
             }).on("error", reject).on("entry", (header, stream4, next) => {
               stream4.on("end", next);
-              const destFilePath = path34.join(resolvedDestDir, stripFileName(strip, header.name, header.type));
-              const resolvedDestPath = path34.resolve(destFilePath);
+              const destFilePath = path35.join(resolvedDestDir, stripFileName(strip, header.name, header.type));
+              const resolvedDestPath = path35.resolve(destFilePath);
               if (!isPathWithinParent(resolvedDestPath, resolvedDestDir)) {
                 console.warn(`[compressing] Skipping entry with path traversal: "${header.name}" -> "${resolvedDestPath}"`);
                 stream4.resume();
                 return;
               }
               if (header.type === "file") {
-                const dir = path34.dirname(destFilePath);
-                fs36.mkdir(dir, { recursive: true }, (err2) => {
+                const dir = path35.dirname(destFilePath);
+                fs37.mkdir(dir, { recursive: true }, (err2) => {
                   if (err2) return reject(err2);
                   entryCount++;
-                  pump(stream4, fs36.createWriteStream(destFilePath, { mode: opts.mode || header.mode }), (err3) => {
+                  pump(stream4, fs37.createWriteStream(destFilePath, { mode: opts.mode || header.mode }), (err3) => {
                     if (err3) return reject(err3);
                     successCount++;
                     done();
                   });
                 });
               } else if (header.type === "symlink") {
-                const dir = path34.dirname(destFilePath);
-                const target = path34.resolve(dir, header.linkname);
+                const dir = path35.dirname(destFilePath);
+                const target = path35.resolve(dir, header.linkname);
                 if (!isPathWithinParent(target, resolvedDestDir)) {
                   console.warn(`[compressing] Skipping symlink "${header.name}": target "${target}" escapes extraction directory`);
                   stream4.resume();
                   return;
                 }
                 entryCount++;
-                fs36.mkdir(dir, { recursive: true }, (err2) => {
+                fs37.mkdir(dir, { recursive: true }, (err2) => {
                   if (err2) return reject(err2);
-                  const relativeTarget = path34.relative(dir, target);
-                  fs36.symlink(relativeTarget, destFilePath, (err3) => {
+                  const relativeTarget = path35.relative(dir, target);
+                  fs37.symlink(relativeTarget, destFilePath, (err3) => {
                     if (err3) return reject(err3);
                     successCount++;
                     stream4.resume();
                   });
                 });
               } else {
-                fs36.mkdir(destFilePath, { recursive: true }, (err2) => {
+                fs37.mkdir(destFilePath, { recursive: true }, (err2) => {
                   if (err2) return reject(err2);
                   stream4.resume();
                 });
@@ -245038,7 +245422,7 @@ var require_utils13 = __commonJS({
     }
     exports2.safePipe = safePipe;
     function normalizePath(fileName) {
-      fileName = path34.normalize(fileName);
+      fileName = path35.normalize(fileName);
       if (process.platform === "win32") fileName = fileName.replace(/\\+/g, "/");
       return fileName;
     }
@@ -245376,7 +245760,7 @@ var require_buffer_crc32 = __commonJS({
 var require_yazl = __commonJS({
   "node_modules/yazl/index.js"(exports2) {
     "use strict";
-    var fs36 = require("fs");
+    var fs37 = require("fs");
     var Transform = require("stream").Transform;
     var PassThrough = require("stream").PassThrough;
     var zlib2 = require("zlib");
@@ -245400,14 +245784,14 @@ var require_yazl = __commonJS({
       if (options == null) options = {};
       var entry = new Entry(metadataPath, false, options);
       self2.entries.push(entry);
-      fs36.stat(realPath, function(err, stats) {
+      fs37.stat(realPath, function(err, stats) {
         if (err) return self2.emit("error", err);
         if (!stats.isFile()) return self2.emit("error", new Error("not a file: " + realPath));
         entry.uncompressedSize = stats.size;
         if (options.mtime == null) entry.setLastModDate(stats.mtime);
         if (options.mode == null) entry.setFileAttributesMode(stats.mode);
         entry.setFileDataPumpFunction(function() {
-          var readStream2 = fs36.createReadStream(realPath);
+          var readStream2 = fs37.createReadStream(realPath);
           entry.state = Entry.FILE_DATA_IN_PROGRESS;
           readStream2.on("error", function(err2) {
             self2.emit("error", err2);
@@ -249730,8 +250114,8 @@ var require_base_stream = __commonJS({
 var require_stream9 = __commonJS({
   "node_modules/compressing/lib/tar/stream.js"(exports2, module2) {
     "use strict";
-    var fs36 = require("fs");
-    var path34 = require("path");
+    var fs37 = require("fs");
+    var path35 = require("path");
     var stream4 = require("stream");
     var tar = require_tar_stream();
     var utils = require_utils13();
@@ -249766,7 +250150,7 @@ var require_stream9 = __commonJS({
         }
       }
       _addFileOrDirEntry(entry, opts) {
-        fs36.stat(entry, (err, stat) => {
+        fs37.stat(entry, (err, stat) => {
           if (err) return this.emit("error", err);
           if (stat.isDirectory()) return this._addDirEntry(entry, opts);
           if (stat.isFile()) return this._addFileEntry(entry, opts);
@@ -249776,27 +250160,27 @@ var require_stream9 = __commonJS({
         });
       }
       _addFileEntry(entry, opts) {
-        fs36.stat(entry, (err, stat) => {
+        fs37.stat(entry, (err, stat) => {
           if (err) return this.emit("error", err);
-          const entryStream = this._pack.entry({ name: opts.relativePath || path34.basename(entry), size: stat.size, mode: stat.mode & 511 }, this._onEntryFinish.bind(this));
-          const stream5 = fs36.createReadStream(entry, opts.fs);
+          const entryStream = this._pack.entry({ name: opts.relativePath || path35.basename(entry), size: stat.size, mode: stat.mode & 511 }, this._onEntryFinish.bind(this));
+          const stream5 = fs37.createReadStream(entry, opts.fs);
           stream5.on("error", (err2) => this.emit("error", err2));
           stream5.pipe(entryStream);
         });
       }
       _addDirEntry(entry, opts) {
-        fs36.readdir(entry, (err, files) => {
+        fs37.readdir(entry, (err, files) => {
           if (err) return this.emit("error", err);
           const relativePath = opts.relativePath || "";
           files.forEach((fileOrDir) => {
             const newOpts = utils.clone(opts);
             if (opts.ignoreBase) {
-              newOpts.relativePath = path34.posix.join(relativePath, fileOrDir);
+              newOpts.relativePath = path35.posix.join(relativePath, fileOrDir);
             } else {
-              newOpts.relativePath = path34.posix.join(relativePath, path34.basename(entry), fileOrDir);
+              newOpts.relativePath = path35.posix.join(relativePath, path35.basename(entry), fileOrDir);
             }
             newOpts.ignoreBase = true;
-            this.addEntry(path34.posix.join(entry, fileOrDir), newOpts);
+            this.addEntry(path35.posix.join(entry, fileOrDir), newOpts);
           });
           this._onEntryFinish();
         });
@@ -249853,7 +250237,7 @@ var require_stream9 = __commonJS({
 var require_stream10 = __commonJS({
   "node_modules/compressing/lib/zip/stream.js"(exports2, module2) {
     "use strict";
-    var path34 = require("path");
+    var path35 = require("path");
     var yazl = require_yazl();
     var TarStream = require_stream9();
     var ZipStream = class extends TarStream {
@@ -249865,7 +250249,7 @@ var require_stream10 = __commonJS({
         stream4.on("error", (err) => this.emit("error", err));
       }
       _addFileEntry(entry, opts) {
-        this._zipfile.addFile(entry, opts.relativePath || path34.basename(entry), opts);
+        this._zipfile.addFile(entry, opts.relativePath || path35.basename(entry), opts);
         this._onEntryFinish();
       }
       _addBufferEntry(entry, opts) {
@@ -249924,7 +250308,7 @@ var require_get_ready = __commonJS({
 var require_file_stream = __commonJS({
   "node_modules/compressing/lib/zip/file_stream.js"(exports2, module2) {
     "use strict";
-    var path34 = require("path");
+    var path35 = require("path");
     var yazl = require_yazl();
     var assert3 = require("assert");
     var stream4 = require("stream");
@@ -249946,7 +250330,7 @@ var require_file_stream = __commonJS({
           this.end();
         }
         if (sourceType === "file") {
-          zipfile.addFile(opts.source, opts.relativePath || path34.basename(opts.source), opts.yazl);
+          zipfile.addFile(opts.source, opts.relativePath || path35.basename(opts.source), opts.yazl);
         } else if (sourceType === "buffer") {
           zipfile.addBuffer(opts.source, opts.relativePath, opts.yazl);
         } else if (sourceType === "stream") {
@@ -250032,7 +250416,7 @@ var require_pend = __commonJS({
 var require_fd_slicer2 = __commonJS({
   "node_modules/fd-slicer2/index.js"(exports2) {
     "use strict";
-    var fs36 = require("fs");
+    var fs37 = require("fs");
     var { Readable: Readable2, Writable, PassThrough } = require("stream");
     var Pend = require_pend();
     var { EventEmitter: EventEmitter3 } = require("events");
@@ -250047,7 +250431,7 @@ var require_fd_slicer2 = __commonJS({
       }
       read(buffer, offset, length, position, callback) {
         this.pend.go((cb) => {
-          fs36.read(this.fd, buffer, offset, length, position, (err, bytesRead, buffer2) => {
+          fs37.read(this.fd, buffer, offset, length, position, (err, bytesRead, buffer2) => {
             cb();
             callback(err, bytesRead, buffer2);
           });
@@ -250055,7 +250439,7 @@ var require_fd_slicer2 = __commonJS({
       }
       write(buffer, offset, length, position, callback) {
         this.pend.go((cb) => {
-          fs36.write(this.fd, buffer, offset, length, position, (err, written, buffer2) => {
+          fs37.write(this.fd, buffer, offset, length, position, (err, written, buffer2) => {
             cb();
             callback(err, written, buffer2);
           });
@@ -250075,7 +250459,7 @@ var require_fd_slicer2 = __commonJS({
         if (this.refCount > 0) return;
         if (this.refCount < 0) throw new Error("invalid unref");
         if (this.autoClose) {
-          fs36.close(this.fd, (err) => {
+          fs37.close(this.fd, (err) => {
             if (err) {
               this.emit("error", err);
             } else {
@@ -250110,7 +250494,7 @@ var require_fd_slicer2 = __commonJS({
         this.context.pend.go((cb) => {
           if (this.destroyed) return cb();
           const buffer = Buffer.alloc(toRead);
-          fs36.read(this.context.fd, buffer, 0, toRead, this.pos, (err, bytesRead) => {
+          fs37.read(this.context.fd, buffer, 0, toRead, this.pos, (err, bytesRead) => {
             if (err) {
               this.destroy(err);
             } else if (bytesRead === 0) {
@@ -250156,7 +250540,7 @@ var require_fd_slicer2 = __commonJS({
         }
         this.context.pend.go((cb) => {
           if (this.destroyed) return cb();
-          fs36.write(this.context.fd, buffer, 0, buffer.length, this.pos, (err, bytes) => {
+          fs37.write(this.context.fd, buffer, 0, buffer.length, this.pos, (err, bytes) => {
             if (err) {
               this.destroy();
               cb();
@@ -250283,7 +250667,7 @@ var require_fd_slicer2 = __commonJS({
 var require_yauzl = __commonJS({
   "node_modules/@eggjs/yauzl/index.js"(exports2) {
     "use strict";
-    var fs36 = require("fs");
+    var fs37 = require("fs");
     var zlib2 = require("zlib");
     var fd_slicer = require_fd_slicer2();
     var crc32 = require_buffer_crc32();
@@ -250301,7 +250685,7 @@ var require_yauzl = __commonJS({
     exports2.ZipFile = ZipFile;
     exports2.Entry = Entry;
     exports2.RandomAccessReader = RandomAccessReader;
-    function open(path34, options, callback) {
+    function open(path35, options, callback) {
       if (typeof options === "function") {
         callback = options;
         options = null;
@@ -250313,10 +250697,10 @@ var require_yauzl = __commonJS({
       if (options.validateEntrySizes == null) options.validateEntrySizes = true;
       if (options.strictFileNames == null) options.strictFileNames = false;
       if (callback == null) callback = defaultCallback;
-      fs36.open(path34, "r", function(err, fd) {
+      fs37.open(path35, "r", function(err, fd) {
         if (err) return callback(err);
         fromFd(fd, options, function(err2, zipfile) {
-          if (err2) fs36.close(fd, defaultCallback);
+          if (err2) fs37.close(fd, defaultCallback);
           callback(err2, zipfile);
         });
       });
@@ -250333,7 +250717,7 @@ var require_yauzl = __commonJS({
       if (options.validateEntrySizes == null) options.validateEntrySizes = true;
       if (options.strictFileNames == null) options.strictFileNames = false;
       if (callback == null) callback = defaultCallback;
-      fs36.fstat(fd, function(err, stats) {
+      fs37.fstat(fd, function(err, stats) {
         if (err) return callback(err);
         var reader = fd_slicer.createFromFd(fd, { autoClose: true });
         fromRandomAccessReader(reader, stats.size, options, callback);
@@ -254653,7 +255037,7 @@ var require_lib8 = __commonJS({
 var require_file_stream2 = __commonJS({
   "node_modules/compressing/lib/gzip/file_stream.js"(exports2, module2) {
     "use strict";
-    var fs36 = require("fs");
+    var fs37 = require("fs");
     var zlib2 = require("zlib");
     var utils = require_utils13();
     var streamifier = require_lib8();
@@ -254663,7 +255047,7 @@ var require_file_stream2 = __commonJS({
         super(opts.zlib);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs36.createReadStream(opts.source, opts.fs);
+          const stream4 = fs37.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -254688,7 +255072,7 @@ var require_file_stream2 = __commonJS({
 var require_uncompress_stream2 = __commonJS({
   "node_modules/compressing/lib/gzip/uncompress_stream.js"(exports2, module2) {
     "use strict";
-    var fs36 = require("fs");
+    var fs37 = require("fs");
     var zlib2 = require("zlib");
     var utils = require_utils13();
     var streamifier = require_lib8();
@@ -254698,7 +255082,7 @@ var require_uncompress_stream2 = __commonJS({
         super(opts.zlib);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs36.createReadStream(opts.source, opts.fs);
+          const stream4 = fs37.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -254738,8 +255122,8 @@ var require_gzip = __commonJS({
 var require_file_stream3 = __commonJS({
   "node_modules/compressing/lib/tar/file_stream.js"(exports2, module2) {
     "use strict";
-    var fs36 = require("fs");
-    var path34 = require("path");
+    var fs37 = require("fs");
+    var path35 = require("path");
     var stream4 = require("stream");
     var tar = require_tar_stream();
     var utils = require_utils13();
@@ -254752,13 +255136,13 @@ var require_file_stream3 = __commonJS({
         pack.on("end", () => this.ready(true));
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          fs36.stat(opts.source, (err, stat) => {
+          fs37.stat(opts.source, (err, stat) => {
             if (err) return this.emit("error", err);
-            this.entry = pack.entry({ name: opts.relativePath || path34.basename(opts.source), size: stat.size, mode: stat.mode & 511 }, (err2) => {
+            this.entry = pack.entry({ name: opts.relativePath || path35.basename(opts.source), size: stat.size, mode: stat.mode & 511 }, (err2) => {
               if (err2) return this.emit("error", err2);
               pack.finalize();
             });
-            const stream5 = fs36.createReadStream(opts.source, opts.fs);
+            const stream5 = fs37.createReadStream(opts.source, opts.fs);
             stream5.on("error", (err2) => this.emit("error", err2));
             stream5.pipe(this);
           });
@@ -254817,7 +255201,7 @@ var require_file_stream3 = __commonJS({
 var require_uncompress_stream3 = __commonJS({
   "node_modules/compressing/lib/tar/uncompress_stream.js"(exports2, module2) {
     "use strict";
-    var fs36 = require("fs");
+    var fs37 = require("fs");
     var tar = require_tar_stream();
     var utils = require_utils13();
     var streamifier = require_lib8();
@@ -254827,7 +255211,7 @@ var require_uncompress_stream3 = __commonJS({
         super(opts);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs36.createReadStream(opts.source, opts.fs);
+          const stream4 = fs37.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -254969,7 +255353,7 @@ var require_FlushWritable = __commonJS({
 var require_uncompress_stream4 = __commonJS({
   "node_modules/compressing/lib/tgz/uncompress_stream.js"(exports2, module2) {
     "use strict";
-    var fs36 = require("fs");
+    var fs37 = require("fs");
     var utils = require_utils13();
     var ready = require_get_ready();
     var streamifier = require_lib8();
@@ -254987,7 +255371,7 @@ var require_uncompress_stream4 = __commonJS({
         this._gzipStream.pipe(tarStream);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs36.createReadStream(opts.source, opts.fs);
+          const stream4 = fs37.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -256298,13 +256682,13 @@ var init_bindingPrompt = __esm({
         fileName: external_exports.string()
       }),
       async (req, res) => {
-        const { vendorId, model, path: path34, fileName } = req.body;
+        const { vendorId, model, path: path35, fileName } = req.body;
         const data = await utils_default.db("o_modelPrompt").where("model", model).andWhere("vendorId", vendorId).select("*").first();
         if (data) {
-          await utils_default.db("o_modelPrompt").where("model", model).andWhere("vendorId", vendorId).update({ fileName, path: path34 });
+          await utils_default.db("o_modelPrompt").where("model", model).andWhere("vendorId", vendorId).update({ fileName, path: path35 });
           res.status(200).send(success3("\u7ED1\u5B9A\u6210\u529F"));
         } else {
-          await utils_default.db("o_modelPrompt").insert({ vendorId, model, path: path34, fileName });
+          await utils_default.db("o_modelPrompt").insert({ vendorId, model, path: path35, fileName });
           res.status(200).send(success3("\u7ED1\u5B9A\u6210\u529F"));
         }
       }
@@ -256313,7 +256697,7 @@ var init_bindingPrompt = __esm({
 });
 
 // src/routes/setting/modelMap/deletePrompt.ts
-var import_express147, import_promises9, import_path22, router147, deletePrompt_default;
+var import_express147, import_promises10, import_path22, router147, deletePrompt_default;
 var init_deletePrompt = __esm({
   "src/routes/setting/modelMap/deletePrompt.ts"() {
     "use strict";
@@ -256322,7 +256706,7 @@ var init_deletePrompt = __esm({
     init_utils3();
     init_zod();
     init_middleware();
-    import_promises9 = __toESM(require("fs/promises"));
+    import_promises10 = __toESM(require("fs/promises"));
     import_path22 = __toESM(require("path"));
     router147 = import_express147.default.Router();
     deletePrompt_default = router147.post(
@@ -256339,11 +256723,11 @@ var init_deletePrompt = __esm({
           return res.status(400).send(error50("\u975E\u6CD5\u8DEF\u5F84"));
         }
         try {
-          await import_promises9.default.access(resolvedFile);
+          await import_promises10.default.access(resolvedFile);
         } catch {
           return res.status(404).send(error50("\u6587\u4EF6\u4E0D\u5B58\u5728"));
         }
-        await import_promises9.default.unlink(resolvedFile);
+        await import_promises10.default.unlink(resolvedFile);
         res.status(200).send(success3("\u5220\u9664\u6210\u529F"));
       }
     );
@@ -256389,7 +256773,7 @@ var init_getImageAndVideoModel = __esm({
 });
 
 // src/routes/setting/modelMap/getPromptList.ts
-var import_express149, import_fast_glob3, import_promises10, import_path23, router149, getPromptList_default;
+var import_express149, import_fast_glob3, import_promises11, import_path23, router149, getPromptList_default;
 var init_getPromptList = __esm({
   "src/routes/setting/modelMap/getPromptList.ts"() {
     "use strict";
@@ -256397,7 +256781,7 @@ var init_getPromptList = __esm({
     init_responseFormat();
     init_utils3();
     import_fast_glob3 = __toESM(require_out4());
-    import_promises10 = __toESM(require("fs/promises"));
+    import_promises11 = __toESM(require("fs/promises"));
     import_path23 = __toESM(require("path"));
     router149 = import_express149.default.Router();
     getPromptList_default = router149.get("/", async (req, res) => {
@@ -256409,7 +256793,7 @@ var init_getPromptList = __esm({
       const result = await Promise.all(
         entries.map(async (entry) => {
           const fullPath = import_path23.default.join(modelPromptRoot, entry);
-          const content = await import_promises10.default.readFile(fullPath, "utf-8");
+          const content = await import_promises11.default.readFile(fullPath, "utf-8");
           const name28 = import_path23.default.basename(entry, ".md");
           const type = entry.includes("/") ? entry.split("/")[0] : "";
           return { path: entry, name: name28, type, data: content };
@@ -256421,7 +256805,7 @@ var init_getPromptList = __esm({
 });
 
 // src/routes/setting/modelMap/savePrompt.ts
-var import_express150, import_promises11, import_path24, router150, savePrompt_default;
+var import_express150, import_promises12, import_path24, router150, savePrompt_default;
 var init_savePrompt = __esm({
   "src/routes/setting/modelMap/savePrompt.ts"() {
     "use strict";
@@ -256430,7 +256814,7 @@ var init_savePrompt = __esm({
     init_utils3();
     init_zod();
     init_middleware();
-    import_promises11 = __toESM(require("fs/promises"));
+    import_promises12 = __toESM(require("fs/promises"));
     import_path24 = __toESM(require("path"));
     router150 = import_express150.default.Router();
     savePrompt_default = router150.post(
@@ -256444,9 +256828,9 @@ var init_savePrompt = __esm({
         const { name: name28, data, type } = req.body;
         const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
         const dir = import_path24.default.join(modelPromptRoot, type);
-        await import_promises11.default.mkdir(dir, { recursive: true });
+        await import_promises12.default.mkdir(dir, { recursive: true });
         const filePath = import_path24.default.join(dir, `${name28}.md`);
-        await import_promises11.default.writeFile(filePath, data, "utf-8");
+        await import_promises12.default.writeFile(filePath, data, "utf-8");
         res.status(200).send(success3("\u4FDD\u5B58\u6210\u529F"));
       }
     );
@@ -256454,7 +256838,7 @@ var init_savePrompt = __esm({
 });
 
 // src/routes/setting/modelMap/updatePrompt.ts
-var import_express151, import_promises12, import_path25, router151, updatePrompt_default;
+var import_express151, import_promises13, import_path25, router151, updatePrompt_default;
 var init_updatePrompt = __esm({
   "src/routes/setting/modelMap/updatePrompt.ts"() {
     "use strict";
@@ -256463,7 +256847,7 @@ var init_updatePrompt = __esm({
     init_utils3();
     init_zod();
     init_middleware();
-    import_promises12 = __toESM(require("fs/promises"));
+    import_promises13 = __toESM(require("fs/promises"));
     import_path25 = __toESM(require("path"));
     router151 = import_express151.default.Router();
     updatePrompt_default = router151.post(
@@ -256483,11 +256867,11 @@ var init_updatePrompt = __esm({
           return res.status(400).send(error50("\u975E\u6CD5\u8DEF\u5F84"));
         }
         try {
-          await import_promises12.default.access(resolvedFile);
+          await import_promises13.default.access(resolvedFile);
         } catch {
           return res.status(404).send(error50("\u6587\u4EF6\u4E0D\u5B58\u5728"));
         }
-        await import_promises12.default.writeFile(resolvedFile, data, "utf-8");
+        await import_promises13.default.writeFile(resolvedFile, data, "utf-8");
         res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
       }
     );
@@ -256546,7 +256930,7 @@ var init_updatePrompt2 = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillContent.ts
-var import_express154, import_path26, fs31, router154, getSkillContent_default;
+var import_express154, import_path26, fs32, router154, getSkillContent_default;
 var init_getSkillContent = __esm({
   "src/routes/setting/skillManagement/getSkillContent.ts"() {
     "use strict";
@@ -256557,7 +256941,7 @@ var init_getSkillContent = __esm({
     init_is_path_inside();
     init_utils3();
     import_path26 = __toESM(require("path"));
-    fs31 = __toESM(require("fs"));
+    fs32 = __toESM(require("fs"));
     router154 = import_express154.default.Router();
     getSkillContent_default = router154.post(
       "/",
@@ -256565,13 +256949,13 @@ var init_getSkillContent = __esm({
         path: external_exports.string()
       }),
       async (req, res) => {
-        const { path: path34 } = req.body;
+        const { path: path35 } = req.body;
         const skillsRoot = utils_default.getPath(["skills"]);
-        const filePath = import_path26.default.join(skillsRoot, path34);
+        const filePath = import_path26.default.join(skillsRoot, path35);
         if (!isPathInside(filePath, skillsRoot)) {
           return res.status(400).send(error50("\u65E0\u6548\u7684\u8DEF\u5F84"));
         }
-        const raw = await fs31.promises.readFile(filePath, "utf-8");
+        const raw = await fs32.promises.readFile(filePath, "utf-8");
         res.status(200).send(success3(raw));
       }
     );
@@ -256600,7 +256984,7 @@ var init_getSkillList = __esm({
 });
 
 // src/routes/setting/skillManagement/saveSkillContent.ts
-var import_express156, import_path27, fs32, router156, saveSkillContent_default;
+var import_express156, import_path27, fs33, router156, saveSkillContent_default;
 var init_saveSkillContent = __esm({
   "src/routes/setting/skillManagement/saveSkillContent.ts"() {
     "use strict";
@@ -256611,7 +256995,7 @@ var init_saveSkillContent = __esm({
     init_is_path_inside();
     init_utils3();
     import_path27 = __toESM(require("path"));
-    fs32 = __toESM(require("fs"));
+    fs33 = __toESM(require("fs"));
     router156 = import_express156.default.Router();
     saveSkillContent_default = router156.post(
       "/",
@@ -256620,16 +257004,16 @@ var init_saveSkillContent = __esm({
         content: external_exports.string()
       }),
       async (req, res) => {
-        const { path: path34, content } = req.body;
+        const { path: path35, content } = req.body;
         const skillsRoot = utils_default.getPath(["skills"]);
-        const filePath = import_path27.default.join(skillsRoot, path34);
+        const filePath = import_path27.default.join(skillsRoot, path35);
         if (!isPathInside(filePath, skillsRoot)) {
           return res.status(400).send(error50("\u65E0\u6548\u7684\u8DEF\u5F84"));
         }
-        if (!fs32.existsSync(filePath)) {
+        if (!fs33.existsSync(filePath)) {
           return res.status(400).send(error50("\u6587\u4EF6\u4E0D\u5B58\u5728"));
         }
-        const raw = await fs32.promises.writeFile(filePath, content, "utf-8");
+        const raw = await fs33.promises.writeFile(filePath, content, "utf-8");
         res.status(200).send(success3(raw));
       }
     );
@@ -256717,7 +257101,7 @@ var init_addVendor = __esm({
         const result = vendorConfigSchema.safeParse(vendor);
         if (!result.success) {
           const issueLines = result.error.issues.map((issue3, index) => {
-            const path34 = issue3.path.length ? issue3.path.join(".") : "root";
+            const path35 = issue3.path.length ? issue3.path.join(".") : "root";
             let detail = issue3.message;
             if (issue3.code === "invalid_union") {
               const unionDetails = [
@@ -256729,7 +257113,7 @@ var init_addVendor = __esm({
                 detail = `${issue3.message}\uFF08${unionDetails.join("\uFF1B")}\uFF09`;
               }
             }
-            return `${index + 1}. ${path34}: ${detail}`;
+            return `${index + 1}. ${path35}: ${detail}`;
           });
           return res.status(400).send(error50(`vendor\u914D\u7F6E\u6821\u9A8C\u5931\u8D25\uFF0C\u5171 ${issueLines.length} \u5904:
 ${issueLines.join("\n")}`));
@@ -257678,10 +258062,10 @@ var init_cues = __esm({
 
 // src/services/task-engine/enqueueUtteranceTts.ts
 async function enqueueUtteranceTts(input) {
-  const utterance = await sql4("utterances").where({ id: input.utteranceId, project_id: input.projectId }).first();
+  const utterance = await sql6("utterances").where({ id: input.utteranceId, project_id: input.projectId }).first();
   if (!utterance) throw new Error("\u53F0\u8BCD\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
   if (!utterance.voice_cast_id) throw new Error("\u8BF7\u5148\u4E3A\u8FD9\u53E5\u53F0\u8BCD\u5206\u914D\u89D2\u8272\u97F3\u8272");
-  const voiceCast = await sql4("voice_cast").where({ id: utterance.voice_cast_id, project_id: input.projectId }).first();
+  const voiceCast = await sql6("voice_cast").where({ id: utterance.voice_cast_id, project_id: input.projectId }).first();
   if (!voiceCast) throw new Error("\u53F0\u8BCD\u7ED1\u5B9A\u7684\u89D2\u8272\u97F3\u8272\u4E0D\u5B58\u5728");
   const model = `${voiceCast.provider}:${voiceCast.model}`;
   const cacheKey = stableIdempotencyKey({
@@ -257699,7 +258083,7 @@ async function enqueueUtteranceTts(input) {
   }
   let referenceAudioPath;
   if (voiceCast.preview_asset_id) {
-    const reference = await sql4("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", voiceCast.preview_asset_id).select("o_image.filePath").first();
+    const reference = await sql6("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", voiceCast.preview_asset_id).select("o_image.filePath").first();
     referenceAudioPath = reference?.filePath ?? void 0;
   }
   const resourceKey = `audio:utterance:${input.utteranceId}`;
@@ -257718,7 +258102,7 @@ async function enqueueUtteranceTts(input) {
     savePath,
     cacheKey
   };
-  const [legacyTaskId] = await sql4("o_tasks").insert({
+  const [legacyTaskId] = await sql6("o_tasks").insert({
     projectId: input.projectId,
     taskClass: "\u9010\u53E5\u914D\u97F3",
     relatedObjects: JSON.stringify({ utteranceId: input.utteranceId }),
@@ -257739,10 +258123,10 @@ async function enqueueUtteranceTts(input) {
     maxAttempts: 2
   });
   if (result.deduped) {
-    await sql4("o_tasks").where("id", legacyTaskId).delete();
+    await sql6("o_tasks").where("id", legacyTaskId).delete();
     const existingResult = result.task.result;
     if (result.task.status === "succeeded" && existingResult?.audioPath) {
-      await sql4("utterances").where("id", input.utteranceId).update({
+      await sql6("utterances").where("id", input.utteranceId).update({
         audio_path: existingResult.audioPath,
         cache_key: cacheKey,
         status: "succeeded",
@@ -257751,7 +258135,7 @@ async function enqueueUtteranceTts(input) {
       });
     }
   } else {
-    await sql4("utterances").where("id", input.utteranceId).update({
+    await sql6("utterances").where("id", input.utteranceId).update({
       status: "queued",
       cache_key: cacheKey,
       error_message: null,
@@ -257760,13 +258144,13 @@ async function enqueueUtteranceTts(input) {
   }
   return { task: result.task, payload: result.task.payload, deduped: result.deduped, cached: false };
 }
-var sql4;
+var sql6;
 var init_enqueueUtteranceTts = __esm({
   "src/services/task-engine/enqueueUtteranceTts.ts"() {
     "use strict";
     init_db();
     init_repository();
-    sql4 = db;
+    sql6 = db;
   }
 });
 
@@ -258659,8 +259043,8 @@ function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills"
         content += "\u4F7F\u7528 read_skill_file \u5DE5\u5177\u8BFB\u53D6\u8D44\u6E90\u6587\u4EF6\u3002\n";
         if (skillPaths.secondarySkills.length > 0) {
           content += "\n<skill_resources>\n";
-          for (const path34 of skillPaths.secondarySkills) {
-            content += `  <file>${path34}</file>
+          for (const path35 of skillPaths.secondarySkills) {
+            content += `  <file>${path35}</file>
 `;
           }
           content += "</skill_resources>\n";
@@ -258703,8 +259087,8 @@ function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills"
         content += "\u53EF\u4EE5\u4F7F\u7528 read_skill_file \u5DE5\u5177\u8BFB\u53D6\u8D44\u6E90\u6587\u4EF6\u3002\n";
         if (skillPaths.tertiarySkills.length > 0) {
           content += "\n<skill_resources>\n";
-          for (const path34 of skillPaths.tertiarySkills) {
-            content += `  <file>${path34}</file>
+          for (const path35 of skillPaths.tertiarySkills) {
+            content += `  <file>${path35}</file>
 `;
           }
           content += "</skill_resources>\n";
@@ -260910,31 +261294,7 @@ var storyboardImageTaskHandler = {
 init_utils3();
 init_db();
 init_generationTask();
-
-// src/services/media/probe.ts
-var import_node_child_process = require("node:child_process");
-var import_node_util = require("node:util");
-init_utils3();
-var execFileAsync = (0, import_node_util.promisify)(import_node_child_process.execFile);
-async function probeMedia(userPath) {
-  const absolutePath = await utils_default.oss.getAbsolutePath(userPath);
-  const executable = process.env.FFPROBE_PATH?.trim() || "ffprobe";
-  try {
-    const { stdout } = await execFileAsync(
-      executable,
-      ["-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", absolutePath],
-      { timeout: 15e3, maxBuffer: 64 * 1024 }
-    );
-    const seconds = Number(stdout.trim());
-    if (!Number.isFinite(seconds) || seconds <= 0) return null;
-    return { durationMs: Math.max(1, Math.round(seconds * 1e3)) };
-  } catch (error73) {
-    console.warn("[\u5A92\u4F53\u63A2\u6D4B] ffprobe \u4E0D\u53EF\u7528\u6216\u6587\u4EF6\u65E0\u6CD5\u63A2\u6D4B:", error73 instanceof Error ? error73.message : String(error73));
-    return null;
-  }
-}
-
-// src/services/task-engine/handlers/utteranceTts.ts
+init_probe();
 init_repository2();
 var sql2 = db;
 var utteranceTtsTaskHandler = {
@@ -260988,6 +261348,69 @@ var utteranceTtsTaskHandler = {
   }
 };
 
+// src/services/task-engine/handlers/compositionRender.ts
+init_db();
+init_generationTask();
+init_renderer();
+var sql3 = db;
+var compositionRenderTaskHandler = {
+  async execute(task, context2) {
+    const payload = task.payload;
+    const [job, timelineRow] = await Promise.all([
+      sql3("composition_jobs").where({ id: payload.compositionJobId, project_id: payload.projectId }).first(),
+      sql3("project_timelines").where({ id: payload.timelineId, project_id: payload.projectId, script_id: payload.scriptId }).first()
+    ]);
+    if (!job) throw new TaskExecutionError("\u5408\u6210\u4EFB\u52A1\u8BB0\u5F55\u4E0D\u5B58\u5728", "COMPOSITION_JOB_NOT_FOUND", false, true);
+    if (!timelineRow) throw new TaskExecutionError("\u65F6\u95F4\u7EBF\u7248\u672C\u4E0D\u5B58\u5728", "TIMELINE_NOT_FOUND", false, true);
+    if (timelineRow.version !== payload.timelineVersion || timelineRow.checksum !== payload.timelineChecksum) {
+      throw new TaskExecutionError("\u65F6\u95F4\u7EBF\u7248\u672C\u6216\u6821\u9A8C\u548C\u4E0D\u4E00\u81F4\uFF0C\u5DF2\u62D2\u7EDD\u6E32\u67D3", "TIMELINE_CHECKSUM_MISMATCH", false, true);
+    }
+    await context2.throwIfCancelled();
+    await context2.transitionToPolling();
+    await sql3("composition_jobs").where("id", payload.compositionJobId).update({
+      status: "rendering",
+      error_message: null,
+      updated_at: Date.now()
+    });
+    try {
+      const result = await renderTimelinePreview({
+        taskId: task.id,
+        timeline: JSON.parse(timelineRow.payload),
+        outputPath: payload.outputPath,
+        preset: payload.preset,
+        shouldCancel: async () => {
+          const row = await sql3("generation_tasks").where("id", task.id).select("cancel_requested", "status").first();
+          return !row || row.cancel_requested === 1 || ["cancelling", "cancelled"].includes(row.status);
+        }
+      });
+      await context2.transitionToFinalizing();
+      await sql3("composition_jobs").where("id", payload.compositionJobId).update({
+        status: "succeeded",
+        output_path: result.outputPath,
+        output_checksum: result.outputChecksum,
+        duration_ms: result.durationMs,
+        render_log: JSON.stringify(result.renderLog),
+        error_message: null,
+        updated_at: Date.now()
+      });
+      return {
+        ...result,
+        compositionJobId: payload.compositionJobId,
+        timelineId: payload.timelineId,
+        timelineVersion: payload.timelineVersion,
+        timelineChecksum: payload.timelineChecksum
+      };
+    } catch (error73) {
+      await sql3("composition_jobs").where("id", payload.compositionJobId).update({
+        status: "failed",
+        error_message: error73 instanceof Error ? error73.message : String(error73),
+        updated_at: Date.now()
+      });
+      throw error73;
+    }
+  }
+};
+
 // src/services/task-engine/index.ts
 var initialized = false;
 async function startGenerationTaskEngine() {
@@ -260997,6 +261420,7 @@ async function startGenerationTaskEngine() {
     registerTaskHandler("asset.image.generate", assetImageTaskHandler);
     registerTaskHandler("storyboard.image.generate", storyboardImageTaskHandler);
     registerTaskHandler("tts.utterance.generate", utteranceTtsTaskHandler);
+    registerTaskHandler("composition.render", compositionRenderTaskHandler);
     initialized = true;
   }
   await generationTaskWorker.start();

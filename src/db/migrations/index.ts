@@ -210,6 +210,20 @@ const migrations: Migration[] = [
       }
     },
   },
+  {
+    id: "20260808_004_composition_render_results",
+    up: async (db) => {
+      if (!(await db.schema.hasColumn("composition_jobs", "output_checksum"))) {
+        await db.schema.alterTable("composition_jobs", (table) => table.text("output_checksum"));
+      }
+      if (!(await db.schema.hasColumn("composition_jobs", "duration_ms"))) {
+        await db.schema.alterTable("composition_jobs", (table) => table.integer("duration_ms"));
+      }
+      if (!(await db.schema.hasColumn("composition_jobs", "render_log"))) {
+        await db.schema.alterTable("composition_jobs", (table) => table.text("render_log"));
+      }
+    },
+  },
 ];
 
 export default async function runMigrations(db: Knex): Promise<void> {
