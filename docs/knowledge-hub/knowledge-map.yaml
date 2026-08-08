@@ -58,7 +58,7 @@
       ],
       "troubleshooting": ["docs/knowledge-hub/troubleshooting.md#任务显示需人工确认"],
       "introduced_in": "toon-custom/first-absorption-2026-08-08",
-      "last_verified_commit": "toon-custom/pending-single-video-queue"
+      "last_verified_commit": "toon-custom/3551338"
     },
     {
       "id": "api.generation-tasks",

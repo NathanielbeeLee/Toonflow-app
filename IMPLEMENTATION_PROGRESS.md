@@ -55,6 +55,8 @@
 
 ## 2026-08-08 第三批：统一单条/批量视频入口
 
+落地提交：`3551338`（已推送 `origin/toon-custom`）。
+
 - 单条 `/production/workbench/generateVideo` 改为调用同一持久入队服务。
 - 保持原响应仍为 `videoId`，现有 Toonflow-web 无需修改即可继续轮询视频结果。
 - 单条与批量请求共享轨道资源占用；已有活动任务时复用同一 `videoId`，避免按钮重复点击造成重复提交。
