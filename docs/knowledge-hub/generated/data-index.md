@@ -16,6 +16,12 @@
 | utterances | 角色音色、逐句台词与字幕 cue | feature.voice-utterance-studio |
 | subtitle_cues | 角色音色、逐句台词与字幕 cue | feature.voice-utterance-studio |
 | generation_tasks | 角色音色、逐句台词与字幕 cue | feature.voice-utterance-studio |
+| project_timelines | 规范化多轨时间线 | feature.normalized-timeline |
+| composition_jobs | 规范化多轨时间线 | feature.normalized-timeline |
+| utterances | 规范化多轨时间线 | feature.normalized-timeline |
+| subtitle_cues | 规范化多轨时间线 | feature.normalized-timeline |
+| o_video | 规范化多轨时间线 | feature.normalized-timeline |
+| o_videoTrack | 规范化多轨时间线 | feature.normalized-timeline |
 | generation_tasks | 持久任务中心 | feature.durable-task-center |
 | generation_tasks | generation_tasks | table.generation-tasks |
 | generation_tasks | 供应商远端任务恢复 | feature.provider-job-resume |

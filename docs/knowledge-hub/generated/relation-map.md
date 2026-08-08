@@ -8,6 +8,7 @@
 | workflow.novel-to-video | uses | feature.durable-video-tasks |
 | workflow.novel-to-video | uses | feature.durable-image-tasks |
 | workflow.novel-to-video | uses | feature.voice-utterance-studio |
+| workflow.novel-to-video | uses | feature.normalized-timeline |
 | feature.agent-directing | documented_by | document.feature-catalog |
 | feature.asset-consistency | documented_by | document.feature-catalog |
 | feature.infinite-canvas | implemented_by | component.frontend-source |
@@ -29,6 +30,8 @@
 | feature.voice-utterance-studio | exposed_by | api.voice-studio |
 | feature.voice-utterance-studio | documented_by | document.feature-catalog |
 | api.voice-studio | uses | feature.voice-utterance-studio |
+| feature.normalized-timeline | uses | feature.voice-utterance-studio |
+| feature.normalized-timeline | documented_by | document.database-tasks |
 | feature.durable-task-center | reads | table.generation-tasks |
 | feature.durable-task-center | uses | api.generation-tasks |
 | feature.durable-task-center | troubleshoots | troubleshooting.unknown-provider-state |

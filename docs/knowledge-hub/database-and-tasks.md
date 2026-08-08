@@ -21,3 +21,10 @@
 - `subtitle_cues`：独立字幕时间片，保存开始/结束毫秒、文本、样式和人工锁定；重建只替换未锁定 cue。
 
 `tts.utterance.generate` 使用 `audio` 通道。缓存身份由文本、供应商模型、音色和发音参数决定；参数未变化且已有成功音频时直接复用。同步式 TTS 无法保存远端 job ID，因此越过供应商调用边界后的不确定失败进入 `manual_review`，不会自动重复扣费。
+
+## 时间线与合成
+
+- `project_timelines`：按项目/剧本保存 renderer-neutral timeline JSON、递增版本、状态和 SHA-256 输入校验和；输入未变化时复用最新版本。
+- `composition_jobs`：预留 FFmpeg/Remotion 渲染器、preset、输出、持久任务和错误归属；本批尚未创建渲染任务。
+
+timeline schema v1 包含画幅、fps、BT.709、48kHz、响度/true peak 目标，以及视频、原生音频、对白、旁白、SFX、环境声、BGM 和字幕轨。媒体工具只用参数数组调用 `ffprobe`/后续 `ffmpeg`，不拼接任意 shell 命令。

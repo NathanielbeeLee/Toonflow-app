@@ -14,7 +14,8 @@
         { "type": "uses", "target": "feature.infinite-canvas" },
         { "type": "uses", "target": "feature.durable-video-tasks" },
         { "type": "uses", "target": "feature.durable-image-tasks" },
-        { "type": "uses", "target": "feature.voice-utterance-studio" }
+        { "type": "uses", "target": "feature.voice-utterance-studio" },
+        { "type": "uses", "target": "feature.normalized-timeline" }
       ],
       "introduced_in": "upstream/v1.1.8",
       "last_verified_commit": "toon-custom/d5eca2c"
@@ -146,6 +147,23 @@
       "relations": [{ "type": "uses", "target": "feature.voice-utterance-studio" }],
       "introduced_in": "toon-custom/f6f5b0eb",
       "last_verified_commit": "toon-custom/f6f5b0eb"
+    },
+    {
+      "id": "feature.normalized-timeline",
+      "type": "feature",
+      "name": "规范化多轨时间线",
+      "summary": "把选片、原生音频、逐句配音和字幕确定性构建成渲染器无关、可版本化的多轨时间线",
+      "user_entry": { "page": "配音与字幕 / 规范化时间线", "action": "选择剧本后构建版本并检查轨道与警告" },
+      "source_paths": ["src/services/composition/timeline.ts", "src/routes/composition/timeline.ts", "frontend/src/views/voiceStudio/index.vue", "src/services/media/probe.ts"],
+      "api": ["POST /api/composition/timeline/build", "POST /api/composition/timeline/latest", "POST /api/composition/timeline/list"],
+      "tables": ["project_timelines", "composition_jobs", "utterances", "subtitle_cues", "o_video", "o_videoTrack"],
+      "config": ["FFPROBE_PATH"],
+      "relations": [
+        { "type": "uses", "target": "feature.voice-utterance-studio" },
+        { "type": "documented_by", "target": "document.database-tasks" }
+      ],
+      "introduced_in": "toon-custom/07c229d9",
+      "last_verified_commit": "toon-custom/07c229d9"
     },
     {
       "id": "feature.durable-task-center",

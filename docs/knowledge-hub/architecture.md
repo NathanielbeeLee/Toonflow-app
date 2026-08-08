@@ -10,9 +10,11 @@ flowchart LR
   Queue --> Vendor["可编辑 Vendor 模板"]
   Vendor --> Cloud["文本/图片/视频/TTS 供应商"]
   Queue --> Media["本地 OSS 媒体目录"]
+  Media --> Timeline["规范化多轨时间线"]
+  Timeline --> Renderer["FFmpeg 渲染器（待接入）"]
   Queue --> Events["任务与项目事件"]
   Knowledge["知识地图"] -.说明.-> API
   Knowledge -.定位.-> Queue
 ```
 
-当前运行时是 TypeScript/Express/Electron 后端加 Vue 前端，数据库为本地 SQLite。外部参考项目不参与运行。Toonflow-web `9c4cb0e` 已以 subtree 纳入 `frontend/`；`data/web` 仍只是发布产物，不能手工维护。
+当前运行时是 TypeScript/Express/Electron 后端加 Vue 前端，数据库为本地 SQLite。外部参考项目不参与运行。规范化时间线是渲染器无关的事实源，视频、原生声音和后加音轨不会互相覆盖；FFmpeg 和后续 Remotion 必须消费同一 schema。Toonflow-web `9c4cb0e` 已以 subtree 纳入 `frontend/`；`data/web` 仍只是发布产物，不能手工维护。

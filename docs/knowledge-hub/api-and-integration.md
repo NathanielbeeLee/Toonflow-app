@@ -16,5 +16,7 @@
 | `POST /api/voiceStudio/utterances/generate` / `batchGenerate` | 单句或批量进入持久 TTS 队列 |
 | `POST /api/voiceStudio/cues/list` / `update` / `rebuild` | 查询、编辑、锁定或重建字幕 cue |
 | `POST /api/voiceStudio/cues/export` | 输出 SRT 或 WebVTT 文本 |
+| `POST /api/composition/timeline/build` | 从选片、逐句音频和字幕构建或复用规范化时间线版本 |
+| `POST /api/composition/timeline/latest` / `list` | 获取最新时间线或版本历史 |
 
-正式版本化 OpenAPI、API Key、webhook 尚未实现。当前接口不应直接暴露到公网。配音接口已有后端能力，但前端页面和真实 TTS 供应商仍待接通。
+正式版本化 OpenAPI、API Key、webhook 尚未实现。当前接口不应直接暴露到公网。时间线接口只构建结构化数据，不会立即渲染或调用付费 API。

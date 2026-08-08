@@ -10,5 +10,6 @@
 | 持久批量图片任务 | 批量资产图和分镜图逐项持久化、去重、限流，并按付费边界恢复 | feature.durable-image-tasks |
 | 供应商与模型限流 | 按供应商、模型和任务通道执行最大并发、RPM 与冷却时间规则 | feature.provider-limits |
 | 角色音色、逐句台词与字幕 cue | 把剧本确定性拆成可编辑、可锁定、可单句生成的台词，并保存独立字幕时间片 | feature.voice-utterance-studio |
+| 规范化多轨时间线 | 把选片、原生音频、逐句配音和字幕确定性构建成渲染器无关、可版本化的多轨时间线 | feature.normalized-timeline |
 | 持久任务中心 | 自动刷新并展示持久任务状态、远端 job ID、重试次数和安全人工介入操作 | feature.durable-task-center |
 | 供应商远端任务恢复 | 保存视频供应商 job ID，重启或轮询失败后继续查询原任务 | feature.provider-job-resume |

@@ -15,6 +15,9 @@
 | POST /api/voiceStudio/utterances/batchGenerate | 配音与字幕 API | api.voice-studio |
 | POST /api/voiceStudio/cues/rebuild | 配音与字幕 API | api.voice-studio |
 | POST /api/voiceStudio/cues/export | 配音与字幕 API | api.voice-studio |
+| POST /api/composition/timeline/build | 规范化多轨时间线 | feature.normalized-timeline |
+| POST /api/composition/timeline/latest | 规范化多轨时间线 | feature.normalized-timeline |
+| POST /api/composition/timeline/list | 规范化多轨时间线 | feature.normalized-timeline |
 | POST /api/generationTasks/list | 持久任务中心 | feature.durable-task-center |
 | POST /api/generationTasks/cancel | 持久任务中心 | feature.durable-task-center |
 | POST /api/generationTasks/retry | 持久任务中心 | feature.durable-task-center |
