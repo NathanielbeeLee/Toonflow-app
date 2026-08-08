@@ -11,7 +11,7 @@
       "relations": [
         { "type": "uses", "target": "feature.agent-directing" },
         { "type": "uses", "target": "feature.asset-consistency" },
-        { "type": "uses", "target": "feature.durable-video-batch" }
+        { "type": "uses", "target": "feature.durable-video-tasks" }
       ],
       "introduced_in": "upstream/v1.1.8",
       "last_verified_commit": "toon-custom/d5eca2c"
@@ -40,13 +40,13 @@
       "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
-      "id": "feature.durable-video-batch",
+      "id": "feature.durable-video-tasks",
       "type": "feature",
-      "name": "持久批量视频任务",
-      "summary": "批量视频生成持久化、有限并发、去重、取消，并对支持的供应商恢复远端轮询",
-      "user_entry": { "page": "制作工作台", "action": "批量生成视频" },
-      "source_paths": ["src/services/task-engine", "src/routes/production/workbench/batchGenerateVideo.ts"],
-      "api": ["POST /api/production/workbench/batchGenerateVideo", "POST /api/generationTasks/list"],
+      "name": "持久视频任务",
+      "summary": "单条/批量视频生成持久化、有限并发、去重、取消，并对支持的供应商恢复远端轮询",
+      "user_entry": { "page": "制作工作台", "action": "单条或批量生成视频" },
+      "source_paths": ["src/services/task-engine", "src/routes/production/workbench/generateVideo.ts", "src/routes/production/workbench/batchGenerateVideo.ts"],
+      "api": ["POST /api/production/workbench/generateVideo", "POST /api/production/workbench/batchGenerateVideo", "POST /api/generationTasks/list"],
       "tables": ["generation_tasks", "task_dependencies", "project_events"],
       "config": ["TOONFLOW_TASK_CONCURRENCY"],
       "relations": [
@@ -58,7 +58,7 @@
       ],
       "troubleshooting": ["docs/knowledge-hub/troubleshooting.md#任务显示需人工确认"],
       "introduced_in": "toon-custom/first-absorption-2026-08-08",
-      "last_verified_commit": "toon-custom/d5eca2c"
+      "last_verified_commit": "toon-custom/pending-single-video-queue"
     },
     {
       "id": "api.generation-tasks",
