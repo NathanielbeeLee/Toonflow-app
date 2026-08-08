@@ -370,6 +370,33 @@ const migrations: Migration[] = [
       }
     },
   },
+  {
+    id: "20260808_011_publish_packages",
+    up: async (db) => {
+      if (!(await db.schema.hasTable("publish_packages"))) {
+        await db.schema.createTable("publish_packages", (table) => {
+          table.text("id").primary();
+          table.integer("project_id").notNullable();
+          table.integer("script_id").notNullable();
+          table.text("composition_job_id").notNullable();
+          table.text("output_checksum").notNullable();
+          table.text("qa_report_id").notNullable();
+          table.text("review_id").notNullable();
+          table.text("status").notNullable().defaultTo("queued");
+          table.text("package_path");
+          table.text("package_checksum");
+          table.integer("size_bytes");
+          table.text("manifest");
+          table.text("task_id");
+          table.text("error_message");
+          table.integer("created_at").notNullable();
+          table.integer("updated_at").notNullable();
+          table.index(["project_id", "script_id", "created_at"], "publish_packages_script_idx");
+          table.unique(["composition_job_id", "output_checksum", "qa_report_id", "review_id"], "publish_packages_gate_unique");
+        });
+      }
+    },
+  },
 ];
 
 export default async function runMigrations(db: Knex): Promise<void> {

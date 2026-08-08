@@ -13,6 +13,7 @@ import {
 } from "@/services/composition/audioClips";
 import { enqueueCompositionQa, getLatestQaReport } from "@/services/composition/qaJobs";
 import { getLatestCompositionReview, recordCompositionReview, reviewStatuses } from "@/services/composition/reviews";
+import { enqueuePublishPackage, getLatestPublishPackage } from "@/services/composition/publish";
 
 const router = express.Router();
 const filters = {
@@ -43,6 +44,22 @@ router.post("/audio/list", validateFields(filters), async (req, res) => {
 router.post("/qa/latest", validateFields(filters), async (req, res) => {
   res.status(200).send(success(await getLatestQaReport(req.body)));
 });
+
+router.post("/publish/latest", validateFields(filters), async (req, res) => {
+  res.status(200).send(success(await getLatestPublishPackage(req.body)));
+});
+
+router.post(
+  "/publish/create",
+  validateFields({ ...filters, compositionJobId: z.string().uuid(), requestId: z.string().trim().min(1) }),
+  async (req, res) => {
+    try {
+      res.status(200).send(success(await enqueuePublishPackage(req.body)));
+    } catch (cause) {
+      res.status(400).send(error(cause instanceof Error ? cause.message : String(cause)));
+    }
+  },
+);
 
 router.post(
   "/review/latest",

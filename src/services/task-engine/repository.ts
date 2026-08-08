@@ -439,6 +439,28 @@ class GenerationTaskRepository {
         });
       }
     }
+    if (task.type === "composition.publish") {
+      const payload = task.payload as { packageId?: string } | null;
+      if (payload?.packageId) {
+        const statusMap: Partial<Record<GenerationTaskStatus, string>> = {
+          queued: "queued",
+          claimed: "running",
+          polling: "running",
+          finalizing: "running",
+          retry_wait: "queued",
+          cancelling: "running",
+          cancelled: "cancelled",
+          succeeded: "succeeded",
+          failed: "failed",
+          manual_review: "failed",
+        };
+        await db("publish_packages").where("id", payload.packageId).update({
+          status: statusMap[task.status] ?? task.status,
+          error_message: task.errorMessage,
+          updated_at: Date.now(),
+        });
+      }
+    }
     if (!task.legacyTaskId) return;
     const stateMap: Partial<Record<GenerationTaskStatus, string>> = {
       queued: "排队中",

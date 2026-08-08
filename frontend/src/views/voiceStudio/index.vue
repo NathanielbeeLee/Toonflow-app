@@ -202,6 +202,18 @@
                   <t-button size="small" theme="danger" variant="outline" @click="openReviewDialog('rejected')">退回修改</t-button>
                 </t-space>
               </div>
+              <div v-if="compositionJob.status === 'succeeded'" class="reviewBar">
+                <div>
+                  <strong>发布交付包</strong>
+                  <span v-if="publishPackage">{{ publishStatusLabel(publishPackage.status) }}<template v-if="publishPackage.sizeBytes"> · {{ formatFileSize(publishPackage.sizeBytes) }}</template></span>
+                  <span v-else>高清成片通过 QA 并审核批准后，可打包 MP4、字幕和质量证据。</span>
+                  <t-alert v-if="publishPackage?.errorMessage" theme="error" :message="publishPackage.errorMessage" />
+                </div>
+                <t-space>
+                  <a v-if="publishPackage?.status === 'succeeded' && publishPackage.packageUrl" :href="publishPackage.packageUrl" download>下载 ZIP</a>
+                  <t-button size="small" theme="primary" :loading="creatingPublishPackage || publishPackageActive" :disabled="!canCreatePublishPackage" @click="createPublishPackage">创建发布包</t-button>
+                </t-space>
+              </div>
             </div>
           </template>
         </t-tab-panel>
@@ -454,6 +466,17 @@ interface CompositionReview {
   createdAt: number;
 }
 
+interface PublishPackage {
+  id: string;
+  compositionJobId: string;
+  status: string;
+  packageUrl: string | null;
+  packageChecksum: string | null;
+  sizeBytes: number | null;
+  taskId: string | null;
+  errorMessage: string | null;
+}
+
 const { project } = storeToRefs(projectStore());
 const projectId = computed(() => (project.value?.id ? Number(project.value.id) : 0));
 const activeTab = ref("utterances");
@@ -466,6 +489,7 @@ const buildingTimeline = ref(false);
 const renderingPreview = ref(false);
 const savingAudioClip = ref(false);
 const runningQa = ref(false);
+const creatingPublishPackage = ref(false);
 const selectedScriptId = ref<number>();
 const includeStoryboardDescriptions = ref(false);
 const scriptOptions = ref<Array<{ label: string; value: number }>>([]);
@@ -480,6 +504,7 @@ const compositionJob = ref<CompositionJob | null>(null);
 const audioClips = ref<ProjectAudioClip[]>([]);
 const qaReport = ref<QaReport | null>(null);
 const compositionReview = ref<CompositionReview | null>(null);
+const publishPackage = ref<PublishPackage | null>(null);
 const selectedUtteranceIds = ref<Array<string | number>>([]);
 const castDialogVisible = ref(false);
 const utteranceDialogVisible = ref(false);
@@ -589,6 +614,15 @@ const timelineTrackRows = computed(() => {
 });
 const compositionJobActive = computed(() => Boolean(compositionJob.value && ["queued", "rendering"].includes(compositionJob.value.status)));
 const qaReportActive = computed(() => Boolean(qaReport.value && ["queued", "running"].includes(qaReport.value.status)));
+const publishPackageActive = computed(() => Boolean(publishPackage.value && ["queued", "running"].includes(publishPackage.value.status)));
+const canCreatePublishPackage = computed(() => Boolean(
+  compositionJob.value?.status === "succeeded"
+  && compositionJob.value.preset === "final-high"
+  && qaReport.value?.status === "succeeded"
+  && qaReport.value.result?.summary.status !== "failed"
+  && compositionReview.value?.status === "approved"
+  && !publishPackageActive.value,
+));
 const canRenderPreview = computed(() => {
   if (!timeline.value || compositionJobActive.value) return false;
   return timeline.value.payload.videoTracks.some((track) => track.clips.length > 0);
@@ -670,11 +704,12 @@ async function loadWorkspace(showLoading = true) {
     audioClips.value = [];
     qaReport.value = null;
     compositionReview.value = null;
+    publishPackage.value = null;
     return;
   }
   if (showLoading) loading.value = true;
   try {
-    const [{ data: utteranceData }, { data: cueData }, { data: timelineData }, { data: jobData }, { data: audioClipData }, { data: qaData }, { data: reviewData }] = await Promise.all([
+    const [{ data: utteranceData }, { data: cueData }, { data: timelineData }, { data: jobData }, { data: audioClipData }, { data: qaData }, { data: reviewData }, { data: publishData }] = await Promise.all([
       axios.post("/voiceStudio/utterances/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/voiceStudio/cues/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/composition/timeline/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
@@ -682,6 +717,7 @@ async function loadWorkspace(showLoading = true) {
       axios.post("/composition/timeline/audio/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/composition/timeline/qa/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/composition/timeline/review/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
+      axios.post("/composition/timeline/publish/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
     ]);
     utterances.value = utteranceData;
     cues.value = cueData;
@@ -690,6 +726,7 @@ async function loadWorkspace(showLoading = true) {
     audioClips.value = audioClipData;
     qaReport.value = qaData?.compositionJobId === jobData?.id ? qaData : null;
     compositionReview.value = reviewData?.compositionJobId === jobData?.id ? reviewData : null;
+    publishPackage.value = publishData?.compositionJobId === jobData?.id ? publishData : null;
   } catch (error) {
     showError(error, "获取配音工作区失败");
   } finally {
@@ -729,6 +766,7 @@ async function generatePreview(preset: CompositionJob["preset"]) {
     compositionJob.value = data.job;
     if (qaReport.value?.compositionJobId !== data.job?.id) qaReport.value = null;
     if (compositionReview.value?.compositionJobId !== data.job?.id) compositionReview.value = null;
+    if (publishPackage.value?.compositionJobId !== data.job?.id) publishPackage.value = null;
     const label = preset === "final-high" ? "高清成片" : "低清预览";
     window.$message.success(data.cached ? `已复用相同时间线的${label}` : data.deduped ? `${label}已经在队列中` : `${label}已进入本地渲染队列`);
   } catch (error) {
@@ -809,6 +847,34 @@ async function saveCompositionReview() {
     showError(error, "保存审核记录失败");
     return false;
   }
+}
+
+async function createPublishPackage() {
+  if (!selectedScriptId.value || !compositionJob.value) return;
+  creatingPublishPackage.value = true;
+  try {
+    const { data } = await axios.post("/composition/timeline/publish/create", {
+      projectId: projectId.value,
+      scriptId: selectedScriptId.value,
+      compositionJobId: compositionJob.value.id,
+      requestId: crypto.randomUUID(),
+    });
+    publishPackage.value = data.package;
+    window.$message.success(data.cached ? "已复用当前审核版本的发布包" : data.deduped ? "发布包已在队列中" : "发布包已进入本地持久队列");
+  } catch (error) {
+    showError(error, "创建发布包失败");
+  } finally {
+    creatingPublishPackage.value = false;
+  }
+}
+
+function publishStatusLabel(status: string) {
+  return ({ queued: "排队中", running: "打包中", succeeded: "已完成", failed: "失败", cancelled: "已取消" } as Record<string, string>)[status] || status;
+}
+
+function formatFileSize(bytes: number) {
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
 function audioKindLabel(kind: ProjectAudioClip["kind"]) {

@@ -660,6 +660,7 @@ function taskTypeLabel(type: string) {
     "tts.utterance.generate": $t("workbench.task.durable.utteranceTtsGenerate"),
     "composition.render": "本地视频合成",
     "composition.qa": "媒体 QA",
+    "composition.publish": "发布交付包",
   };
   return labels[type] || type;
 }

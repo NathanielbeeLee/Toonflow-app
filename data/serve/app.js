@@ -15627,11 +15627,11 @@ var require_mime_types = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path35) {
-      if (!path35 || typeof path35 !== "string") {
+    function lookup(path36) {
+      if (!path36 || typeof path36 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path35).toLowerCase().slice(1);
+      var extension2 = extname("x." + path36).toLowerCase().slice(1);
       if (!extension2) {
         return false;
       }
@@ -19105,13 +19105,13 @@ var require_view = __commonJS({
   "node_modules/express/lib/view.js"(exports2, module2) {
     "use strict";
     var debug = require_src()("express:view");
-    var path35 = require("node:path");
-    var fs39 = require("node:fs");
-    var dirname2 = path35.dirname;
-    var basename = path35.basename;
-    var extname = path35.extname;
-    var join2 = path35.join;
-    var resolve3 = path35.resolve;
+    var path36 = require("node:path");
+    var fs40 = require("node:fs");
+    var dirname2 = path36.dirname;
+    var basename = path36.basename;
+    var extname = path36.extname;
+    var join2 = path36.join;
+    var resolve3 = path36.resolve;
     module2.exports = View;
     function View(name28, options) {
       var opts = options || {};
@@ -19140,17 +19140,17 @@ var require_view = __commonJS({
       this.path = this.lookup(fileName);
     }
     View.prototype.lookup = function lookup(name28) {
-      var path36;
+      var path37;
       var roots = [].concat(this.root);
       debug('lookup "%s"', name28);
-      for (var i = 0; i < roots.length && !path36; i++) {
+      for (var i = 0; i < roots.length && !path37; i++) {
         var root2 = roots[i];
         var loc = resolve3(root2, name28);
         var dir = dirname2(loc);
         var file3 = basename(loc);
-        path36 = this.resolve(dir, file3);
+        path37 = this.resolve(dir, file3);
       }
-      return path36;
+      return path37;
     };
     View.prototype.render = function render(options, callback) {
       var sync = true;
@@ -19172,21 +19172,21 @@ var require_view = __commonJS({
     };
     View.prototype.resolve = function resolve4(dir, file3) {
       var ext = this.ext;
-      var path36 = join2(dir, file3);
-      var stat = tryStat(path36);
+      var path37 = join2(dir, file3);
+      var stat = tryStat(path37);
       if (stat && stat.isFile()) {
-        return path36;
+        return path37;
       }
-      path36 = join2(dir, basename(file3, ext), "index" + ext);
-      stat = tryStat(path36);
+      path37 = join2(dir, basename(file3, ext), "index" + ext);
+      stat = tryStat(path37);
       if (stat && stat.isFile()) {
-        return path36;
+        return path37;
       }
     };
-    function tryStat(path36) {
-      debug('stat "%s"', path36);
+    function tryStat(path37) {
+      debug('stat "%s"', path37);
       try {
-        return fs39.statSync(path36);
+        return fs40.statSync(path37);
       } catch (e) {
         return void 0;
       }
@@ -19199,14 +19199,14 @@ var require_etag = __commonJS({
   "node_modules/etag/index.js"(exports2, module2) {
     "use strict";
     module2.exports = etag;
-    var crypto11 = require("crypto");
+    var crypto12 = require("crypto");
     var Stats = require("fs").Stats;
     var toString4 = Object.prototype.toString;
     function entitytag(entity) {
       if (entity.length === 0) {
         return '"0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"';
       }
-      var hash3 = crypto11.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
+      var hash3 = crypto12.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
       var len = typeof entity === "string" ? Buffer.byteLength(entity, "utf8") : entity.length;
       return '"' + len.toString(16) + "-" + hash3 + '"';
     }
@@ -20376,15 +20376,15 @@ var require_dist = __commonJS({
           if (token.type === endType)
             break;
           if (token.type === "char" || token.type === "escape") {
-            let path35 = token.value;
+            let path36 = token.value;
             let cur = tokens[pos];
             while (cur.type === "char" || cur.type === "escape") {
-              path35 += cur.value;
+              path36 += cur.value;
               cur = tokens[++pos];
             }
             output.push({
               type: "text",
-              value: encodePath(path35)
+              value: encodePath(path36)
             });
             continue;
           }
@@ -20408,16 +20408,16 @@ var require_dist = __commonJS({
       }
       return new TokenData(consumeUntil("end"), str);
     }
-    function compile(path35, options = {}) {
+    function compile(path36, options = {}) {
       const { encode: encode6 = encodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
-      const data = typeof path35 === "object" ? path35 : parse4(path35, options);
+      const data = typeof path36 === "object" ? path36 : parse4(path36, options);
       const fn = tokensToFunction(data.tokens, delimiter, encode6);
-      return function path36(params = {}) {
-        const [path37, ...missing] = fn(params);
+      return function path37(params = {}) {
+        const [path38, ...missing] = fn(params);
         if (missing.length) {
           throw new TypeError(`Missing parameters: ${missing.join(", ")}`);
         }
-        return path37;
+        return path38;
       };
     }
     function tokensToFunction(tokens, delimiter, encode6) {
@@ -20473,9 +20473,9 @@ var require_dist = __commonJS({
         return [encodeValue(value)];
       };
     }
-    function match(path35, options = {}) {
+    function match(path36, options = {}) {
       const { decode: decode4 = decodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
-      const { regexp, keys: keys2 } = pathToRegexp(path35, options);
+      const { regexp, keys: keys2 } = pathToRegexp(path36, options);
       const decoders = keys2.map((key) => {
         if (decode4 === false)
           return NOOP_VALUE;
@@ -20487,7 +20487,7 @@ var require_dist = __commonJS({
         const m = regexp.exec(input);
         if (!m)
           return false;
-        const path36 = m[0];
+        const path37 = m[0];
         const params = /* @__PURE__ */ Object.create(null);
         for (let i = 1; i < m.length; i++) {
           if (m[i] === void 0)
@@ -20496,22 +20496,22 @@ var require_dist = __commonJS({
           const decoder = decoders[i - 1];
           params[key.name] = decoder(m[i]);
         }
-        return { path: path36, params };
+        return { path: path37, params };
       };
     }
-    function pathToRegexp(path35, options = {}) {
+    function pathToRegexp(path36, options = {}) {
       const { delimiter = DEFAULT_DELIMITER, end = true, sensitive = false, trailing = true } = options;
       const keys2 = [];
       const sources = [];
-      const paths = [path35];
+      const paths = [path36];
       let combinations = 0;
       while (paths.length) {
-        const path36 = paths.shift();
-        if (Array.isArray(path36)) {
-          paths.push(...path36);
+        const path37 = paths.shift();
+        if (Array.isArray(path37)) {
+          paths.push(...path37);
           continue;
         }
-        const data = typeof path36 === "object" ? path36 : parse4(path36, options);
+        const data = typeof path37 === "object" ? path37 : parse4(path37, options);
         flatten(data.tokens, 0, [], (tokens) => {
           if (combinations++ >= 256) {
             throw new PathError("Too many path combinations", data.originalPath);
@@ -20656,18 +20656,18 @@ var require_layer = __commonJS({
     var TRAILING_SLASH_REGEXP = /\/+$/;
     var MATCHING_GROUP_REGEXP = /\((?:\?<(.*?)>)?(?!\?)/g;
     module2.exports = Layer;
-    function Layer(path35, options, fn) {
+    function Layer(path36, options, fn) {
       if (!(this instanceof Layer)) {
-        return new Layer(path35, options, fn);
+        return new Layer(path36, options, fn);
       }
-      debug("new %o", path35);
+      debug("new %o", path36);
       const opts = options || {};
       this.handle = fn;
       this.keys = [];
       this.name = fn.name || "<anonymous>";
       this.params = void 0;
       this.path = void 0;
-      this.slash = path35 === "/" && opts.end === false;
+      this.slash = path36 === "/" && opts.end === false;
       function matcher(_path) {
         if (_path instanceof RegExp) {
           const keys2 = [];
@@ -20706,7 +20706,7 @@ var require_layer = __commonJS({
           decode: decodeParam
         });
       }
-      this.matchers = Array.isArray(path35) ? path35.map(matcher) : [matcher(path35)];
+      this.matchers = Array.isArray(path36) ? path36.map(matcher) : [matcher(path36)];
     }
     Layer.prototype.handleError = function handleError(error73, req, res, next) {
       const fn = this.handle;
@@ -20746,9 +20746,9 @@ var require_layer = __commonJS({
         next(err);
       }
     };
-    Layer.prototype.match = function match(path35) {
+    Layer.prototype.match = function match(path36) {
       let match2;
-      if (path35 != null) {
+      if (path36 != null) {
         if (this.slash) {
           this.params = {};
           this.path = "";
@@ -20756,7 +20756,7 @@ var require_layer = __commonJS({
         }
         let i = 0;
         while (!match2 && i < this.matchers.length) {
-          match2 = this.matchers[i](path35);
+          match2 = this.matchers[i](path36);
           i++;
         }
       }
@@ -20784,13 +20784,13 @@ var require_layer = __commonJS({
         throw err;
       }
     }
-    function loosen(path35) {
-      if (path35 instanceof RegExp || path35 === "/") {
-        return path35;
+    function loosen(path36) {
+      if (path36 instanceof RegExp || path36 === "/") {
+        return path36;
       }
-      return Array.isArray(path35) ? path35.map(function(p3) {
+      return Array.isArray(path36) ? path36.map(function(p3) {
         return loosen(p3);
-      }) : String(path35).replace(TRAILING_SLASH_REGEXP, "");
+      }) : String(path36).replace(TRAILING_SLASH_REGEXP, "");
     }
   }
 });
@@ -20806,9 +20806,9 @@ var require_route = __commonJS({
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
     module2.exports = Route;
-    function Route(path35) {
-      debug("new %o", path35);
-      this.path = path35;
+    function Route(path36) {
+      debug("new %o", path36);
+      this.path = path36;
       this.stack = [];
       this.methods = /* @__PURE__ */ Object.create(null);
     }
@@ -21016,8 +21016,8 @@ var require_router = __commonJS({
         if (++sync > 100) {
           return setImmediate(next, err);
         }
-        const path35 = getPathname(req);
-        if (path35 == null) {
+        const path36 = getPathname(req);
+        if (path36 == null) {
           return done(layerError);
         }
         let layer;
@@ -21025,7 +21025,7 @@ var require_router = __commonJS({
         let route;
         while (match !== true && idx < stack.length) {
           layer = stack[idx++];
-          match = matchLayer(layer, path35);
+          match = matchLayer(layer, path36);
           route = layer.route;
           if (typeof match !== "boolean") {
             layerError = layerError || match;
@@ -21063,18 +21063,18 @@ var require_router = __commonJS({
           } else if (route) {
             layer.handleRequest(req, res, next);
           } else {
-            trimPrefix(layer, layerError, layerPath, path35);
+            trimPrefix(layer, layerError, layerPath, path36);
           }
           sync = 0;
         });
       }
-      function trimPrefix(layer, layerError, layerPath, path35) {
+      function trimPrefix(layer, layerError, layerPath, path36) {
         if (layerPath.length !== 0) {
-          if (layerPath !== path35.substring(0, layerPath.length)) {
+          if (layerPath !== path36.substring(0, layerPath.length)) {
             next(layerError);
             return;
           }
-          const c = path35[layerPath.length];
+          const c = path36[layerPath.length];
           if (c && c !== "/") {
             next(layerError);
             return;
@@ -21098,7 +21098,7 @@ var require_router = __commonJS({
     };
     Router.prototype.use = function use(handler) {
       let offset = 0;
-      let path35 = "/";
+      let path36 = "/";
       if (typeof handler !== "function") {
         let arg = handler;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -21106,7 +21106,7 @@ var require_router = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path35 = handler;
+          path36 = handler;
         }
       }
       const callbacks = flatten.call(slice.call(arguments, offset), Infinity);
@@ -21118,8 +21118,8 @@ var require_router = __commonJS({
         if (typeof fn !== "function") {
           throw new TypeError("argument handler must be a function");
         }
-        debug("use %o %s", path35, fn.name || "<anonymous>");
-        const layer = new Layer(path35, {
+        debug("use %o %s", path36, fn.name || "<anonymous>");
+        const layer = new Layer(path36, {
           sensitive: this.caseSensitive,
           strict: false,
           end: false
@@ -21129,9 +21129,9 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router.prototype.route = function route(path35) {
-      const route2 = new Route(path35);
-      const layer = new Layer(path35, {
+    Router.prototype.route = function route(path36) {
+      const route2 = new Route(path36);
+      const layer = new Layer(path36, {
         sensitive: this.caseSensitive,
         strict: this.strict,
         end: true
@@ -21144,8 +21144,8 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router.prototype[method] = function(path35) {
-        const route = this.route(path35);
+      Router.prototype[method] = function(path36) {
+        const route = this.route(path36);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
@@ -21174,9 +21174,9 @@ var require_router = __commonJS({
       const fqdnIndex = url4.substring(0, pathLength).indexOf("://");
       return fqdnIndex !== -1 ? url4.substring(0, url4.indexOf("/", 3 + fqdnIndex)) : void 0;
     }
-    function matchLayer(layer, path35) {
+    function matchLayer(layer, path36) {
       try {
-        return layer.match(path35);
+        return layer.match(path36);
       } catch (err) {
         return err;
       }
@@ -21404,7 +21404,7 @@ var require_application = __commonJS({
     };
     app2.use = function use(fn) {
       var offset = 0;
-      var path35 = "/";
+      var path36 = "/";
       if (typeof fn !== "function") {
         var arg = fn;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -21412,7 +21412,7 @@ var require_application = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path35 = fn;
+          path36 = fn;
         }
       }
       var fns = flatten.call(slice.call(arguments, offset), Infinity);
@@ -21422,12 +21422,12 @@ var require_application = __commonJS({
       var router181 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router181.use(path35, fn2);
+          return router181.use(path36, fn2);
         }
-        debug(".use app under %s", path35);
-        fn2.mountpath = path35;
+        debug(".use app under %s", path36);
+        fn2.mountpath = path36;
         fn2.parent = this;
-        router181.use(path35, function mounted_app(req, res, next) {
+        router181.use(path36, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -21439,8 +21439,8 @@ var require_application = __commonJS({
       }, this);
       return this;
     };
-    app2.route = function route(path35) {
-      return this.router.route(path35);
+    app2.route = function route(path36) {
+      return this.router.route(path36);
     };
     app2.engine = function engine(ext, fn) {
       if (typeof fn !== "function") {
@@ -21483,7 +21483,7 @@ var require_application = __commonJS({
       }
       return this;
     };
-    app2.path = function path35() {
+    app2.path = function path36() {
       return this.parent ? this.parent.path() + this.mountpath : "";
     };
     app2.enabled = function enabled(setting) {
@@ -21499,17 +21499,17 @@ var require_application = __commonJS({
       return this.set(setting, false);
     };
     methods.forEach(function(method) {
-      app2[method] = function(path35) {
+      app2[method] = function(path36) {
         if (method === "get" && arguments.length === 1) {
-          return this.set(path35);
+          return this.set(path36);
         }
-        var route = this.route(path35);
+        var route = this.route(path36);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
     });
-    app2.all = function all3(path35) {
-      var route = this.route(path35);
+    app2.all = function all3(path36) {
+      var route = this.route(path36);
       var args = slice.call(arguments, 1);
       for (var i = 0; i < methods.length; i++) {
         route[methods[i]].apply(route, args);
@@ -22419,7 +22419,7 @@ var require_request = __commonJS({
       var subdomains2 = !isIP(hostname4) ? hostname4.split(".").reverse() : [hostname4];
       return subdomains2.slice(offset);
     });
-    defineGetter(req, "path", function path35() {
+    defineGetter(req, "path", function path36() {
       return parse4(this).pathname;
     });
     defineGetter(req, "host", function host() {
@@ -22636,17 +22636,17 @@ var require_content_disposition = __commonJS({
 var require_cookie_signature = __commonJS({
   "node_modules/cookie-signature/index.js"(exports2) {
     "use strict";
-    var crypto11 = require("crypto");
+    var crypto12 = require("crypto");
     exports2.sign = function(val, secret) {
       if ("string" != typeof val) throw new TypeError("Cookie value must be provided as a string.");
       if (null == secret) throw new TypeError("Secret key must be provided.");
-      return val + "." + crypto11.createHmac("sha256", secret).update(val).digest("base64").replace(/\=+$/, "");
+      return val + "." + crypto12.createHmac("sha256", secret).update(val).digest("base64").replace(/\=+$/, "");
     };
     exports2.unsign = function(input, secret) {
       if ("string" != typeof input) throw new TypeError("Signed cookie string must be provided.");
       if (null == secret) throw new TypeError("Secret key must be provided.");
       var tentativeValue = input.slice(0, input.lastIndexOf(".")), expectedInput = exports2.sign(tentativeValue, secret), expectedBuffer = Buffer.from(expectedInput), inputBuffer = Buffer.from(input);
-      return expectedBuffer.length === inputBuffer.length && crypto11.timingSafeEqual(expectedBuffer, inputBuffer) ? tentativeValue : false;
+      return expectedBuffer.length === inputBuffer.length && crypto12.timingSafeEqual(expectedBuffer, inputBuffer) ? tentativeValue : false;
     };
   }
 });
@@ -22827,32 +22827,32 @@ var require_send = __commonJS({
     var escapeHtml = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
-    var fs39 = require("fs");
+    var fs40 = require("fs");
     var mime = require_mime_types();
     var ms = require_ms();
     var onFinished = require_on_finished();
     var parseRange = require_range_parser();
-    var path35 = require("path");
+    var path36 = require("path");
     var statuses = require_statuses();
     var Stream = require("stream");
     var util4 = require("util");
-    var extname = path35.extname;
-    var join2 = path35.join;
-    var normalize = path35.normalize;
-    var resolve3 = path35.resolve;
-    var sep = path35.sep;
+    var extname = path36.extname;
+    var join2 = path36.join;
+    var normalize = path36.normalize;
+    var resolve3 = path36.resolve;
+    var sep = path36.sep;
     var BYTES_RANGE_REGEXP = /^ *bytes=/;
     var MAX_MAXAGE = 60 * 60 * 24 * 365 * 1e3;
     var UP_PATH_REGEXP = /(?:^|[\\/])\.\.(?:[\\/]|$)/;
     module2.exports = send;
-    function send(req, path36, options) {
-      return new SendStream(req, path36, options);
+    function send(req, path37, options) {
+      return new SendStream(req, path37, options);
     }
-    function SendStream(req, path36, options) {
+    function SendStream(req, path37, options) {
       Stream.call(this);
       var opts = options || {};
       this.options = opts;
-      this.path = path36;
+      this.path = path37;
       this.req = req;
       this._acceptRanges = opts.acceptRanges !== void 0 ? Boolean(opts.acceptRanges) : true;
       this._cacheControl = opts.cacheControl !== void 0 ? Boolean(opts.cacheControl) : true;
@@ -22966,10 +22966,10 @@ var require_send = __commonJS({
       var lastModified = this.res.getHeader("Last-Modified");
       return parseHttpDate(lastModified) <= parseHttpDate(ifRange);
     };
-    SendStream.prototype.redirect = function redirect(path36) {
+    SendStream.prototype.redirect = function redirect(path37) {
       var res = this.res;
       if (hasListeners(this, "directory")) {
-        this.emit("directory", res, path36);
+        this.emit("directory", res, path37);
         return;
       }
       if (this.hasTrailingSlash()) {
@@ -22989,38 +22989,38 @@ var require_send = __commonJS({
     SendStream.prototype.pipe = function pipe3(res) {
       var root2 = this._root;
       this.res = res;
-      var path36 = decode4(this.path);
-      if (path36 === -1) {
+      var path37 = decode4(this.path);
+      if (path37 === -1) {
         this.error(400);
         return res;
       }
-      if (~path36.indexOf("\0")) {
+      if (~path37.indexOf("\0")) {
         this.error(400);
         return res;
       }
       var parts;
       if (root2 !== null) {
-        if (path36) {
-          path36 = normalize("." + sep + path36);
+        if (path37) {
+          path37 = normalize("." + sep + path37);
         }
-        if (UP_PATH_REGEXP.test(path36)) {
-          debug('malicious path "%s"', path36);
+        if (UP_PATH_REGEXP.test(path37)) {
+          debug('malicious path "%s"', path37);
           this.error(403);
           return res;
         }
-        parts = path36.split(sep);
-        path36 = normalize(join2(root2, path36));
+        parts = path37.split(sep);
+        path37 = normalize(join2(root2, path37));
       } else {
-        if (UP_PATH_REGEXP.test(path36)) {
-          debug('malicious path "%s"', path36);
+        if (UP_PATH_REGEXP.test(path37)) {
+          debug('malicious path "%s"', path37);
           this.error(403);
           return res;
         }
-        parts = normalize(path36).split(sep);
-        path36 = resolve3(path36);
+        parts = normalize(path37).split(sep);
+        path37 = resolve3(path37);
       }
       if (containsDotFile(parts)) {
-        debug('%s dotfile "%s"', this._dotfiles, path36);
+        debug('%s dotfile "%s"', this._dotfiles, path37);
         switch (this._dotfiles) {
           case "allow":
             break;
@@ -23034,13 +23034,13 @@ var require_send = __commonJS({
         }
       }
       if (this._index.length && this.hasTrailingSlash()) {
-        this.sendIndex(path36);
+        this.sendIndex(path37);
         return res;
       }
-      this.sendFile(path36);
+      this.sendFile(path37);
       return res;
     };
-    SendStream.prototype.send = function send2(path36, stat) {
+    SendStream.prototype.send = function send2(path37, stat) {
       var len = stat.size;
       var options = this.options;
       var opts = {};
@@ -23052,9 +23052,9 @@ var require_send = __commonJS({
         this.headersAlreadySent();
         return;
       }
-      debug('pipe "%s"', path36);
-      this.setHeader(path36, stat);
-      this.type(path36);
+      debug('pipe "%s"', path37);
+      this.setHeader(path37, stat);
+      this.type(path37);
       if (this.isConditionalGET()) {
         if (this.isPreconditionFailure()) {
           this.error(412);
@@ -23103,30 +23103,30 @@ var require_send = __commonJS({
         res.end();
         return;
       }
-      this.stream(path36, opts);
+      this.stream(path37, opts);
     };
-    SendStream.prototype.sendFile = function sendFile(path36) {
+    SendStream.prototype.sendFile = function sendFile(path37) {
       var i = 0;
       var self2 = this;
-      debug('stat "%s"', path36);
-      fs39.stat(path36, function onstat(err, stat) {
-        var pathEndsWithSep = path36[path36.length - 1] === sep;
-        if (err && err.code === "ENOENT" && !extname(path36) && !pathEndsWithSep) {
+      debug('stat "%s"', path37);
+      fs40.stat(path37, function onstat(err, stat) {
+        var pathEndsWithSep = path37[path37.length - 1] === sep;
+        if (err && err.code === "ENOENT" && !extname(path37) && !pathEndsWithSep) {
           return next(err);
         }
         if (err) return self2.onStatError(err);
-        if (stat.isDirectory()) return self2.redirect(path36);
+        if (stat.isDirectory()) return self2.redirect(path37);
         if (pathEndsWithSep) return self2.error(404);
-        self2.emit("file", path36, stat);
-        self2.send(path36, stat);
+        self2.emit("file", path37, stat);
+        self2.send(path37, stat);
       });
       function next(err) {
         if (self2._extensions.length <= i) {
           return err ? self2.onStatError(err) : self2.error(404);
         }
-        var p3 = path36 + "." + self2._extensions[i++];
+        var p3 = path37 + "." + self2._extensions[i++];
         debug('stat "%s"', p3);
-        fs39.stat(p3, function(err2, stat) {
+        fs40.stat(p3, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self2.emit("file", p3, stat);
@@ -23134,7 +23134,7 @@ var require_send = __commonJS({
         });
       }
     };
-    SendStream.prototype.sendIndex = function sendIndex(path36) {
+    SendStream.prototype.sendIndex = function sendIndex(path37) {
       var i = -1;
       var self2 = this;
       function next(err) {
@@ -23142,9 +23142,9 @@ var require_send = __commonJS({
           if (err) return self2.onStatError(err);
           return self2.error(404);
         }
-        var p3 = join2(path36, self2._index[i]);
+        var p3 = join2(path37, self2._index[i]);
         debug('stat "%s"', p3);
-        fs39.stat(p3, function(err2, stat) {
+        fs40.stat(p3, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self2.emit("file", p3, stat);
@@ -23153,10 +23153,10 @@ var require_send = __commonJS({
       }
       next();
     };
-    SendStream.prototype.stream = function stream4(path36, options) {
+    SendStream.prototype.stream = function stream4(path37, options) {
       var self2 = this;
       var res = this.res;
-      var stream5 = fs39.createReadStream(path36, options);
+      var stream5 = fs40.createReadStream(path37, options);
       this.emit("stream", stream5);
       stream5.pipe(res);
       function cleanup() {
@@ -23171,17 +23171,17 @@ var require_send = __commonJS({
         self2.emit("end");
       });
     };
-    SendStream.prototype.type = function type(path36) {
+    SendStream.prototype.type = function type(path37) {
       var res = this.res;
       if (res.getHeader("Content-Type")) return;
-      var ext = extname(path36);
+      var ext = extname(path37);
       var type2 = mime.contentType(ext) || "application/octet-stream";
       debug("content-type %s", type2);
       res.setHeader("Content-Type", type2);
     };
-    SendStream.prototype.setHeader = function setHeader(path36, stat) {
+    SendStream.prototype.setHeader = function setHeader(path37, stat) {
       var res = this.res;
-      this.emit("headers", res, path36, stat);
+      this.emit("headers", res, path37, stat);
       if (this._acceptRanges && !res.getHeader("Accept-Ranges")) {
         debug("accept ranges");
         res.setHeader("Accept-Ranges", "bytes");
@@ -23239,9 +23239,9 @@ var require_send = __commonJS({
       }
       return err instanceof Error ? createError(status, err, { expose: false }) : createError(status, err);
     }
-    function decode4(path36) {
+    function decode4(path37) {
       try {
-        return decodeURIComponent(path36);
+        return decodeURIComponent(path37);
       } catch (err) {
         return -1;
       }
@@ -23385,7 +23385,7 @@ var require_response = __commonJS({
     var http4 = require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
-    var path35 = require("node:path");
+    var path36 = require("node:path");
     var pathIsAbsolute = require("node:path").isAbsolute;
     var statuses = require_statuses();
     var sign = require_cookie_signature().sign;
@@ -23394,8 +23394,8 @@ var require_response = __commonJS({
     var setCharset = require_utils3().setCharset;
     var cookie = require_cookie();
     var send = require_send();
-    var extname = path35.extname;
-    var resolve3 = path35.resolve;
+    var extname = path36.extname;
+    var resolve3 = path36.resolve;
     var vary = require_vary();
     var { Buffer: Buffer3 } = require("node:buffer");
     var res = Object.create(http4.ServerResponse.prototype);
@@ -23541,26 +23541,26 @@ var require_response = __commonJS({
       this.type("txt");
       return this.send(body);
     };
-    res.sendFile = function sendFile(path36, options, callback) {
+    res.sendFile = function sendFile(path37, options, callback) {
       var done = callback;
       var req = this.req;
       var res2 = this;
       var next = req.next;
       var opts = options || {};
-      if (!path36) {
+      if (!path37) {
         throw new TypeError("path argument is required to res.sendFile");
       }
-      if (typeof path36 !== "string") {
+      if (typeof path37 !== "string") {
         throw new TypeError("path must be a string to res.sendFile");
       }
       if (typeof options === "function") {
         done = options;
         opts = {};
       }
-      if (!opts.root && !pathIsAbsolute(path36)) {
+      if (!opts.root && !pathIsAbsolute(path37)) {
         throw new TypeError("path must be absolute or specify root to res.sendFile");
       }
-      var pathname = encodeURI(path36);
+      var pathname = encodeURI(path37);
       opts.etag = this.app.enabled("etag");
       var file3 = send(req, pathname, opts);
       sendfile(res2, file3, opts, function(err) {
@@ -23571,7 +23571,7 @@ var require_response = __commonJS({
         }
       });
     };
-    res.download = function download2(path36, filename, options, callback) {
+    res.download = function download2(path37, filename, options, callback) {
       var done = callback;
       var name28 = filename;
       var opts = options || null;
@@ -23588,7 +23588,7 @@ var require_response = __commonJS({
         opts = filename;
       }
       var headers = {
-        "Content-Disposition": contentDisposition(name28 || path36)
+        "Content-Disposition": contentDisposition(name28 || path37)
       };
       if (opts && opts.headers) {
         var keys2 = Object.keys(opts.headers);
@@ -23601,7 +23601,7 @@ var require_response = __commonJS({
       }
       opts = Object.create(opts);
       opts.headers = headers;
-      var fullPath = !opts.root ? resolve3(path36) : path36;
+      var fullPath = !opts.root ? resolve3(path37) : path37;
       return this.sendFile(fullPath, opts, done);
     };
     res.contentType = res.type = function contentType(type) {
@@ -23884,11 +23884,11 @@ var require_serve_static = __commonJS({
         }
         var forwardError = !fallthrough;
         var originalUrl = parseUrl2.original(req);
-        var path35 = parseUrl2(req).pathname;
-        if (path35 === "/" && originalUrl.pathname.substr(-1) !== "/") {
-          path35 = "";
+        var path36 = parseUrl2(req).pathname;
+        if (path36 === "/" && originalUrl.pathname.substr(-1) !== "/") {
+          path36 = "";
         }
-        var stream4 = send(req, path35, opts);
+        var stream4 = send(req, path36, opts);
         stream4.on("directory", onDirectory);
         if (setHeaders) {
           stream4.on("headers", setHeaders);
@@ -33080,11 +33080,11 @@ var require_mime_types2 = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path35) {
-      if (!path35 || typeof path35 !== "string") {
+    function lookup(path36) {
+      if (!path36 || typeof path36 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path35).toLowerCase().substr(1);
+      var extension2 = extname("x." + path36).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -33200,7 +33200,7 @@ var require_accepts2 = __commonJS({
 var require_base64id = __commonJS({
   "node_modules/base64id/lib/base64id.js"(exports2, module2) {
     "use strict";
-    var crypto11 = require("crypto");
+    var crypto12 = require("crypto");
     var Base64Id = function() {
     };
     Base64Id.prototype.getRandomBytes = function(bytes) {
@@ -33208,12 +33208,12 @@ var require_base64id = __commonJS({
       var self2 = this;
       bytes = bytes || 12;
       if (bytes > BUFFER_SIZE) {
-        return crypto11.randomBytes(bytes);
+        return crypto12.randomBytes(bytes);
       }
       var bytesInBuffer = parseInt(BUFFER_SIZE / bytes);
       var threshold = parseInt(bytesInBuffer * 0.85);
       if (!threshold) {
-        return crypto11.randomBytes(bytes);
+        return crypto12.randomBytes(bytes);
       }
       if (this.bytesBufferIndex == null) {
         this.bytesBufferIndex = -1;
@@ -33225,14 +33225,14 @@ var require_base64id = __commonJS({
       if (this.bytesBufferIndex == -1 || this.bytesBufferIndex > threshold) {
         if (!this.isGeneratingBytes) {
           this.isGeneratingBytes = true;
-          crypto11.randomBytes(BUFFER_SIZE, function(err, bytes2) {
+          crypto12.randomBytes(BUFFER_SIZE, function(err, bytes2) {
             self2.bytesBuffer = bytes2;
             self2.bytesBufferIndex = 0;
             self2.isGeneratingBytes = false;
           });
         }
         if (this.bytesBufferIndex == -1) {
-          return crypto11.randomBytes(bytes);
+          return crypto12.randomBytes(bytes);
         }
       }
       var result = this.bytesBuffer.slice(bytes * this.bytesBufferIndex, bytes * (this.bytesBufferIndex + 1));
@@ -33246,7 +33246,7 @@ var require_base64id = __commonJS({
       }
       this.sequenceNumber = this.sequenceNumber + 1 | 0;
       rand.writeInt32BE(this.sequenceNumber, 11);
-      if (crypto11.randomBytes) {
+      if (crypto12.randomBytes) {
         this.getRandomBytes(12).copy(rand);
       } else {
         [0, 4, 8].forEach(function(i) {
@@ -39063,11 +39063,11 @@ var require_server = __commonJS({
        * @protected
        */
       _computePath(options) {
-        let path35 = (options.path || "/engine.io").replace(/\/$/, "");
+        let path36 = (options.path || "/engine.io").replace(/\/$/, "");
         if (options.addTrailingSlash !== false) {
-          path35 += "/";
+          path36 += "/";
         }
-        return path35;
+        return path36;
       }
       /**
        * Returns a list of available transports for upgrade given a certain transport.
@@ -39566,10 +39566,10 @@ var require_server = __commonJS({
        * @param {Object} options
        */
       attach(server2, options = {}) {
-        const path35 = this._computePath(options);
+        const path36 = this._computePath(options);
         const destroyUpgradeTimeout = options.destroyUpgradeTimeout || 1e3;
         function check3(req) {
-          return path35 === req.url.slice(0, path35.length);
+          return path36 === req.url.slice(0, path36.length);
         }
         const listeners = server2.listeners("request").slice(0);
         server2.removeAllListeners("request");
@@ -39577,7 +39577,7 @@ var require_server = __commonJS({
         server2.on("listening", this.init.bind(this));
         server2.on("request", (req, res) => {
           if (check3(req)) {
-            debug('intercepting request for path "%s"', path35);
+            debug('intercepting request for path "%s"', path36);
             this.handleRequest(req, res);
           } else {
             let i = 0;
@@ -40416,8 +40416,8 @@ var require_userver = __commonJS({
        * @param options
        */
       attach(app2, options = {}) {
-        const path35 = this._computePath(options);
-        app2.any(path35, this.handleRequest.bind(this)).ws(path35, {
+        const path36 = this._computePath(options);
+        app2.any(path36, this.handleRequest.bind(this)).ws(path36, {
           compression: options.compression,
           idleTimeout: options.idleTimeout,
           maxBackpressure: options.maxBackpressure,
@@ -44843,7 +44843,7 @@ var require_dist3 = __commonJS({
     var zlib_1 = require("zlib");
     var accepts = require_accepts2();
     var stream_1 = require("stream");
-    var path35 = require("path");
+    var path36 = require("path");
     var engine_io_1 = require_engine_io();
     var client_1 = require_client();
     var events_1 = require("events");
@@ -45038,7 +45038,7 @@ var require_dist3 = __commonJS({
             res.writeHeader("cache-control", "public, max-age=0");
             res.writeHeader("content-type", "application/" + (isMap ? "json" : "javascript") + "; charset=utf-8");
             res.writeHeader("etag", expectedEtag);
-            const filepath = path35.join(__dirname, "../client-dist/", filename);
+            const filepath = path36.join(__dirname, "../client-dist/", filename);
             (0, uws_1.serveFile)(res, filepath);
           });
         }
@@ -45120,7 +45120,7 @@ var require_dist3 = __commonJS({
        * @private
        */
       static sendFile(filename, req, res) {
-        const readStream2 = (0, fs_1.createReadStream)(path35.join(__dirname, "../client-dist/", filename));
+        const readStream2 = (0, fs_1.createReadStream)(path36.join(__dirname, "../client-dist/", filename));
         const encoding = accepts(req).encodings(["br", "gzip", "deflate"]);
         const onError = (err) => {
           if (err) {
@@ -49337,8 +49337,8 @@ var require_node2 = __commonJS({
           }
           break;
         case "FILE":
-          var fs39 = require("fs");
-          stream5 = new fs39.SyncWriteStream(fd2, { autoClose: false });
+          var fs40 = require("fs");
+          stream5 = new fs40.SyncWriteStream(fd2, { autoClose: false });
           stream5._type = "fs";
           break;
         case "PIPE":
@@ -49865,7 +49865,7 @@ var require_path = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.convertPosixPathToPattern = exports2.convertWindowsPathToPattern = exports2.convertPathToPattern = exports2.escapePosixPath = exports2.escapeWindowsPath = exports2.escape = exports2.removeLeadingDotSegment = exports2.makeAbsolute = exports2.unixify = void 0;
     var os = require("os");
-    var path35 = require("path");
+    var path36 = require("path");
     var IS_WINDOWS_PLATFORM = os.platform() === "win32";
     var LEADING_DOT_SEGMENT_CHARACTERS_COUNT = 2;
     var POSIX_UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([()*?[\]{|}]|^!|[!+@](?=\()|\\(?![!()*+?@[\]{|}]))/g;
@@ -49877,7 +49877,7 @@ var require_path = __commonJS({
     }
     exports2.unixify = unixify;
     function makeAbsolute(cwd, filepath) {
-      return path35.resolve(cwd, filepath);
+      return path36.resolve(cwd, filepath);
     }
     exports2.makeAbsolute = makeAbsolute;
     function removeLeadingDotSegment(entry) {
@@ -51176,7 +51176,7 @@ var require_braces = __commonJS({
 var require_constants4 = __commonJS({
   "node_modules/picomatch/lib/constants.js"(exports2, module2) {
     "use strict";
-    var path35 = require("path");
+    var path36 = require("path");
     var WIN_SLASH = "\\\\/";
     var WIN_NO_SLASH = `[^${WIN_SLASH}]`;
     var DEFAULT_MAX_EXTGLOB_RECURSION = 0;
@@ -51350,7 +51350,7 @@ var require_constants4 = __commonJS({
       /* | */
       CHAR_ZERO_WIDTH_NOBREAK_SPACE: 65279,
       /* \uFEFF */
-      SEP: path35.sep,
+      SEP: path36.sep,
       /**
        * Create EXTGLOB_CHARS
        */
@@ -51377,7 +51377,7 @@ var require_constants4 = __commonJS({
 var require_utils5 = __commonJS({
   "node_modules/picomatch/lib/utils.js"(exports2) {
     "use strict";
-    var path35 = require("path");
+    var path36 = require("path");
     var win32 = process.platform === "win32";
     var {
       REGEX_BACKSLASH,
@@ -51406,7 +51406,7 @@ var require_utils5 = __commonJS({
       if (options && typeof options.windows === "boolean") {
         return options.windows;
       }
-      return win32 === true || path35.sep === "\\";
+      return win32 === true || path36.sep === "\\";
     };
     exports2.escapeLast = (input, char, lastIdx) => {
       const idx = input.lastIndexOf(char, lastIdx);
@@ -52770,7 +52770,7 @@ var require_parse3 = __commonJS({
 var require_picomatch = __commonJS({
   "node_modules/picomatch/lib/picomatch.js"(exports2, module2) {
     "use strict";
-    var path35 = require("path");
+    var path36 = require("path");
     var scan = require_scan();
     var parse4 = require_parse3();
     var utils = require_utils5();
@@ -52855,7 +52855,7 @@ var require_picomatch = __commonJS({
     };
     picomatch.matchBase = (input, glob, options, posix = utils.isWindows(options)) => {
       const regex = glob instanceof RegExp ? glob : picomatch.makeRe(glob, options);
-      return regex.test(path35.basename(input));
+      return regex.test(path36.basename(input));
     };
     picomatch.isMatch = (str, patterns, options) => picomatch(patterns, options)(str);
     picomatch.parse = (pattern, options) => {
@@ -53082,7 +53082,7 @@ var require_pattern = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.isAbsolute = exports2.partitionAbsoluteAndRelative = exports2.removeDuplicateSlashes = exports2.matchAny = exports2.convertPatternsToRe = exports2.makeRe = exports2.getPatternParts = exports2.expandBraceExpansion = exports2.expandPatternsWithBraceExpansion = exports2.isAffectDepthOfReadingPattern = exports2.endsWithSlashGlobStar = exports2.hasGlobStar = exports2.getBaseDirectory = exports2.isPatternRelatedToParentDirectory = exports2.getPatternsOutsideCurrentDirectory = exports2.getPatternsInsideCurrentDirectory = exports2.getPositivePatterns = exports2.getNegativePatterns = exports2.isPositivePattern = exports2.isNegativePattern = exports2.convertToNegativePattern = exports2.convertToPositivePattern = exports2.isDynamicPattern = exports2.isStaticPattern = void 0;
-    var path35 = require("path");
+    var path36 = require("path");
     var globParent = require_glob_parent();
     var micromatch = require_micromatch();
     var GLOBSTAR = "**";
@@ -53177,7 +53177,7 @@ var require_pattern = __commonJS({
     }
     exports2.endsWithSlashGlobStar = endsWithSlashGlobStar;
     function isAffectDepthOfReadingPattern(pattern) {
-      const basename = path35.basename(pattern);
+      const basename = path36.basename(pattern);
       return endsWithSlashGlobStar(pattern) || isStaticPattern(basename);
     }
     exports2.isAffectDepthOfReadingPattern = isAffectDepthOfReadingPattern;
@@ -53235,7 +53235,7 @@ var require_pattern = __commonJS({
     }
     exports2.partitionAbsoluteAndRelative = partitionAbsoluteAndRelative;
     function isAbsolute(pattern) {
-      return path35.isAbsolute(pattern);
+      return path36.isAbsolute(pattern);
     }
     exports2.isAbsolute = isAbsolute;
   }
@@ -53410,10 +53410,10 @@ var require_utils6 = __commonJS({
     exports2.array = array4;
     var errno = require_errno();
     exports2.errno = errno;
-    var fs39 = require_fs();
-    exports2.fs = fs39;
-    var path35 = require_path();
-    exports2.path = path35;
+    var fs40 = require_fs();
+    exports2.fs = fs40;
+    var path36 = require_path();
+    exports2.path = path36;
     var pattern = require_pattern();
     exports2.pattern = pattern;
     var stream4 = require_stream3();
@@ -53525,8 +53525,8 @@ var require_async = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.read = void 0;
-    function read(path35, settings, callback) {
-      settings.fs.lstat(path35, (lstatError, lstat) => {
+    function read(path36, settings, callback) {
+      settings.fs.lstat(path36, (lstatError, lstat) => {
         if (lstatError !== null) {
           callFailureCallback(callback, lstatError);
           return;
@@ -53535,7 +53535,7 @@ var require_async = __commonJS({
           callSuccessCallback(callback, lstat);
           return;
         }
-        settings.fs.stat(path35, (statError, stat) => {
+        settings.fs.stat(path36, (statError, stat) => {
           if (statError !== null) {
             if (settings.throwErrorOnBrokenSymbolicLink) {
               callFailureCallback(callback, statError);
@@ -53567,13 +53567,13 @@ var require_sync = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.read = void 0;
-    function read(path35, settings) {
-      const lstat = settings.fs.lstatSync(path35);
+    function read(path36, settings) {
+      const lstat = settings.fs.lstatSync(path36);
       if (!lstat.isSymbolicLink() || !settings.followSymbolicLink) {
         return lstat;
       }
       try {
-        const stat = settings.fs.statSync(path35);
+        const stat = settings.fs.statSync(path36);
         if (settings.markSymbolicLink) {
           stat.isSymbolicLink = () => true;
         }
@@ -53595,12 +53595,12 @@ var require_fs2 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createFileSystemAdapter = exports2.FILE_SYSTEM_ADAPTER = void 0;
-    var fs39 = require("fs");
+    var fs40 = require("fs");
     exports2.FILE_SYSTEM_ADAPTER = {
-      lstat: fs39.lstat,
-      stat: fs39.stat,
-      lstatSync: fs39.lstatSync,
-      statSync: fs39.statSync
+      lstat: fs40.lstat,
+      stat: fs40.stat,
+      lstatSync: fs40.lstatSync,
+      statSync: fs40.statSync
     };
     function createFileSystemAdapter(fsMethods) {
       if (fsMethods === void 0) {
@@ -53617,12 +53617,12 @@ var require_settings = __commonJS({
   "node_modules/@nodelib/fs.stat/out/settings.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var fs39 = require_fs2();
+    var fs40 = require_fs2();
     var Settings = class {
       constructor(_options = {}) {
         this._options = _options;
         this.followSymbolicLink = this._getValue(this._options.followSymbolicLink, true);
-        this.fs = fs39.createFileSystemAdapter(this._options.fs);
+        this.fs = fs40.createFileSystemAdapter(this._options.fs);
         this.markSymbolicLink = this._getValue(this._options.markSymbolicLink, false);
         this.throwErrorOnBrokenSymbolicLink = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
       }
@@ -53644,17 +53644,17 @@ var require_out = __commonJS({
     var sync = require_sync();
     var settings_1 = require_settings();
     exports2.Settings = settings_1.default;
-    function stat(path35, optionsOrSettingsOrCallback, callback) {
+    function stat(path36, optionsOrSettingsOrCallback, callback) {
       if (typeof optionsOrSettingsOrCallback === "function") {
-        async.read(path35, getSettings(), optionsOrSettingsOrCallback);
+        async.read(path36, getSettings(), optionsOrSettingsOrCallback);
         return;
       }
-      async.read(path35, getSettings(optionsOrSettingsOrCallback), callback);
+      async.read(path36, getSettings(optionsOrSettingsOrCallback), callback);
     }
     exports2.stat = stat;
-    function statSync(path35, optionsOrSettings) {
+    function statSync(path36, optionsOrSettings) {
       const settings = getSettings(optionsOrSettings);
-      return sync.read(path35, settings);
+      return sync.read(path36, settings);
     }
     exports2.statSync = statSync;
     function getSettings(settingsOrOptions = {}) {
@@ -53779,8 +53779,8 @@ var require_utils7 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.fs = void 0;
-    var fs39 = require_fs3();
-    exports2.fs = fs39;
+    var fs40 = require_fs3();
+    exports2.fs = fs40;
   }
 });
 
@@ -53872,16 +53872,16 @@ var require_async2 = __commonJS({
           return;
         }
         const tasks = names.map((name28) => {
-          const path35 = common.joinPathSegments(directory, name28, settings.pathSegmentSeparator);
+          const path36 = common.joinPathSegments(directory, name28, settings.pathSegmentSeparator);
           return (done) => {
-            fsStat.stat(path35, settings.fsStatSettings, (error73, stats) => {
+            fsStat.stat(path36, settings.fsStatSettings, (error73, stats) => {
               if (error73 !== null) {
                 done(error73);
                 return;
               }
               const entry = {
                 name: name28,
-                path: path35,
+                path: path36,
                 dirent: utils.fs.createDirentFromStats(name28, stats)
               };
               if (settings.stats) {
@@ -53975,14 +53975,14 @@ var require_fs4 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createFileSystemAdapter = exports2.FILE_SYSTEM_ADAPTER = void 0;
-    var fs39 = require("fs");
+    var fs40 = require("fs");
     exports2.FILE_SYSTEM_ADAPTER = {
-      lstat: fs39.lstat,
-      stat: fs39.stat,
-      lstatSync: fs39.lstatSync,
-      statSync: fs39.statSync,
-      readdir: fs39.readdir,
-      readdirSync: fs39.readdirSync
+      lstat: fs40.lstat,
+      stat: fs40.stat,
+      lstatSync: fs40.lstatSync,
+      statSync: fs40.statSync,
+      readdir: fs40.readdir,
+      readdirSync: fs40.readdirSync
     };
     function createFileSystemAdapter(fsMethods) {
       if (fsMethods === void 0) {
@@ -53999,15 +53999,15 @@ var require_settings2 = __commonJS({
   "node_modules/@nodelib/fs.scandir/out/settings.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var path35 = require("path");
+    var path36 = require("path");
     var fsStat = require_out();
-    var fs39 = require_fs4();
+    var fs40 = require_fs4();
     var Settings = class {
       constructor(_options = {}) {
         this._options = _options;
         this.followSymbolicLinks = this._getValue(this._options.followSymbolicLinks, false);
-        this.fs = fs39.createFileSystemAdapter(this._options.fs);
-        this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path35.sep);
+        this.fs = fs40.createFileSystemAdapter(this._options.fs);
+        this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path36.sep);
         this.stats = this._getValue(this._options.stats, false);
         this.throwErrorOnBrokenSymbolicLink = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
         this.fsStatSettings = new fsStat.Settings({
@@ -54034,17 +54034,17 @@ var require_out2 = __commonJS({
     var sync = require_sync2();
     var settings_1 = require_settings2();
     exports2.Settings = settings_1.default;
-    function scandir(path35, optionsOrSettingsOrCallback, callback) {
+    function scandir(path36, optionsOrSettingsOrCallback, callback) {
       if (typeof optionsOrSettingsOrCallback === "function") {
-        async.read(path35, getSettings(), optionsOrSettingsOrCallback);
+        async.read(path36, getSettings(), optionsOrSettingsOrCallback);
         return;
       }
-      async.read(path35, getSettings(optionsOrSettingsOrCallback), callback);
+      async.read(path36, getSettings(optionsOrSettingsOrCallback), callback);
     }
     exports2.scandir = scandir;
-    function scandirSync(path35, optionsOrSettings) {
+    function scandirSync(path36, optionsOrSettings) {
       const settings = getSettings(optionsOrSettings);
-      return sync.read(path35, settings);
+      return sync.read(path36, settings);
     }
     exports2.scandirSync = scandirSync;
     function getSettings(settingsOrOptions = {}) {
@@ -54691,7 +54691,7 @@ var require_settings3 = __commonJS({
   "node_modules/@nodelib/fs.walk/out/settings.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var path35 = require("path");
+    var path36 = require("path");
     var fsScandir = require_out2();
     var Settings = class {
       constructor(_options = {}) {
@@ -54701,7 +54701,7 @@ var require_settings3 = __commonJS({
         this.deepFilter = this._getValue(this._options.deepFilter, null);
         this.entryFilter = this._getValue(this._options.entryFilter, null);
         this.errorFilter = this._getValue(this._options.errorFilter, null);
-        this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path35.sep);
+        this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path36.sep);
         this.fsScandirSettings = new fsScandir.Settings({
           followSymbolicLinks: this._options.followSymbolicLinks,
           fs: this._options.fs,
@@ -54763,7 +54763,7 @@ var require_reader2 = __commonJS({
   "node_modules/fast-glob/out/readers/reader.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var path35 = require("path");
+    var path36 = require("path");
     var fsStat = require_out();
     var utils = require_utils6();
     var Reader = class {
@@ -54776,7 +54776,7 @@ var require_reader2 = __commonJS({
         });
       }
       _getFullEntryPath(filepath) {
-        return path35.resolve(this._settings.cwd, filepath);
+        return path36.resolve(this._settings.cwd, filepath);
       }
       _makeEntry(stats, pattern) {
         const entry = {
@@ -55192,7 +55192,7 @@ var require_provider = __commonJS({
   "node_modules/fast-glob/out/providers/provider.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var path35 = require("path");
+    var path36 = require("path");
     var deep_1 = require_deep();
     var entry_1 = require_entry();
     var error_1 = require_error();
@@ -55206,7 +55206,7 @@ var require_provider = __commonJS({
         this.entryTransformer = new entry_2.default(this._settings);
       }
       _getRootDirectory(task) {
-        return path35.resolve(this._settings.cwd, task.base);
+        return path36.resolve(this._settings.cwd, task.base);
       }
       _getReaderOptions(task) {
         const basePath = task.base === "." ? "" : task.base;
@@ -55387,16 +55387,16 @@ var require_settings4 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DEFAULT_FILE_SYSTEM_ADAPTER = void 0;
-    var fs39 = require("fs");
+    var fs40 = require("fs");
     var os = require("os");
     var CPU_COUNT = Math.max(os.cpus().length, 1);
     exports2.DEFAULT_FILE_SYSTEM_ADAPTER = {
-      lstat: fs39.lstat,
-      lstatSync: fs39.lstatSync,
-      stat: fs39.stat,
-      statSync: fs39.statSync,
-      readdir: fs39.readdir,
-      readdirSync: fs39.readdirSync
+      lstat: fs40.lstat,
+      lstatSync: fs40.lstatSync,
+      stat: fs40.stat,
+      statSync: fs40.statSync,
+      readdir: fs40.readdir,
+      readdirSync: fs40.readdirSync
     };
     var Settings = class {
       constructor(_options = {}) {
@@ -56276,16 +56276,16 @@ var require_string2 = __commonJS({
       }
     }
     function arrayToList(array4, finalEscape, ctx) {
-      let sql13 = "";
+      let sql15 = "";
       for (let i = 0; i < array4.length; i++) {
         const val = array4[i];
         if (Array.isArray(val)) {
-          sql13 += (i === 0 ? "" : ", ") + "(" + arrayToList(val, finalEscape, ctx) + ")";
+          sql15 += (i === 0 ? "" : ", ") + "(" + arrayToList(val, finalEscape, ctx) + ")";
         } else {
-          sql13 += (i === 0 ? "" : ", ") + finalEscape(val, ctx);
+          sql15 += (i === 0 ? "" : ", ") + finalEscape(val, ctx);
         }
       }
-      return sql13;
+      return sql15;
     }
     function bufferToString(buffer) {
       return "X" + escapeString(buffer.toString("hex"));
@@ -58594,26 +58594,26 @@ var require_ensure_connection_callback = __commonJS({
     function ensureConnectionCallback(runner) {
       runner.client.emit("start", runner.builder);
       runner.builder.emit("start", runner.builder);
-      const sql13 = runner.builder.toSQL();
+      const sql15 = runner.builder.toSQL();
       if (runner.builder._debug) {
-        runner.client.logger.debug(sql13);
+        runner.client.logger.debug(sql15);
       }
-      if (Array.isArray(sql13)) {
-        return runner.queryArray(sql13);
+      if (Array.isArray(sql15)) {
+        return runner.queryArray(sql15);
       }
-      return runner.query(sql13);
+      return runner.query(sql15);
     }
     function ensureConnectionStreamCallback(runner, params) {
       try {
-        const sql13 = runner.builder.toSQL();
-        if (Array.isArray(sql13) && params.hasHandler) {
+        const sql15 = runner.builder.toSQL();
+        if (Array.isArray(sql15) && params.hasHandler) {
           throw new Error(
             "The stream may only be used with a single query statement."
           );
         }
         return runner.client.stream(
           runner.connection,
-          sql13,
+          sql15,
           params.stream,
           params.options
         );
@@ -58752,7 +58752,7 @@ var require_runner = __commonJS({
           if (!(error73 instanceof KnexTimeoutError)) {
             return Promise.reject(error73);
           }
-          const { timeout: timeout2, sql: sql13, bindings } = obj;
+          const { timeout: timeout2, sql: sql15, bindings } = obj;
           let cancelQuery;
           if (obj.cancelOnTimeout) {
             cancelQuery = this.client.cancelQuery(this.connection);
@@ -58764,14 +58764,14 @@ var require_runner = __commonJS({
             this.connection.__knex__disposed = error73;
             throw Object.assign(cancelError, {
               message: `After query timeout of ${timeout2}ms exceeded, cancelling of query failed.`,
-              sql: sql13,
+              sql: sql15,
               bindings,
               timeout: timeout2
             });
           }).then(() => {
             throw Object.assign(error73, {
               message: `Defined query timeout of ${timeout2}ms exceeded when running query.`,
-              sql: sql13,
+              sql: sql15,
               bindings,
               timeout: timeout2
             });
@@ -59920,11 +59920,11 @@ var require_baseGet = __commonJS({
     "use strict";
     var castPath2 = require_castPath();
     var toKey2 = require_toKey();
-    function baseGet2(object4, path35) {
-      path35 = castPath2(path35, object4);
-      var index = 0, length = path35.length;
+    function baseGet2(object4, path36) {
+      path36 = castPath2(path36, object4);
+      var index = 0, length = path36.length;
       while (object4 != null && index < length) {
-        object4 = object4[toKey2(path35[index++])];
+        object4 = object4[toKey2(path36[index++])];
       }
       return index && index == length ? object4 : void 0;
     }
@@ -59937,8 +59937,8 @@ var require_get2 = __commonJS({
   "node_modules/lodash/get.js"(exports2, module2) {
     "use strict";
     var baseGet2 = require_baseGet();
-    function get2(object4, path35, defaultValue) {
-      var result = object4 == null ? void 0 : baseGet2(object4, path35);
+    function get2(object4, path36, defaultValue) {
+      var result = object4 == null ? void 0 : baseGet2(object4, path36);
       return result === void 0 ? defaultValue : result;
     }
     module2.exports = get2;
@@ -60525,26 +60525,26 @@ var require_flatten = __commonJS({
 var require_fs5 = __commonJS({
   "node_modules/knex/lib/migrations/util/fs.js"(exports2, module2) {
     "use strict";
-    var fs39 = require("fs");
+    var fs40 = require("fs");
     var flatten = require_flatten();
     var os = require("os");
-    var path35 = require("path");
+    var path36 = require("path");
     var { promisify: promisify5 } = require("util");
-    var stat = promisify5(fs39.stat);
-    var readFile3 = promisify5(fs39.readFile);
-    var writeFile3 = promisify5(fs39.writeFile);
-    var readdir = promisify5(fs39.readdir);
-    var mkdir = promisify5(fs39.mkdir);
-    function existsSync4(path36) {
+    var stat = promisify5(fs40.stat);
+    var readFile3 = promisify5(fs40.readFile);
+    var writeFile3 = promisify5(fs40.writeFile);
+    var readdir = promisify5(fs40.readdir);
+    var mkdir = promisify5(fs40.mkdir);
+    function existsSync4(path37) {
       try {
-        fs39.accessSync(path36);
+        fs40.accessSync(path37);
         return true;
       } catch (e) {
         return false;
       }
     }
     function createTemp() {
-      return promisify5(fs39.mkdtemp)(`${os.tmpdir()}${path35.sep}`);
+      return promisify5(fs40.mkdtemp)(`${os.tmpdir()}${path36.sep}`);
     }
     function ensureDirectoryExists(dir) {
       return stat(dir).catch(() => mkdir(dir, { recursive: true }));
@@ -60554,7 +60554,7 @@ var require_fs5 = __commonJS({
       return flatten(
         await Promise.all(
           pathsList.sort().map(async (currentPath) => {
-            const currentFile = path35.resolve(dir, currentPath);
+            const currentFile = path36.resolve(dir, currentPath);
             const statFile = await stat(currentFile);
             if (statFile && statFile.isDirectory()) {
               if (recursive) {
@@ -61040,11 +61040,11 @@ var require_hasPath = __commonJS({
     var isIndex2 = require_isIndex();
     var isLength2 = require_isLength();
     var toKey2 = require_toKey();
-    function hasPath2(object4, path35, hasFunc) {
-      path35 = castPath2(path35, object4);
-      var index = -1, length = path35.length, result = false;
+    function hasPath2(object4, path36, hasFunc) {
+      path36 = castPath2(path36, object4);
+      var index = -1, length = path36.length, result = false;
       while (++index < length) {
-        var key = toKey2(path35[index]);
+        var key = toKey2(path36[index]);
         if (!(result = object4 != null && hasFunc(object4, key))) {
           break;
         }
@@ -61066,8 +61066,8 @@ var require_hasIn = __commonJS({
     "use strict";
     var baseHasIn2 = require_baseHasIn();
     var hasPath2 = require_hasPath();
-    function hasIn2(object4, path35) {
-      return object4 != null && hasPath2(object4, path35, baseHasIn2);
+    function hasIn2(object4, path36) {
+      return object4 != null && hasPath2(object4, path36, baseHasIn2);
     }
     module2.exports = hasIn2;
   }
@@ -61086,13 +61086,13 @@ var require_baseMatchesProperty = __commonJS({
     var toKey2 = require_toKey();
     var COMPARE_PARTIAL_FLAG7 = 1;
     var COMPARE_UNORDERED_FLAG5 = 2;
-    function baseMatchesProperty2(path35, srcValue) {
-      if (isKey2(path35) && isStrictComparable2(srcValue)) {
-        return matchesStrictComparable2(toKey2(path35), srcValue);
+    function baseMatchesProperty2(path36, srcValue) {
+      if (isKey2(path36) && isStrictComparable2(srcValue)) {
+        return matchesStrictComparable2(toKey2(path36), srcValue);
       }
       return function(object4) {
-        var objValue = get2(object4, path35);
-        return objValue === void 0 && objValue === srcValue ? hasIn2(object4, path35) : baseIsEqual2(srcValue, objValue, COMPARE_PARTIAL_FLAG7 | COMPARE_UNORDERED_FLAG5);
+        var objValue = get2(object4, path36);
+        return objValue === void 0 && objValue === srcValue ? hasIn2(object4, path36) : baseIsEqual2(srcValue, objValue, COMPARE_PARTIAL_FLAG7 | COMPARE_UNORDERED_FLAG5);
       };
     }
     module2.exports = baseMatchesProperty2;
@@ -61117,9 +61117,9 @@ var require_basePropertyDeep = __commonJS({
   "node_modules/lodash/_basePropertyDeep.js"(exports2, module2) {
     "use strict";
     var baseGet2 = require_baseGet();
-    function basePropertyDeep2(path35) {
+    function basePropertyDeep2(path36) {
       return function(object4) {
-        return baseGet2(object4, path35);
+        return baseGet2(object4, path36);
       };
     }
     module2.exports = basePropertyDeep2;
@@ -61134,8 +61134,8 @@ var require_property = __commonJS({
     var basePropertyDeep2 = require_basePropertyDeep();
     var isKey2 = require_isKey();
     var toKey2 = require_toKey();
-    function property2(path35) {
-      return isKey2(path35) ? baseProperty2(toKey2(path35)) : basePropertyDeep2(path35);
+    function property2(path36) {
+      return isKey2(path36) ? baseProperty2(toKey2(path36)) : basePropertyDeep2(path36);
     }
     module2.exports = property2;
   }
@@ -61394,10 +61394,10 @@ var require_sortBy = __commonJS({
 var require_is_node_modules = __commonJS({
   "node_modules/get-package-type/is-node-modules.cjs"(exports2, module2) {
     "use strict";
-    var path35 = require("path");
+    var path36 = require("path");
     function isNodeModules(directory) {
-      let basename = path35.basename(directory);
-      if (path35.sep === "\\") {
+      let basename = path36.basename(directory);
+      if (path36.sep === "\\") {
         basename = basename.toLowerCase();
       }
       return basename === "node_modules";
@@ -61418,7 +61418,7 @@ var require_cache = __commonJS({
 var require_async7 = __commonJS({
   "node_modules/get-package-type/async.cjs"(exports2, module2) {
     "use strict";
-    var path35 = require("path");
+    var path36 = require("path");
     var { promisify: promisify5 } = require("util");
     var readFile3 = promisify5(require("fs").readFile);
     var isNodeModules = require_is_node_modules();
@@ -61429,10 +61429,10 @@ var require_async7 = __commonJS({
         return "commonjs";
       }
       try {
-        return JSON.parse(await readFile3(path35.resolve(directory, "package.json"))).type || "commonjs";
+        return JSON.parse(await readFile3(path36.resolve(directory, "package.json"))).type || "commonjs";
       } catch (_) {
       }
-      const parent = path35.dirname(directory);
+      const parent = path36.dirname(directory);
       if (parent === directory) {
         return "commonjs";
       }
@@ -61453,7 +61453,7 @@ var require_async7 = __commonJS({
       return result;
     }
     function getPackageType(filename) {
-      return getDirectoryType(path35.resolve(path35.dirname(filename)));
+      return getDirectoryType(path36.resolve(path36.dirname(filename)));
     }
     module2.exports = getPackageType;
   }
@@ -61463,7 +61463,7 @@ var require_async7 = __commonJS({
 var require_sync7 = __commonJS({
   "node_modules/get-package-type/sync.cjs"(exports2, module2) {
     "use strict";
-    var path35 = require("path");
+    var path36 = require("path");
     var { readFileSync: readFileSync2 } = require("fs");
     var isNodeModules = require_is_node_modules();
     var resultsCache = require_cache();
@@ -61472,10 +61472,10 @@ var require_sync7 = __commonJS({
         return "commonjs";
       }
       try {
-        return JSON.parse(readFileSync2(path35.resolve(directory, "package.json"))).type || "commonjs";
+        return JSON.parse(readFileSync2(path36.resolve(directory, "package.json"))).type || "commonjs";
       } catch (_) {
       }
-      const parent = path35.dirname(directory);
+      const parent = path36.dirname(directory);
       if (parent === directory) {
         return "commonjs";
       }
@@ -61490,7 +61490,7 @@ var require_sync7 = __commonJS({
       return result;
     }
     function getPackageTypeSync(filename) {
-      return getDirectoryType(path35.resolve(path35.dirname(filename)));
+      return getDirectoryType(path36.resolve(path36.dirname(filename)));
     }
     module2.exports = getPackageTypeSync;
   }
@@ -61533,7 +61533,7 @@ var require_import_file = __commonJS({
 var require_MigrationsLoader = __commonJS({
   "node_modules/knex/lib/migrations/common/MigrationsLoader.js"(exports2, module2) {
     "use strict";
-    var path35 = require("path");
+    var path36 = require("path");
     var DEFAULT_LOAD_EXTENSIONS = Object.freeze([
       ".co",
       ".coffee",
@@ -61555,8 +61555,8 @@ var require_MigrationsLoader = __commonJS({
         this.loadExtensions = loadExtensions || DEFAULT_LOAD_EXTENSIONS;
       }
       getFile(migrationsInfo) {
-        const absoluteDir = path35.resolve(process.cwd(), migrationsInfo.directory);
-        const _path = path35.join(absoluteDir, migrationsInfo.file);
+        const absoluteDir = path36.resolve(process.cwd(), migrationsInfo.directory);
+        const _path = path36.join(absoluteDir, migrationsInfo.file);
         const importFile = require_import_file();
         return importFile(_path);
       }
@@ -61572,7 +61572,7 @@ var require_MigrationsLoader = __commonJS({
 var require_fs_migrations = __commonJS({
   "node_modules/knex/lib/migrations/migrate/sources/fs-migrations.js"(exports2, module2) {
     "use strict";
-    var path35 = require("path");
+    var path36 = require("path");
     var sortBy = require_sortBy();
     var { readdir } = require_fs5();
     var { AbstractMigrationsLoader } = require_MigrationsLoader();
@@ -61583,7 +61583,7 @@ var require_fs_migrations = __commonJS({
        */
       getMigrations(loadExtensions) {
         const readMigrationsPromises = this.migrationsPaths.map((configDir) => {
-          const absoluteDir = path35.resolve(process.cwd(), configDir);
+          const absoluteDir = path36.resolve(process.cwd(), configDir);
           return readdir(absoluteDir).then((files) => ({
             files,
             configDir,
@@ -61624,7 +61624,7 @@ var require_fs_migrations = __commonJS({
     function filterMigrations(migrationSource, migrations2, loadExtensions) {
       return migrations2.filter((migration) => {
         const migrationName = migrationSource.getMigrationName(migration);
-        const extension = path35.extname(migrationName);
+        const extension = path36.extname(migrationName);
         return loadExtensions.includes(extension);
       });
     }
@@ -61986,7 +61986,7 @@ var require_timestamp = __commonJS({
 var require_MigrationGenerator = __commonJS({
   "node_modules/knex/lib/migrations/migrate/MigrationGenerator.js"(exports2, module2) {
     "use strict";
-    var path35 = require("path");
+    var path36 = require("path");
     var { writeJsFileUsingTemplate } = require_template2();
     var { getMergedConfig } = require_migrator_configuration_merger();
     var { ensureDirectoryExists } = require_fs5();
@@ -62015,7 +62015,7 @@ var require_MigrationGenerator = __commonJS({
         return Promise.all(promises6);
       }
       _getStubPath() {
-        return this.config.stub || path35.join(__dirname, "stub", this.config.extension + ".stub");
+        return this.config.stub || path36.join(__dirname, "stub", this.config.extension + ".stub");
       }
       _getNewMigrationName(name28) {
         if (name28[0] === "-") name28 = name28.slice(1);
@@ -62025,7 +62025,7 @@ var require_MigrationGenerator = __commonJS({
         const fileName = this._getNewMigrationName(name28);
         const dirs = this._absoluteConfigDirs();
         const dir = dirs.slice(-1)[0];
-        return path35.join(dir, fileName);
+        return path36.join(dir, fileName);
       }
       // Write a new migration to disk, using the config and generated filename,
       // passing any `variables` given in the config to the template.
@@ -62047,7 +62047,7 @@ var require_MigrationGenerator = __commonJS({
               "Failed to resolve config file, knex cannot determine where to generate migrations"
             );
           }
-          return path35.resolve(process.cwd(), directory);
+          return path36.resolve(process.cwd(), directory);
         });
       }
     };
@@ -62689,13 +62689,13 @@ var require_includes = __commonJS({
 var require_fs_seeds = __commonJS({
   "node_modules/knex/lib/migrations/seed/sources/fs-seeds.js"(exports2, module2) {
     "use strict";
-    var path35 = require("path");
+    var path36 = require("path");
     var flatten = require_flatten();
     var includes = require_includes();
     var { AbstractMigrationsLoader } = require_MigrationsLoader();
     var { getFilepathsInFolder } = require_fs5();
     var filterByLoadExtensions = (extensions) => (value) => {
-      const extension = path35.extname(value);
+      const extension = path36.extname(value);
       return includes(extensions, extension);
     };
     var FsSeeds = class extends AbstractMigrationsLoader {
@@ -62707,7 +62707,7 @@ var require_fs_seeds = __commonJS({
               "Empty value passed as a directory for Seeder, this is not supported."
             );
           }
-          return path35.resolve(process.cwd(), directory);
+          return path36.resolve(process.cwd(), directory);
         });
       }
       async getSeeds(config3) {
@@ -62724,7 +62724,7 @@ var require_fs_seeds = __commonJS({
           files.sort();
         }
         if (specific) {
-          files = files.filter((file3) => path35.basename(file3) === specific);
+          files = files.filter((file3) => path36.basename(file3) === specific);
           if (files.length === 0) {
             throw new Error(
               `Invalid argument provided: the specific seed "${specific}" does not exist.`
@@ -62801,7 +62801,7 @@ var require_seeder_configuration_merger = __commonJS({
 var require_Seeder = __commonJS({
   "node_modules/knex/lib/migrations/seed/Seeder.js"(exports2, module2) {
     "use strict";
-    var path35 = require("path");
+    var path36 = require("path");
     var { ensureDirectoryExists } = require_fs5();
     var { writeJsFileUsingTemplate } = require_template2();
     var { yyyymmddhhmmss } = require_timestamp();
@@ -62852,7 +62852,7 @@ var require_Seeder = __commonJS({
         return filepath;
       }
       _getStubPath() {
-        return this.config.stub || path35.join(__dirname, "stub", this.config.extension + ".stub");
+        return this.config.stub || path36.join(__dirname, "stub", this.config.extension + ".stub");
       }
       _getNewStubFileName(name28) {
         if (name28[0] === "-") name28 = name28.slice(1);
@@ -62867,7 +62867,7 @@ var require_Seeder = __commonJS({
           this.config.logger
         );
         const dir = dirs.slice(-1)[0];
-        return path35.join(dir, fileName);
+        return path36.join(dir, fileName);
       }
       // Write a new seed to disk, using the config and generated filename,
       // passing any `variables` given in the config to the template.
@@ -63822,8 +63822,8 @@ var require_transaction = __commonJS({
           this._rejecter(error73);
         });
       }
-      query(conn, sql13, status, value) {
-        const q = this.trxClient.query(conn, sql13).catch((err) => {
+      query(conn, sql15, status, value) {
+        const q = this.trxClient.query(conn, sql15).catch((err) => {
           status = 2;
           value = err;
           this._completed = true;
@@ -63834,7 +63834,7 @@ var require_transaction = __commonJS({
           }
           if (status === 2) {
             if (value === void 0) {
-              if (this.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql13)) {
+              if (this.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql15)) {
                 this._resolver();
                 return;
               }
@@ -64020,8 +64020,8 @@ var require_transaction = __commonJS({
       return trxClient;
     }
     function completedError(trx, obj) {
-      const sql13 = typeof obj === "string" ? obj : obj && obj.sql;
-      debug("%s: Transaction completed: %s", trx.txid, sql13);
+      const sql15 = typeof obj === "string" ? obj : obj && obj.sql;
+      debug("%s: Transaction completed: %s", trx.txid, sql15);
       throw new Error(
         "Transaction query already complete, run with DEBUG=knex:tx for more info"
       );
@@ -64036,12 +64036,12 @@ var require_query_executioner = __commonJS({
     "use strict";
     var _debugQuery = require_src3()("knex:query");
     var debugBindings = require_src3()("knex:bindings");
-    var debugQuery = (sql13, txId) => _debugQuery(sql13.replace(/%/g, "%%"), txId);
+    var debugQuery = (sql15, txId) => _debugQuery(sql15.replace(/%/g, "%%"), txId);
     var { isString: isString2 } = require_is();
-    function formatQuery(sql13, bindings, timeZone, client) {
+    function formatQuery(sql15, bindings, timeZone, client) {
       bindings = bindings == null ? [] : [].concat(bindings);
       let index = 0;
-      return sql13.replace(/\\?\?/g, (match) => {
+      return sql15.replace(/\\?\?/g, (match) => {
         if (match === "\\?") {
           return "?";
         }
@@ -65355,8 +65355,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Adds a raw `where` clause to the query.
-      whereRaw(sql13, bindings) {
-        const raw = sql13.isRawInstance ? sql13 : this.client.raw(sql13, bindings);
+      whereRaw(sql15, bindings) {
+        const raw = sql15.isRawInstance ? sql15 : this.client.raw(sql15, bindings);
         this._statements.push({
           grouping: "where",
           type: "whereRaw",
@@ -65366,8 +65366,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      orWhereRaw(sql13, bindings) {
-        return this._bool("or").whereRaw(sql13, bindings);
+      orWhereRaw(sql15, bindings) {
+        return this._bool("or").whereRaw(sql15, bindings);
       }
       // Helper for compiling any advanced `where` queries.
       whereWrapped(callback) {
@@ -65525,8 +65525,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Adds a raw `group by` clause to the query.
-      groupByRaw(sql13, bindings) {
-        const raw = sql13.isRawInstance ? sql13 : this.client.raw(sql13, bindings);
+      groupByRaw(sql15, bindings) {
+        const raw = sql15.isRawInstance ? sql15 : this.client.raw(sql15, bindings);
         this._statements.push({
           grouping: "group",
           type: "groupByRaw",
@@ -65571,8 +65571,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Add a raw `order by` clause to the query.
-      orderByRaw(sql13, bindings) {
-        const raw = sql13.isRawInstance ? sql13 : this.client.raw(sql13, bindings);
+      orderByRaw(sql15, bindings) {
+        const raw = sql15.isRawInstance ? sql15 : this.client.raw(sql15, bindings);
         this._statements.push({
           grouping: "order",
           type: "orderByRaw",
@@ -65754,8 +65754,8 @@ var require_querybuilder = __commonJS({
         return this._bool("or")._not(true).havingIn(column, values);
       }
       // Adds a raw `having` clause to the query.
-      havingRaw(sql13, bindings) {
-        const raw = sql13.isRawInstance ? sql13 : this.client.raw(sql13, bindings);
+      havingRaw(sql15, bindings) {
+        const raw = sql15.isRawInstance ? sql15 : this.client.raw(sql15, bindings);
         this._statements.push({
           grouping: "having",
           type: "havingRaw",
@@ -65765,8 +65765,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      orHavingRaw(sql13, bindings) {
-        return this._bool("or").havingRaw(sql13, bindings);
+      orHavingRaw(sql15, bindings) {
+        return this._bool("or").havingRaw(sql15, bindings);
       }
       // set the skip binding parameter (= insert the raw value in the query) for an attribute.
       _setSkipBinding(attribute, options) {
@@ -66086,8 +66086,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      fromRaw(sql13, bindings) {
-        const raw = sql13.isRawInstance ? sql13 : this.client.raw(sql13, bindings);
+      fromRaw(sql15, bindings) {
+        const raw = sql15.isRawInstance ? sql15 : this.client.raw(sql15, bindings);
         return this.from(raw);
       }
       // Passes query to provided callback function, useful for e.g. composing
@@ -66113,11 +66113,11 @@ var require_querybuilder = __commonJS({
       }
       jsonExtract() {
         const column = arguments[0];
-        let path35;
+        let path36;
         let alias;
         let singleValue = true;
         if (arguments.length >= 2) {
-          path35 = arguments[1];
+          path36 = arguments[1];
         }
         if (arguments.length >= 3) {
           alias = arguments[2];
@@ -66130,32 +66130,32 @@ var require_querybuilder = __commonJS({
         }
         return this._json("jsonExtract", {
           column,
-          path: path35,
+          path: path36,
           alias,
           singleValue
           // boolean used only in MSSQL to use function for extract value instead of object/array.
         });
       }
-      jsonSet(column, path35, value, alias) {
+      jsonSet(column, path36, value, alias) {
         return this._json("jsonSet", {
           column,
-          path: path35,
+          path: path36,
           value,
           alias
         });
       }
-      jsonInsert(column, path35, value, alias) {
+      jsonInsert(column, path36, value, alias) {
         return this._json("jsonInsert", {
           column,
-          path: path35,
+          path: path36,
           value,
           alias
         });
       }
-      jsonRemove(column, path35, alias) {
+      jsonRemove(column, path36, alias) {
         return this._json("jsonRemove", {
           column,
-          path: path35,
+          path: path36,
           alias
         });
       }
@@ -66194,12 +66194,12 @@ var require_querybuilder = __commonJS({
       orWhereNotJsonObject(column, value) {
         return this._bool("or").whereNotJsonObject(column, value);
       }
-      whereJsonPath(column, path35, operator, value) {
-        this._whereJsonWrappedValue("whereJsonPath", column, value, operator, path35);
+      whereJsonPath(column, path36, operator, value) {
+        this._whereJsonWrappedValue("whereJsonPath", column, value, operator, path36);
         return this;
       }
-      orWhereJsonPath(column, path35, operator, value) {
-        return this._bool("or").whereJsonPath(column, path35, operator, value);
+      orWhereJsonPath(column, path36, operator, value) {
+        return this._bool("or").whereJsonPath(column, path36, operator, value);
       }
       // Json superset wheres
       whereJsonSupersetOf(column, value) {
@@ -66734,15 +66734,15 @@ var require_wrappingFormatter = __commonJS({
       return ret.join(", ");
     }
     function outputQuery(compiled, isParameter, builder, client) {
-      let sql13 = compiled.sql || "";
-      if (sql13) {
+      let sql15 = compiled.sql || "";
+      if (sql15) {
         if ((compiled.method === "select" || compiled.method === "first") && (isParameter || compiled.as)) {
-          sql13 = `(${sql13})`;
+          sql15 = `(${sql15})`;
           if (compiled.as)
-            return client.alias(sql13, wrapString(compiled.as, builder, client));
+            return client.alias(sql15, wrapString(compiled.as, builder, client));
         }
       }
-      return sql13;
+      return sql15;
     }
     function rawOrFn(value, method, builder, client, bindingHolder) {
       if (typeof value === "function") {
@@ -66786,7 +66786,7 @@ var require_rawFormatter = __commonJS({
       const expectedBindings = raw.bindings.length;
       const values = raw.bindings;
       let index = 0;
-      const sql13 = raw.sql.replace(/\\?\?\??/g, function(match) {
+      const sql15 = raw.sql.replace(/\\?\?\??/g, function(match) {
         if (match === "\\?") {
           return match;
         }
@@ -66801,7 +66801,7 @@ var require_rawFormatter = __commonJS({
       }
       return {
         method: "raw",
-        sql: sql13,
+        sql: sql15,
         bindings: bindingsHolder.bindings
       };
     }
@@ -66812,7 +66812,7 @@ var require_rawFormatter = __commonJS({
       const builder = raw;
       const values = raw.bindings;
       const regex = /\\?(:(\w+):(?=::)|:(\w+):(?!:)|:(\w+))/g;
-      const sql13 = raw.sql.replace(regex, function(match, p1, p22, p3, p4) {
+      const sql15 = raw.sql.replace(regex, function(match, p1, p22, p3, p4) {
         if (match !== p1) {
           return p1;
         }
@@ -66836,7 +66836,7 @@ var require_rawFormatter = __commonJS({
       });
       return {
         method: "raw",
-        sql: sql13,
+        sql: sql15,
         bindings: bindingsHolder.bindings
       };
     }
@@ -66907,8 +66907,8 @@ var require_raw2 = __commonJS({
           saveAsyncStack(this, 4);
         }
       }
-      set(sql13, bindings) {
-        this.sql = sql13;
+      set(sql15, bindings) {
+        this.sql = sql15;
         this.bindings = isObject5(bindings) && !bindings.toSQL || bindings === void 0 ? bindings : [bindings];
         return this;
       }
@@ -67094,8 +67094,8 @@ var require_has = __commonJS({
     "use strict";
     var baseHas = require_baseHas();
     var hasPath2 = require_hasPath();
-    function has(object4, path35) {
-      return object4 != null && hasPath2(object4, path35, baseHas);
+    function has(object4, path36) {
+      return object4 != null && hasPath2(object4, path36, baseHas);
     }
     module2.exports = has;
   }
@@ -67126,14 +67126,14 @@ var require_baseSet = __commonJS({
     var isIndex2 = require_isIndex();
     var isObject5 = require_isObject();
     var toKey2 = require_toKey();
-    function baseSet(object4, path35, value, customizer) {
+    function baseSet(object4, path36, value, customizer) {
       if (!isObject5(object4)) {
         return object4;
       }
-      path35 = castPath2(path35, object4);
-      var index = -1, length = path35.length, lastIndex = length - 1, nested = object4;
+      path36 = castPath2(path36, object4);
+      var index = -1, length = path36.length, lastIndex = length - 1, nested = object4;
       while (nested != null && ++index < length) {
-        var key = toKey2(path35[index]), newValue = value;
+        var key = toKey2(path36[index]), newValue = value;
         if (key === "__proto__" || key === "constructor" || key === "prototype") {
           return object4;
         }
@@ -67141,7 +67141,7 @@ var require_baseSet = __commonJS({
           var objValue = nested[key];
           newValue = customizer ? customizer(objValue, key, nested) : void 0;
           if (newValue === void 0) {
-            newValue = isObject5(objValue) ? objValue : isIndex2(path35[index + 1]) ? [] : {};
+            newValue = isObject5(objValue) ? objValue : isIndex2(path36[index + 1]) ? [] : {};
           }
         }
         assignValue(nested, key, newValue);
@@ -67163,9 +67163,9 @@ var require_basePickBy = __commonJS({
     function basePickBy(object4, paths, predicate) {
       var index = -1, length = paths.length, result = {};
       while (++index < length) {
-        var path35 = paths[index], value = baseGet2(object4, path35);
-        if (predicate(value, path35)) {
-          baseSet(result, castPath2(path35, object4), value);
+        var path36 = paths[index], value = baseGet2(object4, path36);
+        if (predicate(value, path36)) {
+          baseSet(result, castPath2(path36, object4), value);
         }
       }
       return result;
@@ -67190,8 +67190,8 @@ var require_pickBy = __commonJS({
         return [prop];
       });
       predicate = baseIteratee2(predicate);
-      return basePickBy(object4, props, function(value, path35) {
-        return predicate(value, path35[0]);
+      return basePickBy(object4, props, function(value, path36) {
+        return predicate(value, path36[0]);
       });
     }
     module2.exports = pickBy;
@@ -67351,7 +67351,7 @@ var require_querycompiler = __commonJS({
       // the component compilers, trimming out the empties, and returning a
       // generated query string.
       select() {
-        let sql13 = this.with();
+        let sql15 = this.with();
         let unionStatement = "";
         const firstStatements = [];
         const endStatements = [];
@@ -67377,13 +67377,13 @@ var require_querycompiler = __commonJS({
           const statements = compact(firstStatements.concat(endStatements)).join(
             " "
           );
-          sql13 += unionStatement + (statements ? " " + statements : "");
+          sql15 += unionStatement + (statements ? " " + statements : "");
         } else {
           const allStatements = (wrapMainQuery ? "(" : "") + compact(firstStatements).join(" ") + (wrapMainQuery ? ")" : "");
           const endStat = compact(endStatements).join(" ");
-          sql13 += allStatements + (unionStatement ? " " + unionStatement : "") + (endStat ? " " + endStat : endStat);
+          sql15 += allStatements + (unionStatement ? " " + unionStatement : "") + (endStat ? " " + endStat : endStat);
         }
-        return sql13;
+        return sql15;
       }
       pluck() {
         let toPluck = this.single.pluck;
@@ -67399,55 +67399,55 @@ var require_querycompiler = __commonJS({
       // inserts using a single query statement.
       insert() {
         const insertValues = this.single.insert || [];
-        const sql13 = this.with() + `insert into ${this.tableName} `;
+        const sql15 = this.with() + `insert into ${this.tableName} `;
         const body = this._insertBody(insertValues);
-        return body === "" ? "" : sql13 + body;
+        return body === "" ? "" : sql15 + body;
       }
       _onConflictClause(columns) {
         return columns instanceof Raw ? this.formatter.wrap(columns) : `(${this.formatter.columnize(columns)})`;
       }
       _buildInsertValues(insertData) {
-        let sql13 = "";
+        let sql15 = "";
         let i = -1;
         while (++i < insertData.values.length) {
-          if (i !== 0) sql13 += "), (";
-          sql13 += this.client.parameterize(
+          if (i !== 0) sql15 += "), (";
+          sql15 += this.client.parameterize(
             insertData.values[i],
             this.client.valueForUndefined,
             this.builder,
             this.bindingsHolder
           );
         }
-        return sql13;
+        return sql15;
       }
       _insertBody(insertValues) {
-        let sql13 = "";
+        let sql15 = "";
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
             return "";
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
-          return sql13 + this._emptyInsertValue;
+          return sql15 + this._emptyInsertValue;
         }
         const insertData = this._prepInsert(insertValues);
         if (typeof insertData === "string") {
-          sql13 += insertData;
+          sql15 += insertData;
         } else {
           if (insertData.columns.length) {
-            sql13 += `(${columnize_(
+            sql15 += `(${columnize_(
               insertData.columns,
               this.builder,
               this.client,
               this.bindingsHolder
             )}`;
-            sql13 += ") values (" + this._buildInsertValues(insertData) + ")";
+            sql15 += ") values (" + this._buildInsertValues(insertData) + ")";
           } else if (insertValues.length === 1 && insertValues[0]) {
-            sql13 += this._emptyInsertValue;
+            sql15 += this._emptyInsertValue;
           } else {
-            sql13 = "";
+            sql15 = "";
           }
         }
-        return sql13;
+        return sql15;
       }
       // Compiles the "update" query.
       update() {
@@ -67469,7 +67469,7 @@ var require_querycompiler = __commonJS({
         if (this.onlyUnions()) return "";
         const hints = this._hintComments();
         const columns = this.grouped.columns || [];
-        let i = -1, sql13 = [];
+        let i = -1, sql15 = [];
         if (columns) {
           while (++i < columns.length) {
             const stmt = columns[i];
@@ -67479,15 +67479,15 @@ var require_querycompiler = __commonJS({
               continue;
             }
             if (stmt.type === "aggregate") {
-              sql13.push(...this.aggregate(stmt));
+              sql15.push(...this.aggregate(stmt));
             } else if (stmt.type === "aggregateRaw") {
-              sql13.push(this.aggregateRaw(stmt));
+              sql15.push(this.aggregateRaw(stmt));
             } else if (stmt.type === "analytic") {
-              sql13.push(this.analytic(stmt));
+              sql15.push(this.analytic(stmt));
             } else if (stmt.type === "json") {
-              sql13.push(this.json(stmt));
+              sql15.push(this.json(stmt));
             } else if (stmt.value && stmt.value.length > 0) {
-              sql13.push(
+              sql15.push(
                 columnize_(
                   stmt.value,
                   this.builder,
@@ -67498,9 +67498,9 @@ var require_querycompiler = __commonJS({
             }
           }
         }
-        if (sql13.length === 0) sql13 = ["*"];
+        if (sql15.length === 0) sql15 = ["*"];
         const select = this.onlyJson() ? "" : "select ";
-        return `${select}${hints}${distinctClause}` + sql13.join(", ") + (this.tableName ? ` from ${this.single.only ? "only " : ""}${this.tableName}` : "");
+        return `${select}${hints}${distinctClause}` + sql15.join(", ") + (this.tableName ? ` from ${this.single.only ? "only " : ""}${this.tableName}` : "");
       }
       // Add comments to the query
       comments() {
@@ -67583,16 +67583,16 @@ var require_querycompiler = __commonJS({
       // Compiles all each of the `join` clauses on the query,
       // including any nested join queries.
       join() {
-        let sql13 = "";
+        let sql15 = "";
         let i = -1;
         const joins = this.grouped.join;
         if (!joins) return "";
         while (++i < joins.length) {
           const join2 = joins[i];
           const table = this._joinTable(join2);
-          if (i > 0) sql13 += " ";
+          if (i > 0) sql15 += " ";
           if (join2.joinType === "raw") {
-            sql13 += unwrapRaw_(
+            sql15 += unwrapRaw_(
               join2.table,
               void 0,
               this.builder,
@@ -67600,7 +67600,7 @@ var require_querycompiler = __commonJS({
               this.bindingsHolder
             );
           } else {
-            sql13 += join2.joinType + " join " + wrap_(
+            sql15 += join2.joinType + " join " + wrap_(
               table,
               void 0,
               this.builder,
@@ -67611,18 +67611,18 @@ var require_querycompiler = __commonJS({
             while (++ii < join2.clauses.length) {
               const clause = join2.clauses[ii];
               if (ii > 0) {
-                sql13 += ` ${clause.bool} `;
+                sql15 += ` ${clause.bool} `;
               } else {
-                sql13 += ` ${clause.type === "onUsing" ? "using" : "on"} `;
+                sql15 += ` ${clause.type === "onUsing" ? "using" : "on"} `;
               }
               const val = this[clause.type](clause);
               if (val) {
-                sql13 += val;
+                sql15 += val;
               }
             }
           }
         }
-        return sql13;
+        return sql15;
       }
       onBetween(statement) {
         return wrap_(
@@ -67679,29 +67679,29 @@ var require_querycompiler = __commonJS({
         ) + " " + this._not(statement, "in ") + this.wrap(values);
       }
       multiOnIn(statement) {
-        let i = -1, sql13 = `(${columnize_(
+        let i = -1, sql15 = `(${columnize_(
           statement.column,
           this.builder,
           this.client,
           this.bindingsHolder
         )}) `;
-        sql13 += this._not(statement, "in ") + "((";
+        sql15 += this._not(statement, "in ") + "((";
         while (++i < statement.value.length) {
-          if (i !== 0) sql13 += "),(";
-          sql13 += this.client.parameterize(
+          if (i !== 0) sql15 += "),(";
+          sql15 += this.client.parameterize(
             statement.value[i],
             void 0,
             this.builder,
             this.bindingsHolder
           );
         }
-        return sql13 + "))";
+        return sql15 + "))";
       }
       // Compiles all `where` statements on the query.
       where() {
         const wheres = this.grouped.where;
         if (!wheres) return;
-        const sql13 = [];
+        const sql15 = [];
         let i = -1;
         while (++i < wheres.length) {
           const stmt = wheres[i];
@@ -67711,15 +67711,15 @@ var require_querycompiler = __commonJS({
           }
           const val = this[stmt.type](stmt);
           if (val) {
-            if (sql13.length === 0) {
-              sql13[0] = "where";
+            if (sql15.length === 0) {
+              sql15[0] = "where";
             } else {
-              sql13.push(stmt.bool);
+              sql15.push(stmt.bool);
             }
-            sql13.push(val);
+            sql15.push(val);
           }
         }
-        return sql13.length > 1 ? sql13.join(" ") : "";
+        return sql15.length > 1 ? sql15.join(" ") : "";
       }
       group() {
         return this._groupsOrders("group");
@@ -67731,21 +67731,21 @@ var require_querycompiler = __commonJS({
       having() {
         const havings = this.grouped.having;
         if (!havings) return "";
-        const sql13 = ["having"];
+        const sql15 = ["having"];
         for (let i = 0, l = havings.length; i < l; i++) {
           const s = havings[i];
           const val = this[s.type](s);
           if (val) {
-            if (sql13.length === 0) {
-              sql13[0] = "where";
+            if (sql15.length === 0) {
+              sql15[0] = "where";
             }
-            if (sql13.length > 1 || sql13.length === 1 && sql13[0] !== "having") {
-              sql13.push(s.bool);
+            if (sql15.length > 1 || sql15.length === 1 && sql15[0] !== "having") {
+              sql15.push(s.bool);
             }
-            sql13.push(val);
+            sql15.push(val);
           }
         }
-        return sql13.length > 1 ? sql13.join(" ") : "";
+        return sql15.length > 1 ? sql15.join(" ") : "";
       }
       havingRaw(statement) {
         return this._not(statement, "") + unwrapRaw_(
@@ -67834,11 +67834,11 @@ var require_querycompiler = __commonJS({
         const onlyUnions = this.onlyUnions();
         const unions = this.grouped.union;
         if (!unions) return "";
-        let sql13 = "";
+        let sql15 = "";
         for (let i = 0, l = unions.length; i < l; i++) {
           const union3 = unions[i];
-          if (i > 0) sql13 += " ";
-          if (i > 0 || !onlyUnions) sql13 += union3.clause + " ";
+          if (i > 0) sql15 += " ";
+          if (i > 0 || !onlyUnions) sql15 += union3.clause + " ";
           const statement = rawOrFn_(
             union3.value,
             void 0,
@@ -67848,12 +67848,12 @@ var require_querycompiler = __commonJS({
           );
           if (statement) {
             const wrap = union3.wrap;
-            if (wrap) sql13 += "(";
-            sql13 += statement;
-            if (wrap) sql13 += ")";
+            if (wrap) sql15 += "(";
+            sql15 += statement;
+            if (wrap) sql15 += ")";
           }
         }
-        return sql13;
+        return sql15;
       }
       // If we haven't specified any columns or a `tableName`, we're assuming this
       // is only being used for unions.
@@ -67928,19 +67928,19 @@ var require_querycompiler = __commonJS({
         const self2 = this;
         const wrapJoin = new JoinClause();
         clause.value.call(wrapJoin, wrapJoin);
-        let sql13 = "";
+        let sql15 = "";
         for (let ii = 0; ii < wrapJoin.clauses.length; ii++) {
           const wrapClause = wrapJoin.clauses[ii];
           if (ii > 0) {
-            sql13 += ` ${wrapClause.bool} `;
+            sql15 += ` ${wrapClause.bool} `;
           }
           const val = self2[wrapClause.type](wrapClause);
           if (val) {
-            sql13 += val;
+            sql15 += val;
           }
         }
-        if (sql13.length) {
-          return `(${sql13})`;
+        if (sql15.length) {
+          return `(${sql15})`;
         }
         return "";
       }
@@ -68141,32 +68141,32 @@ var require_querycompiler = __commonJS({
         return this[stmt.method](stmt.params);
       }
       analytic(stmt) {
-        let sql13 = "";
+        let sql15 = "";
         const self2 = this;
-        sql13 += stmt.method + "() over (";
+        sql15 += stmt.method + "() over (";
         if (stmt.raw) {
-          sql13 += stmt.raw;
+          sql15 += stmt.raw;
         } else {
           if (stmt.partitions.length) {
-            sql13 += "partition by ";
-            sql13 += map3(stmt.partitions, function(partition) {
+            sql15 += "partition by ";
+            sql15 += map3(stmt.partitions, function(partition) {
               if (isString2(partition)) {
                 return self2.formatter.columnize(partition);
               } else return self2.formatter.columnize(partition.column) + (partition.order ? " " + partition.order : "");
             }).join(", ") + " ";
           }
-          sql13 += "order by ";
-          sql13 += map3(stmt.order, function(order) {
+          sql15 += "order by ";
+          sql15 += map3(stmt.order, function(order) {
             if (isString2(order)) {
               return self2.formatter.columnize(order);
             } else return self2.formatter.columnize(order.column) + (order.order ? " " + order.order : "");
           }).join(", ");
         }
-        sql13 += ")";
+        sql15 += ")";
         if (stmt.alias) {
-          sql13 += " as " + stmt.alias;
+          sql15 += " as " + stmt.alias;
         }
-        return sql13;
+        return sql15;
       }
       // Compiles all `with` statements on the query.
       with() {
@@ -68175,7 +68175,7 @@ var require_querycompiler = __commonJS({
         }
         const withs = this.grouped.with;
         if (!withs) return;
-        const sql13 = [];
+        const sql15 = [];
         let i = -1;
         let isRecursive = false;
         while (++i < withs.length) {
@@ -68184,9 +68184,9 @@ var require_querycompiler = __commonJS({
             isRecursive = true;
           }
           const val = this[stmt.type](stmt);
-          sql13.push(val);
+          sql15.push(val);
         }
-        return `with ${isRecursive ? "recursive " : ""}${sql13.join(", ")} `;
+        return `with ${isRecursive ? "recursive " : ""}${sql15.join(", ")} `;
       }
       withWrapped(statement) {
         const val = rawOrFn_(
@@ -68358,10 +68358,10 @@ var require_querycompiler = __commonJS({
       _groupsOrders(type) {
         const items = this.grouped[type];
         if (!items) return "";
-        const sql13 = items.map((item) => {
+        const sql15 = items.map((item) => {
           return this._groupOrder(item, type);
         });
-        return sql13.length ? type + " by " + sql13.join(", ") : "";
+        return sql15.length ? type + " by " + sql15.join(", ") : "";
       }
       // Get the table name, wrapping it if necessary.
       // Implemented as a property to prevent ordering issues as described in #704.
@@ -68699,8 +68699,8 @@ var require_compiler = __commonJS({
           (materialized ? this.dropMaterializedViewPrefix : this.dropViewPrefix) + (ifExists ? "if exists " : "") + this.formatter.wrap(prefixedTableName(this.schema, viewName))
         );
       }
-      raw(sql13, bindings) {
-        this.sequence.push(this.client.raw(sql13, bindings).toSQL());
+      raw(sql15, bindings) {
+        this.sequence.push(this.client.raw(sql15, bindings).toSQL());
       }
       toSQL() {
         const sequence = this.builder._sequence;
@@ -68743,9 +68743,9 @@ var require_compiler = __commonJS({
         builder.queryContext(queryContext);
       }
       builder.setSchema(this.schema);
-      const sql13 = builder.toSQL();
-      for (let i = 0, l = sql13.length; i < l; i++) {
-        this.sequence.push(sql13[i]);
+      const sql15 = builder.toSQL();
+      for (let i = 0, l = sql15.length; i < l; i++) {
+        this.sequence.push(sql15[i]);
       }
     }
     function buildTable(type) {
@@ -69404,8 +69404,8 @@ var require_tablecompiler = __commonJS({
               const nullableType2 = nullable3 ? "null" : "not null";
               const columnType = columnInfo.type + (columnInfo.maxLength ? `(${columnInfo.maxLength})` : "");
               const defaultValue = columnInfo.defaultValue !== null && columnInfo.defaultValue !== void 0 ? `default '${columnInfo.defaultValue}'` : "";
-              const sql13 = `alter table ${tableName} ${alterColumnPrefix} ${columnName} ${columnType} ${nullableType2} ${defaultValue}`;
-              return this.client.raw(sql13);
+              const sql15 = `alter table ${tableName} ${alterColumnPrefix} ${columnName} ${columnType} ${nullableType2} ${defaultValue}`;
+              return this.client.raw(sql15);
             });
           }
         });
@@ -69420,8 +69420,8 @@ var require_tablecompiler = __commonJS({
         if (checkConstraintNames === void 0) return "";
         checkConstraintNames = normalizeArr(checkConstraintNames);
         const tableName = this.tableName();
-        const sql13 = `alter table ${tableName} ${checkConstraintNames.map((constraint) => `drop constraint ${constraint}`).join(", ")}`;
-        this.pushQuery(sql13);
+        const sql15 = `alter table ${tableName} ${checkConstraintNames.map((constraint) => `drop constraint ${constraint}`).join(", ")}`;
+        this.pushQuery(sql15);
       }
       check(checkPredicate, bindings, constraintName) {
         const tableName = this.tableName();
@@ -69430,8 +69430,8 @@ var require_tablecompiler = __commonJS({
           this.checksCount++;
           checkConstraint = tableName + "_" + this.checksCount;
         }
-        const sql13 = `alter table ${tableName} add constraint ${checkConstraint} check(${checkPredicate})`;
-        this.pushQuery(sql13);
+        const sql15 = `alter table ${tableName} add constraint ${checkConstraint} check(${checkPredicate})`;
+        this.pushQuery(sql15);
       }
       _addChecks() {
         if (this.grouped.checks) {
@@ -69875,8 +69875,8 @@ var require_ref2 = __commonJS({
         const string5 = this._schema ? `${this._schema}.${this.ref}` : this.ref;
         const formatter = this.client.formatter(this);
         const ref = formatter.columnize(string5);
-        const sql13 = this._alias ? `${ref} as ${formatter.wrap(this._alias)}` : ref;
-        this.set(sql13, []);
+        const sql15 = this._alias ? `${ref} as ${formatter.wrap(this._alias)}` : ref;
+        this.set(sql15, []);
         return super.toSQL(...arguments);
       }
     };
@@ -70047,24 +70047,24 @@ var require_viewcompiler = __commonJS({
           this.client,
           this.bindingsHolder
         ) + ")" : "";
-        let sql13 = createStatement + this.viewName() + columnList;
-        sql13 += " as ";
-        sql13 += selectQuery.toString();
+        let sql15 = createStatement + this.viewName() + columnList;
+        sql15 += " as ";
+        sql15 += selectQuery.toString();
         switch (this.single.checkOption) {
           case "default_option":
-            sql13 += " with check option";
+            sql15 += " with check option";
             break;
           case "local":
-            sql13 += " with local check option";
+            sql15 += " with local check option";
             break;
           case "cascaded":
-            sql13 += " with cascaded check option";
+            sql15 += " with cascaded check option";
             break;
           default:
             break;
         }
         this.pushQuery({
-          sql: sql13
+          sql: sql15
         });
       }
       renameView(from, to) {
@@ -70250,8 +70250,8 @@ var require_client2 = __commonJS({
       prepBindings(bindings) {
         return bindings;
       }
-      positionBindings(sql13) {
-        return sql13;
+      positionBindings(sql15) {
+        return sql15;
       }
       postProcessResponse(resp, queryContext) {
         if (this.config.postProcessResponse) {
@@ -70643,15 +70643,15 @@ var require_pg_connection_string = __commonJS({
       if (config3.sslcert || config3.sslkey || config3.sslrootcert || config3.sslmode) {
         config3.ssl = {};
       }
-      const fs39 = config3.sslcert || config3.sslkey || config3.sslrootcert ? require("fs") : null;
+      const fs40 = config3.sslcert || config3.sslkey || config3.sslrootcert ? require("fs") : null;
       if (config3.sslcert) {
-        config3.ssl.cert = fs39.readFileSync(config3.sslcert).toString();
+        config3.ssl.cert = fs40.readFileSync(config3.sslcert).toString();
       }
       if (config3.sslkey) {
-        config3.ssl.key = fs39.readFileSync(config3.sslkey).toString();
+        config3.ssl.key = fs40.readFileSync(config3.sslkey).toString();
       }
       if (config3.sslrootcert) {
-        config3.ssl.ca = fs39.readFileSync(config3.sslrootcert).toString();
+        config3.ssl.ca = fs40.readFileSync(config3.sslrootcert).toString();
       }
       switch (config3.sslmode) {
         case "disable": {
@@ -70935,24 +70935,24 @@ var require_sqlite_querycompiler = __commonJS({
       // then join them all together with select unions to complete the queries.
       insert() {
         const insertValues = this.single.insert || [];
-        let sql13 = this.with() + `insert into ${this.tableName} `;
+        let sql15 = this.with() + `insert into ${this.tableName} `;
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
             return "";
           } else if (insertValues.length === 1 && insertValues[0] && isEmpty(insertValues[0])) {
             return {
-              sql: sql13 + this._emptyInsertValue
+              sql: sql15 + this._emptyInsertValue
             };
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql13 + this._emptyInsertValue
+            sql: sql15 + this._emptyInsertValue
           };
         }
         const insertData = this._prepInsert(insertValues);
         if (isString2(insertData)) {
           return {
-            sql: sql13 + insertData
+            sql: sql15 + insertData
           };
         }
         if (insertData.columns.length === 0) {
@@ -70960,7 +70960,7 @@ var require_sqlite_querycompiler = __commonJS({
             sql: ""
           };
         }
-        sql13 += `(${this.formatter.columnize(insertData.columns)})`;
+        sql15 += `(${this.formatter.columnize(insertData.columns)})`;
         if (this.client.valueForUndefined !== null) {
           insertData.values.forEach((bindings) => {
             each(bindings, (binding) => {
@@ -70978,20 +70978,20 @@ var require_sqlite_querycompiler = __commonJS({
             this.builder,
             this.bindingsHolder
           );
-          sql13 += ` values (${parameters})`;
+          sql15 += ` values (${parameters})`;
           const { onConflict: onConflict2, ignore: ignore2, merge: merge5 } = this.single;
-          if (onConflict2 && ignore2) sql13 += this._ignore(onConflict2);
+          if (onConflict2 && ignore2) sql15 += this._ignore(onConflict2);
           else if (onConflict2 && merge5) {
-            sql13 += this._merge(merge5.updates, onConflict2, insertValues);
+            sql15 += this._merge(merge5.updates, onConflict2, insertValues);
             const wheres = this.where();
-            if (wheres) sql13 += ` ${wheres}`;
+            if (wheres) sql15 += ` ${wheres}`;
           }
           const { returning: returning2 } = this.single;
           if (returning2) {
-            sql13 += this._returning(returning2);
+            sql15 += this._returning(returning2);
           }
           return {
-            sql: sql13,
+            sql: sql15,
             returning: returning2
           };
         }
@@ -71016,16 +71016,16 @@ var require_sqlite_querycompiler = __commonJS({
           }
           blocks[i] = block.join(", ");
         }
-        sql13 += " select " + blocks.join(" union all select ");
+        sql15 += " select " + blocks.join(" union all select ");
         const { onConflict, ignore, merge: merge4 } = this.single;
-        if (onConflict && ignore) sql13 += " where true" + this._ignore(onConflict);
+        if (onConflict && ignore) sql15 += " where true" + this._ignore(onConflict);
         else if (onConflict && merge4) {
-          sql13 += " where true" + this._merge(merge4.updates, onConflict, insertValues);
+          sql15 += " where true" + this._merge(merge4.updates, onConflict, insertValues);
         }
         const { returning } = this.single;
-        if (returning) sql13 += this._returning(returning);
+        if (returning) sql15 += this._returning(returning);
         return {
-          sql: sql13,
+          sql: sql15,
           returning
         };
       }
@@ -71047,9 +71047,9 @@ var require_sqlite_querycompiler = __commonJS({
         return ` on conflict ${this._onConflictClause(columns)} do nothing`;
       }
       _merge(updates, columns, insert) {
-        let sql13 = ` on conflict ${this._onConflictClause(columns)} do update set `;
+        let sql15 = ` on conflict ${this._onConflictClause(columns)} do update set `;
         if (updates && Array.isArray(updates)) {
-          sql13 += updates.map(
+          sql15 += updates.map(
             (column) => wrapString(
               column.split(".").pop(),
               this.formatter.builder,
@@ -71057,15 +71057,15 @@ var require_sqlite_querycompiler = __commonJS({
               this.formatter
             )
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql13;
+          return sql15;
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
           if (typeof updateData === "string") {
-            sql13 += updateData;
+            sql15 += updateData;
           } else {
-            sql13 += updateData.join(",");
+            sql15 += updateData.join(",");
           }
-          return sql13;
+          return sql15;
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -71073,10 +71073,10 @@ var require_sqlite_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          sql13 += insertData.columns.map(
+          sql15 += insertData.columns.map(
             (column) => wrapString(column.split(".").pop(), this.builder, this.client)
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql13;
+          return sql15;
         }
       }
       _returning(value) {
@@ -71230,12 +71230,12 @@ var require_sqlite_compiler = __commonJS({
       }
       // Compile the query to determine if a table exists.
       hasTable(tableName) {
-        const sql13 = `select * from sqlite_master where type = 'table' and name = ${this.client.parameter(
+        const sql15 = `select * from sqlite_master where type = 'table' and name = ${this.client.parameter(
           this.formatter.wrap(tableName).replace(/`/g, ""),
           this.builder,
           this.bindingsHolder
         )}`;
-        this.pushQuery({ sql: sql13, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql15, output: (resp) => resp.length > 0 });
       }
       // Compile the query to determine if a column exists.
       hasColumn(tableName, column) {
@@ -71357,17 +71357,17 @@ var require_sqlite_tablecompiler = __commonJS({
       // Create a new table.
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
-        let sql13 = createStatement + this.tableName();
+        let sql15 = createStatement + this.tableName();
         if (like && this.tableNameLike()) {
-          sql13 += " as select * from " + this.tableNameLike() + " where 0=1";
+          sql15 += " as select * from " + this.tableNameLike() + " where 0=1";
         } else {
-          sql13 += " (" + columns.sql.join(", ");
-          sql13 += this.foreignKeys() || "";
-          sql13 += this.primaryKeys() || "";
-          sql13 += this._addChecks();
-          sql13 += ")";
+          sql15 += " (" + columns.sql.join(", ");
+          sql15 += this.foreignKeys() || "";
+          sql15 += this.primaryKeys() || "";
+          sql15 += this._addChecks();
+          sql15 += ")";
         }
-        this.pushQuery(sql13);
+        this.pushQuery(sql15);
         if (like) {
           this.addColumns(columns, this.addColumnsPrefix);
         }
@@ -71563,7 +71563,7 @@ var require_sqlite_tablecompiler = __commonJS({
         }
       }
       foreignKeys() {
-        let sql13 = "";
+        let sql15 = "";
         const foreignKeys = filter6(this.grouped.alterTable || [], {
           method: "foreign"
         });
@@ -71576,11 +71576,11 @@ var require_sqlite_tablecompiler = __commonJS({
           if (constraintName) {
             constraintName = " constraint " + this.formatter.wrap(constraintName);
           }
-          sql13 += `,${constraintName} foreign key(${column}) references ${foreignTable}(${references})`;
-          if (foreign.onDelete) sql13 += ` on delete ${foreign.onDelete}`;
-          if (foreign.onUpdate) sql13 += ` on update ${foreign.onUpdate}`;
+          sql15 += `,${constraintName} foreign key(${column}) references ${foreignTable}(${references})`;
+          if (foreign.onDelete) sql15 += ` on delete ${foreign.onDelete}`;
+          if (foreign.onUpdate) sql15 += ` on update ${foreign.onUpdate}`;
         }
-        return sql13;
+        return sql15;
       }
       createTableBlock() {
         return this.getColumns().concat().join(",");
@@ -71836,20 +71836,20 @@ var require_parser = __commonJS({
       operator: /-|\(|\)|;|\+|\*|\/|%|==|=|<=|<>|<<|<|>=|>>|>|!=|,|&|~|\|\||\||\./,
       _ws: /\s+/
     };
-    function parseCreateTable(sql13) {
-      const result = createTable({ input: tokenize(sql13, TOKENS) });
+    function parseCreateTable(sql15) {
+      const result = createTable({ input: tokenize(sql15, TOKENS) });
       if (!result.success) {
         throw new Error(
-          `Parsing CREATE TABLE failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql13}"`
+          `Parsing CREATE TABLE failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql15}"`
         );
       }
       return result.ast;
     }
-    function parseCreateIndex(sql13) {
-      const result = createIndex({ input: tokenize(sql13, TOKENS) });
+    function parseCreateIndex(sql15) {
+      const result = createIndex({ input: tokenize(sql15, TOKENS) });
       if (!result.success) {
         throw new Error(
-          `Parsing CREATE INDEX failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql13}"`
+          `Parsing CREATE INDEX failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql15}"`
         );
       }
       return result.ast;
@@ -72912,16 +72912,16 @@ var require_ddl = __commonJS({
         );
       }
       async generateAlterCommands(newSql, createIndices, columns) {
-        const sql13 = [];
+        const sql15 = [];
         const pre = [];
         const post = [];
         let check3 = null;
-        sql13.push(newSql);
-        sql13.push(copyData(this.tableName(), this.alteredName, columns));
-        sql13.push(dropOriginal(this.tableName()));
-        sql13.push(renameTable(this.alteredName, this.tableName()));
+        sql15.push(newSql);
+        sql15.push(copyData(this.tableName(), this.alteredName, columns));
+        sql15.push(dropOriginal(this.tableName()));
+        sql15.push(renameTable(this.alteredName, this.tableName()));
         for (const createIndex of createIndices) {
-          sql13.push(createIndex);
+          sql15.push(createIndex);
         }
         const isForeignCheckEnabled2 = await this.isForeignCheckEnabled();
         if (isForeignCheckEnabled2) {
@@ -72929,7 +72929,7 @@ var require_ddl = __commonJS({
           post.push(setForeignCheck(true));
           check3 = executeForeignCheck();
         }
-        return { pre, sql: sql13, check: check3, post };
+        return { pre, sql: sql15, check: check3, post };
       }
     };
     module2.exports = SQLite3_DDL;
@@ -73316,18 +73316,18 @@ var require_pg_querycompiler = __commonJS({
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        let sql13 = super.insert();
-        if (sql13 === "") return sql13;
+        let sql15 = super.insert();
+        if (sql15 === "") return sql15;
         const { returning, onConflict, ignore, merge: merge4, insert } = this.single;
-        if (onConflict && ignore) sql13 += this._ignore(onConflict);
+        if (onConflict && ignore) sql15 += this._ignore(onConflict);
         if (onConflict && merge4) {
-          sql13 += this._merge(merge4.updates, onConflict, insert);
+          sql15 += this._merge(merge4.updates, onConflict, insert);
           const wheres = this.where();
-          if (wheres) sql13 += ` ${wheres}`;
+          if (wheres) sql15 += ` ${wheres}`;
         }
-        if (returning) sql13 += this._returning(returning);
+        if (returning) sql15 += this._returning(returning);
         return {
-          sql: sql13,
+          sql: sql15,
           returning
         };
       }
@@ -73345,15 +73345,15 @@ var require_pg_querycompiler = __commonJS({
       using() {
         const usingTables = this.single.using;
         if (!usingTables) return;
-        let sql13 = "using ";
+        let sql15 = "using ";
         if (Array.isArray(usingTables)) {
-          sql13 += usingTables.map((table) => {
+          sql15 += usingTables.map((table) => {
             return this.formatter.wrap(table);
           }).join(",");
         } else {
-          sql13 += this.formatter.wrap(usingTables);
+          sql15 += this.formatter.wrap(usingTables);
         }
-        return sql13;
+        return sql15;
       }
       // Compiles an `delete` query, allowing for a return value.
       del() {
@@ -73393,10 +73393,10 @@ var require_pg_querycompiler = __commonJS({
             using += (using ? "," : "using ") + tableJoins.join(",");
           }
         }
-        const sql13 = withSQL + `delete from ${this.single.only ? "only " : ""}${tableName}` + (using ? ` ${using}` : "") + (wheres ? ` ${wheres}` : "");
+        const sql15 = withSQL + `delete from ${this.single.only ? "only " : ""}${tableName}` + (using ? ` ${using}` : "") + (wheres ? ` ${wheres}` : "");
         const { returning } = this.single;
         return {
-          sql: sql13 + this._returning(returning),
+          sql: sql15 + this._returning(returning),
           returning
         };
       }
@@ -73416,9 +73416,9 @@ var require_pg_querycompiler = __commonJS({
         return ` on conflict ${this._onConflictClause(columns)} do nothing`;
       }
       _merge(updates, columns, insert) {
-        let sql13 = ` on conflict ${this._onConflictClause(columns)} do update set `;
+        let sql15 = ` on conflict ${this._onConflictClause(columns)} do update set `;
         if (updates && Array.isArray(updates)) {
-          sql13 += updates.map(
+          sql15 += updates.map(
             (column) => wrapString(
               column.split(".").pop(),
               this.formatter.builder,
@@ -73426,15 +73426,15 @@ var require_pg_querycompiler = __commonJS({
               this.formatter
             )
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql13;
+          return sql15;
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
           if (typeof updateData === "string") {
-            sql13 += updateData;
+            sql15 += updateData;
           } else {
-            sql13 += updateData.join(",");
+            sql15 += updateData.join(",");
           }
-          return sql13;
+          return sql15;
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -73442,26 +73442,26 @@ var require_pg_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          sql13 += insertData.columns.map(
+          sql15 += insertData.columns.map(
             (column) => wrapString(column.split(".").pop(), this.builder, this.client)
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql13;
+          return sql15;
         }
       }
       // Join array of table names and apply default schema.
       _tableNames(tables) {
         const schemaName = this.single.schema;
-        const sql13 = [];
+        const sql15 = [];
         for (let i = 0; i < tables.length; i++) {
           let tableName = tables[i];
           if (tableName) {
             if (schemaName) {
               tableName = `${schemaName}.${tableName}`;
             }
-            sql13.push(this.formatter.wrap(tableName));
+            sql15.push(this.formatter.wrap(tableName));
           }
         }
-        return sql13.join(", ");
+        return sql15.join(", ");
       }
       _lockingClause(lockMode) {
         const tables = this.single.lockTables || [];
@@ -73496,19 +73496,19 @@ var require_pg_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        const sql13 = "select * from information_schema.columns where table_name = ? and table_catalog = current_database()";
+        const sql15 = "select * from information_schema.columns where table_name = ? and table_catalog = current_database()";
         const bindings = [table];
-        return this._buildColumnInfoQuery(schema, sql13, bindings, column);
+        return this._buildColumnInfoQuery(schema, sql15, bindings, column);
       }
-      _buildColumnInfoQuery(schema, sql13, bindings, column) {
+      _buildColumnInfoQuery(schema, sql15, bindings, column) {
         if (schema) {
-          sql13 += " and table_schema = ?";
+          sql15 += " and table_schema = ?";
           bindings.push(schema);
         } else {
-          sql13 += " and table_schema = current_schema()";
+          sql15 += " and table_schema = current_schema()";
         }
         return {
-          sql: sql13,
+          sql: sql15,
           bindings,
           output(resp) {
             const out = reduce(
@@ -73798,11 +73798,11 @@ var require_pg_tablecompiler = __commonJS({
       }
       _setNullableState(column, isNullable) {
         const constraintAction = isNullable ? "drop not null" : "set not null";
-        const sql13 = `alter table ${this.tableName()} alter column ${this.formatter.wrap(
+        const sql15 = `alter table ${this.tableName()} alter column ${this.formatter.wrap(
           column
         )} ${constraintAction}`;
         return this.pushQuery({
-          sql: sql13
+          sql: sql15
         });
       }
       compileAdd(builder) {
@@ -73816,11 +73816,11 @@ var require_pg_tablecompiler = __commonJS({
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
         const columnsSql = ` (${columns.sql.join(", ")}${this.primaryKeys() || ""}${this._addChecks()})`;
-        let sql13 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + " including all" + (columns.sql.length ? ", " + columns.sql.join(", ") : "") + ")" : columnsSql);
+        let sql15 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + " including all" + (columns.sql.length ? ", " + columns.sql.join(", ") : "") + ")" : columnsSql);
         if (this.single.inherits)
-          sql13 += ` inherits (${this.formatter.wrap(this.single.inherits)})`;
+          sql15 += ` inherits (${this.formatter.wrap(this.single.inherits)})`;
         this.pushQuery({
-          sql: sql13,
+          sql: sql15,
           bindings: columns.bindings
         });
         const hasComment = has(this.single, "comment");
@@ -74080,16 +74080,16 @@ var require_pg_compiler = __commonJS({
       }
       // Check whether the current table
       hasTable(tableName) {
-        let sql13 = "select * from information_schema.tables where table_name = ?";
+        let sql15 = "select * from information_schema.tables where table_name = ?";
         const bindings = [tableName];
         if (this.schema) {
-          sql13 += " and table_schema = ?";
+          sql15 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql13 += " and table_schema = current_schema()";
+          sql15 += " and table_schema = current_schema()";
         }
         this.pushQuery({
-          sql: sql13,
+          sql: sql15,
           bindings,
           output(resp) {
             return resp.rows.length > 0;
@@ -74098,16 +74098,16 @@ var require_pg_compiler = __commonJS({
       }
       // Compile the query to determine if a column exists in a table.
       hasColumn(tableName, columnName) {
-        let sql13 = "select * from information_schema.columns where table_name = ? and column_name = ?";
+        let sql15 = "select * from information_schema.columns where table_name = ? and column_name = ?";
         const bindings = [tableName, columnName];
         if (this.schema) {
-          sql13 += " and table_schema = ?";
+          sql15 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql13 += " and table_schema = current_schema()";
+          sql15 += " and table_schema = current_schema()";
         }
         this.pushQuery({
-          sql: sql13,
+          sql: sql15,
           bindings,
           output(resp) {
             return resp.rows.length > 0;
@@ -74294,9 +74294,9 @@ var require_postgres = __commonJS({
       }
       // Position the bindings for the query. The escape sequence for question mark
       // is \? (e.g. knex.raw("\\?") since javascript requires '\' to be escaped too...)
-      positionBindings(sql13) {
+      positionBindings(sql15) {
         let questionCount = 0;
-        return sql13.replace(/(\\*)(\?)/g, function(match, escapes) {
+        return sql15.replace(/(\\*)(\?)/g, function(match, escapes) {
           if (escapes.length % 2) {
             return "?";
           } else {
@@ -74306,26 +74306,26 @@ var require_postgres = __commonJS({
         });
       }
       setSchemaSearchPath(connection, searchPath) {
-        let path35 = searchPath || this.searchPath;
-        if (!path35) return Promise.resolve(true);
-        if (!Array.isArray(path35) && !isString2(path35)) {
+        let path36 = searchPath || this.searchPath;
+        if (!path36) return Promise.resolve(true);
+        if (!Array.isArray(path36) && !isString2(path36)) {
           throw new TypeError(
-            `knex: Expected searchPath to be Array/String, got: ${typeof path35}`
+            `knex: Expected searchPath to be Array/String, got: ${typeof path36}`
           );
         }
-        if (isString2(path35)) {
-          if (path35.includes(",")) {
-            const parts = path35.split(",");
+        if (isString2(path36)) {
+          if (path36.includes(",")) {
+            const parts = path36.split(",");
             const arraySyntax = `[${parts.map((searchPath2) => `'${searchPath2}'`).join(", ")}]`;
             this.logger.warn(
-              `Detected comma in searchPath "${path35}".If you are trying to specify multiple schemas, use Array syntax: ${arraySyntax}`
+              `Detected comma in searchPath "${path36}".If you are trying to specify multiple schemas, use Array syntax: ${arraySyntax}`
             );
           }
-          path35 = [path35];
+          path36 = [path36];
         }
-        path35 = path35.map((schemaName) => `"${schemaName}"`).join(",");
+        path36 = path36.map((schemaName) => `"${schemaName}"`).join(",");
         return new Promise(function(resolver, rejecter) {
-          connection.query(`set search_path to ${path35}`, function(err) {
+          connection.query(`set search_path to ${path36}`, function(err) {
             if (err) return rejecter(err);
             resolver(true);
           });
@@ -74348,10 +74348,10 @@ var require_postgres = __commonJS({
             throw e;
           }
         }
-        const sql13 = obj.sql;
+        const sql15 = obj.sql;
         return new Promise(function(resolver, rejecter) {
           const queryStream = connection.query(
-            new PGQueryStream(sql13, obj.bindings, options)
+            new PGQueryStream(sql15, obj.bindings, options)
           );
           queryStream.on("error", function(error73) {
             rejecter(error73);
@@ -74509,20 +74509,20 @@ var require_crdb_querycompiler = __commonJS({
         return `truncate ${this.tableName}`;
       }
       upsert() {
-        let sql13 = this._upsert();
-        if (sql13 === "") return sql13;
+        let sql15 = this._upsert();
+        if (sql15 === "") return sql15;
         const { returning } = this.single;
-        if (returning) sql13 += this._returning(returning);
+        if (returning) sql15 += this._returning(returning);
         return {
-          sql: sql13,
+          sql: sql15,
           returning
         };
       }
       _upsert() {
         const upsertValues = this.single.upsert || [];
-        const sql13 = this.with() + `upsert into ${this.tableName} `;
+        const sql15 = this.with() + `upsert into ${this.tableName} `;
         const body = this._insertBody(upsertValues);
-        return body === "" ? "" : sql13 + body;
+        return body === "" ? "" : sql15 + body;
       }
       _groupOrder(item, type) {
         return this._basicGroupOrder(item, type);
@@ -75013,9 +75013,9 @@ var require_mssql_querycompiler = __commonJS({
         return result;
       }
       select() {
-        const sql13 = this.with();
+        const sql15 = this.with();
         const statements = components.map((component) => this[component](this));
-        return sql13 + compact(statements).join(" ");
+        return sql15 + compact(statements).join(" ");
       }
       //#region Insert
       // Compiles an "insert" query, allowing for multiple
@@ -75030,7 +75030,7 @@ var require_mssql_querycompiler = __commonJS({
       insertWithTriggers() {
         const insertValues = this.single.insert || [];
         const { returning } = this.single;
-        let sql13 = this.with() + `${this._buildTempTable(returning)}insert into ${this.tableName} `;
+        let sql15 = this.with() + `${this._buildTempTable(returning)}insert into ${this.tableName} `;
         const returningSql = returning ? this._returning("insert", returning, true) + " " : "";
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
@@ -75038,39 +75038,39 @@ var require_mssql_querycompiler = __commonJS({
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql13 + returningSql + this._emptyInsertValue + this._buildReturningSelect(returning),
+            sql: sql15 + returningSql + this._emptyInsertValue + this._buildReturningSelect(returning),
             returning
           };
         }
-        sql13 += this._buildInsertData(insertValues, returningSql);
+        sql15 += this._buildInsertData(insertValues, returningSql);
         if (returning) {
-          sql13 += this._buildReturningSelect(returning);
+          sql15 += this._buildReturningSelect(returning);
         }
         return {
-          sql: sql13,
+          sql: sql15,
           returning
         };
       }
       _buildInsertData(insertValues, returningSql) {
-        let sql13 = "";
+        let sql15 = "";
         const insertData = this._prepInsert(insertValues);
         if (typeof insertData === "string") {
-          sql13 += insertData;
+          sql15 += insertData;
         } else {
           if (insertData.columns.length) {
-            sql13 += `(${this.formatter.columnize(insertData.columns)}`;
-            sql13 += `) ${returningSql}values (` + this._buildInsertValues(insertData) + ")";
+            sql15 += `(${this.formatter.columnize(insertData.columns)}`;
+            sql15 += `) ${returningSql}values (` + this._buildInsertValues(insertData) + ")";
           } else if (insertValues.length === 1 && insertValues[0]) {
-            sql13 += returningSql + this._emptyInsertValue;
+            sql15 += returningSql + this._emptyInsertValue;
           } else {
             return "";
           }
         }
-        return sql13;
+        return sql15;
       }
       standardInsert() {
         const insertValues = this.single.insert || [];
-        let sql13 = this.with() + `insert into ${this.tableName} `;
+        let sql15 = this.with() + `insert into ${this.tableName} `;
         const { returning } = this.single;
         const returningSql = returning ? this._returning("insert", returning) + " " : "";
         if (Array.isArray(insertValues)) {
@@ -75079,13 +75079,13 @@ var require_mssql_querycompiler = __commonJS({
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql13 + returningSql + this._emptyInsertValue,
+            sql: sql15 + returningSql + this._emptyInsertValue,
             returning
           };
         }
-        sql13 += this._buildInsertData(insertValues, returningSql);
+        sql15 += this._buildInsertData(insertValues, returningSql);
         return {
-          sql: sql13,
+          sql: sql15,
           returning
         };
       }
@@ -75184,7 +75184,7 @@ var require_mssql_querycompiler = __commonJS({
         const top = this.top();
         const hints = this._hintComments();
         const columns = this.grouped.columns || [];
-        let i = -1, sql13 = [];
+        let i = -1, sql15 = [];
         if (columns) {
           while (++i < columns.length) {
             const stmt = columns[i];
@@ -75194,21 +75194,21 @@ var require_mssql_querycompiler = __commonJS({
               continue;
             }
             if (stmt.type === "aggregate") {
-              sql13.push(...this.aggregate(stmt));
+              sql15.push(...this.aggregate(stmt));
             } else if (stmt.type === "aggregateRaw") {
-              sql13.push(this.aggregateRaw(stmt));
+              sql15.push(this.aggregateRaw(stmt));
             } else if (stmt.type === "analytic") {
-              sql13.push(this.analytic(stmt));
+              sql15.push(this.analytic(stmt));
             } else if (stmt.type === "json") {
-              sql13.push(this.json(stmt));
+              sql15.push(this.json(stmt));
             } else if (stmt.value && stmt.value.length > 0) {
-              sql13.push(this.formatter.columnize(stmt.value));
+              sql15.push(this.formatter.columnize(stmt.value));
             }
           }
         }
-        if (sql13.length === 0) sql13 = ["*"];
+        if (sql15.length === 0) sql15 = ["*"];
         const select = this.onlyJson() ? "" : "select ";
-        return `${select}${hints}${distinctClause}` + (top ? top + " " : "") + sql13.join(", ") + (this.tableName ? ` from ${this.tableName}` : "");
+        return `${select}${hints}${distinctClause}` + (top ? top + " " : "") + sql15.join(", ") + (this.tableName ? ` from ${this.tableName}` : "");
       }
       _returning(method, value, withTrigger) {
         switch (method) {
@@ -75229,10 +75229,10 @@ var require_mssql_querycompiler = __commonJS({
           } else {
             selections = `[t].${this.formatter.columnize(values)}`;
           }
-          let sql13 = `select top(0) ${selections} into #out `;
-          sql13 += `from ${this.tableName} as t `;
-          sql13 += `left join ${this.tableName} on 0=1;`;
-          return sql13;
+          let sql15 = `select top(0) ${selections} into #out `;
+          sql15 += `from ${this.tableName} as t `;
+          sql15 += `left join ${this.tableName} on 0=1;`;
+          return sql15;
         }
         return "";
       }
@@ -75244,9 +75244,9 @@ var require_mssql_querycompiler = __commonJS({
           } else {
             selections = this.formatter.columnize(values);
           }
-          let sql13 = `; select ${selections} from #out; `;
-          sql13 += `drop table #out;`;
-          return sql13;
+          let sql15 = `; select ${selections} from #out; `;
+          sql15 += `drop table #out;`;
+          return sql15;
         }
         return "";
       }
@@ -75268,16 +75268,16 @@ var require_mssql_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        let sql13 = `select [COLUMN_NAME], [COLUMN_DEFAULT], [DATA_TYPE], [CHARACTER_MAXIMUM_LENGTH], [IS_NULLABLE] from INFORMATION_SCHEMA.COLUMNS where table_name = ? and table_catalog = ?`;
+        let sql15 = `select [COLUMN_NAME], [COLUMN_DEFAULT], [DATA_TYPE], [CHARACTER_MAXIMUM_LENGTH], [IS_NULLABLE] from INFORMATION_SCHEMA.COLUMNS where table_name = ? and table_catalog = ?`;
         const bindings = [table, this.client.database()];
         if (schema) {
-          sql13 += " and table_schema = ?";
+          sql15 += " and table_schema = ?";
           bindings.push(schema);
         } else {
-          sql13 += ` and table_schema = 'dbo'`;
+          sql15 += ` and table_schema = 'dbo'`;
         }
         return {
-          sql: sql13,
+          sql: sql15,
           bindings,
           output(resp) {
             const out = resp.reduce((columns, val) => {
@@ -75433,12 +75433,12 @@ var require_mssql_compiler = __commonJS({
           this.bindingsHolder
         );
         const bindings = [tableName];
-        let sql13 = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ${formattedTable}`;
+        let sql15 = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ${formattedTable}`;
         if (this.schema) {
-          sql13 += " AND TABLE_SCHEMA = ?";
+          sql15 += " AND TABLE_SCHEMA = ?";
           bindings.push(this.schema);
         }
-        this.pushQuery({ sql: sql13, bindings, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql15, bindings, output: (resp) => resp.length > 0 });
       }
       // Check whether a column exists on the schema.
       hasColumn(tableName, column) {
@@ -75452,8 +75452,8 @@ var require_mssql_compiler = __commonJS({
           this.builder,
           this.bindingsHolder
         );
-        const sql13 = `select object_id from sys.columns where name = ${formattedColumn} and object_id = object_id(${formattedTable})`;
-        this.pushQuery({ sql: sql13, output: (resp) => resp.length > 0 });
+        const sql15 = `select object_id from sys.columns where name = ${formattedColumn} and object_id = object_id(${formattedTable})`;
+        this.pushQuery({ sql: sql15, output: (resp) => resp.length > 0 });
       }
     };
     SchemaCompiler_MSSQL.prototype.dropTablePrefix = "DROP TABLE ";
@@ -75547,9 +75547,9 @@ ELSE
             this.pushQuery(baseQuery);
           }
         }
-        columns.sql.forEach((sql13) => {
+        columns.sql.forEach((sql15) => {
           this.pushQuery({
-            sql: (this.lowerCase ? "alter table " : "ALTER TABLE ") + this.tableName() + " " + (this.lowerCase ? this.alterColumnPrefix.toLowerCase() : this.alterColumnPrefix) + sql13,
+            sql: (this.lowerCase ? "alter table " : "ALTER TABLE ") + this.tableName() + " " + (this.lowerCase ? this.alterColumnPrefix.toLowerCase() : this.alterColumnPrefix) + sql15,
             bindings: columns.bindings
           });
         });
@@ -75769,18 +75769,18 @@ var require_mssql_viewcompiler = __commonJS({
       }
       createQuery(columns, selectQuery, materialized, replace) {
         const createStatement = "CREATE " + (replace ? "OR ALTER " : "") + "VIEW ";
-        let sql13 = createStatement + this.viewName();
+        let sql15 = createStatement + this.viewName();
         const columnList = columns ? " (" + columnize_(
           columns,
           this.viewBuilder,
           this.client,
           this.bindingsHolder
         ) + ")" : "";
-        sql13 += columnList;
-        sql13 += " AS ";
-        sql13 += selectQuery.toString();
+        sql15 += columnList;
+        sql15 += " AS ";
+        sql15 += selectQuery.toString();
         this.pushQuery({
-          sql: sql13
+          sql: sql15
         });
       }
       renameColumn(from, to) {
@@ -76103,9 +76103,9 @@ var require_mssql = __commonJS({
         });
       }
       // Position the bindings for the query.
-      positionBindings(sql13) {
+      positionBindings(sql15) {
         let questionCount = -1;
-        return sql13.replace(/\\?\?/g, (match) => {
+        return sql15.replace(/\\?\?/g, (match) => {
           if (match === "\\?") {
             return "?";
           }
@@ -76131,11 +76131,11 @@ var require_mssql = __commonJS({
       }
       _makeRequest(query, callback) {
         const Driver = this._driver();
-        const sql13 = typeof query === "string" ? query : query.sql;
+        const sql15 = typeof query === "string" ? query : query.sql;
         let rowCount = 0;
-        if (!sql13) throw new Error("The query is empty");
-        debug("request::request sql=%s", sql13);
-        const request = new Driver.Request(sql13, (err, remoteRowCount) => {
+        if (!sql15) throw new Error("The query is empty");
+        debug("request::request sql=%s", sql15);
+        const request = new Driver.Request(sql15, (err, remoteRowCount) => {
           if (err) {
             debug("request::error message=%s", err.message);
             return callback(err);
@@ -76392,9 +76392,9 @@ var require_transaction3 = __commonJS({
     var Debug = require_src3();
     var debug = Debug("knex:tx");
     var Transaction_MySQL = class extends Transaction {
-      query(conn, sql13, status, value) {
+      query(conn, sql15, status, value) {
         const t = this;
-        const q = this.trxClient.query(conn, sql13).catch((err) => {
+        const q = this.trxClient.query(conn, sql15).catch((err) => {
           if (err.errno === 1305) {
             this.trxClient.logger.warn(
               "Transaction was implicitly committed, do not mix transactions and DDL with MySQL (#805)"
@@ -76409,7 +76409,7 @@ var require_transaction3 = __commonJS({
           if (status === 1) t._resolver(value);
           if (status === 2) {
             if (value === void 0) {
-              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql13)) {
+              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql15)) {
                 t._resolver();
                 return;
               }
@@ -76476,22 +76476,22 @@ var require_mysql_querycompiler = __commonJS({
       }
       // Compiles an `delete` allowing comments
       del() {
-        const sql13 = super.del();
-        if (sql13 === "") return sql13;
+        const sql15 = super.del();
+        if (sql15 === "") return sql15;
         const comments = this.comments();
-        return (comments === "" ? "" : comments + " ") + sql13;
+        return (comments === "" ? "" : comments + " ") + sql15;
       }
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        let sql13 = super.insert();
-        if (sql13 === "") return sql13;
+        let sql15 = super.insert();
+        if (sql15 === "") return sql15;
         const comments = this.comments();
-        sql13 = (comments === "" ? "" : comments + " ") + sql13;
+        sql15 = (comments === "" ? "" : comments + " ") + sql15;
         const { ignore, merge: merge4, insert } = this.single;
-        if (ignore) sql13 = sql13.replace("insert into", "insert ignore into");
+        if (ignore) sql15 = sql15.replace("insert into", "insert ignore into");
         if (merge4) {
-          sql13 += this._merge(merge4.updates, insert);
+          sql15 += this._merge(merge4.updates, insert);
           const wheres = this.where();
           if (wheres) {
             throw new Error(
@@ -76499,24 +76499,24 @@ var require_mysql_querycompiler = __commonJS({
             );
           }
         }
-        return sql13;
+        return sql15;
       }
       upsert() {
         const upsertValues = this.single.upsert || [];
-        const sql13 = this.with() + `replace into ${this.tableName} `;
+        const sql15 = this.with() + `replace into ${this.tableName} `;
         const body = this._insertBody(upsertValues);
-        return body === "" ? "" : sql13 + body;
+        return body === "" ? "" : sql15 + body;
       }
       // Compiles merge for onConflict, allowing for different merge strategies
       _merge(updates, insert) {
-        const sql13 = " on duplicate key update ";
+        const sql15 = " on duplicate key update ";
         if (updates && Array.isArray(updates)) {
-          return sql13 + updates.map(
+          return sql15 + updates.map(
             (column) => wrapAsIdentifier(column, this.formatter.builder, this.client)
           ).map((column) => `${column} = values(${column})`).join(", ");
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
-          return sql13 + updateData.join(",");
+          return sql15 + updateData.join(",");
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -76524,7 +76524,7 @@ var require_mysql_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          return sql13 + insertData.columns.map((column) => wrapAsIdentifier(column, this.builder, this.client)).map((column) => `${column} = values(${column})`).join(", ");
+          return sql15 + insertData.columns.map((column) => wrapAsIdentifier(column, this.builder, this.client)).map((column) => `${column} = values(${column})`).join(", ");
         }
       }
       // Update method, including joins, wheres, order & limits.
@@ -76693,16 +76693,16 @@ var require_mysql_compiler = __commonJS({
       }
       // Check whether a table exists on the query.
       hasTable(tableName) {
-        let sql13 = "select * from information_schema.tables where table_name = ?";
+        let sql15 = "select * from information_schema.tables where table_name = ?";
         const bindings = [tableName];
         if (this.schema) {
-          sql13 += " and table_schema = ?";
+          sql15 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql13 += " and table_schema = database()";
+          sql15 += " and table_schema = database()";
         }
         this.pushQuery({
-          sql: sql13,
+          sql: sql15,
           bindings,
           output: function output(resp) {
             return resp.length > 0;
@@ -76743,16 +76743,16 @@ var require_mysql_tablecompiler = __commonJS({
         columnsSql += this.primaryKeys() || "";
         columnsSql += this._addChecks();
         columnsSql += ")";
-        let sql13 = createStatement + this.tableName() + (like && this.tableNameLike() ? " like " + this.tableNameLike() : columnsSql);
+        let sql15 = createStatement + this.tableName() + (like && this.tableNameLike() ? " like " + this.tableNameLike() : columnsSql);
         if (client.connectionSettings) {
           conn = client.connectionSettings;
         }
         const charset = this.single.charset || conn.charset || "";
         const collation = this.single.collate || conn.collate || "";
         const engine = this.single.engine || "";
-        if (charset && !like) sql13 += ` default character set ${charset}`;
-        if (collation) sql13 += ` collate ${collation}`;
-        if (engine) sql13 += ` engine = ${engine}`;
+        if (charset && !like) sql15 += ` default character set ${charset}`;
+        if (collation) sql15 += ` collate ${collation}`;
+        if (engine) sql15 += ` engine = ${engine}`;
         if (this.single.comment) {
           const comment = this.single.comment || "";
           const MAX_COMMENT_LENGTH = 1024;
@@ -76760,9 +76760,9 @@ var require_mysql_tablecompiler = __commonJS({
             this.client.logger.warn(
               `The max length for a table comment is ${MAX_COMMENT_LENGTH} characters`
             );
-          sql13 += ` comment = '${comment}'`;
+          sql15 += ` comment = '${comment}'`;
         }
-        this.pushQuery(sql13);
+        this.pushQuery(sql15);
         if (like) {
           this.addColumns(columns, this.addColumnsPrefix);
         }
@@ -76794,23 +76794,23 @@ var require_mysql_tablecompiler = __commonJS({
                   reject(e);
                 }
               }).then(function() {
-                let sql13 = `alter table ${table} change ${wrapped} ${column.Type}`;
+                let sql15 = `alter table ${table} change ${wrapped} ${column.Type}`;
                 if (String(column.Null).toUpperCase() !== "YES") {
-                  sql13 += ` NOT NULL`;
+                  sql15 += ` NOT NULL`;
                 } else {
-                  sql13 += ` NULL`;
+                  sql15 += ` NULL`;
                 }
                 if (column.Default !== void 0 && column.Default !== null) {
-                  sql13 += ` DEFAULT '${column.Default}'`;
+                  sql15 += ` DEFAULT '${column.Default}'`;
                 }
                 if (column.Collation !== void 0 && column.Collation !== null) {
-                  sql13 += ` COLLATE '${column.Collation}'`;
+                  sql15 += ` COLLATE '${column.Collation}'`;
                 }
                 if (column.Extra == "auto_increment") {
-                  sql13 += ` AUTO_INCREMENT`;
+                  sql15 += ` AUTO_INCREMENT`;
                 }
                 return runner.query({
-                  sql: sql13
+                  sql: sql15
                 });
               }).then(function() {
                 if (!refs.length) {
@@ -76872,7 +76872,7 @@ var require_mysql_tablecompiler = __commonJS({
         const bindingsHolder = {
           bindings: []
         };
-        const sql13 = "SELECT KCU.CONSTRAINT_NAME, KCU.TABLE_NAME, KCU.COLUMN_NAME,        KCU.REFERENCED_TABLE_NAME, KCU.REFERENCED_COLUMN_NAME,        RC.UPDATE_RULE, RC.DELETE_RULE FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC        USING(CONSTRAINT_NAME) WHERE KCU.REFERENCED_TABLE_NAME = " + this.client.parameter(
+        const sql15 = "SELECT KCU.CONSTRAINT_NAME, KCU.TABLE_NAME, KCU.COLUMN_NAME,        KCU.REFERENCED_TABLE_NAME, KCU.REFERENCED_COLUMN_NAME,        RC.UPDATE_RULE, RC.DELETE_RULE FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC        USING(CONSTRAINT_NAME) WHERE KCU.REFERENCED_TABLE_NAME = " + this.client.parameter(
           this.tableNameRaw,
           this.tableBuilder,
           bindingsHolder
@@ -76886,7 +76886,7 @@ var require_mysql_tablecompiler = __commonJS({
           bindingsHolder
         );
         return runner.query({
-          sql: sql13,
+          sql: sql15,
           bindings: bindingsHolder.bindings
         });
       }
@@ -77510,9 +77510,9 @@ var require_transaction4 = __commonJS({
     var Transaction = require_transaction();
     var debug = require_src3()("knex:tx");
     var Transaction_MySQL2 = class extends Transaction {
-      query(conn, sql13, status, value) {
+      query(conn, sql15, status, value) {
         const t = this;
-        const q = this.trxClient.query(conn, sql13).catch((err) => {
+        const q = this.trxClient.query(conn, sql15).catch((err) => {
           if (err.code === "ER_SP_DOES_NOT_EXIST") {
             this.trxClient.logger.warn(
               "Transaction was implicitly committed, do not mix transactions and DDL with MySQL (#805)"
@@ -77527,7 +77527,7 @@ var require_transaction4 = __commonJS({
           if (status === 1) t._resolver(value);
           if (status === 2) {
             if (value === void 0) {
-              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql13)) {
+              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql15)) {
                 t._resolver();
                 return;
               }
@@ -77608,7 +77608,7 @@ var require_utils10 = __commonJS({
         }
       }
       generateCombinedName(logger3, postfix, name28, subNames) {
-        const crypto11 = require("crypto");
+        const crypto12 = require("crypto");
         if (!Array.isArray(subNames)) subNames = subNames ? [subNames] : [];
         const table = name28.replace(/\.|-/g, "_");
         const subNamesPart = subNames.join("_");
@@ -77617,13 +77617,13 @@ var require_utils10 = __commonJS({
           logger3.warn(
             `Automatically generated name "${result}" exceeds ${this.limit} character limit for Oracle Database ${this.oracleVersion}. Using base64 encoded sha1 of that name instead.`
           );
-          result = crypto11.createHash("sha1").update(result).digest("base64").replace("=", "");
+          result = crypto12.createHash("sha1").update(result).digest("base64").replace("=", "");
         }
         return result;
       }
     };
-    function wrapSqlWithCatch(sql13, errorNumberToCatch) {
-      return `begin execute immediate '${sql13.replace(/'/g, "''")}'; exception when others then if sqlcode != ${errorNumberToCatch} then raise; end if; end;`;
+    function wrapSqlWithCatch(sql15, errorNumberToCatch) {
+      return `begin execute immediate '${sql15.replace(/'/g, "''")}'; exception when others then if sqlcode != ${errorNumberToCatch} then raise; end if; end;`;
     }
     function ReturningHelper(columnName) {
       this.columnName = columnName;
@@ -77807,7 +77807,7 @@ var require_oracle_compiler = __commonJS({
       }
       // Check whether a column exists on the schema.
       hasColumn(tableName, column) {
-        const sql13 = `select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = ${this.client.parameter(
+        const sql15 = `select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = ${this.client.parameter(
           tableName,
           this.builder,
           this.bindingsHolder
@@ -77816,7 +77816,7 @@ var require_oracle_compiler = __commonJS({
           this.builder,
           this.bindingsHolder
         )}`;
-        this.pushQuery({ sql: sql13, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql15, output: (resp) => resp.length > 0 });
       }
       dropSequenceIfExists(sequenceName) {
         const prefix = this.schema ? `"${this.schema}".` : "";
@@ -78127,14 +78127,14 @@ var require_oracle_tablecompiler = __commonJS({
           prefix = prefix || this.addColumnsPrefix;
           const columnSql = columns.sql;
           const alter = this.lowerCase ? "alter table " : "ALTER TABLE ";
-          let sql13 = `${alter}${this.tableName()} ${prefix}`;
+          let sql15 = `${alter}${this.tableName()} ${prefix}`;
           if (columns.sql.length > 1) {
-            sql13 += `(${columnSql.join(", ")})`;
+            sql15 += `(${columnSql.join(", ")})`;
           } else {
-            sql13 += columnSql.join(", ");
+            sql15 += columnSql.join(", ");
           }
           this.pushQuery({
-            sql: sql13,
+            sql: sql15,
             bindings: columns.bindings
           });
         }
@@ -78157,10 +78157,10 @@ var require_oracle_tablecompiler = __commonJS({
       // Adds the "create" query to the query sequence.
       createQuery(columns, ifNot, like) {
         const columnsSql = like && this.tableNameLike() ? " as (select * from " + this.tableNameLike() + " where 0=1)" : " (" + columns.sql.join(", ") + this._addChecks() + ")";
-        const sql13 = `create table ${this.tableName()}${columnsSql}`;
+        const sql15 = `create table ${this.tableName()}${columnsSql}`;
         this.pushQuery({
           // catch "name is already used by an existing object" for workaround for "if not exists"
-          sql: ifNot ? utils.wrapSqlWithCatch(sql13, -955) : sql13,
+          sql: ifNot ? utils.wrapSqlWithCatch(sql15, -955) : sql15,
           bindings: columns.bindings
         });
         if (this.single.comment) this.comment(this.single.comment);
@@ -78300,9 +78300,9 @@ var require_oracle = __commonJS({
         return this.connectionSettings.database;
       }
       // Position the bindings for the query.
-      positionBindings(sql13) {
+      positionBindings(sql15) {
         let questionCount = 0;
-        return sql13.replace(/\?/g, function() {
+        return sql15.replace(/\?/g, function() {
           questionCount += 1;
           return `:${questionCount}`;
         });
@@ -78406,7 +78406,7 @@ var require_oracle_querycompiler = __commonJS({
           return "";
         }
         const insertData = this._prepInsert(insertValues);
-        const sql13 = {};
+        const sql15 = {};
         if (isString2(insertData)) {
           return this._addReturningToSqlAndConvert(
             `insert into ${this.tableName} ${insertData}`,
@@ -78428,7 +78428,7 @@ var require_oracle_querycompiler = __commonJS({
           );
         }
         const insertDefaultsOnly = insertData.columns.length === 0;
-        sql13.sql = "begin " + insertData.values.map((value) => {
+        sql15.sql = "begin " + insertData.values.map((value) => {
           let returningHelper;
           const parameterizedValues = !insertDefaultsOnly ? this.client.parameterize(
             value,
@@ -78440,7 +78440,7 @@ var require_oracle_querycompiler = __commonJS({
           let subSql = `insert into ${this.tableName} `;
           if (returning) {
             returningHelper = new ReturningHelper(returningValues.join(":"));
-            sql13.outParams = (sql13.outParams || []).concat(returningHelper);
+            sql15.outParams = (sql15.outParams || []).concat(returningHelper);
           }
           if (insertDefaultsOnly) {
             subSql += `(${this.formatter.wrap(
@@ -78461,24 +78461,24 @@ var require_oracle_querycompiler = __commonJS({
           return `execute immediate '${subSql.replace(/'/g, "''")}` + (parameterizedValuesWithoutDefault || returning ? "' using " : "") + parameterizedValuesWithoutDefault + (parameterizedValuesWithoutDefault && returning ? ", " : "") + (returning ? "out ?" : "") + ";";
         }).join(" ") + "end;";
         if (returning) {
-          sql13.returning = returning;
-          sql13.returningSql = `select ${this.formatter.columnize(returning)} from ` + this.tableName + " where ROWID in (" + sql13.outParams.map((v, i) => `:${i + 1}`).join(", ") + ") order by case ROWID " + sql13.outParams.map((v, i) => `when CHARTOROWID(:${i + 1}) then ${i}`).join(" ") + " end";
+          sql15.returning = returning;
+          sql15.returningSql = `select ${this.formatter.columnize(returning)} from ` + this.tableName + " where ROWID in (" + sql15.outParams.map((v, i) => `:${i + 1}`).join(", ") + ") order by case ROWID " + sql15.outParams.map((v, i) => `when CHARTOROWID(:${i + 1}) then ${i}`).join(" ") + " end";
         }
-        return sql13;
+        return sql15;
       }
       // Update method, including joins, wheres, order & limits.
       update() {
         const updates = this._prepUpdate(this.single.update);
         const where = this.where();
         let { returning } = this.single;
-        const sql13 = `update ${this.tableName} set ` + updates.join(", ") + (where ? ` ${where}` : "");
+        const sql15 = `update ${this.tableName} set ` + updates.join(", ") + (where ? ` ${where}` : "");
         if (!returning) {
-          return sql13;
+          return sql15;
         }
         if (!Array.isArray(returning)) {
           returning = [returning];
         }
-        return this._addReturningToSqlAndConvert(sql13, returning, this.tableName);
+        return this._addReturningToSqlAndConvert(sql15, returning, this.tableName);
       }
       // Compiles a `truncate` query.
       truncate() {
@@ -78497,7 +78497,7 @@ var require_oracle_querycompiler = __commonJS({
       columnInfo() {
         const column = this.single.columnInfo;
         const table = this.client.customWrapIdentifier(this.single.table, identity2);
-        const sql13 = `select * from xmltable( '/ROWSET/ROW'
+        const sql15 = `select * from xmltable( '/ROWSET/ROW'
       passing dbms_xmlgen.getXMLType('
       select char_col_decl_length, column_name, data_type, data_default, nullable
       from all_tab_columns where table_name = ''${table}'' ')
@@ -78505,7 +78505,7 @@ var require_oracle_querycompiler = __commonJS({
       CHAR_COL_DECL_LENGTH number, COLUMN_NAME varchar2(200), DATA_TYPE varchar2(106),
       DATA_DEFAULT clob, NULLABLE varchar2(1))`;
         return {
-          sql: sql13,
+          sql: sql15,
           output(resp) {
             const out = reduce(
               resp,
@@ -78536,16 +78536,16 @@ var require_oracle_querycompiler = __commonJS({
         return this._aggregate(stmt, { aliasSeparator: " " });
       }
       // for single commands only
-      _addReturningToSqlAndConvert(sql13, returning, tableName) {
+      _addReturningToSqlAndConvert(sql15, returning, tableName) {
         const res = {
-          sql: sql13
+          sql: sql15
         };
         if (!returning) {
           return res;
         }
         const returningValues = Array.isArray(returning) ? returning : [returning];
         const returningHelper = new ReturningHelper(returningValues.join(":"));
-        res.sql = sql13 + " returning ROWID into " + this.client.parameter(returningHelper, this.builder, this.bindingsHolder);
+        res.sql = sql15 + " returning ROWID into " + this.client.parameter(returningHelper, this.builder, this.bindingsHolder);
         res.returningSql = `select ${this.formatter.columnize(
           returning
         )} from ${tableName} where ROWID = :1`;
@@ -78654,7 +78654,7 @@ var require_utils11 = __commonJS({
           });
         });
       };
-      const fetchAsync = promisify5(function(sql13, bindParams, options, cb) {
+      const fetchAsync = promisify5(function(sql15, bindParams, options, cb) {
         options = options || {};
         options.outFormat = client.driver.OUT_FORMAT_OBJECT || client.driver.OBJECT;
         if (!options.outFormat) {
@@ -78662,7 +78662,7 @@ var require_utils11 = __commonJS({
         }
         if (options.resultSet) {
           connection.execute(
-            sql13,
+            sql15,
             bindParams || [],
             options,
             function(err, result) {
@@ -78705,7 +78705,7 @@ var require_utils11 = __commonJS({
           );
         } else {
           connection.execute(
-            sql13,
+            sql15,
             bindParams || [],
             options,
             function(err, result) {
@@ -78722,8 +78722,8 @@ var require_utils11 = __commonJS({
           );
         }
       });
-      connection.executeAsync = function(sql13, bindParams, options) {
-        return fetchAsync(sql13, bindParams, options).then(async (results) => {
+      connection.executeAsync = function(sql15, bindParams, options) {
+        return fetchAsync(sql15, bindParams, options).then(async (results) => {
           const closeResultSet = () => {
             return results.resultSet ? promisify5(results.resultSet.close).call(results.resultSet) : Promise.resolve();
           };
@@ -78800,7 +78800,7 @@ var require_oracledb_querycompiler = __commonJS({
           return "";
         }
         const insertData = this._prepInsert(insertValues);
-        const sql13 = {};
+        const sql15 = {};
         if (isString2(insertData)) {
           return this._addReturningToSqlAndConvert(
             "insert into " + this.tableName + " " + insertData,
@@ -78823,8 +78823,8 @@ var require_oracledb_querycompiler = __commonJS({
           );
         }
         const insertDefaultsOnly = insertData.columns.length === 0;
-        sql13.returning = returning;
-        sql13.sql = "begin " + insertData.values.map(function(value, index) {
+        sql15.returning = returning;
+        sql15.sql = "begin " + insertData.values.map(function(value, index) {
           const parameterizedValues = !insertDefaultsOnly ? self2.client.parameterize(
             value,
             self2.client.valueForUndefined,
@@ -78867,9 +78867,9 @@ var require_oracledb_querycompiler = __commonJS({
           const parameterizedValuesWithoutDefaultAndBlob = parameterizedValues.replace(/DEFAULT, /g, "").replace(/, DEFAULT/g, "").replace("EMPTY_BLOB(), ", "").replace(", EMPTY_BLOB()", "");
           return "execute immediate '" + subSql.replace(/'/g, "''") + (parameterizedValuesWithoutDefaultAndBlob || value ? "' using " : "") + parameterizedValuesWithoutDefaultAndBlob + (parameterizedValuesWithoutDefaultAndBlob && outClause ? "," : "") + outClause + ";";
         }).join(" ") + "end;";
-        sql13.outBinding = outBinding;
+        sql15.outBinding = outBinding;
         if (returning[0] === "*") {
-          sql13.returningSql = function() {
+          sql15.returningSql = function() {
             return "select * from " + self2.tableName + " where ROWID in (" + this.outBinding.map(function(v, i) {
               return ":" + (i + 1);
             }).join(", ") + ") order by case ROWID " + this.outBinding.map(function(v, i) {
@@ -78877,7 +78877,7 @@ var require_oracledb_querycompiler = __commonJS({
             }).join(" ") + " end";
           };
         }
-        return sql13;
+        return sql15;
       }
       with() {
         const undoList = [];
@@ -78895,10 +78895,10 @@ var require_oracledb_querycompiler = __commonJS({
         }
         return result;
       }
-      _addReturningToSqlAndConvert(sql13, outBinding, tableName, returning) {
+      _addReturningToSqlAndConvert(sql15, outBinding, tableName, returning) {
         const self2 = this;
         const res = {
-          sql: sql13
+          sql: sql15
         };
         if (!outBinding) {
           return res;
@@ -78915,7 +78915,7 @@ var require_oracledb_querycompiler = __commonJS({
           }
           self2.formatter.bindings.push(new ReturningHelper(columnName));
         });
-        res.sql = sql13;
+        res.sql = sql15;
         returningClause = returningClause.slice(0, -1);
         intoClause = intoClause.slice(0, -1);
         if (returningClause && intoClause) {
@@ -78972,7 +78972,7 @@ var require_oracledb_querycompiler = __commonJS({
       }
       update() {
         const self2 = this;
-        const sql13 = {};
+        const sql15 = {};
         const outBindPrep = this._prepOutbindings(
           this.single.update || this.single.counter,
           this.single.returning
@@ -78999,15 +78999,15 @@ var require_oracledb_querycompiler = __commonJS({
         });
         returningClause = returningClause.slice(0, -1);
         intoClause = intoClause.slice(0, -1);
-        sql13.outBinding = outBinding;
-        sql13.returning = returning;
-        sql13.sql = "update " + this.tableName + " set " + updates.join(", ") + (where ? " " + where : "");
+        sql15.outBinding = outBinding;
+        sql15.returning = returning;
+        sql15.sql = "update " + this.tableName + " set " + updates.join(", ") + (where ? " " + where : "");
         if (outBinding.length && !isEmpty(outBinding[0])) {
-          sql13.sql += " returning " + returningClause + " into" + intoClause;
+          sql15.sql += " returning " + returningClause + " into" + intoClause;
         }
         if (returning[0] === "*") {
-          sql13.returningSql = function() {
-            let sql14 = "select * from " + self2.tableName;
+          sql15.returningSql = function() {
+            let sql16 = "select * from " + self2.tableName;
             const modifiedRowsCount = this.rowsAffected.length || this.rowsAffected;
             let returningSqlIn = " where ROWID in (";
             let returningSqlOrderBy = ") order by case ROWID ";
@@ -79022,10 +79022,10 @@ var require_oracledb_querycompiler = __commonJS({
               returningSqlIn = returningSqlIn.slice(0, -2);
               returningSqlOrderBy = returningSqlOrderBy.slice(0, -1);
             }
-            return sql14 += returningSqlIn + returningSqlOrderBy + " end";
+            return sql16 += returningSqlIn + returningSqlOrderBy + " end";
           };
         }
-        return sql13;
+        return sql15;
       }
       _jsonPathWrap(extraction) {
         return `'${extraction.path || extraction[1]}'`;
@@ -79114,11 +79114,11 @@ var require_oracledb_tablecompiler = __commonJS({
       }
       _setNullableState(column, isNullable) {
         const nullability = isNullable ? "NULL" : "NOT NULL";
-        const sql13 = `alter table ${this.tableName()} modify (${this.formatter.wrap(
+        const sql15 = `alter table ${this.tableName()} modify (${this.formatter.wrap(
           column
         )} ${nullability})`;
         return this.pushQuery({
-          sql: sql13
+          sql: sql15
         });
       }
     };
@@ -79715,27 +79715,27 @@ var require_redshift_querycompiler = __commonJS({
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        const sql13 = QueryCompiler.prototype.insert.apply(this, arguments);
-        if (sql13 === "") return sql13;
+        const sql15 = QueryCompiler.prototype.insert.apply(this, arguments);
+        if (sql15 === "") return sql15;
         this._slightReturn();
         return {
-          sql: sql13
+          sql: sql15
         };
       }
       // Compiles an `update` query, warning on unsupported returning
       update() {
-        const sql13 = QueryCompiler.prototype.update.apply(this, arguments);
+        const sql15 = QueryCompiler.prototype.update.apply(this, arguments);
         this._slightReturn();
         return {
-          sql: sql13
+          sql: sql15
         };
       }
       // Compiles an `delete` query, warning on unsupported returning
       del() {
-        const sql13 = QueryCompiler.prototype.del.apply(this, arguments);
+        const sql15 = QueryCompiler.prototype.del.apply(this, arguments);
         this._slightReturn();
         return {
-          sql: sql13
+          sql: sql15
         };
       }
       // simple: if trying to return, warn
@@ -79774,12 +79774,12 @@ var require_redshift_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        const sql13 = "select * from information_schema.columns where table_name = ? and table_catalog = ?";
+        const sql15 = "select * from information_schema.columns where table_name = ? and table_catalog = ?";
         const bindings = [
           table.toLowerCase(),
           this.client.database().toLowerCase()
         ];
-        return this._buildColumnInfoQuery(schema, sql13, bindings, column);
+        return this._buildColumnInfoQuery(schema, sql15, bindings, column);
       }
       jsonExtract(params) {
         let extractions;
@@ -79951,11 +79951,11 @@ var require_redshift_tablecompiler = __commonJS({
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
         const columnsSql = " (" + columns.sql.join(", ") + this._addChecks() + ")";
-        let sql13 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + ")" : columnsSql);
+        let sql15 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + ")" : columnsSql);
         if (this.single.inherits)
-          sql13 += ` like (${this.formatter.wrap(this.single.inherits)})`;
+          sql15 += ` like (${this.formatter.wrap(this.single.inherits)})`;
         this.pushQuery({
-          sql: sql13,
+          sql: sql15,
           bindings: columns.bindings
         });
         const hasComment = has(this.single, "comment");
@@ -82360,8 +82360,8 @@ var require_types = __commonJS({
       TokenType2[TokenType2["bang"] = bang] = "bang";
       const tilde = 35456;
       TokenType2[TokenType2["tilde"] = tilde] = "tilde";
-      const pipeline2 = 35841;
-      TokenType2[TokenType2["pipeline"] = pipeline2] = "pipeline";
+      const pipeline3 = 35841;
+      TokenType2[TokenType2["pipeline"] = pipeline3] = "pipeline";
       const nullishCoalescing = 36866;
       TokenType2[TokenType2["nullishCoalescing"] = nullishCoalescing] = "nullishCoalescing";
       const logicalOR = 37890;
@@ -93914,8 +93914,8 @@ var require_JSXTransformer = __commonJS({
         }
         if (this.isAutomaticRuntime) {
           if (this.importProcessor) {
-            for (const [path35, resolvedName] of Object.entries(this.cjsAutomaticModuleNameResolutions)) {
-              prefix += `var ${resolvedName} = require("${path35}");`;
+            for (const [path36, resolvedName] of Object.entries(this.cjsAutomaticModuleNameResolutions)) {
+              prefix += `var ${resolvedName} = require("${path36}");`;
             }
           } else {
             const { createElement: createElementResolution, ...otherResolutions } = this.esmAutomaticImportNameResolutions;
@@ -94108,11 +94108,11 @@ var require_JSXTransformer = __commonJS({
       }
       claimAutoImportedName(funcName, importPathSuffix) {
         if (this.importProcessor) {
-          const path35 = this.jsxImportSource + importPathSuffix;
-          if (!this.cjsAutomaticModuleNameResolutions[path35]) {
-            this.cjsAutomaticModuleNameResolutions[path35] = this.importProcessor.getFreeIdentifierForPath(path35);
+          const path36 = this.jsxImportSource + importPathSuffix;
+          if (!this.cjsAutomaticModuleNameResolutions[path36]) {
+            this.cjsAutomaticModuleNameResolutions[path36] = this.importProcessor.getFreeIdentifierForPath(path36);
           }
-          return `${this.cjsAutomaticModuleNameResolutions[path35]}.${funcName}`;
+          return `${this.cjsAutomaticModuleNameResolutions[path36]}.${funcName}`;
         } else {
           if (!this.esmAutomaticImportNameResolutions[funcName]) {
             this.esmAutomaticImportNameResolutions[funcName] = this.nameManager.claimFreeName(
@@ -94548,7 +94548,7 @@ var require_CJSImportProcessor = __commonJS({
        */
       pruneTypeOnlyImports() {
         this.nonTypeIdentifiers = _getNonTypeIdentifiers.getNonTypeIdentifiers.call(void 0, this.tokens, this.options);
-        for (const [path35, importInfo] of this.importInfoByPath.entries()) {
+        for (const [path36, importInfo] of this.importInfoByPath.entries()) {
           if (importInfo.hasBareImport || importInfo.hasStarExport || importInfo.exportStarNames.length > 0 || importInfo.namedExports.length > 0) {
             continue;
           }
@@ -94558,7 +94558,7 @@ var require_CJSImportProcessor = __commonJS({
             ...importInfo.namedImports.map(({ localName }) => localName)
           ];
           if (names.every((name28) => this.shouldAutomaticallyElideImportedName(name28))) {
-            this.importsToReplace.set(path35, "");
+            this.importsToReplace.set(path36, "");
           }
         }
       }
@@ -94566,7 +94566,7 @@ var require_CJSImportProcessor = __commonJS({
         return this.isTypeScriptTransformEnabled && !this.keepUnusedImports && !this.nonTypeIdentifiers.has(name28);
       }
       generateImportReplacements() {
-        for (const [path35, importInfo] of this.importInfoByPath.entries()) {
+        for (const [path36, importInfo] of this.importInfoByPath.entries()) {
           const {
             defaultNames,
             wildcardNames,
@@ -94576,17 +94576,17 @@ var require_CJSImportProcessor = __commonJS({
             hasStarExport
           } = importInfo;
           if (defaultNames.length === 0 && wildcardNames.length === 0 && namedImports.length === 0 && namedExports.length === 0 && exportStarNames.length === 0 && !hasStarExport) {
-            this.importsToReplace.set(path35, `require('${path35}');`);
+            this.importsToReplace.set(path36, `require('${path36}');`);
             continue;
           }
-          const primaryImportName = this.getFreeIdentifierForPath(path35);
+          const primaryImportName = this.getFreeIdentifierForPath(path36);
           let secondaryImportName;
           if (this.enableLegacyTypeScriptModuleInterop) {
             secondaryImportName = primaryImportName;
           } else {
-            secondaryImportName = wildcardNames.length > 0 ? wildcardNames[0] : this.getFreeIdentifierForPath(path35);
+            secondaryImportName = wildcardNames.length > 0 ? wildcardNames[0] : this.getFreeIdentifierForPath(path36);
           }
-          let requireCode = `var ${primaryImportName} = require('${path35}');`;
+          let requireCode = `var ${primaryImportName} = require('${path36}');`;
           if (wildcardNames.length > 0) {
             for (const wildcardName of wildcardNames) {
               const moduleExpr = this.enableLegacyTypeScriptModuleInterop ? primaryImportName : `${this.helperManager.getHelperName("interopRequireWildcard")}(${primaryImportName})`;
@@ -94614,7 +94614,7 @@ var require_CJSImportProcessor = __commonJS({
               "createStarExport"
             )}(${primaryImportName});`;
           }
-          this.importsToReplace.set(path35, requireCode);
+          this.importsToReplace.set(path36, requireCode);
           for (const defaultName of defaultNames) {
             this.identifierReplacements.set(defaultName, `${secondaryImportName}.default`);
           }
@@ -94623,8 +94623,8 @@ var require_CJSImportProcessor = __commonJS({
           }
         }
       }
-      getFreeIdentifierForPath(path35) {
-        const components = path35.split("/");
+      getFreeIdentifierForPath(path36) {
+        const components = path36.split("/");
         const lastComponent = components[components.length - 1];
         const baseName = lastComponent.replace(/\W/g, "");
         return this.nameManager.claimFreeName(`_${baseName}`);
@@ -94669,8 +94669,8 @@ var require_CJSImportProcessor = __commonJS({
         if (!this.tokens.matches1AtIndex(index, _types.TokenType.string)) {
           throw new Error("Expected string token at the end of import statement.");
         }
-        const path35 = this.tokens.stringValueAtIndex(index);
-        const importInfo = this.getImportInfo(path35);
+        const path36 = this.tokens.stringValueAtIndex(index);
+        const importInfo = this.getImportInfo(path36);
         importInfo.defaultNames.push(...defaultNames);
         importInfo.wildcardNames.push(...wildcardNames);
         importInfo.namedImports.push(...namedImports);
@@ -94737,8 +94737,8 @@ var require_CJSImportProcessor = __commonJS({
         if (!this.tokens.matches1AtIndex(index, _types.TokenType.string)) {
           throw new Error("Expected string token at the end of import statement.");
         }
-        const path35 = this.tokens.stringValueAtIndex(index);
-        const importInfo = this.getImportInfo(path35);
+        const path36 = this.tokens.stringValueAtIndex(index);
+        const importInfo = this.getImportInfo(path36);
         importInfo.namedExports.push(...namedImports);
       }
       preprocessExportStarAtIndex(index) {
@@ -94753,8 +94753,8 @@ var require_CJSImportProcessor = __commonJS({
         if (!this.tokens.matches1AtIndex(index, _types.TokenType.string)) {
           throw new Error("Expected string token at the end of star export statement.");
         }
-        const path35 = this.tokens.stringValueAtIndex(index);
-        const importInfo = this.getImportInfo(path35);
+        const path36 = this.tokens.stringValueAtIndex(index);
+        const importInfo = this.getImportInfo(path36);
         if (exportedName !== null) {
           importInfo.exportStarNames.push(exportedName);
         } else {
@@ -94794,8 +94794,8 @@ var require_CJSImportProcessor = __commonJS({
        * Get a mutable import info object for this path, creating one if it doesn't
        * exist yet.
        */
-      getImportInfo(path35) {
-        const existingInfo = this.importInfoByPath.get(path35);
+      getImportInfo(path36) {
+        const existingInfo = this.importInfoByPath.get(path36);
         if (existingInfo) {
           return existingInfo;
         }
@@ -94808,7 +94808,7 @@ var require_CJSImportProcessor = __commonJS({
           exportStarNames: [],
           hasStarExport: false
         };
-        this.importInfoByPath.set(path35, newInfo);
+        this.importInfoByPath.set(path36, newInfo);
         return newInfo;
       }
       addExportBinding(localName, exportedName) {
@@ -95348,16 +95348,16 @@ var require_resolve_uri_umd = __commonJS({
       }
       function parseFileUrl(input) {
         const match = fileRegex.exec(input);
-        const path35 = match[2];
-        return makeUrl("file:", "", match[1] || "", "", isAbsolutePath(path35) ? path35 : "/" + path35, match[3] || "", match[4] || "");
+        const path36 = match[2];
+        return makeUrl("file:", "", match[1] || "", "", isAbsolutePath(path36) ? path36 : "/" + path36, match[3] || "", match[4] || "");
       }
-      function makeUrl(scheme, user, host, port, path35, query, hash3) {
+      function makeUrl(scheme, user, host, port, path36, query, hash3) {
         return {
           scheme,
           user,
           host,
           port,
-          path: path35,
+          path: path36,
           query,
           hash: hash3,
           type: 7
@@ -95387,11 +95387,11 @@ var require_resolve_uri_umd = __commonJS({
         url4.type = input ? input.startsWith("?") ? 3 : input.startsWith("#") ? 2 : 4 : 1;
         return url4;
       }
-      function stripPathFilename(path35) {
-        if (path35.endsWith("/.."))
-          return path35;
-        const index = path35.lastIndexOf("/");
-        return path35.slice(0, index + 1);
+      function stripPathFilename(path36) {
+        if (path36.endsWith("/.."))
+          return path36;
+        const index = path36.lastIndexOf("/");
+        return path36.slice(0, index + 1);
       }
       function mergePaths(url4, base) {
         normalizePath(base, base.type);
@@ -95429,14 +95429,14 @@ var require_resolve_uri_umd = __commonJS({
           pieces[pointer++] = piece;
           positive++;
         }
-        let path35 = "";
+        let path36 = "";
         for (let i = 1; i < pointer; i++) {
-          path35 += "/" + pieces[i];
+          path36 += "/" + pieces[i];
         }
-        if (!path35 || addTrailingSlash && !path35.endsWith("/..")) {
-          path35 += "/";
+        if (!path36 || addTrailingSlash && !path36.endsWith("/..")) {
+          path36 += "/";
         }
-        url4.path = path35;
+        url4.path = path36;
       }
       function resolve3(input, base) {
         if (!input && !base)
@@ -95477,13 +95477,13 @@ var require_resolve_uri_umd = __commonJS({
           case 3:
             return queryHash;
           case 4: {
-            const path35 = url4.path.slice(1);
-            if (!path35)
+            const path36 = url4.path.slice(1);
+            if (!path36)
               return queryHash || ".";
-            if (isRelative(base || input) && !isRelative(path35)) {
-              return "./" + path35 + queryHash;
+            if (isRelative(base || input) && !isRelative(path36)) {
+              return "./" + path36 + queryHash;
             }
-            return path35 + queryHash;
+            return path36 + queryHash;
           }
           case 5:
             return url4.path + queryHash;
@@ -95583,10 +95583,10 @@ var require_trace_mapping_umd = __commonJS({
       module3.exports = __toCommonJS2(trace_mapping_exports);
       var import_sourcemap_codec = __toESM2(require_sourcemap_codec());
       var import_resolve_uri = __toESM2(require_resolve_uri());
-      function stripFilename(path35) {
-        if (!path35) return "";
-        const index = path35.lastIndexOf("/");
-        return path35.slice(0, index + 1);
+      function stripFilename(path36) {
+        if (!path36) return "";
+        const index = path36.lastIndexOf("/");
+        return path36.slice(0, index + 1);
       }
       function resolver(mapUrl, sourceRoot) {
         const from = stripFilename(mapUrl);
@@ -96795,9 +96795,9 @@ var require_util2 = __commonJS({
       /** @class */
       (function(_super) {
         __extends(VError2, _super);
-        function VError2(path35, message) {
+        function VError2(path36, message) {
           var _this = _super.call(this, message) || this;
-          _this.path = path35;
+          _this.path = path36;
           Object.setPrototypeOf(_this, VError2.prototype);
           return _this;
         }
@@ -96857,26 +96857,26 @@ var require_util2 = __commonJS({
             (_b27 = this._messages).push.apply(_b27, best._messages);
           }
         };
-        DetailContext2.prototype.getError = function(path35) {
+        DetailContext2.prototype.getError = function(path36) {
           var msgParts = [];
           for (var i = this._propNames.length - 1; i >= 0; i--) {
             var p3 = this._propNames[i];
-            path35 += typeof p3 === "number" ? "[" + p3 + "]" : p3 ? "." + p3 : "";
+            path36 += typeof p3 === "number" ? "[" + p3 + "]" : p3 ? "." + p3 : "";
             var m = this._messages[i];
             if (m) {
-              msgParts.push(path35 + " " + m);
+              msgParts.push(path36 + " " + m);
             }
           }
-          return new VError(path35, msgParts.join("; "));
+          return new VError(path36, msgParts.join("; "));
         };
-        DetailContext2.prototype.getErrorDetail = function(path35) {
+        DetailContext2.prototype.getErrorDetail = function(path36) {
           var details = [];
           for (var i = this._propNames.length - 1; i >= 0; i--) {
             var p3 = this._propNames[i];
-            path35 += typeof p3 === "number" ? "[" + p3 + "]" : p3 ? "." + p3 : "";
+            path36 += typeof p3 === "number" ? "[" + p3 + "]" : p3 ? "." + p3 : "";
             var message = this._messages[i];
             if (message) {
-              details.push({ path: path35, message });
+              details.push({ path: path36, message });
             }
           }
           var detail = null;
@@ -97689,8 +97689,8 @@ var require_dist4 = __commonJS({
           this.checkerPlain = this.ttype.getChecker(suite, false);
           this.checkerStrict = this.ttype.getChecker(suite, true);
         }
-        Checker2.prototype.setReportedPath = function(path35) {
-          this._path = path35;
+        Checker2.prototype.setReportedPath = function(path36) {
+          this._path = path36;
         };
         Checker2.prototype.check = function(value) {
           return this._doCheck(this.checkerPlain, value);
@@ -103123,9 +103123,9 @@ var require_CJSImportTransformer = __commonJS({
         if (shouldElideImport) {
           this.tokens.removeToken();
         } else {
-          const path35 = this.tokens.stringValue();
-          this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path35));
-          this.tokens.appendCode(this.importProcessor.claimImportCode(path35));
+          const path36 = this.tokens.stringValue();
+          this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path36));
+          this.tokens.appendCode(this.importProcessor.claimImportCode(path36));
         }
         _removeMaybeImportAttributes.removeMaybeImportAttributes.call(void 0, this.tokens);
         if (this.tokens.matches1(_types.TokenType.semi)) {
@@ -103705,8 +103705,8 @@ var require_CJSImportTransformer = __commonJS({
         }
         if (this.tokens.matchesContextual(_keywords.ContextualKeyword._from)) {
           this.tokens.removeToken();
-          const path35 = this.tokens.stringValue();
-          this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path35));
+          const path36 = this.tokens.stringValue();
+          this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path36));
           _removeMaybeImportAttributes.removeMaybeImportAttributes.call(void 0, this.tokens);
         } else {
           this.tokens.appendCode(exportStatements.join(" "));
@@ -103720,8 +103720,8 @@ var require_CJSImportTransformer = __commonJS({
         while (!this.tokens.matches1(_types.TokenType.string)) {
           this.tokens.removeToken();
         }
-        const path35 = this.tokens.stringValue();
-        this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path35));
+        const path36 = this.tokens.stringValue();
+        this.tokens.replaceTokenTrimmingLeftWhitespace(this.importProcessor.claimImportCode(path36));
         _removeMaybeImportAttributes.removeMaybeImportAttributes.call(void 0, this.tokens);
         if (this.tokens.matches1(_types.TokenType.semi)) {
           this.tokens.removeToken();
@@ -107083,6 +107083,33 @@ var init_migrations = __esm({
             });
           }
         }
+      },
+      {
+        id: "20260808_011_publish_packages",
+        up: async (db2) => {
+          if (!await db2.schema.hasTable("publish_packages")) {
+            await db2.schema.createTable("publish_packages", (table) => {
+              table.text("id").primary();
+              table.integer("project_id").notNullable();
+              table.integer("script_id").notNullable();
+              table.text("composition_job_id").notNullable();
+              table.text("output_checksum").notNullable();
+              table.text("qa_report_id").notNullable();
+              table.text("review_id").notNullable();
+              table.text("status").notNullable().defaultTo("queued");
+              table.text("package_path");
+              table.text("package_checksum");
+              table.integer("size_bytes");
+              table.text("manifest");
+              table.text("task_id");
+              table.text("error_message");
+              table.integer("created_at").notNullable();
+              table.integer("updated_at").notNullable();
+              table.index(["project_id", "script_id", "created_at"], "publish_packages_script_idx");
+              table.unique(["composition_job_id", "output_checksum", "qa_report_id", "review_id"], "publish_packages_gate_unique");
+            });
+          }
+        }
       }
     ];
   }
@@ -107280,7 +107307,7 @@ async function getAllEnums(db2, config3) {
   return await getTableEnums(db2, config3);
 }
 async function getAllTables(db2, schemas) {
-  const sql13 = `
+  const sql15 = `
     SELECT
       TABLE_NAME AS name,
       TABLE_SCHEMA AS 'schema',
@@ -107288,10 +107315,10 @@ async function getAllTables(db2, schemas) {
     FROM INFORMATION_SCHEMA.TABLES
     WHERE TABLE_SCHEMA NOT IN('mysql', 'information_schema', 'performance_schema', 'sys')
     ${schemas.length > 0 ? " AND TABLE_SCHEMA IN (:schemas)" : ""}`;
-  return (await db2.raw(sql13, { schemas }))[0];
+  return (await db2.raw(sql15, { schemas }))[0];
 }
 async function getAllColumns(db2, config3, table, schema) {
-  const sql13 = `
+  const sql15 = `
     SELECT
       column_name as name,
       is_nullable as isNullable,
@@ -107312,7 +107339,7 @@ async function getAllColumns(db2, config3, table, schema) {
       AND c.TABLE_SCHEMA = :schema
       ORDER BY ORDINAL_POSITION
     `;
-  return (await db2.raw(sql13, { table, schema }))[0].map((c) => ({
+  return (await db2.raw(sql15, { table, schema }))[0].map((c) => ({
     name: c.name,
     type: c.fullType == "tinyint(1)" ? c.fullType : c.type,
     // tinyint(1) typically aliased as a boolean
@@ -107356,7 +107383,7 @@ var init_mssql = __esm({
         return await getTableEnums(db2, config3);
       },
       async getAllTables(db2, schemas) {
-        const sql13 = `
+        const sql15 = `
       SELECT
         TABLE_NAME name,
         TABLE_SCHEMA [schema],
@@ -107368,10 +107395,10 @@ var init_mssql = __esm({
           SELECT TOP 1 value FROM fn_listextendedproperty (NULL, 'schema', TABLE_SCHEMA, 'view', TABLE_NAME, null, null) EP WHERE EP.name = 'MS_Description'
         ) EP 
       ${schemas.length > 0 ? `WHERE TABLE_SCHEMA IN (${schemas.map((_) => "?").join(",")})` : ""}`;
-        return await db2.raw(sql13, schemas);
+        return await db2.raw(sql15, schemas);
       },
       async getAllColumns(db2, config3, table, schema) {
-        const sql13 = `
+        const sql15 = `
       SELECT
 				COLUMN_NAME as name,
 				IS_NULLABLE AS isNullable,
@@ -107395,7 +107422,7 @@ var init_mssql = __esm({
         WHERE c.TABLE_NAME = :table
         AND c.TABLE_SCHEMA = :schema
       `;
-        return (await db2.raw(sql13, { table, schema })).map((c) => ({
+        return (await db2.raw(sql15, { table, schema })).map((c) => ({
           name: c.name,
           type: c.type,
           nullable: c.isNullable === "YES",
@@ -108723,11 +108750,11 @@ var init_toKey = __esm({
 });
 
 // node_modules/lodash-es/_baseGet.js
-function baseGet(object4, path35) {
-  path35 = castPath_default(path35, object4);
-  var index = 0, length = path35.length;
+function baseGet(object4, path36) {
+  path36 = castPath_default(path36, object4);
+  var index = 0, length = path36.length;
   while (object4 != null && index < length) {
-    object4 = object4[toKey_default(path35[index++])];
+    object4 = object4[toKey_default(path36[index++])];
   }
   return index && index == length ? object4 : void 0;
 }
@@ -108742,8 +108769,8 @@ var init_baseGet = __esm({
 });
 
 // node_modules/lodash-es/get.js
-function get(object4, path35, defaultValue) {
-  var result = object4 == null ? void 0 : baseGet_default(object4, path35);
+function get(object4, path36, defaultValue) {
+  var result = object4 == null ? void 0 : baseGet_default(object4, path36);
   return result === void 0 ? defaultValue : result;
 }
 var get_default;
@@ -109552,11 +109579,11 @@ var init_baseHasIn = __esm({
 });
 
 // node_modules/lodash-es/_hasPath.js
-function hasPath(object4, path35, hasFunc) {
-  path35 = castPath_default(path35, object4);
-  var index = -1, length = path35.length, result = false;
+function hasPath(object4, path36, hasFunc) {
+  path36 = castPath_default(path36, object4);
+  var index = -1, length = path36.length, result = false;
   while (++index < length) {
-    var key = toKey_default(path35[index]);
+    var key = toKey_default(path36[index]);
     if (!(result = object4 != null && hasFunc(object4, key))) {
       break;
     }
@@ -109583,8 +109610,8 @@ var init_hasPath = __esm({
 });
 
 // node_modules/lodash-es/hasIn.js
-function hasIn(object4, path35) {
-  return object4 != null && hasPath_default(object4, path35, baseHasIn_default);
+function hasIn(object4, path36) {
+  return object4 != null && hasPath_default(object4, path36, baseHasIn_default);
 }
 var hasIn_default;
 var init_hasIn = __esm({
@@ -109597,13 +109624,13 @@ var init_hasIn = __esm({
 });
 
 // node_modules/lodash-es/_baseMatchesProperty.js
-function baseMatchesProperty(path35, srcValue) {
-  if (isKey_default(path35) && isStrictComparable_default(srcValue)) {
-    return matchesStrictComparable_default(toKey_default(path35), srcValue);
+function baseMatchesProperty(path36, srcValue) {
+  if (isKey_default(path36) && isStrictComparable_default(srcValue)) {
+    return matchesStrictComparable_default(toKey_default(path36), srcValue);
   }
   return function(object4) {
-    var objValue = get_default(object4, path35);
-    return objValue === void 0 && objValue === srcValue ? hasIn_default(object4, path35) : baseIsEqual_default(srcValue, objValue, COMPARE_PARTIAL_FLAG6 | COMPARE_UNORDERED_FLAG4);
+    var objValue = get_default(object4, path36);
+    return objValue === void 0 && objValue === srcValue ? hasIn_default(object4, path36) : baseIsEqual_default(srcValue, objValue, COMPARE_PARTIAL_FLAG6 | COMPARE_UNORDERED_FLAG4);
   };
 }
 var COMPARE_PARTIAL_FLAG6, COMPARE_UNORDERED_FLAG4, baseMatchesProperty_default;
@@ -109638,9 +109665,9 @@ var init_baseProperty = __esm({
 });
 
 // node_modules/lodash-es/_basePropertyDeep.js
-function basePropertyDeep(path35) {
+function basePropertyDeep(path36) {
   return function(object4) {
-    return baseGet_default(object4, path35);
+    return baseGet_default(object4, path36);
   };
 }
 var basePropertyDeep_default;
@@ -109653,8 +109680,8 @@ var init_basePropertyDeep = __esm({
 });
 
 // node_modules/lodash-es/property.js
-function property(path35) {
-  return isKey_default(path35) ? baseProperty_default(toKey_default(path35)) : basePropertyDeep_default(path35);
+function property(path36) {
+  return isKey_default(path36) ? baseProperty_default(toKey_default(path36)) : basePropertyDeep_default(path36);
 }
 var property_default;
 var init_property = __esm({
@@ -109815,7 +109842,7 @@ var init_postgres = __esm({
     init_SharedAdapterTasks();
     postgres_default = {
       async getAllEnums(db2, config3) {
-        const sql13 = `
+        const sql15 = `
     SELECT 
       pg_namespace.nspname AS schema, 
       pg_enum.enumsortorder AS order, 
@@ -109826,7 +109853,7 @@ var init_postgres = __esm({
     JOIN pg_namespace ON pg_namespace.oid = pg_type.typnamespace
     ${config3.schemas.length > 0 ? ` WHERE pg_namespace.nspname = ANY(:schemas)` : ""}
     `;
-        const ungroupedEnums = (await db2.raw(sql13, { schemas: config3.schemas })).rows;
+        const ungroupedEnums = (await db2.raw(sql15, { schemas: config3.schemas })).rows;
         const groupedEnums = uniqBy_default(ungroupedEnums, (e) => `${e.name}.${e.schema}`).map((row) => ({
           name: row.name,
           schema: row.schema,
@@ -109836,7 +109863,7 @@ var init_postgres = __esm({
         return groupedEnums.concat(tableEnums);
       },
       async getAllTables(db2, schemas) {
-        const sql13 = `
+        const sql15 = `
       WITH schemas AS (
         SELECT nspname AS name, oid AS oid
         FROM pg_namespace
@@ -109851,11 +109878,11 @@ var init_postgres = __esm({
         WHERE pg_class.relkind IN ('r', 'p', 'v', 'm')
         AND NOT pg_class.relispartition
     `;
-        const results = await db2.raw(sql13, { schemas });
+        const results = await db2.raw(sql15, { schemas });
         return results.rows;
       },
       async getAllColumns(db2, config3, table, schema) {
-        const sql13 = `
+        const sql15 = `
       SELECT
         typns.nspname typeschema,
         pg_type.typname,
@@ -109886,7 +109913,7 @@ var init_postgres = __esm({
       AND pg_class.relname = :table
       AND pg_namespace.nspname = :schema
     `;
-        return (await db2.raw(sql13, { table, schema })).rows.map((c) => ({
+        return (await db2.raw(sql15, { table, schema })).rows.map((c) => ({
           name: c.name,
           type: c.typname,
           nullable: !c.notnullable,
@@ -109913,12 +109940,12 @@ var init_sqlite = __esm({
         return await getTableEnums(db2, config3);
       },
       async getAllTables(db2, schemas) {
-        const sql13 = `
+        const sql15 = `
       SELECT tbl_name from sqlite_master
       WHERE tbl_name <> 'sqlite_sequence'
       AND type IN ('table', 'view')
     `;
-        return (await db2.raw(sql13)).map((t) => ({ name: t.tbl_name, schema: "main", comment: "" }));
+        return (await db2.raw(sql15)).map((t) => ({ name: t.tbl_name, schema: "main", comment: "" }));
       },
       async getAllColumns(db2, config3, table, schema) {
         return (await db2.raw(`pragma table_info(${table})`)).map((c) => ({
@@ -111675,13 +111702,13 @@ var require_ast = __commonJS({
         helperExpression: function helperExpression(node) {
           return node.type === "SubExpression" || (node.type === "MustacheStatement" || node.type === "BlockStatement") && !!(node.params && node.params.length || node.hash);
         },
-        scopedId: function scopedId(path35) {
-          return /^\.|this\b/.test(path35.original);
+        scopedId: function scopedId(path36) {
+          return /^\.|this\b/.test(path36.original);
         },
         // an ID is simple if it only has one part, and that part is not
         // `..` or `this`.
-        simpleId: function simpleId(path35) {
-          return path35.parts.length === 1 && !AST.helpers.scopedId(path35) && !path35.depth;
+        simpleId: function simpleId(path36) {
+          return path36.parts.length === 1 && !AST.helpers.scopedId(path36) && !path36.depth;
         }
       }
     };
@@ -112751,12 +112778,12 @@ var require_helpers4 = __commonJS({
         loc
       };
     }
-    function prepareMustache(path35, params, hash3, open, strip, locInfo) {
+    function prepareMustache(path36, params, hash3, open, strip, locInfo) {
       var escapeFlag = open.charAt(3) || open.charAt(2), escaped = escapeFlag !== "{" && escapeFlag !== "&";
       var decorator = /\*/.test(open);
       return {
         type: decorator ? "Decorator" : "MustacheStatement",
-        path: path35,
+        path: path36,
         params,
         hash: hash3,
         escaped,
@@ -113074,9 +113101,9 @@ var require_compiler3 = __commonJS({
       },
       DecoratorBlock: function DecoratorBlock(decorator) {
         var program = decorator.program && this.compileProgram(decorator.program);
-        var params = this.setupFullMustacheParams(decorator, program, void 0), path35 = decorator.path;
+        var params = this.setupFullMustacheParams(decorator, program, void 0), path36 = decorator.path;
         this.useDecorators = true;
-        this.opcode("registerDecorator", params.length, path35.original);
+        this.opcode("registerDecorator", params.length, path36.original);
       },
       PartialStatement: function PartialStatement(partial3) {
         this.usePartial = true;
@@ -113140,46 +113167,46 @@ var require_compiler3 = __commonJS({
         }
       },
       ambiguousSexpr: function ambiguousSexpr(sexpr, program, inverse) {
-        var path35 = sexpr.path, name28 = path35.parts[0], isBlock = program != null || inverse != null;
-        this.opcode("getContext", path35.depth);
+        var path36 = sexpr.path, name28 = path36.parts[0], isBlock = program != null || inverse != null;
+        this.opcode("getContext", path36.depth);
         this.opcode("pushProgram", program);
         this.opcode("pushProgram", inverse);
-        path35.strict = true;
-        this.accept(path35);
+        path36.strict = true;
+        this.accept(path36);
         this.opcode("invokeAmbiguous", name28, isBlock);
       },
       simpleSexpr: function simpleSexpr(sexpr) {
-        var path35 = sexpr.path;
-        path35.strict = true;
-        this.accept(path35);
+        var path36 = sexpr.path;
+        path36.strict = true;
+        this.accept(path36);
         this.opcode("resolvePossibleLambda");
       },
       helperSexpr: function helperSexpr(sexpr, program, inverse) {
-        var params = this.setupFullMustacheParams(sexpr, program, inverse), path35 = sexpr.path, name28 = path35.parts[0];
+        var params = this.setupFullMustacheParams(sexpr, program, inverse), path36 = sexpr.path, name28 = path36.parts[0];
         if (this.options.knownHelpers[name28]) {
           this.opcode("invokeKnownHelper", params.length, name28);
         } else if (this.options.knownHelpersOnly) {
           throw new _exception2["default"]("You specified knownHelpersOnly, but used the unknown helper " + name28, sexpr);
         } else {
-          path35.strict = true;
-          path35.falsy = true;
-          this.accept(path35);
-          this.opcode("invokeHelper", params.length, path35.original, _ast2["default"].helpers.simpleId(path35));
+          path36.strict = true;
+          path36.falsy = true;
+          this.accept(path36);
+          this.opcode("invokeHelper", params.length, path36.original, _ast2["default"].helpers.simpleId(path36));
         }
       },
-      PathExpression: function PathExpression(path35) {
-        this.addDepth(path35.depth);
-        this.opcode("getContext", path35.depth);
-        var name28 = path35.parts[0], scoped = _ast2["default"].helpers.scopedId(path35), blockParamId = !path35.depth && !scoped && this.blockParamIndex(name28);
+      PathExpression: function PathExpression(path36) {
+        this.addDepth(path36.depth);
+        this.opcode("getContext", path36.depth);
+        var name28 = path36.parts[0], scoped = _ast2["default"].helpers.scopedId(path36), blockParamId = !path36.depth && !scoped && this.blockParamIndex(name28);
         if (blockParamId) {
-          this.opcode("lookupBlockParam", blockParamId, path35.parts);
+          this.opcode("lookupBlockParam", blockParamId, path36.parts);
         } else if (!name28) {
           this.opcode("pushContext");
-        } else if (path35.data) {
+        } else if (path36.data) {
           this.options.data = true;
-          this.opcode("lookupData", path35.depth, path35.parts, path35.strict);
+          this.opcode("lookupData", path36.depth, path36.parts, path36.strict);
         } else {
-          this.opcode("lookupOnContext", path35.parts, path35.falsy, path35.strict, scoped);
+          this.opcode("lookupOnContext", path36.parts, path36.falsy, path36.strict, scoped);
         }
       },
       StringLiteral: function StringLiteral(string5) {
@@ -113532,16 +113559,16 @@ var require_util3 = __commonJS({
     }
     exports2.urlGenerate = urlGenerate;
     function normalize(aPath) {
-      var path35 = aPath;
+      var path36 = aPath;
       var url4 = urlParse(aPath);
       if (url4) {
         if (!url4.path) {
           return aPath;
         }
-        path35 = url4.path;
+        path36 = url4.path;
       }
-      var isAbsolute = exports2.isAbsolute(path35);
-      var parts = path35.split(/\/+/);
+      var isAbsolute = exports2.isAbsolute(path36);
+      var parts = path36.split(/\/+/);
       for (var part, up = 0, i = parts.length - 1; i >= 0; i--) {
         part = parts[i];
         if (part === ".") {
@@ -113558,15 +113585,15 @@ var require_util3 = __commonJS({
           }
         }
       }
-      path35 = parts.join("/");
-      if (path35 === "") {
-        path35 = isAbsolute ? "/" : ".";
+      path36 = parts.join("/");
+      if (path36 === "") {
+        path36 = isAbsolute ? "/" : ".";
       }
       if (url4) {
-        url4.path = path35;
+        url4.path = path36;
         return urlGenerate(url4);
       }
-      return path35;
+      return path36;
     }
     exports2.normalize = normalize;
     function join2(aRoot, aPath) {
@@ -116357,8 +116384,8 @@ var require_printer = __commonJS({
       return this.accept(sexpr.path) + " " + params + hash3;
     };
     PrintVisitor.prototype.PathExpression = function(id) {
-      var path35 = id.parts.join("/");
-      return (id.data ? "@" : "") + "PATH:" + path35;
+      var path36 = id.parts.join("/");
+      return (id.data ? "@" : "") + "PATH:" + path36;
     };
     PrintVisitor.prototype.StringLiteral = function(string5) {
       return '"' + string5.value + '"';
@@ -116398,8 +116425,8 @@ var require_lib6 = __commonJS({
     handlebars.print = printer.print;
     module2.exports = handlebars;
     function extension(module3, filename) {
-      var fs39 = require("fs");
-      var templateString = fs39.readFileSync(filename, "utf8");
+      var fs40 = require("fs");
+      var templateString = fs40.readFileSync(filename, "utf8");
       module3.exports = handlebars.compile(templateString);
     }
     if (typeof require !== "undefined" && require.extensions) {
@@ -126255,11 +126282,11 @@ var require_mime_types3 = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path35) {
-      if (!path35 || typeof path35 !== "string") {
+    function lookup(path36) {
+      if (!path36 || typeof path36 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path35).toLowerCase().substr(1);
+      var extension2 = extname("x." + path36).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -126571,13 +126598,13 @@ var require_form_data = __commonJS({
     "use strict";
     var CombinedStream = require_combined_stream();
     var util4 = require("util");
-    var path35 = require("path");
+    var path36 = require("path");
     var http4 = require("http");
     var https2 = require("https");
     var parseUrl2 = require("url").parse;
-    var fs39 = require("fs");
+    var fs40 = require("fs");
     var Stream = require("stream").Stream;
-    var crypto11 = require("crypto");
+    var crypto12 = require("crypto");
     var mime = require_mime_types3();
     var asynckit = require_asynckit();
     var setToStringTag = require_es_set_tostringtag();
@@ -126642,7 +126669,7 @@ var require_form_data = __commonJS({
         if (value.end != void 0 && value.end != Infinity && value.start != void 0) {
           callback(null, value.end + 1 - (value.start ? value.start : 0));
         } else {
-          fs39.stat(value.path, function(err, stat) {
+          fs40.stat(value.path, function(err, stat) {
             if (err) {
               callback(err);
               return;
@@ -126699,11 +126726,11 @@ var require_form_data = __commonJS({
     FormData4.prototype._getContentDisposition = function(value, options) {
       var filename;
       if (typeof options.filepath === "string") {
-        filename = path35.normalize(options.filepath).replace(/\\/g, "/");
+        filename = path36.normalize(options.filepath).replace(/\\/g, "/");
       } else if (options.filename || value && (value.name || value.path)) {
-        filename = path35.basename(options.filename || value && (value.name || value.path));
+        filename = path36.basename(options.filename || value && (value.name || value.path));
       } else if (value && value.readable && hasOwn(value, "httpVersion")) {
-        filename = path35.basename(value.client._httpMessage.path || "");
+        filename = path36.basename(value.client._httpMessage.path || "");
       }
       if (filename) {
         return 'filename="' + filename + '"';
@@ -126783,7 +126810,7 @@ var require_form_data = __commonJS({
       return Buffer.concat([dataBuffer, Buffer.from(this._lastBoundary())]);
     };
     FormData4.prototype._generateBoundary = function() {
-      this._boundary = "--------------------------" + crypto11.randomBytes(12).toString("hex");
+      this._boundary = "--------------------------" + crypto12.randomBytes(12).toString("hex");
     };
     FormData4.prototype.getLengthSync = function() {
       var knownLength = this._overheadLength + this._valueLength;
@@ -126901,9 +126928,9 @@ function isVisitable(thing) {
 function removeBrackets(key) {
   return utils_default2.endsWith(key, "[]") ? key.slice(0, -2) : key;
 }
-function renderKey(path35, key, dots) {
-  if (!path35) return key;
-  return path35.concat(key).map(function each(token, i) {
+function renderKey(path36, key, dots) {
+  if (!path36) return key;
+  return path36.concat(key).map(function each(token, i) {
     token = removeBrackets(token);
     return !dots && i ? "[" + token + "]" : token;
   }).join(dots ? "." : "");
@@ -126953,13 +126980,13 @@ function toFormData(obj, formData, options) {
     }
     return value;
   }
-  function defaultVisitor(value, key, path35) {
+  function defaultVisitor(value, key, path36) {
     let arr = value;
     if (utils_default2.isReactNative(formData) && utils_default2.isReactNativeBlob(value)) {
-      formData.append(renderKey(path35, key, dots), convertValue(value));
+      formData.append(renderKey(path36, key, dots), convertValue(value));
       return false;
     }
-    if (value && !path35 && typeof value === "object") {
+    if (value && !path36 && typeof value === "object") {
       if (utils_default2.endsWith(key, "{}")) {
         key = metaTokens ? key : key.slice(0, -2);
         value = JSON.stringify(value);
@@ -126978,7 +127005,7 @@ function toFormData(obj, formData, options) {
     if (isVisitable(value)) {
       return true;
     }
-    formData.append(renderKey(path35, key, dots), convertValue(value));
+    formData.append(renderKey(path36, key, dots), convertValue(value));
     return false;
   }
   const stack = [];
@@ -126987,16 +127014,16 @@ function toFormData(obj, formData, options) {
     convertValue,
     isVisitable
   });
-  function build(value, path35) {
+  function build(value, path36) {
     if (utils_default2.isUndefined(value)) return;
     if (stack.indexOf(value) !== -1) {
-      throw Error("Circular reference detected in " + path35.join("."));
+      throw Error("Circular reference detected in " + path36.join("."));
     }
     stack.push(value);
     utils_default2.forEach(value, function each(el, key) {
-      const result = !(utils_default2.isUndefined(el) || el === null) && visitor.call(formData, el, utils_default2.isString(key) ? key.trim() : key, path35, exposedHelpers);
+      const result = !(utils_default2.isUndefined(el) || el === null) && visitor.call(formData, el, utils_default2.isString(key) ? key.trim() : key, path36, exposedHelpers);
       if (result === true) {
-        build(el, path35 ? path35.concat(key) : [key]);
+        build(el, path36 ? path36.concat(key) : [key]);
       }
     });
     stack.pop();
@@ -127273,7 +127300,7 @@ var init_platform = __esm({
 // node_modules/axios/lib/helpers/toURLEncodedForm.js
 function toURLEncodedForm(data, options) {
   return toFormData_default(data, new platform_default.classes.URLSearchParams(), {
-    visitor: function(value, key, path35, helpers) {
+    visitor: function(value, key, path36, helpers) {
       if (platform_default.isNode && utils_default2.isBuffer(value)) {
         this.append(key, value.toString("base64"));
         return false;
@@ -127311,11 +127338,11 @@ function arrayToObject(arr) {
   return obj;
 }
 function formDataToJSON(formData) {
-  function buildPath(path35, value, target, index) {
-    let name28 = path35[index++];
+  function buildPath(path36, value, target, index) {
+    let name28 = path36[index++];
     if (name28 === "__proto__") return true;
     const isNumericKey = Number.isFinite(+name28);
-    const isLast = index >= path35.length;
+    const isLast = index >= path36.length;
     name28 = !name28 && utils_default2.isArray(target) ? target.length : name28;
     if (isLast) {
       if (utils_default2.hasOwnProp(target, name28)) {
@@ -127328,7 +127355,7 @@ function formDataToJSON(formData) {
     if (!target[name28] || !utils_default2.isObject(target[name28])) {
       target[name28] = [];
     }
-    const result = buildPath(path35, value, target[name28], index);
+    const result = buildPath(path36, value, target[name28], index);
     if (result && utils_default2.isArray(target[name28])) {
       target[name28] = arrayToObject(target[name28]);
     }
@@ -129476,9 +129503,9 @@ var init_http = __esm({
           auth = urlUsername + ":" + urlPassword;
         }
         auth && headers.delete("authorization");
-        let path35;
+        let path36;
         try {
-          path35 = buildURL(
+          path36 = buildURL(
             parsed.pathname + parsed.search,
             config3.params,
             config3.paramsSerializer
@@ -129496,7 +129523,7 @@ var init_http = __esm({
           false
         );
         const options = {
-          path: path35,
+          path: path36,
           method,
           headers: headers.toJSON(),
           agents: { http: config3.httpAgent, https: config3.httpsAgent },
@@ -129760,14 +129787,14 @@ var init_cookies = __esm({
     cookies_default = platform_default.hasStandardBrowserEnv ? (
       // Standard browser envs support document.cookie
       {
-        write(name28, value, expires, path35, domain3, secure, sameSite) {
+        write(name28, value, expires, path36, domain3, secure, sameSite) {
           if (typeof document === "undefined") return;
           const cookie = [`${name28}=${encodeURIComponent(value)}`];
           if (utils_default2.isNumber(expires)) {
             cookie.push(`expires=${new Date(expires).toUTCString()}`);
           }
-          if (utils_default2.isString(path35)) {
-            cookie.push(`path=${path35}`);
+          if (utils_default2.isString(path36)) {
+            cookie.push(`path=${path36}`);
           }
           if (utils_default2.isString(domain3)) {
             cookie.push(`domain=${domain3}`);
@@ -131888,10 +131915,10 @@ function mergeDefs(...defs) {
 function cloneDef(schema) {
   return mergeDefs(schema._zod.def);
 }
-function getElementAtPath(obj, path35) {
-  if (!path35)
+function getElementAtPath(obj, path36) {
+  if (!path36)
     return obj;
-  return path35.reduce((acc, key) => acc?.[key], obj);
+  return path36.reduce((acc, key) => acc?.[key], obj);
 }
 function promiseAllObject(promisesObj) {
   const keys2 = Object.keys(promisesObj);
@@ -132203,11 +132230,11 @@ function aborted(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues(path35, issues) {
+function prefixIssues(path36, issues) {
   return issues.map((iss) => {
     var _a31;
     (_a31 = iss).path ?? (_a31.path = []);
-    iss.path.unshift(path35);
+    iss.path.unshift(path36);
     return iss;
   });
 }
@@ -132450,7 +132477,7 @@ function formatError(error73, mapper = (issue3) => issue3.message) {
 }
 function treeifyError(error73, mapper = (issue3) => issue3.message) {
   const result = { errors: [] };
-  const processError = (error74, path35 = []) => {
+  const processError = (error74, path36 = []) => {
     var _a31, _b27;
     for (const issue3 of error74.issues) {
       if (issue3.code === "invalid_union" && issue3.errors.length) {
@@ -132460,7 +132487,7 @@ function treeifyError(error73, mapper = (issue3) => issue3.message) {
       } else if (issue3.code === "invalid_element") {
         processError({ issues: issue3.issues }, issue3.path);
       } else {
-        const fullpath = [...path35, ...issue3.path];
+        const fullpath = [...path36, ...issue3.path];
         if (fullpath.length === 0) {
           result.errors.push(mapper(issue3));
           continue;
@@ -132492,8 +132519,8 @@ function treeifyError(error73, mapper = (issue3) => issue3.message) {
 }
 function toDotPath(_path) {
   const segs = [];
-  const path35 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-  for (const seg of path35) {
+  const path36 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+  for (const seg of path36) {
     if (typeof seg === "number")
       segs.push(`[${seg}]`);
     else if (typeof seg === "symbol")
@@ -145257,13 +145284,13 @@ function resolveRef(ref, ctx) {
   if (!ref.startsWith("#")) {
     throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
   }
-  const path35 = ref.slice(1).split("/").filter(Boolean);
-  if (path35.length === 0) {
+  const path36 = ref.slice(1).split("/").filter(Boolean);
+  if (path36.length === 0) {
     return ctx.rootSchema;
   }
   const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-  if (path35[0] === defsKey) {
-    const key = path35[1];
+  if (path36[0] === defsKey) {
+    const key = path36[1];
     if (!key || !ctx.defs[key]) {
       throw new Error(`Reference not found: ${ref}`);
     }
@@ -146445,8 +146472,8 @@ var init_parseUtil = __esm({
     init_errors3();
     init_en2();
     makeIssue = (params) => {
-      const { data, path: path35, errorMaps, issueData } = params;
-      const fullPath = [...path35, ...issueData.path || []];
+      const { data, path: path36, errorMaps, issueData } = params;
+      const fullPath = [...path36, ...issueData.path || []];
       const fullIssue = {
         ...issueData,
         path: fullPath
@@ -146729,11 +146756,11 @@ var init_types = __esm({
     init_parseUtil();
     init_util2();
     ParseInputLazyPath = class {
-      constructor(parent, value, path35, key) {
+      constructor(parent, value, path36, key) {
         this._cachedPath = [];
         this.parent = parent;
         this.data = value;
-        this._path = path35;
+        this._path = path36;
         this._key = key;
       }
       get path() {
@@ -154036,37 +154063,37 @@ function createOpenAI(options = {}) {
   );
   const createChatModel = (modelId) => new OpenAIChatLanguageModel(modelId, {
     provider: `${providerName}.chat`,
-    url: ({ path: path35 }) => `${baseURL}${path35}`,
+    url: ({ path: path36 }) => `${baseURL}${path36}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createCompletionModel = (modelId) => new OpenAICompletionLanguageModel(modelId, {
     provider: `${providerName}.completion`,
-    url: ({ path: path35 }) => `${baseURL}${path35}`,
+    url: ({ path: path36 }) => `${baseURL}${path36}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createEmbeddingModel = (modelId) => new OpenAIEmbeddingModel(modelId, {
     provider: `${providerName}.embedding`,
-    url: ({ path: path35 }) => `${baseURL}${path35}`,
+    url: ({ path: path36 }) => `${baseURL}${path36}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createImageModel = (modelId) => new OpenAIImageModel(modelId, {
     provider: `${providerName}.image`,
-    url: ({ path: path35 }) => `${baseURL}${path35}`,
+    url: ({ path: path36 }) => `${baseURL}${path36}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createTranscriptionModel = (modelId) => new OpenAITranscriptionModel(modelId, {
     provider: `${providerName}.transcription`,
-    url: ({ path: path35 }) => `${baseURL}${path35}`,
+    url: ({ path: path36 }) => `${baseURL}${path36}`,
     headers: getHeaders,
     fetch: options.fetch
   });
   const createSpeechModel = (modelId) => new OpenAISpeechModel(modelId, {
     provider: `${providerName}.speech`,
-    url: ({ path: path35 }) => `${baseURL}${path35}`,
+    url: ({ path: path36 }) => `${baseURL}${path36}`,
     headers: getHeaders,
     fetch: options.fetch
   });
@@ -154081,7 +154108,7 @@ function createOpenAI(options = {}) {
   const createResponsesModel = (modelId) => {
     return new OpenAIResponsesLanguageModel(modelId, {
       provider: `${providerName}.responses`,
-      url: ({ path: path35 }) => `${baseURL}${path35}`,
+      url: ({ path: path36 }) => `${baseURL}${path36}`,
       headers: getHeaders,
       fetch: options.fetch,
       fileIdPrefixes: ["file-"]
@@ -159424,7 +159451,7 @@ function createDeepSeek(options = {}) {
   const createLanguageModel = (modelId) => {
     return new DeepSeekChatLanguageModel(modelId, {
       provider: `deepseek.chat`,
-      url: ({ path: path35 }) => `${baseURL}${path35}`,
+      url: ({ path: path36 }) => `${baseURL}${path36}`,
       headers: getHeaders,
       fetch: options.fetch
     });
@@ -160942,10 +160969,10 @@ function mergeDefs2(...defs) {
 function cloneDef2(schema) {
   return mergeDefs2(schema._zod.def);
 }
-function getElementAtPath2(obj, path35) {
-  if (!path35)
+function getElementAtPath2(obj, path36) {
+  if (!path36)
     return obj;
-  return path35.reduce((acc, key) => acc == null ? void 0 : acc[key], obj);
+  return path36.reduce((acc, key) => acc == null ? void 0 : acc[key], obj);
 }
 function promiseAllObject2(promisesObj) {
   const keys2 = Object.keys(promisesObj);
@@ -161258,12 +161285,12 @@ function aborted2(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues2(path35, issues) {
+function prefixIssues2(path36, issues) {
   return issues.map((iss) => {
     var _a47;
     var _a37;
     (_a47 = (_a37 = iss).path) != null ? _a47 : _a37.path = [];
-    iss.path.unshift(path35);
+    iss.path.unshift(path36);
     return iss;
   });
 }
@@ -161423,7 +161450,7 @@ function formatError2(error482, mapper = (issue22) => issue22.message) {
 }
 function treeifyError2(error482, mapper = (issue22) => issue22.message) {
   const result = { errors: [] };
-  const processError = (error492, path35 = []) => {
+  const processError = (error492, path36 = []) => {
     var _a47, _b27, _c, _d;
     var _a37, _b28;
     for (const issue22 of error492.issues) {
@@ -161434,7 +161461,7 @@ function treeifyError2(error482, mapper = (issue22) => issue22.message) {
       } else if (issue22.code === "invalid_element") {
         processError({ issues: issue22.issues }, issue22.path);
       } else {
-        const fullpath = [...path35, ...issue22.path];
+        const fullpath = [...path36, ...issue22.path];
         if (fullpath.length === 0) {
           result.errors.push(mapper(issue22));
           continue;
@@ -161466,8 +161493,8 @@ function treeifyError2(error482, mapper = (issue22) => issue22.message) {
 }
 function toDotPath2(_path) {
   const segs = [];
-  const path35 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-  for (const seg of path35) {
+  const path36 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+  for (const seg of path36) {
     if (typeof seg === "number")
       segs.push(`[${seg}]`);
     else if (typeof seg === "symbol")
@@ -164087,13 +164114,13 @@ function resolveRef2(ref, ctx) {
   if (!ref.startsWith("#")) {
     throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
   }
-  const path35 = ref.slice(1).split("/").filter(Boolean);
-  if (path35.length === 0) {
+  const path36 = ref.slice(1).split("/").filter(Boolean);
+  if (path36.length === 0) {
     return ctx.rootSchema;
   }
   const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-  if (path35[0] === defsKey) {
-    const key = path35[1];
+  if (path36[0] === defsKey) {
+    const key = path36[1];
     if (!key || !ctx.defs[key]) {
       throw new Error(`Reference not found: ${ref}`);
     }
@@ -164658,7 +164685,7 @@ function createZhipu(options = {}) {
   });
   const createImageModel = (modelId) => new ZhipuImageModel(modelId, {
     provider: "zhipu.image",
-    url: ({ path: path35 }) => `${baseURL}${path35}`,
+    url: ({ path: path36 }) => `${baseURL}${path36}`,
     headers: getHeaders,
     fetch: options.fetch,
     _internal: {
@@ -176195,10 +176222,10 @@ var require_util4 = __commonJS({
     function cloneDef3(schema) {
       return mergeDefs3(schema._zod.def);
     }
-    function getElementAtPath3(obj, path35) {
-      if (!path35)
+    function getElementAtPath3(obj, path36) {
+      if (!path36)
         return obj;
-      return path35.reduce((acc, key) => acc?.[key], obj);
+      return path36.reduce((acc, key) => acc?.[key], obj);
     }
     function promiseAllObject3(promisesObj) {
       const keys2 = Object.keys(promisesObj);
@@ -176582,11 +176609,11 @@ var require_util4 = __commonJS({
       }
       return false;
     }
-    function prefixIssues3(path35, issues) {
+    function prefixIssues3(path36, issues) {
       return issues.map((iss) => {
         var _a31;
         (_a31 = iss).path ?? (_a31.path = []);
-        iss.path.unshift(path35);
+        iss.path.unshift(path36);
         return iss;
       });
     }
@@ -176811,7 +176838,7 @@ var require_errors = __commonJS({
     }
     function treeifyError3(error73, mapper = (issue3) => issue3.message) {
       const result = { errors: [] };
-      const processError = (error74, path35 = []) => {
+      const processError = (error74, path36 = []) => {
         var _a31, _b27;
         for (const issue3 of error74.issues) {
           if (issue3.code === "invalid_union" && issue3.errors.length) {
@@ -176821,7 +176848,7 @@ var require_errors = __commonJS({
           } else if (issue3.code === "invalid_element") {
             processError({ issues: issue3.issues }, issue3.path);
           } else {
-            const fullpath = [...path35, ...issue3.path];
+            const fullpath = [...path36, ...issue3.path];
             if (fullpath.length === 0) {
               result.errors.push(mapper(issue3));
               continue;
@@ -176853,8 +176880,8 @@ var require_errors = __commonJS({
     }
     function toDotPath3(_path) {
       const segs = [];
-      const path35 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-      for (const seg of path35) {
+      const path36 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+      for (const seg of path36) {
         if (typeof seg === "number")
           segs.push(`[${seg}]`);
         else if (typeof seg === "symbol")
@@ -191355,13 +191382,13 @@ var require_from_json_schema = __commonJS({
       if (!ref.startsWith("#")) {
         throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
       }
-      const path35 = ref.slice(1).split("/").filter(Boolean);
-      if (path35.length === 0) {
+      const path36 = ref.slice(1).split("/").filter(Boolean);
+      if (path36.length === 0) {
         return ctx.rootSchema;
       }
       const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-      if (path35[0] === defsKey) {
-        const key = path35[1];
+      if (path36[0] === defsKey) {
+        const key = path36[1];
         if (!key || !ctx.defs[key]) {
           throw new Error(`Reference not found: ${ref}`);
         }
@@ -192406,8 +192433,8 @@ var require_parseUtil = __commonJS({
     var errors_js_1 = require_errors3();
     var en_js_1 = __importDefault(require_en2());
     var makeIssue2 = (params) => {
-      const { data, path: path35, errorMaps, issueData } = params;
-      const fullPath = [...path35, ...issueData.path || []];
+      const { data, path: path36, errorMaps, issueData } = params;
+      const fullPath = [...path36, ...issueData.path || []];
       const fullIssue = {
         ...issueData,
         path: fullPath
@@ -192561,11 +192588,11 @@ var require_types4 = __commonJS({
     var parseUtil_js_1 = require_parseUtil();
     var util_js_1 = require_util5();
     var ParseInputLazyPath2 = class {
-      constructor(parent, value, path35, key) {
+      constructor(parent, value, path36, key) {
         this._cachedPath = [];
         this.parent = parent;
         this.data = value;
-        this._path = path35;
+        this._path = path36;
         this._key = key;
       }
       get path() {
@@ -200560,8 +200587,8 @@ ${user}:`]
       });
       const getCommonModelConfig = (modelType) => ({
         provider: `qwen.${modelType}`,
-        url: ({ path: path35 }) => {
-          const url4 = new URL(`${baseURL}${path35}`);
+        url: ({ path: path36 }) => {
+          const url4 = new URL(`${baseURL}${path36}`);
           if (options.queryParams) {
             url4.search = new URLSearchParams(options.queryParams).toString();
           }
@@ -208627,8 +208654,8 @@ function createOpenAICompatible(options) {
   const getHeaders = () => withUserAgentSuffix(headers, `ai-sdk/openai-compatible/${VERSION9}`);
   const getCommonModelConfig = (modelType) => ({
     provider: `${providerName}.${modelType}`,
-    url: ({ path: path35 }) => {
-      const url4 = new URL(`${baseURL}${path35}`);
+    url: ({ path: path36 }) => {
+      const url4 = new URL(`${baseURL}${path36}`);
       if (options.queryParams) {
         url4.search = new URLSearchParams(options.queryParams).toString();
       }
@@ -221212,7 +221239,7 @@ function createMinimax(options = {}) {
   const createLanguageModel = (modelId) => {
     return new MinimaxChatLanguageModel(modelId, {
       provider: `minimax.chat`,
-      url: ({ path: path35 }) => `${baseURL}${path35}`,
+      url: ({ path: path36 }) => `${baseURL}${path36}`,
       headers: getHeaders,
       fetch: options.fetch
     });
@@ -222114,14 +222141,14 @@ var require_jwa = __commonJS({
   "node_modules/jwa/index.js"(exports2, module2) {
     "use strict";
     var Buffer3 = require_safe_buffer2().Buffer;
-    var crypto11 = require("crypto");
+    var crypto12 = require("crypto");
     var formatEcdsa = require_ecdsa_sig_formatter();
     var util4 = require("util");
     var MSG_INVALID_ALGORITHM = '"%s" is not a valid algorithm.\n  Supported algorithms are:\n  "HS256", "HS384", "HS512", "RS256", "RS384", "RS512", "PS256", "PS384", "PS512", "ES256", "ES384", "ES512" and "none".';
     var MSG_INVALID_SECRET = "secret must be a string or buffer";
     var MSG_INVALID_VERIFIER_KEY = "key must be a string or a buffer";
     var MSG_INVALID_SIGNER_KEY = "key must be a string, a buffer or an object";
-    var supportsKeyObjects = typeof crypto11.createPublicKey === "function";
+    var supportsKeyObjects = typeof crypto12.createPublicKey === "function";
     if (supportsKeyObjects) {
       MSG_INVALID_VERIFIER_KEY += " or a KeyObject";
       MSG_INVALID_SECRET += "or a KeyObject";
@@ -222211,17 +222238,17 @@ var require_jwa = __commonJS({
       return function sign(thing, secret) {
         checkIsSecretKey(secret);
         thing = normalizeInput(thing);
-        var hmac = crypto11.createHmac("sha" + bits, secret);
+        var hmac = crypto12.createHmac("sha" + bits, secret);
         var sig = (hmac.update(thing), hmac.digest("base64"));
         return fromBase64(sig);
       };
     }
     var bufferEqual;
-    var timingSafeEqual = "timingSafeEqual" in crypto11 ? function timingSafeEqual2(a, b) {
+    var timingSafeEqual = "timingSafeEqual" in crypto12 ? function timingSafeEqual2(a, b) {
       if (a.byteLength !== b.byteLength) {
         return false;
       }
-      return crypto11.timingSafeEqual(a, b);
+      return crypto12.timingSafeEqual(a, b);
     } : function timingSafeEqual2(a, b) {
       if (!bufferEqual) {
         bufferEqual = require_buffer_equal_constant_time();
@@ -222238,7 +222265,7 @@ var require_jwa = __commonJS({
       return function sign(thing, privateKey) {
         checkIsPrivateKey(privateKey);
         thing = normalizeInput(thing);
-        var signer = crypto11.createSign("RSA-SHA" + bits);
+        var signer = crypto12.createSign("RSA-SHA" + bits);
         var sig = (signer.update(thing), signer.sign(privateKey, "base64"));
         return fromBase64(sig);
       };
@@ -222248,7 +222275,7 @@ var require_jwa = __commonJS({
         checkIsPublicKey(publicKey);
         thing = normalizeInput(thing);
         signature = toBase64(signature);
-        var verifier = crypto11.createVerify("RSA-SHA" + bits);
+        var verifier = crypto12.createVerify("RSA-SHA" + bits);
         verifier.update(thing);
         return verifier.verify(publicKey, signature, "base64");
       };
@@ -222257,11 +222284,11 @@ var require_jwa = __commonJS({
       return function sign(thing, privateKey) {
         checkIsPrivateKey(privateKey);
         thing = normalizeInput(thing);
-        var signer = crypto11.createSign("RSA-SHA" + bits);
+        var signer = crypto12.createSign("RSA-SHA" + bits);
         var sig = (signer.update(thing), signer.sign({
           key: privateKey,
-          padding: crypto11.constants.RSA_PKCS1_PSS_PADDING,
-          saltLength: crypto11.constants.RSA_PSS_SALTLEN_DIGEST
+          padding: crypto12.constants.RSA_PKCS1_PSS_PADDING,
+          saltLength: crypto12.constants.RSA_PSS_SALTLEN_DIGEST
         }, "base64"));
         return fromBase64(sig);
       };
@@ -222271,12 +222298,12 @@ var require_jwa = __commonJS({
         checkIsPublicKey(publicKey);
         thing = normalizeInput(thing);
         signature = toBase64(signature);
-        var verifier = crypto11.createVerify("RSA-SHA" + bits);
+        var verifier = crypto12.createVerify("RSA-SHA" + bits);
         verifier.update(thing);
         return verifier.verify({
           key: publicKey,
-          padding: crypto11.constants.RSA_PKCS1_PSS_PADDING,
-          saltLength: crypto11.constants.RSA_PSS_SALTLEN_DIGEST
+          padding: crypto12.constants.RSA_PKCS1_PSS_PADDING,
+          saltLength: crypto12.constants.RSA_PSS_SALTLEN_DIGEST
         }, signature, "base64");
       };
     }
@@ -226002,8 +226029,8 @@ var require_auth_config = __commonJS({
       writeAuthConfig: () => writeAuthConfig
     });
     module2.exports = __toCommonJS2(auth_config_exports);
-    var fs39 = __toESM2(require("fs"));
-    var path35 = __toESM2(require("path"));
+    var fs40 = __toESM2(require("fs"));
+    var path36 = __toESM2(require("path"));
     var import_token_util = require_token_util();
     function getAuthConfigPath() {
       const dataDir = (0, import_token_util.getVercelDataDir)();
@@ -226012,15 +226039,15 @@ var require_auth_config = __commonJS({
           `Unable to find Vercel CLI data directory. Your platform: ${process.platform}. Supported: darwin, linux, win32.`
         );
       }
-      return path35.join(dataDir, "auth.json");
+      return path36.join(dataDir, "auth.json");
     }
     function readAuthConfig() {
       try {
         const authPath = getAuthConfigPath();
-        if (!fs39.existsSync(authPath)) {
+        if (!fs40.existsSync(authPath)) {
           return null;
         }
-        const content = fs39.readFileSync(authPath, "utf8");
+        const content = fs40.readFileSync(authPath, "utf8");
         if (!content) {
           return null;
         }
@@ -226031,11 +226058,11 @@ var require_auth_config = __commonJS({
     }
     function writeAuthConfig(config3) {
       const authPath = getAuthConfigPath();
-      const authDir = path35.dirname(authPath);
-      if (!fs39.existsSync(authDir)) {
-        fs39.mkdirSync(authDir, { mode: 504, recursive: true });
+      const authDir = path36.dirname(authPath);
+      if (!fs40.existsSync(authDir)) {
+        fs40.mkdirSync(authDir, { mode: 504, recursive: true });
       }
-      fs39.writeFileSync(authPath, JSON.stringify(config3, null, 2), { mode: 384 });
+      fs40.writeFileSync(authPath, JSON.stringify(config3, null, 2), { mode: 384 });
     }
     function isValidAccessToken(authConfig) {
       if (!authConfig.token)
@@ -226181,8 +226208,8 @@ var require_token_util = __commonJS({
       saveToken: () => saveToken
     });
     module2.exports = __toCommonJS2(token_util_exports);
-    var path35 = __toESM2(require("path"));
-    var fs39 = __toESM2(require("fs"));
+    var path36 = __toESM2(require("path"));
+    var fs40 = __toESM2(require("fs"));
     var import_token_error = require_token_error();
     var import_token_io = require_token_io();
     var import_auth_config = require_auth_config();
@@ -226193,7 +226220,7 @@ var require_token_util = __commonJS({
       if (!dataDir) {
         return null;
       }
-      return path35.join(dataDir, vercelFolder);
+      return path36.join(dataDir, vercelFolder);
     }
     async function getVercelCliToken() {
       const authConfig = (0, import_auth_config.readAuthConfig)();
@@ -226266,13 +226293,13 @@ var require_token_util = __commonJS({
           "Unable to find project root directory. Have you linked your project with `vc link?`"
         );
       }
-      const prjPath = path35.join(dir, ".vercel", "project.json");
-      if (!fs39.existsSync(prjPath)) {
+      const prjPath = path36.join(dir, ".vercel", "project.json");
+      if (!fs40.existsSync(prjPath)) {
         throw new import_token_error.VercelOidcTokenError(
           "project.json not found, have you linked your project with `vc link?`"
         );
       }
-      const prj = JSON.parse(fs39.readFileSync(prjPath, "utf8"));
+      const prj = JSON.parse(fs40.readFileSync(prjPath, "utf8"));
       if (typeof prj.projectId !== "string" && typeof prj.orgId !== "string") {
         throw new TypeError(
           "Expected a string-valued projectId property. Try running `vc link` to re-link your project."
@@ -226287,11 +226314,11 @@ var require_token_util = __commonJS({
           "Unable to find user data directory. Please reach out to Vercel support."
         );
       }
-      const tokenPath = path35.join(dir, "com.vercel.token", `${projectId}.json`);
+      const tokenPath = path36.join(dir, "com.vercel.token", `${projectId}.json`);
       const tokenJson = JSON.stringify(token);
-      fs39.mkdirSync(path35.dirname(tokenPath), { mode: 504, recursive: true });
-      fs39.writeFileSync(tokenPath, tokenJson);
-      fs39.chmodSync(tokenPath, 432);
+      fs40.mkdirSync(path36.dirname(tokenPath), { mode: 504, recursive: true });
+      fs40.writeFileSync(tokenPath, tokenJson);
+      fs40.chmodSync(tokenPath, 432);
       return;
     }
     function loadToken(projectId) {
@@ -226301,11 +226328,11 @@ var require_token_util = __commonJS({
           "Unable to find user data directory. Please reach out to Vercel support."
         );
       }
-      const tokenPath = path35.join(dir, "com.vercel.token", `${projectId}.json`);
-      if (!fs39.existsSync(tokenPath)) {
+      const tokenPath = path36.join(dir, "com.vercel.token", `${projectId}.json`);
+      if (!fs40.existsSync(tokenPath)) {
         return null;
       }
-      const token = JSON.parse(fs39.readFileSync(tokenPath, "utf8"));
+      const token = JSON.parse(fs40.readFileSync(tokenPath, "utf8"));
       assertVercelOidcTokenResponse(token);
       return token;
     }
@@ -237490,8 +237517,8 @@ var init_ai = __esm({
         await exec2(modelName);
         return this;
       }
-      async save(path35) {
-        await utils_default.oss.writeFile(path35, this.result);
+      async save(path36) {
+        await utils_default.oss.writeFile(path36, this.result);
         return this;
       }
     };
@@ -237557,8 +237584,8 @@ var init_ai = __esm({
           throw e;
         }
       }
-      async save(path35) {
-        await utils_default.oss.writeFile(path35, this.result);
+      async save(path36) {
+        await utils_default.oss.writeFile(path36, this.result);
         return this;
       }
     };
@@ -237583,8 +237610,8 @@ var init_ai = __esm({
         }
         return await exec2(modelName);
       }
-      async save(path35) {
-        await utils_default.oss.writeFile(path35, this.result);
+      async save(path36) {
+        await utils_default.oss.writeFile(path36, this.result);
         return this;
       }
     };
@@ -238254,6 +238281,28 @@ var init_repository = __esm({
               manual_review: "failed"
             };
             await db("media_qa_reports").where("id", payload.reportId).update({
+              status: statusMap[task.status] ?? task.status,
+              error_message: task.errorMessage,
+              updated_at: Date.now()
+            });
+          }
+        }
+        if (task.type === "composition.publish") {
+          const payload = task.payload;
+          if (payload?.packageId) {
+            const statusMap = {
+              queued: "queued",
+              claimed: "running",
+              polling: "running",
+              finalizing: "running",
+              retry_wait: "queued",
+              cancelling: "running",
+              cancelled: "cancelled",
+              succeeded: "succeeded",
+              failed: "failed",
+              manual_review: "failed"
+            };
+            await db("publish_packages").where("id", payload.packageId).update({
               status: statusMap[task.status] ?? task.status,
               error_message: task.errorMessage,
               updated_at: Date.now()
@@ -239131,7223 +239180,17 @@ var init_renderer = __esm({
   }
 });
 
-// src/lib/responseFormat.ts
-function success3(data = null, message = "\u6210\u529F") {
-  return {
-    code: 200,
-    data,
-    message
-  };
-}
-function error50(message = "", data = null) {
-  return {
-    code: 400,
-    data,
-    message
-  };
-}
-var init_responseFormat = __esm({
-  "src/lib/responseFormat.ts"() {
-    "use strict";
-  }
-});
-
-// node_modules/zod/locales/index.js
-var init_locales2 = __esm({
-  "node_modules/zod/locales/index.js"() {
-    "use strict";
-    init_locales();
-  }
-});
-
-// src/middleware/middleware.ts
-function validateFields(shape, source = "body") {
-  const schema = external_exports.object(shape);
-  return (req, res, next) => {
-    const data = req[source];
-    const parseResult = schema.safeParse(data);
-    if (!parseResult.success) {
-      const errors = parseResult.error.issues.map((issue3) => `\u5B57\u6BB5 ${issue3.path.join(".")} ${issue3.message}`);
-      console.error(errors);
-      return res.status(400).json({ message: "\u53C2\u6570\u9519\u8BEF", errors });
-    }
-    next();
-  };
-}
-var init_middleware = __esm({
-  "src/middleware/middleware.ts"() {
-    "use strict";
-    init_zod();
-    init_locales2();
-    external_exports.config(zh_CN_default());
-  }
-});
-
-// src/routes/agents/clearMemory.ts
-var import_express, router, clearMemory_default;
-var init_clearMemory = __esm({
-  "src/routes/agents/clearMemory.ts"() {
-    "use strict";
-    import_express = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router = import_express.default.Router();
-    clearMemory_default = router.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        episodesId: external_exports.number().optional(),
-        agentType: external_exports.enum(["scriptAgent", "productionAgent"]),
-        type: external_exports.enum(["message", "summary", "all"]).optional()
-      }),
-      async (req, res) => {
-        const { projectId, episodesId, agentType, type = "all" } = req.body;
-        const isolationKey = `${projectId}:${agentType}${episodesId ? `:${episodesId}` : ""}`;
-        if (type === "all") {
-          await utils_default.db("memories").where({ isolationKey }).del();
-        } else if (type === "message") {
-          await utils_default.db("memories").where({ isolationKey, type: "message" }).del();
-          await utils_default.db("memories").where({ isolationKey, type: "summary" }).del();
-        } else {
-          await utils_default.db("memories").where({ isolationKey, type: "message", summarized: 1 }).update({ summarized: 0 });
-          await utils_default.db("memories").where({ isolationKey, type: "summary" }).del();
-        }
-        res.status(200).send(success3(null));
-      }
-    );
-  }
-});
-
-// src/routes/agents/getMemory.ts
-function normalizeRole(role) {
-  return role?.startsWith("assistant") ? "assistant" : "user";
-}
-var import_express2, router2, getMemory_default;
-var init_getMemory = __esm({
-  "src/routes/agents/getMemory.ts"() {
-    "use strict";
-    import_express2 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router2 = import_express2.default.Router();
-    getMemory_default = router2.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        agentType: external_exports.enum(["scriptAgent", "productionAgent"]),
-        episodesId: external_exports.number().optional()
-      }),
-      async (req, res) => {
-        const { projectId, agentType, episodesId } = req.body;
-        const isolationKey = `${projectId}:${agentType}${episodesId ? `:${episodesId}` : ""}`;
-        const rows = await utils_default.db("memories").where({ isolationKey, type: "message" }).orderBy("createTime", "asc").select("id", "role", "name", "content", "createTime");
-        const history = rows.map((row) => ({
-          id: row.id,
-          role: normalizeRole(row.role),
-          name: row.name ?? void 0,
-          status: "complete",
-          datetime: new Date(row.createTime).toISOString(),
-          content: [{ type: "markdown", status: "complete", data: row.content }],
-          createTime: row.createTime
-        }));
-        res.status(200).send(success3(history));
-      }
-    );
-  }
-});
-
-// src/routes/artStyle/addArtStyle.ts
-var import_express3, router3, addArtStyle_default;
-var init_addArtStyle = __esm({
-  "src/routes/artStyle/addArtStyle.ts"() {
-    "use strict";
-    import_express3 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_dist_node();
-    init_responseFormat();
-    init_middleware();
-    router3 = import_express3.default.Router();
-    addArtStyle_default = router3.post(
-      "/",
-      validateFields({
-        name: external_exports.string(),
-        fileUrl: external_exports.string(),
-        prompt: external_exports.string()
-      }),
-      async (req, res) => {
-        const { name: name28, fileUrl, prompt } = req.body;
-        const imagePath = `/artStyle/${v4_default()}.jpg`;
-        const matches = fileUrl.match(/^data:image\/\w+;base64,(.+)$/);
-        const realBase64 = matches ? matches[1] : fileUrl;
-        await utils_default.oss.writeFile(imagePath, Buffer.from(realBase64, "base64"));
-        await utils_default.db("o_artStyle").insert({
-          name: name28,
-          fileUrl: imagePath,
-          label: name28,
-          prompt
-        });
-        res.status(200).send(success3("\u827A\u672F\u98CE\u683C\u6DFB\u52A0\u6210\u529F"));
-      }
-    );
-  }
-});
-
-// src/routes/artStyle/editArtStyle.ts
-var import_express4, router4, editArtStyle_default;
-var init_editArtStyle = __esm({
-  "src/routes/artStyle/editArtStyle.ts"() {
-    "use strict";
-    import_express4 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_dist_node();
-    init_responseFormat();
-    init_middleware();
-    router4 = import_express4.default.Router();
-    editArtStyle_default = router4.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        name: external_exports.string(),
-        fileUrl: external_exports.string(),
-        prompt: external_exports.string()
-      }),
-      async (req, res) => {
-        const { id, name: name28, fileUrl, prompt } = req.body;
-        const imagePath = `/artStyle/${v4_default()}.jpg`;
-        const matches = fileUrl.match(/^data:image\/\w+;base64,(.+)$/);
-        const realBase64 = matches ? matches[1] : fileUrl;
-        await utils_default.oss.writeFile(imagePath, Buffer.from(realBase64, "base64"));
-        await utils_default.db("o_artStyle").update({
-          name: name28,
-          fileUrl: imagePath,
-          label: name28,
-          prompt
-        }).where("id", id);
-        res.status(200).send(success3("\u827A\u672F\u98CE\u683C\u7F16\u8F91\u6210\u529F"));
-      }
-    );
-  }
-});
-
-// src/routes/artStyle/extractStylePrompt.ts
-var import_express5, router5, extractStylePrompt_default;
-var init_extractStylePrompt = __esm({
-  "src/routes/artStyle/extractStylePrompt.ts"() {
-    "use strict";
-    import_express5 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router5 = import_express5.default.Router();
-    extractStylePrompt_default = router5.post(
-      "/",
-      validateFields({
-        images: external_exports.array(external_exports.string())
-      }),
-      async (req, res) => {
-        const { images } = req.body;
-        try {
-          const resText = await utils_default.Ai.Text("universalAi").invoke({
-            system: '\u8BF7\u6839\u636E\u4EE5\u4E0B\u56FE\u7247\u6570\u636E\uFF0C\u63D0\u53D6\u51FA\u56FE\u7247\u7684\u753B\u98CE\u63D0\u793A\u8BCD\uFF0C\u7528\u4E8E\u751F\u6210\u56FE\u7247\u65F6\u6307\u5B9A\u98CE\u683C\uFF0C\u8981\u6C42\u7B80\u6D01\u4E14\u5177\u6709\u827A\u672F\u6027,\u53EA\u9700\u8981\u753B\u98CE\u63D0\u793A\u8BCD\uFF0C\u4E0D\u9700\u8981\u5176\u4ED6\u5185\u5BB9\uFF1A"\u6BD4\u5982\uFF1A`(\u753B\u98CE\uFF1A2D\u52A8\u6F2B\u98CE\u683C,2d animation style)`,`(\u753B\u98CE\uFF1A\u7167\u7247\u7EA7\u771F\u4EBA\u8D85\u5199\u5B9E,photorealistic, lifelike, ultra detailed)`\uFF0C`(\u753B\u98CE\uFF1A3D\u56FD\u521B,Chinese 3D animation style)`\u7B49,\u5982\u679C\u56FE\u7247\u98CE\u683C\u65E0\u6CD5\u63CF\u8FF0\uFF0C\u53EF\u4EE5\u8FD4\u56DE`\u65E0\u6CD5\u63CF\u8FF0`,\u591A\u5F20\u56FE\u7247\u65F6\uFF0C\u53EA\u8F93\u51FA\u4E00\u4E2A\u7EFC\u5408\u7684\u753B\u98CE\u63D0\u793A\u8BCD\uFF0C\u8981\u6C42\u5305\u542B\u6240\u6709\u56FE\u7247\u7684\u5171\u540C\u98CE\u683C\u7279\u5F81\uFF0C\u8F93\u51FA\u683C\u5F0F\u5FC5\u987B\u4E25\u683C\u6309\u7167\u793A\u4F8B\u4E2D\u7684\u683C\u5F0F\uFF0C\u5FC5\u987B\u5305\u542B`\u753B\u98CE`\u4E8C\u5B57\uFF0C\u4E14\u5FC5\u987B\u4F7F\u7528\u62EC\u53F7\u62EC\u8D77\u6765\uFF0C\u62EC\u53F7\u5185\u5FC5\u987B\u5305\u542B\u4E2D\u6587\u548C\u82F1\u6587\u7684\u753B\u98CE\u63CF\u8FF0\uFF0C\u5E76\u7528\u9017\u53F7\u5206\u9694\uFF0C\u82F1\u6587\u90E8\u5206\u9700\u8981\u7FFB\u8BD1\u6210\u5730\u9053\u7684\u82F1\u6587\u63D0\u793A\u8BCD',
-            messages: [
-              {
-                role: "user",
-                content: [
-                  ...images.map((image) => ({
-                    type: "image",
-                    image
-                  }))
-                ]
-              }
-            ]
-          });
-          res.status(200).send(success3(resText.text));
-        } catch (e) {
-          const err = utils_default.error(e);
-          res.status(500).send({ message: err.message });
-        }
-      }
-    );
-  }
-});
-
-// src/routes/artStyle/getArtStyle.ts
-var import_express6, router6, getArtStyle_default;
-var init_getArtStyle = __esm({
-  "src/routes/artStyle/getArtStyle.ts"() {
-    "use strict";
-    import_express6 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    router6 = import_express6.default.Router();
-    getArtStyle_default = router6.post("/", async (req, res) => {
-      const list2 = await utils_default.db("o_artStyle").select("*");
-      const data = await Promise.all(
-        list2.map(async (item) => {
-          const fileUrl = await utils_default.oss.getSmallImageUrl(item.fileUrl);
-          return { ...item, fileUrl };
-        })
-      );
-      res.status(200).send(success3(data));
-    });
-  }
-});
-
-// src/routes/assets/addAssets.ts
-var import_express7, router7, addAssets_default;
-var init_addAssets = __esm({
-  "src/routes/assets/addAssets.ts"() {
-    "use strict";
-    import_express7 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router7 = import_express7.default.Router();
-    addAssets_default = router7.post(
-      "/",
-      validateFields({
-        name: external_exports.string(),
-        describe: external_exports.string(),
-        type: external_exports.string(),
-        projectId: external_exports.number(),
-        remark: external_exports.string().optional().nullable(),
-        prompt: external_exports.string().optional().nullable()
-      }),
-      async (req, res) => {
-        const { name: name28, describe: describe4, type, projectId, remark, prompt } = req.body;
-        await utils_default.db("o_assets").insert({
-          name: name28,
-          describe: describe4,
-          type,
-          projectId,
-          remark,
-          prompt,
-          startTime: Date.now()
-        });
-        res.status(200).send(success3({ message: "\u65B0\u589E\u8D44\u4EA7\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/assets/addAudioAssets.ts
-var import_express8, router8, addAudioAssets_default;
-var init_addAudioAssets = __esm({
-  "src/routes/assets/addAudioAssets.ts"() {
-    "use strict";
-    import_express8 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router8 = import_express8.default.Router();
-    addAudioAssets_default = router8.post(
-      "/",
-      validateFields({
-        name: external_exports.string(),
-        describe: external_exports.string(),
-        projectId: external_exports.number(),
-        assetsItem: external_exports.array(
-          external_exports.object({
-            base64: external_exports.string(),
-            prompt: external_exports.string(),
-            describe: external_exports.string(),
-            name: external_exports.string()
-          })
-        )
-      }),
-      async (req, res) => {
-        const { name: name28, describe: describe4, projectId, assetsItem } = req.body;
-        await Promise.all(
-          assetsItem.map(async (i) => {
-            if (i.base64) {
-              const mimeMatch = i.base64.match(/^data:audio\/([^;]+);base64,/);
-              const mimeExt = mimeMatch ? mimeMatch[1] : "mp3";
-              const mimeToExt = {
-                mpeg: "mp3",
-                "x-wav": "wav",
-                "x-aiff": "aiff",
-                "x-m4a": "m4a",
-                "x-flac": "flac"
-              };
-              const ext = mimeToExt[mimeExt] ?? mimeExt;
-              const savePath = `/${projectId}/assets/audio/${utils_default.uuid()}.${ext}`;
-              const base64Data = i.base64.replace(/^data:[^;]+;base64,/, "");
-              await utils_default.oss.writeFile(savePath, base64Data);
-              i.src = savePath;
-            }
-          })
-        );
-        const [id] = await utils_default.db("o_assets").insert({
-          name: name28,
-          describe: describe4,
-          type: "audio",
-          projectId,
-          startTime: Date.now()
-        });
-        for (const item of assetsItem) {
-          const [assetsId] = await utils_default.db("o_assets").insert({
-            prompt: item.prompt,
-            assetsId: id,
-            type: "audio",
-            describe: item.describe,
-            name: item.name,
-            projectId,
-            startTime: Date.now()
-          });
-          const [imageId] = await utils_default.db("o_image").insert({
-            filePath: item.src,
-            type: "audio",
-            assetsId,
-            state: "\u5DF2\u5B8C\u6210"
-          });
-          await utils_default.db("o_assets").where("id", assetsId).update({
-            imageId
-          });
-        }
-        res.status(200).send(success3({ message: "\u65B0\u589E\u8D44\u4EA7\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/assets/batchDelete.ts
-var import_express9, router9, batchDelete_default;
-var init_batchDelete = __esm({
-  "src/routes/assets/batchDelete.ts"() {
-    "use strict";
-    import_express9 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router9 = import_express9.default.Router();
-    batchDelete_default = router9.post(
-      "/",
-      validateFields({
-        id: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        await utils_default.db("o_assets").whereIn("id", id).delete();
-        res.status(200).send(success3({ message: "\u5220\u9664\u8D44\u4EA7\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/assets/batchGenerationData.ts
-var import_express10, router10, batchGenerationData_default;
-var init_batchGenerationData = __esm({
-  "src/routes/assets/batchGenerationData.ts"() {
-    "use strict";
-    import_express10 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router10 = import_express10.default.Router();
-    batchGenerationData_default = router10.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        type: external_exports.string(),
-        name: external_exports.string().optional(),
-        page: external_exports.number(),
-        limit: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId, type, name: name28, page = 1, limit = 10 } = req.body;
-        const offset = (page - 1) * limit;
-        let query = utils_default.db("o_assets").select("*").where("projectId", projectId).andWhere("type", type);
-        if (name28) {
-          query = query.andWhere("name", "like", `%${name28}%`);
-        }
-        const parentAssets = await query.offset(offset).limit(limit);
-        const totalQuery = await utils_default.db("o_assets").where("projectId", projectId).andWhere("type", type).andWhere((qb) => {
-          if (name28) {
-            qb.andWhere("name", "like", `%${name28}%`);
-          }
-        }).count("* as total").first();
-        res.status(200).send(success3({ data: parentAssets, total: totalQuery?.total }));
-      }
-    );
-  }
-});
-
-// src/routes/assets/delAssets.ts
-var import_express11, router11, delAssets_default;
-var init_delAssets = __esm({
-  "src/routes/assets/delAssets.ts"() {
-    "use strict";
-    import_express11 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router11 = import_express11.default.Router();
-    delAssets_default = router11.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        const assetsData = await utils_default.db("o_image").where("assetsId", id);
-        await Promise.all(
-          assetsData.map(
-            (i) => i.filePath ? utils_default.oss.deleteFile(i.filePath).catch((e) => {
-              if (e?.code !== "ENOENT") throw e;
-            }) : Promise.resolve()
-          )
-        );
-        const imageIds = assetsData.map((i) => i.id).filter(Boolean);
-        if (imageIds.length > 0) {
-          await utils_default.db("o_assets").whereIn("imageId", imageIds).update({ imageId: null });
-        }
-        await utils_default.db("o_image").where({ assetsId: id }).delete();
-        await utils_default.db("o_assets").where({ id }).delete();
-        await utils_default.db("o_assets").where("assetsId", id).delete();
-        res.status(200).send(success3({ message: "\u5220\u9664\u8D44\u4EA7\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/assets/delImage.ts
-var import_express12, router12, delImage_default;
-var init_delImage = __esm({
-  "src/routes/assets/delImage.ts"() {
-    "use strict";
-    import_express12 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router12 = import_express12.default.Router();
-    delImage_default = router12.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        await utils_default.db("o_assets").where({ imageId: id }).update({
-          imageId: null
-        });
-        await utils_default.db("o_image").where({ id }).delete();
-        const assetsData = await utils_default.db("o_image").where("id", id);
-        await Promise.all(assetsData.map((i) => i.filePath && utils_default.oss.deleteFile(i.filePath)));
-        res.status(200).send(success3({ message: "\u8D44\u4EA7\u56FE\u7247\u5220\u9664\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/assets/getAssetsApi.ts
-async function filterTypeGetFileUrl(url4, type) {
-  if (type == "role" || type == "tool" || type == "scene") {
-    return await utils_default.oss.getSmallImageUrl(url4);
-  } else {
-    return await utils_default.oss.getFileUrl(url4);
-  }
-}
-var import_express13, router13, getAssetsApi_default;
-var init_getAssetsApi = __esm({
-  "src/routes/assets/getAssetsApi.ts"() {
-    "use strict";
-    import_express13 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router13 = import_express13.default.Router();
-    getAssetsApi_default = router13.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        type: external_exports.string(),
-        name: external_exports.string().optional(),
-        page: external_exports.number(),
-        limit: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId, type, name: name28, page = 1, limit = 10 } = req.body;
-        const offset = (page - 1) * limit;
-        let query = utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state").where("o_assets.projectId", projectId).andWhere("o_assets.type", type);
-        if (name28) {
-          query = query.andWhere("name", "like", `%${name28}%`);
-        }
-        const parentAssets = await query.where("o_assets.assetsId", null).offset(offset).limit(limit);
-        let childQuery = utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state", "o_image.errorReason").where("o_assets.projectId", projectId).andWhere("o_assets.type", type).whereNotNull("o_assets.assetsId");
-        if (name28) {
-          childQuery = childQuery.andWhere("o_assets.name", "like", `%${name28}%`);
-        }
-        const childAssets = await childQuery;
-        const childAssetsWithSrc = await Promise.all(
-          childAssets.map(async (child) => ({
-            ...child,
-            src: child.filePath && await filterTypeGetFileUrl(child.filePath, child.type)
-          }))
-        );
-        const result = await Promise.all(
-          parentAssets.map(async (parent) => ({
-            ...parent,
-            sonAssets: childAssetsWithSrc.filter((child) => child.assetsId === parent.id),
-            src: parent.filePath && await filterTypeGetFileUrl(parent.filePath, parent.type),
-            ...parent.type == "audio" ? { sex: parent.describe?.split("|")[0], describe: parent.describe?.split("|")[1] } : {}
-          }))
-        );
-        const totalQuery = await utils_default.db("o_assets").where("projectId", projectId).andWhere("type", type).andWhere("assetsId", null).andWhere((qb) => {
-          if (name28) {
-            qb.andWhere("name", "like", `%${name28}%`);
-          }
-        }).count("* as total").first();
-        res.status(200).send(success3({ data: result, total: totalQuery?.total }));
-      }
-    );
-  }
-});
-
-// src/routes/assets/getImage.ts
-var import_express14, router14, getImage_default;
-var init_getImage = __esm({
-  "src/routes/assets/getImage.ts"() {
-    "use strict";
-    import_express14 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    init_zod();
-    init_middleware();
-    router14 = import_express14.default.Router();
-    getImage_default = router14.post(
-      "/",
-      validateFields({
-        assetsId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { assetsId } = req.body;
-        const assets = await utils_default.db("o_assets").where("id", assetsId).select("id", "imageId", "type").first();
-        const rawTempAssets = await utils_default.db("o_image").where("assetsId", assetsId).select("id", "filePath", "assetsId", "type", "state");
-        const tempAssets = await Promise.all(
-          rawTempAssets.map(async (item) => ({
-            ...item,
-            filePath: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : "",
-            selected: assets?.imageId != null && Number(item.id) === Number(assets.imageId)
-          }))
-        );
-        const data = {
-          id: assets.id,
-          imageId: assets.imageId ?? null,
-          tempAssets
-        };
-        res.status(200).send(success3(data));
-      }
-    );
-  }
-});
-
-// src/routes/assets/getMaterialData.ts
-var import_express15, router15, getMaterialData_default;
-var init_getMaterialData = __esm({
-  "src/routes/assets/getMaterialData.ts"() {
-    "use strict";
-    import_express15 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router15 = import_express15.default.Router();
-    getMaterialData_default = router15.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number().optional()
-      }),
-      async (req, res) => {
-        const { projectId, scriptId } = req.body;
-        const list2 = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.id", "=", "o_image.assetsId").where("o_assets.type", "clip").andWhere("o_assets.projectId", projectId).select("*");
-        const data = await Promise.all(
-          list2.map(async (item) => ({
-            ...item,
-            filePath: item.filePath ? await utils_default.oss.getFileUrl(item.filePath) : ""
-          }))
-        );
-        const ending = await utils_default.oss.getFileUrl("/ending.mp4", "assets");
-        data.push({
-          id: 0,
-          name: "Toonflow\u7247\u5C3E",
-          filePath: ending,
-          type: "clip"
-        });
-        const trackRows = await utils_default.db("o_videoTrack").where("o_videoTrack.scriptId", scriptId).andWhere("o_videoTrack.projectId", projectId).select("o_videoTrack.id as trackId", "o_videoTrack.videoId");
-        const video = await Promise.all(
-          trackRows.map(async (track) => {
-            const videoItems = await utils_default.db("o_video").where("o_video.videoTrackId", track.trackId).andWhere("o_video.state", "\u751F\u6210\u6210\u529F").select("*");
-            const videoList = await Promise.all(
-              videoItems.map(async (v) => ({
-                id: v.id,
-                filePath: v.filePath ? await utils_default.oss.getFileUrl(v.filePath) : "",
-                videoTrackId: v.videoTrackId
-              }))
-            );
-            return {
-              id: track.trackId,
-              videoId: track.videoId,
-              video: videoList
-            };
-          })
-        ).then((tracks) => tracks.filter((track) => track.video.length > 0));
-        res.status(200).send(success3({ data, video }));
-      }
-    );
-  }
-});
-
-// src/routes/assets/pollingImageAssets.ts
-var import_express16, router16, pollingImageAssets_default;
-var init_pollingImageAssets = __esm({
-  "src/routes/assets/pollingImageAssets.ts"() {
-    "use strict";
-    import_express16 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router16 = import_express16.default.Router();
-    pollingImageAssets_default = router16.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        const data = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", ids).whereNot("o_image.state", "\u751F\u6210\u4E2D").select("o_image.state", "o_assets.id", "o_image.filePath");
-        const result = await Promise.all(
-          data.map(async (item) => ({
-            ...item,
-            filePath: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null
-          }))
-        );
-        res.status(200).send(success3(result));
-      }
-    );
-  }
-});
-
-// src/routes/assets/pollingPromptAssets.ts
-var import_express17, router17, pollingPromptAssets_default;
-var init_pollingPromptAssets = __esm({
-  "src/routes/assets/pollingPromptAssets.ts"() {
-    "use strict";
-    import_express17 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router17 = import_express17.default.Router();
-    pollingPromptAssets_default = router17.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        const data = await utils_default.db("o_assets").whereIn("id", ids).whereNot("promptState", "\u751F\u6210\u4E2D").select("*");
-        res.status(200).send(success3(data));
-      }
-    );
-  }
-});
-
-// src/routes/assets/saveAssets.ts
-var import_express18, router18, saveAssets_default;
-var init_saveAssets = __esm({
-  "src/routes/assets/saveAssets.ts"() {
-    "use strict";
-    import_express18 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_dist_node();
-    init_responseFormat();
-    init_middleware();
-    router18 = import_express18.default.Router();
-    saveAssets_default = router18.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        projectId: external_exports.number(),
-        base64: external_exports.string().optional().nullable(),
-        type: external_exports.enum(["role", "scene", "tool"]),
-        prompt: external_exports.string().optional().nullable(),
-        imageId: external_exports.number().optional().nullable()
-      }),
-      async (req, res) => {
-        const { id, base64: base644, type, prompt, projectId, imageId } = req.body;
-        if (base644) {
-          const matches = base644.match(/^data:image\/\w+;base64,(.+)$/);
-          const realBase64 = matches ? matches[1] : base644;
-          const savePath = `/${projectId}/${type}/${v4_default()}.png`;
-          await utils_default.oss.writeFile(savePath, Buffer.from(realBase64, "base64"));
-          const [idData] = await utils_default.db("o_image").insert({
-            assetsId: id,
-            filePath: savePath,
-            type,
-            state: "\u5DF2\u5B8C\u6210"
-          });
-          await utils_default.db("o_assets").where("id", id).update({
-            prompt: prompt ?? "",
-            imageId: idData
-          });
-        } else {
-          await utils_default.db("o_assets").where("id", id).update({
-            prompt: prompt ?? "",
-            imageId
-          });
-        }
-        res.status(200).send(success3({ message: "\u4FDD\u5B58\u8D44\u4EA7\u56FE\u7247\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/assets/updateAssets.ts
-var import_express19, router19, updateAssets_default;
-var init_updateAssets = __esm({
-  "src/routes/assets/updateAssets.ts"() {
-    "use strict";
-    import_express19 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router19 = import_express19.default.Router();
-    updateAssets_default = router19.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        name: external_exports.string(),
-        describe: external_exports.string(),
-        remark: external_exports.string().optional().nullable(),
-        prompt: external_exports.string().optional().nullable()
-      }),
-      async (req, res) => {
-        const { id, name: name28, describe: describe4, remark, prompt } = req.body;
-        await utils_default.db("o_assets").where({ id }).update({
-          name: name28,
-          describe: describe4,
-          remark,
-          prompt
-        });
-        res.status(200).send(success3({ message: "\u66F4\u65B0\u8D44\u4EA7\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/assets/updateAudioAssets.ts
-var import_express20, router20, updateAudioAssets_default;
-var init_updateAudioAssets = __esm({
-  "src/routes/assets/updateAudioAssets.ts"() {
-    "use strict";
-    import_express20 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router20 = import_express20.default.Router();
-    updateAudioAssets_default = router20.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        name: external_exports.string(),
-        describe: external_exports.string(),
-        projectId: external_exports.number(),
-        assetsItem: external_exports.array(
-          external_exports.object({
-            src: external_exports.string().optional(),
-            id: external_exports.number().optional(),
-            base64: external_exports.string().optional(),
-            prompt: external_exports.string(),
-            describe: external_exports.string(),
-            name: external_exports.string()
-          })
-        )
-      }),
-      async (req, res) => {
-        const { id, name: name28, describe: describe4, projectId, assetsItem } = req.body;
-        await Promise.all(
-          assetsItem.map(async (i) => {
-            if (i.src) {
-              i.src = utils_default.replaceUrl(i.src);
-            }
-            if (i.base64) {
-              const mimeMatch = i.base64.match(/^data:audio\/([^;]+);base64,/);
-              const mimeExt = mimeMatch ? mimeMatch[1] : "mp3";
-              const mimeToExt = {
-                mpeg: "mp3",
-                "x-wav": "wav",
-                "x-aiff": "aiff",
-                "x-m4a": "m4a",
-                "x-flac": "flac"
-              };
-              const ext = mimeToExt[mimeExt] ?? mimeExt;
-              const savePath = `/${projectId}/assets/audio/${utils_default.uuid()}.${ext}`;
-              const base64Data = i.base64.replace(/^data:[^;]+;base64,/, "");
-              await utils_default.oss.writeFile(savePath, base64Data);
-              i.src = savePath;
-            }
-          })
-        );
-        await utils_default.db("o_assets").where("id", id).update({
-          name: name28,
-          describe: describe4
-        });
-        const existingItems = await utils_default.db("o_assets").where("assetsId", id).select("id");
-        const existingIds = existingItems.map((i) => i.id);
-        const incomingIds = assetsItem.filter((i) => i.id).map((i) => i.id);
-        const toDeleteIds = existingIds.filter((eid) => !incomingIds.includes(eid));
-        if (toDeleteIds.length > 0) {
-          const deleteItems = await utils_default.db("o_assets").whereIn("id", toDeleteIds).select("imageId");
-          const deleteImageIds = deleteItems.map((i) => i.imageId).filter(Boolean);
-          await utils_default.db("o_assets").whereIn("id", toDeleteIds).update({ imageId: null });
-          if (deleteImageIds.length > 0) {
-            await utils_default.db("o_image").whereIn("id", deleteImageIds).delete();
-          }
-          await utils_default.db("o_assets").whereIn("id", toDeleteIds).delete();
-        }
-        for (const item of assetsItem) {
-          if (item.id) {
-            await utils_default.db("o_assets").where("id", item.id).update({
-              prompt: item.prompt,
-              describe: item.describe,
-              name: item.name
-            });
-            const itemData = await utils_default.db("o_assets").where("id", item.id).select("imageId").first();
-            await utils_default.db("o_image").where("id", itemData?.imageId).update({
-              filePath: item.src
-            });
-          } else {
-            const [assetsId] = await utils_default.db("o_assets").insert({
-              prompt: item.prompt,
-              assetsId: id,
-              type: "audio",
-              projectId,
-              describe: item.describe,
-              name: item.name,
-              startTime: Date.now()
-            });
-            const [imageId] = await utils_default.db("o_image").insert({
-              filePath: item.src,
-              type: "audio",
-              assetsId,
-              state: "\u5DF2\u5B8C\u6210"
-            });
-            await utils_default.db("o_assets").where("id", assetsId).update({
-              imageId
-            });
-          }
-        }
-        res.status(200).send(success3({ message: "\u65B0\u589E\u8D44\u4EA7\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/assets/uploadClip.ts
-function getExtFromBase64(base64Data) {
-  const mime = base64Data.match(/^data:([^;]+);base64,/)?.[1] ?? "";
-  const mimeMap = {
-    // 图片
-    "image/jpeg": "jpeg",
-    "image/jpg": "jpg",
-    "image/png": "png",
-    // 音频
-    "audio/mpeg": "mp3",
-    "audio/mp3": "mp3",
-    "audio/wav": "wav",
-    // 视频
-    "video/mp4": "mp4",
-    "video/webm": "webm"
-  };
-  return mimeMap[mime] ?? "bin";
-}
-var import_express21, router21, uploadClip_default;
-var init_uploadClip = __esm({
-  "src/routes/assets/uploadClip.ts"() {
-    "use strict";
-    import_express21 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    init_middleware();
-    init_zod();
-    init_dist_node();
-    router21 = import_express21.default.Router();
-    uploadClip_default = router21.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        base64Data: external_exports.string(),
-        type: external_exports.string().optional().default("clip"),
-        name: external_exports.string()
-      }),
-      async (req, res) => {
-        const { base64Data, projectId, type = "clip", name: name28 } = req.body;
-        const ext = getExtFromBase64(base64Data);
-        const savePath = `/${projectId}/assets/${v4_default()}.${ext}`;
-        await utils_default.oss.writeFile(savePath, Buffer.from(base64Data.match(/base64,([A-Za-z0-9+/=]+)/)[1] ?? "", "base64"));
-        const [id] = await utils_default.db("o_assets").insert({
-          type,
-          projectId,
-          name: name28,
-          startTime: Date.now()
-        });
-        const [imageId] = await utils_default.db("o_image").insert({
-          filePath: savePath,
-          type,
-          assetsId: id,
-          state: "\u5DF2\u5B8C\u6210"
-        });
-        await utils_default.db("o_assets").where("id", id).update({
-          imageId
-        });
-        res.status(200).send(success3("\u4E0A\u4F20\u6210\u529F"));
-      }
-    );
-  }
-});
-
-// node_modules/yocto-queue/index.js
-var Node, Queue;
-var init_yocto_queue = __esm({
-  "node_modules/yocto-queue/index.js"() {
-    "use strict";
-    Node = class {
-      value;
-      next;
-      constructor(value) {
-        this.value = value;
-      }
-    };
-    Queue = class {
-      #head;
-      #tail;
-      #size;
-      constructor() {
-        this.clear();
-      }
-      enqueue(value) {
-        const node = new Node(value);
-        if (this.#head) {
-          this.#tail.next = node;
-          this.#tail = node;
-        } else {
-          this.#head = node;
-          this.#tail = node;
-        }
-        this.#size++;
-      }
-      dequeue() {
-        const current = this.#head;
-        if (!current) {
-          return;
-        }
-        this.#head = this.#head.next;
-        this.#size--;
-        if (!this.#head) {
-          this.#tail = void 0;
-        }
-        return current.value;
-      }
-      peek() {
-        if (!this.#head) {
-          return;
-        }
-        return this.#head.value;
-      }
-      clear() {
-        this.#head = void 0;
-        this.#tail = void 0;
-        this.#size = 0;
-      }
-      get size() {
-        return this.#size;
-      }
-      *[Symbol.iterator]() {
-        let current = this.#head;
-        while (current) {
-          yield current.value;
-          current = current.next;
-        }
-      }
-      *drain() {
-        while (this.#head) {
-          yield this.dequeue();
-        }
-      }
-    };
-  }
-});
-
-// node_modules/p-limit/index.js
-function pLimit(concurrency) {
-  let rejectOnClear = false;
-  if (typeof concurrency === "object") {
-    ({ concurrency, rejectOnClear = false } = concurrency);
-  }
-  validateConcurrency(concurrency);
-  if (typeof rejectOnClear !== "boolean") {
-    throw new TypeError("Expected `rejectOnClear` to be a boolean");
-  }
-  const queue = new Queue();
-  let activeCount = 0;
-  const resumeNext = () => {
-    if (activeCount < concurrency && queue.size > 0) {
-      activeCount++;
-      queue.dequeue().run();
-    }
-  };
-  const next = () => {
-    activeCount--;
-    resumeNext();
-  };
-  const run = async (function_, resolve3, arguments_) => {
-    const result = (async () => function_(...arguments_))();
-    resolve3(result);
-    try {
-      await result;
-    } catch {
-    }
-    next();
-  };
-  const enqueue = (function_, resolve3, reject, arguments_) => {
-    const queueItem = { reject };
-    new Promise((internalResolve) => {
-      queueItem.run = internalResolve;
-      queue.enqueue(queueItem);
-    }).then(run.bind(void 0, function_, resolve3, arguments_));
-    if (activeCount < concurrency) {
-      resumeNext();
-    }
-  };
-  const generator = (function_, ...arguments_) => new Promise((resolve3, reject) => {
-    enqueue(function_, resolve3, reject, arguments_);
-  });
-  Object.defineProperties(generator, {
-    activeCount: {
-      get: () => activeCount
-    },
-    pendingCount: {
-      get: () => queue.size
-    },
-    clearQueue: {
-      value() {
-        if (!rejectOnClear) {
-          queue.clear();
-          return;
-        }
-        const abortError = AbortSignal.abort().reason;
-        while (queue.size > 0) {
-          queue.dequeue().reject(abortError);
-        }
-      }
-    },
-    concurrency: {
-      get: () => concurrency,
-      set(newConcurrency) {
-        validateConcurrency(newConcurrency);
-        concurrency = newConcurrency;
-        queueMicrotask(() => {
-          while (activeCount < concurrency && queue.size > 0) {
-            resumeNext();
-          }
-        });
-      }
-    },
-    map: {
-      async value(iterable, function_) {
-        const promises6 = Array.from(iterable, (value, index) => this(function_, value, index));
-        return Promise.all(promises6);
-      }
-    }
-  });
-  return generator;
-}
-function validateConcurrency(concurrency) {
-  if (!((Number.isInteger(concurrency) || concurrency === Number.POSITIVE_INFINITY) && concurrency > 0)) {
-    throw new TypeError("Expected `concurrency` to be a number from 1 and up");
-  }
-}
-var init_p_limit = __esm({
-  "node_modules/p-limit/index.js"() {
-    "use strict";
-    init_yocto_queue();
-  }
-});
-
-// src/routes/assetsGenerate/batchGenerateImageAssets.ts
-function buildPrompt(cfg, artStyle, name28, prompt) {
-  return `
-    \u8BF7\u6839\u636E\u4EE5\u4E0B\u53C2\u6570\u751F\u6210${cfg.promptTitle}\uFF1A
-
-    **\u57FA\u7840\u53C2\u6570\uFF1A**
-    - \u753B\u98CE\u98CE\u683C: ${artStyle || "\u672A\u6307\u5B9A"}
-
-    **${cfg.label}\u8BBE\u5B9A\uFF1A**
-    - \u540D\u79F0:${name28},
-    - \u63D0\u793A\u8BCD:${prompt},
-
-    \u8BF7\u4E25\u683C\u6309\u7167\u7CFB\u7EDF\u89C4\u8303\u751F\u6210${cfg.promptEnd}\u3002
-  `;
-}
-var import_express22, router22, assetTypeConfig, requestSchema, batchGenerateImageAssets_default;
-var init_batchGenerateImageAssets = __esm({
-  "src/routes/assetsGenerate/batchGenerateImageAssets.ts"() {
-    "use strict";
-    import_express22 = __toESM(require_express2());
-    init_p_limit();
-    init_utils3();
-    init_zod();
-    init_dist_node();
-    init_responseFormat();
-    init_middleware();
-    router22 = import_express22.default.Router();
-    assetTypeConfig = {
-      role: {
-        label: "\u89D2\u8272",
-        taskClass: "\u89D2\u8272\u56FE\u751F\u6210",
-        dir: "role",
-        promptTitle: "\u89D2\u8272\u6807\u51C6\u56DB\u89C6\u56FE",
-        promptEnd: "\u4EBA\u7269\u89D2\u8272\u56DB\u89C6\u56FE"
-      },
-      scene: {
-        label: "\u573A\u666F",
-        taskClass: "\u573A\u666F\u56FE\u751F\u6210",
-        dir: "scene",
-        promptTitle: "\u6807\u51C6\u573A\u666F\u56FE",
-        promptEnd: "\u6807\u51C6\u573A\u666F\u56FE"
-      },
-      tool: {
-        label: "\u9053\u5177",
-        taskClass: "\u9053\u5177\u56FE\u751F\u6210",
-        dir: "props",
-        promptTitle: "\u6807\u51C6\u9053\u5177\u56FE",
-        promptEnd: "\u6807\u51C6\u9053\u5177\u56FE"
-      }
-    };
-    requestSchema = {
-      projectId: external_exports.number(),
-      model: external_exports.string(),
-      resolution: external_exports.string(),
-      concurrentCount: external_exports.number().int().min(1).optional(),
-      items: external_exports.array(
-        external_exports.object({
-          id: external_exports.number(),
-          type: external_exports.enum(["role", "scene", "tool", "storyboard"]),
-          name: external_exports.string(),
-          prompt: external_exports.string(),
-          base64: external_exports.string().optional().nullable()
-        })
-      )
-    };
-    batchGenerateImageAssets_default = router22.post("/", validateFields(requestSchema), async (req, res) => {
-      const { projectId, model, resolution, concurrentCount, items } = req.body;
-      const project = await utils_default.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
-      if (!project) return res.status(500).send(error50("\u9879\u76EE\u4E3A\u7A7A"));
-      const totalNovelId = [];
-      for (const item of items) {
-        const [imageId] = await utils_default.db("o_image").insert({
-          type: item.type,
-          state: "\u751F\u6210\u4E2D",
-          assetsId: item.id
-        });
-        await utils_default.db("o_assets").where("id", item.id).update({ imageId });
-        totalNovelId.push(imageId);
-      }
-      const limit = pLimit(concurrentCount ?? 1);
-      const tasks = items.map(
-        (item, index) => limit(async () => {
-          const imageId = totalNovelId[index];
-          const data = await utils_default.db("o_image").where("id", imageId).select("state").first();
-          if (data?.state === "\u751F\u6210\u5931\u8D25") {
-            return;
-          }
-          const cfg = assetTypeConfig[item.type];
-          if (!cfg) return;
-          await utils_default.db("o_assets").where("id", item.id).update({ imageId });
-          const imagePath = `/${projectId}/${cfg.dir}/${v4_default()}.jpg`;
-          const userPrompt = buildPrompt(cfg, project.artStyle ?? "", item.name, item.prompt);
-          const describe4 = `\u751F\u6210${cfg.label}\u56FE\uFF0C\u540D\u79F0\uFF1A${item.name}\uFF0C\u63D0\u793A\u8BCD\uFF1A${item.prompt}`;
-          const relatedObjects = { id: item.id, projectId, type: cfg.label };
-          try {
-            const aiImage = utils_default.Ai.Image(model);
-            await aiImage.run(
-              {
-                prompt: userPrompt,
-                referenceList: item.base64 ? [{ base64: item.base64, type: "image" }] : [],
-                size: resolution,
-                aspectRatio: "16:9"
-              },
-              {
-                taskClass: cfg.taskClass,
-                describe: describe4,
-                projectId,
-                relatedObjects: JSON.stringify(relatedObjects)
-              }
-            );
-            aiImage.save(imagePath);
-            const imageData = await utils_default.db("o_image").where("id", imageId).select("*").first();
-            if (!imageData) return res.status(500).send("\u8D44\u4EA7\u5DF2\u88AB\u5220\u9664");
-            if (!imageData) return;
-            if (imageData.state === "\u751F\u6210\u5931\u8D25") return;
-            await utils_default.db("o_image").where("id", imageId).update({
-              state: "\u5DF2\u5B8C\u6210",
-              filePath: imagePath,
-              type: item.type,
-              model: model.split(/:(.+)/)[1],
-              resolution
-            });
-            await utils_default.db("o_assets").where("id", item.id).update({ imageId });
-          } catch (e) {
-            await utils_default.db("o_image").where("id", imageId).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(e).message });
-          }
-        })
-      );
-      Promise.all(tasks).catch(() => {
-      });
-      return res.status(200).send(success3({ total: items.length }));
-    });
-  }
-});
-
-// src/routes/assetsGenerate/batchPolishAssetsPrompt.ts
-var import_express23, router23, batchPolishAssetsPrompt_default;
-var init_batchPolishAssetsPrompt = __esm({
-  "src/routes/assetsGenerate/batchPolishAssetsPrompt.ts"() {
-    "use strict";
-    import_express23 = __toESM(require_express2());
-    init_utils3();
-    init_p_limit();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router23 = import_express23.default.Router();
-    batchPolishAssetsPrompt_default = router23.post(
-      "/",
-      validateFields({
-        items: array(
-          object({
-            assetsId: number2(),
-            type: string2(),
-            name: string2(),
-            describe: string2()
-          })
-        ),
-        projectId: number2(),
-        concurrentCount: number2().int().min(1).optional(),
-        otherTextPrompt: string2()
-      }),
-      async (req, res) => {
-        const { projectId, items, concurrentCount, otherTextPrompt } = req.body;
-        const project = await utils_default.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
-        if (!project) return res.status(500).send(success3({ message: "\u9879\u76EE\u4E3A\u7A7A" }));
-        const assetsIds = items.map((item) => item.assetsId);
-        const assetsDataList = await utils_default.db("o_assets").whereIn("id", assetsIds).select("id", "assetsId");
-        if (!assetsDataList || assetsDataList.length === 0) return res.status(500).send(error50("\u8D44\u4EA7\u4E0D\u5B58\u5728"));
-        const assetsDataMap = new Map(assetsDataList.map((a) => [a.id, a]));
-        await utils_default.db("o_assets").whereIn("id", assetsIds).update({ promptState: "\u751F\u6210\u4E2D" });
-        const getTypeConfig = (isDerivative) => ({
-          role: {
-            promptKey: "role-polish",
-            itemType: "characters",
-            label: "\u89D2\u8272\u6807\u51C6\u56DB\u89C6\u56FE",
-            nameLabel: "\u89D2\u8272",
-            visualManual: isDerivative ? "art_character_derivative" : "art_character"
-          },
-          scene: {
-            promptKey: "scene-polish",
-            itemType: "scenes",
-            label: "\u573A\u666F\u56FE",
-            nameLabel: "\u573A\u666F",
-            visualManual: isDerivative ? "art_scene_derivative" : "art_scene"
-          },
-          tool: {
-            promptKey: "tool-polish",
-            itemType: "props",
-            label: "\u9053\u5177\u56FE",
-            nameLabel: "\u9053\u5177",
-            visualManual: isDerivative ? "art_prop_derivative" : "art_prop"
-          }
-        });
-        const limit = pLimit(concurrentCount ?? 1);
-        const tasks = items.map(
-          (item) => limit(async () => {
-            const assetData = assetsDataMap.get(item.assetsId);
-            if (!assetData) return;
-            const typeConfig = getTypeConfig(!!assetData.assetsId);
-            const config3 = typeConfig[item.type];
-            if (!config3) return;
-            const visualManual = await utils_default.getArtPrompt(project.artStyle, "art_skills", config3.visualManual);
-            if (!visualManual) {
-              await utils_default.db("o_assets").where("id", item.assetsId).update({ promptState: "\u751F\u6210\u5931\u8D25", promptErrorReason: "\u89C6\u89C9\u624B\u518C\u672A\u5B9A\u4E49" });
-              return;
-            }
-            const systemPrompt = visualManual;
-            try {
-              const { _output } = await utils_default.Ai.Text("universalAi").invoke({
-                system: systemPrompt + "\n" + otherTextPrompt,
-                messages: [
-                  {
-                    role: "user",
-                    content: `
-                    **\u57FA\u7840\u53C2\u6570\uFF1A**
-      **${config3.nameLabel}\u8BBE\u5B9A\uFF1A**
-      - ${config3.nameLabel}\u540D\u79F0:${item.name},
-      - ${config3.nameLabel}\u63CF\u8FF0:${item.describe},`
-                  }
-                ]
-              });
-              if (!_output) {
-                await utils_default.db("o_assets").where("id", item.assetsId).update({ promptState: "\u751F\u6210\u5931\u8D25" });
-                return;
-              }
-              await utils_default.db("o_assets").where("id", item.assetsId).update({ prompt: _output, promptState: "\u5DF2\u5B8C\u6210" });
-            } catch (e) {
-              await utils_default.db("o_assets").where("id", item.assetsId).update({ promptState: "\u5931\u8D25", promptErrorReason: utils_default.error(e).message });
-            }
-          })
-        );
-        Promise.all(tasks).catch((err) => {
-          res.status(500).send(error50(err));
-        });
-        return res.status(200).send(success3({ total: items.length }));
-      }
-    );
-  }
-});
-
-// src/routes/assetsGenerate/cancelGenerate.ts
-var import_express24, router24, cancelGenerate_default;
-var init_cancelGenerate = __esm({
-  "src/routes/assetsGenerate/cancelGenerate.ts"() {
-    "use strict";
-    import_express24 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router24 = import_express24.default.Router();
-    cancelGenerate_default = router24.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        await utils_default.db("o_image").where("id", id).update({
-          state: "\u751F\u6210\u5931\u8D25"
-        });
-        res.status(200).send(success3({ message: "\u53D6\u6D88\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/services/task-engine/budget.ts
-async function getProjectBudget(projectId) {
-  const control = await sql5("project_budget_controls").where("project_id", projectId).first();
-  const usage = await sql5("usage_ledger").leftJoin("generation_tasks", "generation_tasks.id", "usage_ledger.task_id").where("generation_tasks.project_id", projectId).sum({ reserved: sql5.raw("coalesce(actual_cost, estimated_cost, 0)") }).first();
-  return {
-    projectId,
-    budgetLimit: control?.budget_limit ?? null,
-    currency: control?.currency ?? "CNY",
-    blockUnknownPrice: control?.block_unknown_price === 1,
-    reservedCost: Number(usage?.reserved ?? 0),
-    remaining: control?.budget_limit == null ? null : Math.max(0, Number(control.budget_limit) - Number(usage?.reserved ?? 0))
-  };
-}
-async function upsertProjectBudget(input) {
-  const project = await sql5("o_project").where("id", input.projectId).first();
-  if (!project) throw new Error("\u9879\u76EE\u4E0D\u5B58\u5728");
-  const row = {
-    project_id: input.projectId,
-    budget_limit: input.budgetLimit,
-    currency: input.currency,
-    block_unknown_price: input.blockUnknownPrice ? 1 : 0,
-    updated_at: Date.now()
-  };
-  await sql5("project_budget_controls").insert(row).onConflict("project_id").merge(row);
-  return getProjectBudget(input.projectId);
-}
-async function listPricingRules() {
-  return (await sql5("pricing_rules").orderBy(["provider", "model", "lane"])).map((row) => ({
-    id: row.id,
-    provider: row.provider,
-    model: row.model,
-    lane: row.lane,
-    unitType: row.unit_type,
-    unitPrice: row.unit_price,
-    currency: row.currency,
-    updatedAt: row.updated_at
-  }));
-}
-async function upsertPricingRule(input) {
-  const existing = input.id ? null : await sql5("pricing_rules").where({ provider: input.provider, model: input.model, lane: input.lane }).first();
-  const id = input.id ?? existing?.id ?? v4_default();
-  const row = {
-    id,
-    provider: input.provider,
-    model: input.model,
-    lane: input.lane,
-    unit_type: input.unitType,
-    unit_price: input.unitPrice,
-    currency: input.currency,
-    updated_at: Date.now()
-  };
-  if (input.id || existing) {
-    const updated = await sql5("pricing_rules").where("id", id).update(row);
-    if (updated !== 1) throw new Error("\u4EF7\u683C\u89C4\u5219\u4E0D\u5B58\u5728");
-  } else {
-    await sql5("pricing_rules").insert(row);
-  }
-  return row;
-}
-async function deletePricingRule(id) {
-  await sql5("pricing_rules").where("id", id).delete();
-  return { id };
-}
-async function prepareCostReservation(input) {
-  const [provider, model] = input.model.split(/:(.+)/);
-  const exact = await sql5("pricing_rules").where({ provider, model, lane: input.lane }).first();
-  const rule = exact || await sql5("pricing_rules").where({ provider, model: "*", lane: input.lane }).first();
-  const budget = await getProjectBudget(input.projectId);
-  if (!rule) {
-    if (budget.blockUnknownPrice) throw new Error(`\u6A21\u578B ${provider}:${model} \u6CA1\u6709\u4EF7\u683C\u89C4\u5219\uFF0C\u9879\u76EE\u5DF2\u8BBE\u7F6E\u963B\u6B62\u672A\u77E5\u4EF7\u683C\u4EFB\u52A1`);
-    return null;
-  }
-  if (rule.currency !== budget.currency) throw new Error(`\u4EF7\u683C\u89C4\u5219\u4F7F\u7528 ${rule.currency}\uFF0C\u9879\u76EE\u9884\u7B97\u4F7F\u7528 ${budget.currency}\uFF0C\u8BF7\u7EDF\u4E00\u5E01\u79CD`);
-  const units = Number(input.metrics[rule.unit_type] ?? 0);
-  if (!Number.isFinite(units) || units <= 0) throw new Error(`\u4EF7\u683C\u89C4\u5219\u8981\u6C42 ${rule.unit_type} \u5355\u4F4D\uFF0C\u4F46\u4EFB\u52A1\u65E0\u6CD5\u63D0\u4F9B\u6709\u6548\u6570\u91CF`);
-  const estimatedCost = Number((units * Number(rule.unit_price)).toFixed(6));
-  if (budget.budgetLimit != null && budget.reservedCost + estimatedCost > budget.budgetLimit) {
-    throw new Error(`\u9884\u8BA1\u8D39\u7528 ${estimatedCost} ${budget.currency} \u5C06\u8D85\u8FC7\u9879\u76EE\u5269\u4F59\u9884\u7B97 ${budget.remaining} ${budget.currency}`);
-  }
-  return {
-    provider,
-    model,
-    units,
-    estimatedCost,
-    currency: rule.currency,
-    pricingSnapshot: { ruleId: rule.id, unitType: rule.unit_type, unitPrice: rule.unit_price, capturedAt: Date.now() }
-  };
-}
-var sql5, pricingUnitTypes;
-var init_budget = __esm({
-  "src/services/task-engine/budget.ts"() {
-    "use strict";
-    init_dist_node();
-    init_db();
-    sql5 = db;
-    pricingUnitTypes = ["request", "second", "character"];
-  }
-});
-
-// src/services/task-engine/enqueueSingleAssetImage.ts
-async function enqueueSingleAssetImage(input) {
-  const resourceKey = `image:asset:${input.assetId}`;
-  const existing = await generationTaskRepository.list({ projectId: input.projectId, lane: "image", limit: 100 });
-  const active = existing.data.find((task) => task.resourceKey === resourceKey && !["cancelled", "succeeded", "failed"].includes(task.status));
-  if (active) return { task: active, payload: active.payload, deduped: true };
-  const asset = await utils_default.db("o_assets").where({ id: input.assetId, projectId: input.projectId }).first();
-  if (!asset) throw new Error("\u8D44\u4EA7\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
-  const costReservation = await prepareCostReservation({ projectId: input.projectId, lane: "image", model: input.model, metrics: { request: 1 } });
-  let referencePath;
-  if (input.referenceBase64) {
-    referencePath = `/${input.projectId}/task-inputs/${v4_default()}.png`;
-    await utils_default.oss.writeFile(referencePath, input.referenceBase64);
-  }
-  let imageId;
-  let legacyTaskId;
-  try {
-    [imageId] = await utils_default.db("o_image").insert({
-      type: input.assetType,
-      state: "\u751F\u6210\u4E2D",
-      assetsId: input.assetId,
-      model: input.model.split(/:(.+)/)[1] ?? input.model,
-      resolution: input.size
-    });
-    if (imageId == null) throw new Error("\u521B\u5EFA\u56FE\u7247\u5360\u4F4D\u8BB0\u5F55\u5931\u8D25");
-    await utils_default.db("o_assets").where("id", input.assetId).update({ imageId });
-    [legacyTaskId] = await utils_default.db("o_tasks").insert({
-      projectId: input.projectId,
-      taskClass: "\u5355\u5F20\u8D44\u4EA7\u56FE\u7247",
-      relatedObjects: JSON.stringify({ assetId: input.assetId, imageId }),
-      model: input.model.split(/:(.+)/)[1] ?? input.model,
-      describe: "\u6301\u4E45\u961F\u5217\uFF1A\u5355\u5F20\u8D44\u4EA7\u56FE\u7247\u751F\u6210",
-      state: "\u6392\u961F\u4E2D",
-      startTime: Date.now()
-    });
-    if (legacyTaskId == null) throw new Error("\u521B\u5EFA\u56FE\u7247\u4EFB\u52A1\u8BB0\u5F55\u5931\u8D25");
-    const payload = {
-      projectId: input.projectId,
-      assetId: input.assetId,
-      imageId,
-      assetType: input.assetType,
-      model: input.model,
-      prompt: input.prompt,
-      size: input.size,
-      aspectRatio: input.aspectRatio,
-      savePath: `/${input.projectId}/assets/single/${v4_default()}.jpg`,
-      referencePath
-    };
-    const queued = await generationTaskRepository.enqueue({
-      projectId: input.projectId,
-      legacyTaskId,
-      lane: "image",
-      type: "asset.image.single.generate",
-      resourceKey,
-      payload,
-      provider: input.model.split(/:(.+)/)[0],
-      idempotencyKey: stableIdempotencyKey({ type: "asset.image.single.generate", resourceKey, requestId: input.requestId }),
-      maxAttempts: 3,
-      costReservation
-    });
-    if (queued.deduped) {
-      await Promise.all([utils_default.db("o_image").where("id", imageId).delete(), utils_default.db("o_tasks").where("id", legacyTaskId).delete()]);
-      if (referencePath) await utils_default.oss.deleteFile(referencePath).catch(() => void 0);
-      const existingPayload = queued.task.payload;
-      await utils_default.db("o_assets").where("id", input.assetId).update({ imageId: existingPayload.imageId });
-      return { task: queued.task, payload: existingPayload, deduped: true };
-    }
-    return { task: queued.task, payload, deduped: false };
-  } catch (error73) {
-    const cleanup = [utils_default.db("o_assets").where("id", input.assetId).update({ imageId: asset.imageId ?? null })];
-    if (imageId) cleanup.push(utils_default.db("o_image").where("id", imageId).delete());
-    if (legacyTaskId) cleanup.push(utils_default.db("o_tasks").where("id", legacyTaskId).delete());
-    await Promise.all(cleanup);
-    if (referencePath) await utils_default.oss.deleteFile(referencePath).catch(() => void 0);
-    throw error73;
-  }
-}
-var init_enqueueSingleAssetImage = __esm({
-  "src/services/task-engine/enqueueSingleAssetImage.ts"() {
-    "use strict";
-    init_dist_node();
-    init_utils3();
-    init_repository();
-    init_budget();
-  }
-});
-
-// src/routes/assetsGenerate/generateAssets.ts
-function buildPrompt2(cfg, artStyle, name28, prompt) {
-  return `
-    \u8BF7\u6839\u636E\u4EE5\u4E0B\u53C2\u6570\u751F\u6210${cfg.promptTitle}\uFF1A
-
-    **\u57FA\u7840\u53C2\u6570\uFF1A**
-    - \u753B\u98CE\u98CE\u683C: ${artStyle || "\u672A\u6307\u5B9A"}
-
-    **${cfg.label}\u8BBE\u5B9A\uFF1A**
-    - \u540D\u79F0:${name28},
-    - \u63D0\u793A\u8BCD:${prompt},
-
-    \u8BF7\u4E25\u683C\u6309\u7167\u7CFB\u7EDF\u89C4\u8303\u751F\u6210${cfg.promptEnd}\u3002
-  `;
-}
-var import_express25, router25, assetTypeConfig2, requestSchema2, generateAssets_default;
-var init_generateAssets = __esm({
-  "src/routes/assetsGenerate/generateAssets.ts"() {
-    "use strict";
-    import_express25 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_enqueueSingleAssetImage();
-    router25 = import_express25.default.Router();
-    assetTypeConfig2 = {
-      role: {
-        label: "\u89D2\u8272",
-        taskClass: "\u89D2\u8272\u56FE\u751F\u6210",
-        dir: "role",
-        promptTitle: "\u89D2\u8272\u6807\u51C6\u56DB\u89C6\u56FE",
-        promptEnd: "\u4EBA\u7269\u89D2\u8272\u56DB\u89C6\u56FE"
-      },
-      scene: {
-        label: "\u573A\u666F",
-        taskClass: "\u573A\u666F\u56FE\u751F\u6210",
-        dir: "scene",
-        promptTitle: "\u6807\u51C6\u573A\u666F\u56FE",
-        promptEnd: "\u6807\u51C6\u573A\u666F\u56FE"
-      },
-      tool: {
-        label: "\u9053\u5177",
-        taskClass: "\u9053\u5177\u56FE\u751F\u6210",
-        dir: "props",
-        promptTitle: "\u6807\u51C6\u9053\u5177\u56FE",
-        promptEnd: "\u6807\u51C6\u9053\u5177\u56FE"
-      }
-    };
-    requestSchema2 = {
-      projectId: external_exports.number(),
-      model: external_exports.string(),
-      resolution: external_exports.enum(["1K", "2K", "4K"]),
-      id: external_exports.number(),
-      type: external_exports.enum(["role", "scene", "tool"]),
-      name: external_exports.string(),
-      prompt: external_exports.string(),
-      base64: external_exports.string().optional().nullable(),
-      requestId: external_exports.string().trim().min(1).optional()
-    };
-    generateAssets_default = router25.post("/", validateFields(requestSchema2), async (req, res) => {
-      const { projectId, model, resolution, id, type, name: name28, prompt, base64: base644 } = req.body;
-      const project = await utils_default.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
-      if (!project) return res.status(500).send(success3({ message: "\u9879\u76EE\u4E3A\u7A7A" }));
-      const cfg = assetTypeConfig2[type];
-      if (!cfg) return res.status(400).send(error50("\u4E0D\u652F\u6301\u7684\u7C7B\u578B"));
-      const userPrompt = buildPrompt2(cfg, project.artStyle, name28, prompt);
-      try {
-        const result = await enqueueSingleAssetImage({
-          projectId,
-          assetId: id,
-          assetType: type,
-          model,
-          prompt: userPrompt,
-          size: resolution,
-          aspectRatio: "16:9",
-          referenceBase64: base644 || void 0,
-          requestId: req.body.requestId || `${Date.now()}-${id}`
-        });
-        return res.status(200).send(success3({
-          queued: true,
-          taskId: result.task.id,
-          imageId: result.payload.imageId,
-          assetsId: id,
-          deduped: result.deduped
-        }));
-      } catch (e) {
-        return res.status(400).send(error50(utils_default.error(e).message || "\u56FE\u7247\u751F\u6210\u5931\u8D25"));
-      }
-    });
-  }
-});
-
-// src/routes/assetsGenerate/polishAssetsPrompt.ts
-var import_express26, router26, polishAssetsPrompt_default;
-var init_polishAssetsPrompt = __esm({
-  "src/routes/assetsGenerate/polishAssetsPrompt.ts"() {
-    "use strict";
-    import_express26 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router26 = import_express26.default.Router();
-    polishAssetsPrompt_default = router26.post(
-      "/",
-      validateFields({
-        assetsId: number2(),
-        projectId: number2(),
-        type: string2(),
-        name: string2(),
-        describe: string2()
-      }),
-      async (req, res) => {
-        const { assetsId, projectId, type, name: name28, describe: describe4 } = req.body;
-        const project = await utils_default.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
-        if (!project) return res.status(500).send(success3({ message: "\u9879\u76EE\u4E3A\u7A7A" }));
-        await utils_default.db("o_assets").where("id", assetsId).update({ promptState: "\u751F\u6210\u4E2D" });
-        const assetsData = await utils_default.db("o_assets").where("id", assetsId).select("assetsId").first();
-        if (!assetsData) return { code: 500, message: "\u8D44\u4EA7\u4E0D\u5B58\u5728" };
-        const typeConfig = {
-          role: {
-            promptKey: "role-polish",
-            itemType: "characters",
-            label: "\u89D2\u8272\u6807\u51C6\u56DB\u89C6\u56FE",
-            nameLabel: "\u89D2\u8272",
-            visualManual: assetsData.assetsId ? "art_character_derivative" : "art_character"
-          },
-          scene: {
-            promptKey: "scene-polish",
-            itemType: "scenes",
-            label: "\u573A\u666F\u56FE",
-            nameLabel: "\u573A\u666F",
-            visualManual: assetsData.assetsId ? "art_scene_derivative" : "art_scene"
-          },
-          tool: {
-            promptKey: "tool-polish",
-            itemType: "props",
-            label: "\u9053\u5177\u56FE",
-            nameLabel: "\u9053\u5177",
-            visualManual: assetsData.assetsId ? "art_prop_derivative" : "art_prop"
-          }
-        };
-        const config3 = typeConfig[type];
-        if (!config3) return res.status(500).send(error50("\u4E0D\u652F\u6301\u7684\u7C7B\u578B"));
-        if (!config3.visualManual) return res.status(500).send(error50("\u89C6\u89C9\u624B\u518C\u672A\u5B9A\u4E49"));
-        const visualManual = await utils_default.getArtPrompt(project.artStyle, "art_skills", config3.visualManual);
-        if (!visualManual) return res.status(500).send(error50("\u89C6\u89C9\u624B\u518C\u672A\u5B9A\u4E49"));
-        const systemPrompt = visualManual;
-        try {
-          const { _output } = await utils_default.Ai.Text("universalAi").invoke({
-            system: systemPrompt,
-            messages: [
-              {
-                role: "user",
-                content: `**\u57FA\u7840\u53C2\u6570\uFF1A**
-      **${config3.nameLabel}\u8BBE\u5B9A\uFF1A**
-      - ${config3.nameLabel}\u540D\u79F0:${name28},
-      - ${config3.nameLabel}\u63CF\u8FF0:${describe4},`
-              }
-            ]
-          });
-          if (!_output) return res.status(500).send("\u5931\u8D25");
-          await utils_default.db("o_assets").where("id", assetsId).update({ prompt: _output, promptState: "\u5DF2\u5B8C\u6210" });
-          res.status(200).send(success3({ prompt: _output, assetsId }));
-        } catch (e) {
-          await utils_default.db("o_assets").where("id", assetsId).update({ promptState: "\u5931\u8D25", promptErrorReason: utils_default.error(e).message });
-          return res.status(500).send(error50(e?.data?.error?.message ?? e?.message ?? "\u751F\u6210\u5931\u8D25"));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/common/getBigImage.ts
-var import_express27, router27, getBigImage_default;
-var init_getBigImage = __esm({
-  "src/routes/common/getBigImage.ts"() {
-    "use strict";
-    import_express27 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    init_zod();
-    init_middleware();
-    router27 = import_express27.default.Router();
-    getBigImage_default = router27.post(
-      "/",
-      validateFields({
-        url: external_exports.string()
-      }),
-      async (req, res) => {
-        let { url: url4 } = req.body;
-        if (url4.startsWith("/oss/")) {
-          url4 = utils_default.replaceUrl(url4).replace("/smallImage", "");
-        }
-        const bigImageUrl = await utils_default.oss.getFileUrl(utils_default.replaceUrl(url4));
-        res.status(200).send(success3(bigImageUrl));
-      }
-    );
-  }
-});
-
-// src/services/composition/timeline.ts
-function mapTimelineRow(row) {
-  return {
-    id: row.id,
-    projectId: row.project_id,
-    scriptId: row.script_id,
-    version: row.version,
-    status: row.status,
-    payload: JSON.parse(row.payload),
-    checksum: row.checksum,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
-  };
-}
-function safeStyle(value) {
-  if (typeof value !== "string" || !value) return null;
-  try {
-    return JSON.parse(value);
-  } catch {
-    return null;
-  }
-}
-async function buildNormalizedTimeline(input) {
-  const [project, script] = await Promise.all([
-    sql6("o_project").where("id", input.projectId).first(),
-    sql6("o_script").where({ id: input.scriptId, projectId: input.projectId }).first()
-  ]);
-  if (!project || !script) throw new Error("\u9879\u76EE\u6216\u5267\u672C\u4E0D\u5B58\u5728");
-  const [tracks, storyboards, utterances, cueRows, projectAudioRows] = await Promise.all([
-    sql6("o_videoTrack").where({ projectId: input.projectId, scriptId: input.scriptId }),
-    sql6("o_storyboard").where({ projectId: input.projectId, scriptId: input.scriptId }).orderBy("index", "asc"),
-    sql6("utterances").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("ordinal", "asc"),
-    sql6("subtitle_cues").leftJoin("utterances", "utterances.id", "subtitle_cues.utterance_id").where("subtitle_cues.project_id", input.projectId).where("utterances.script_id", input.scriptId).select("subtitle_cues.*").orderBy("subtitle_cues.start_ms", "asc"),
-    sql6("project_audio_clips").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("start_ms", "asc")
-  ]);
-  const firstStoryboardIndex = /* @__PURE__ */ new Map();
-  for (const storyboard of storyboards) {
-    if (storyboard.trackId != null && !firstStoryboardIndex.has(storyboard.trackId)) {
-      firstStoryboardIndex.set(storyboard.trackId, Number(storyboard.index ?? Number.MAX_SAFE_INTEGER));
-    }
-  }
-  tracks.sort(
-    (a, b) => (firstStoryboardIndex.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (firstStoryboardIndex.get(b.id) ?? Number.MAX_SAFE_INTEGER)
-  );
-  const selectedIds = tracks.map((track) => track.videoId).filter((id2) => typeof id2 === "number");
-  const videos = selectedIds.length ? await sql6("o_video").whereIn("id", selectedIds) : [];
-  const videoById = new Map(videos.map((video) => [video.id, video]));
-  const warnings = [];
-  const videoClips = [];
-  let cursor = 0;
-  for (const track of tracks) {
-    const selected = videoById.get(track.videoId);
-    const durationMs = Math.max(1e3, Math.round((Number(track.duration) || 5) * 1e3));
-    if (!selected?.filePath || !["\u751F\u6210\u6210\u529F", "\u5DF2\u5B8C\u6210"].includes(selected.state)) {
-      warnings.push(`\u89C6\u9891\u8F68\u9053 ${track.id} \u5C1A\u672A\u9009\u62E9\u5DF2\u6210\u529F\u7684\u89C6\u9891\uFF0C\u672A\u52A0\u5165\u65F6\u95F4\u7EBF`);
-      continue;
-    }
-    videoClips.push({
-      id: `video-${selected.id}`,
-      sourceType: "selected_video",
-      sourceId: selected.id,
-      storyboardTrackId: track.id,
-      path: selected.filePath,
-      startMs: cursor,
-      inMs: 0,
-      outMs: durationMs,
-      durationMs,
-      transitionOut: { type: "cut", durationMs: 0 }
-    });
-    cursor += durationMs;
-  }
-  const nativeClips = videoClips.map((clip) => ({
-    id: `native-${clip.sourceId}`,
-    sourceType: "embedded_video_audio",
-    sourceId: clip.sourceId,
-    path: clip.path,
-    startMs: clip.startMs,
-    inMs: clip.inMs,
-    durationMs: clip.durationMs,
-    gainDb: 0,
-    fadeInMs: 0,
-    fadeOutMs: 0
-  }));
-  const utteranceById = new Map(utterances.map((row) => [row.id, row]));
-  const dialogueClips = [];
-  const narrationClips = [];
-  for (const cue of cueRows) {
-    const utterance = utteranceById.get(cue.utterance_id);
-    if (!utterance?.audio_path || utterance.status !== "succeeded") continue;
-    const target = utterance.kind === "narration" ? narrationClips : dialogueClips;
-    target.push({
-      id: `utterance-${utterance.id}`,
-      sourceType: "utterance_audio",
-      sourceId: utterance.id,
-      path: utterance.audio_path,
-      startMs: cue.start_ms,
-      inMs: 0,
-      durationMs: utterance.duration_ms ?? Math.max(1, cue.end_ms - cue.start_ms),
-      gainDb: 0,
-      fadeInMs: 10,
-      fadeOutMs: 30
-    });
-  }
-  if (cueRows.some((cue) => cue.end_ms > cursor) && cursor > 0) {
-    warnings.push("\u90E8\u5206\u5B57\u5E55\u6216\u914D\u97F3\u8D85\u51FA\u5DF2\u9009\u89C6\u9891\u603B\u65F6\u957F");
-  }
-  const projectAudioByKind = /* @__PURE__ */ new Map();
-  for (const row of projectAudioRows) {
-    const kind = row.kind;
-    const target = projectAudioByKind.get(kind) || [];
-    target.push({
-      id: row.id,
-      sourceType: "project_audio_asset",
-      sourceId: row.asset_id,
-      path: row.path,
-      startMs: row.start_ms,
-      inMs: row.in_ms,
-      durationMs: row.duration_ms,
-      gainDb: row.gain_db,
-      fadeInMs: row.fade_in_ms,
-      fadeOutMs: row.fade_out_ms
-    });
-    projectAudioByKind.set(kind, target);
-    if (cursor > 0 && row.start_ms + row.duration_ms > cursor) warnings.push(`${row.name} \u97F3\u9891\u8D85\u51FA\u89C6\u9891\u603B\u65F6\u957F`);
-  }
-  const ratio = project.videoRatio === "9:16" ? "9:16" : "16:9";
-  const payload = {
-    schemaVersion: 1,
-    projectId: input.projectId,
-    scriptId: input.scriptId,
-    settings: {
-      width: ratio === "9:16" ? 1080 : 1920,
-      height: ratio === "9:16" ? 1920 : 1080,
-      fps: 24,
-      colorSpace: "bt709",
-      audioSampleRate: 48e3,
-      loudnessTargetLufs: -16,
-      truePeakDb: -1.5
-    },
-    durationMs: cursor,
-    videoTracks: [{ id: "video-main", clips: videoClips }],
-    audioTracks: [
-      { id: "audio-native", kind: "native", clips: nativeClips },
-      { id: "audio-dialogue", kind: "dialogue", clips: dialogueClips },
-      { id: "audio-narration", kind: "narration", clips: narrationClips },
-      { id: "audio-sfx", kind: "sfx", clips: projectAudioByKind.get("sfx") || [] },
-      { id: "audio-ambience", kind: "ambience", clips: projectAudioByKind.get("ambience") || [] },
-      { id: "audio-bgm", kind: "bgm", clips: projectAudioByKind.get("bgm") || [] }
-    ],
-    subtitleTracks: [
-      {
-        id: "subtitles-main",
-        cues: cueRows.map((cue) => ({
-          id: cue.id,
-          utteranceId: cue.utterance_id,
-          startMs: cue.start_ms,
-          endMs: cue.end_ms,
-          text: cue.text,
-          style: safeStyle(cue.style),
-          locked: cue.locked === 1
-        }))
-      }
-    ],
-    warnings
-  };
-  const serialized = JSON.stringify(payload);
-  const checksum = import_node_crypto7.default.createHash("sha256").update(serialized).digest("hex");
-  const latest = await sql6("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
-  if (latest?.checksum === checksum) return { timeline: mapTimelineRow(latest), deduped: true };
-  const now2 = Date.now();
-  const id = v4_default();
-  await sql6("project_timelines").insert({
-    id,
-    project_id: input.projectId,
-    script_id: input.scriptId,
-    version: Number(latest?.version ?? 0) + 1,
-    status: "draft",
-    payload: serialized,
-    checksum,
-    created_at: now2,
-    updated_at: now2
-  });
-  return { timeline: mapTimelineRow(await sql6("project_timelines").where("id", id).first()), deduped: false };
-}
-async function getLatestTimeline(input) {
-  const row = await sql6("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
-  return row ? mapTimelineRow(row) : null;
-}
-async function listTimelines(input) {
-  const rows = await sql6("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc");
-  return rows.map(mapTimelineRow);
-}
-var import_node_crypto7, sql6;
-var init_timeline = __esm({
-  "src/services/composition/timeline.ts"() {
-    "use strict";
-    import_node_crypto7 = __toESM(require("node:crypto"));
-    init_dist_node();
-    init_db();
-    sql6 = db;
-  }
-});
-
-// src/services/composition/jobs.ts
-async function mapJob(row) {
-  if (!row) return null;
-  return {
-    id: row.id,
-    projectId: row.project_id,
-    scriptId: row.script_id,
-    timelineId: row.timeline_id,
-    timelineVersion: row.timeline_version,
-    renderer: row.renderer,
-    preset: row.preset,
-    status: row.status,
-    outputPath: row.output_path ?? null,
-    outputUrl: row.output_path ? await utils_default.oss.getFileUrl(row.output_path) : null,
-    inputChecksum: row.input_checksum,
-    outputChecksum: row.output_checksum ?? null,
-    durationMs: row.duration_ms ?? null,
-    taskId: row.task_id ?? null,
-    errorMessage: row.error_message ?? null,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
-  };
-}
-async function getLatestCompositionJob(input) {
-  const row = await sql7("composition_jobs").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first();
-  return mapJob(row);
-}
-async function enqueueCompositionRender(input) {
-  const timeline = await sql7("project_timelines").where({ id: input.timelineId, project_id: input.projectId, script_id: input.scriptId }).first();
-  if (!timeline) throw new Error("\u65F6\u95F4\u7EBF\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u5267\u672C");
-  const payload = JSON.parse(timeline.payload);
-  const clipCount = (payload.videoTracks || []).reduce((total, track) => total + (track.clips?.length || 0), 0);
-  if (clipCount === 0) throw new Error("\u65F6\u95F4\u7EBF\u6CA1\u6709\u5DF2\u9009\u89C6\u9891\uFF0C\u8BF7\u5148\u5B8C\u6210\u9009\u7247\u5E76\u91CD\u65B0\u6784\u5EFA\u65F6\u95F4\u7EBF");
-  const inputChecksum = stableIdempotencyKey({
-    renderer: "ffmpeg",
-    rendererVersion: 3,
-    preset: input.preset,
-    timelineChecksum: timeline.checksum
-  });
-  const previous = await sql7("composition_jobs").where({ timeline_id: timeline.id, preset: input.preset, input_checksum: inputChecksum }).orderBy("created_at", "desc").first();
-  if (previous?.status === "succeeded" && previous.output_path && await utils_default.oss.fileExists(previous.output_path)) {
-    return { job: await mapJob(previous), task: previous.task_id ? await generationTaskRepository.get(previous.task_id) : null, cached: true, deduped: true };
-  }
-  if (previous && ["queued", "rendering"].includes(previous.status) && previous.task_id) {
-    const task = await generationTaskRepository.get(previous.task_id);
-    if (task && !["cancelled", "succeeded", "failed"].includes(task.status)) {
-      return { job: await mapJob(previous), task, cached: false, deduped: true };
-    }
-  }
-  const jobId = v4_default();
-  const outputPath = `/${input.projectId}/composition/${input.scriptId}/timeline-v${timeline.version}-${timeline.checksum.slice(0, 12)}-${input.preset}.mp4`;
-  const now2 = Date.now();
-  await sql7("composition_jobs").insert({
-    id: jobId,
-    project_id: input.projectId,
-    script_id: input.scriptId,
-    timeline_id: timeline.id,
-    timeline_version: timeline.version,
-    renderer: "ffmpeg",
-    preset: input.preset,
-    status: "queued",
-    output_path: null,
-    input_checksum: inputChecksum,
-    task_id: null,
-    error_message: null,
-    created_at: now2,
-    updated_at: now2
-  });
-  const [legacyTaskId] = await sql7("o_tasks").insert({
-    projectId: input.projectId,
-    taskClass: "\u89C6\u9891\u5408\u6210",
-    relatedObjects: JSON.stringify({ compositionJobId: jobId, timelineId: timeline.id }),
-    model: "ffmpeg",
-    describe: `${input.preset === "final-high" ? "\u672C\u5730\u9AD8\u6E05\u6210\u7247" : "\u672C\u5730\u4F4E\u6E05\u9884\u89C8"}\uFF1A\u65F6\u95F4\u7EBF v${timeline.version}\uFF0C${clipCount} \u4E2A\u7247\u6BB5`,
-    state: "\u6392\u961F\u4E2D",
-    startTime: now2
-  });
-  const taskPayload = {
-    projectId: input.projectId,
-    scriptId: input.scriptId,
-    compositionJobId: jobId,
-    timelineId: timeline.id,
-    timelineVersion: timeline.version,
-    timelineChecksum: timeline.checksum,
-    preset: input.preset,
-    outputPath,
-    model: "local:ffmpeg"
-  };
-  try {
-    const result = await generationTaskRepository.enqueue({
-      projectId: input.projectId,
-      legacyTaskId,
-      lane: "compose",
-      type: "composition.render",
-      resourceKey: `composition:timeline:${timeline.id}:${input.preset}`,
-      payload: taskPayload,
-      provider: "local",
-      idempotencyKey: stableIdempotencyKey({ type: "composition.render", inputChecksum, requestId: input.requestId }),
-      maxAttempts: 2
-    });
-    if (result.deduped) {
-      await Promise.all([
-        sql7("composition_jobs").where("id", jobId).delete(),
-        sql7("o_tasks").where("id", legacyTaskId).delete()
-      ]);
-      const existingJob = await sql7("composition_jobs").where("task_id", result.task.id).first();
-      return { job: await mapJob(existingJob), task: result.task, cached: false, deduped: true };
-    }
-    await sql7("composition_jobs").where("id", jobId).update({ task_id: result.task.id, updated_at: Date.now() });
-    return { job: await mapJob(await sql7("composition_jobs").where("id", jobId).first()), task: result.task, cached: false, deduped: false };
-  } catch (error73) {
-    await Promise.all([
-      sql7("composition_jobs").where("id", jobId).delete(),
-      sql7("o_tasks").where("id", legacyTaskId).delete()
-    ]);
-    throw error73;
-  }
-}
-var sql7;
-var init_jobs = __esm({
-  "src/services/composition/jobs.ts"() {
-    "use strict";
-    init_dist_node();
-    init_utils3();
-    init_db();
-    init_repository();
-    sql7 = db;
-  }
-});
-
-// src/services/composition/audioClips.ts
-function mapRow2(row) {
-  return {
-    id: row.id,
-    projectId: row.project_id,
-    scriptId: row.script_id,
-    kind: row.kind,
-    assetId: row.asset_id,
-    name: row.name,
-    path: row.path,
-    startMs: row.start_ms,
-    inMs: row.in_ms,
-    durationMs: row.duration_ms,
-    gainDb: row.gain_db,
-    fadeInMs: row.fade_in_ms,
-    fadeOutMs: row.fade_out_ms,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
-  };
-}
-async function listProjectAudioClips(input) {
-  const rows = await sql8("project_audio_clips").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("start_ms", "asc");
-  return rows.map(mapRow2);
-}
-async function upsertProjectAudioClip(input) {
-  const [script, asset] = await Promise.all([
-    sql8("o_script").where({ id: input.scriptId, projectId: input.projectId }).first(),
-    sql8("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where({ "o_assets.id": input.assetId, "o_assets.projectId": input.projectId, "o_assets.type": "audio" }).select("o_assets.id", "o_assets.name", "o_image.filePath").first()
-  ]);
-  if (!script) throw new Error("\u5267\u672C\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
-  if (!asset?.filePath) throw new Error("\u58F0\u97F3\u7D20\u6750\u4E0D\u5B58\u5728\u3001\u672A\u5B8C\u6210\u6216\u6CA1\u6709\u672C\u5730\u6587\u4EF6");
-  const media = await probeMedia(asset.filePath);
-  if (!media?.hasAudio) throw new Error("\u58F0\u97F3\u7D20\u6750\u65E0\u6CD5\u8BFB\u53D6\u6709\u6548\u97F3\u8F68");
-  if (input.inMs >= media.durationMs) throw new Error("\u58F0\u97F3\u7D20\u6750\u5165\u70B9\u4E0D\u80FD\u8D85\u8FC7\u6587\u4EF6\u65F6\u957F");
-  const availableMs = media.durationMs - input.inMs;
-  const durationMs = Math.min(input.durationMs ?? availableMs, availableMs);
-  if (durationMs <= 0) throw new Error("\u58F0\u97F3\u7D20\u6750\u7247\u6BB5\u65F6\u957F\u5FC5\u987B\u5927\u4E8E 0");
-  const now2 = Date.now();
-  const id = input.id ?? v4_default();
-  const values = {
-    project_id: input.projectId,
-    script_id: input.scriptId,
-    kind: input.kind,
-    asset_id: input.assetId,
-    name: asset.name || `${input.kind}-${input.assetId}`,
-    path: asset.filePath,
-    start_ms: input.startMs,
-    in_ms: input.inMs,
-    duration_ms: durationMs,
-    gain_db: input.gainDb,
-    fade_in_ms: Math.min(input.fadeInMs, durationMs),
-    fade_out_ms: Math.min(input.fadeOutMs, durationMs),
-    updated_at: now2
-  };
-  if (input.id) {
-    const updated = await sql8("project_audio_clips").where({ id: input.id, project_id: input.projectId, script_id: input.scriptId }).update(values);
-    if (updated !== 1) throw new Error("\u58F0\u97F3\u7247\u6BB5\u4E0D\u5B58\u5728");
-  } else {
-    await sql8("project_audio_clips").insert({ id, ...values, created_at: now2 });
-  }
-  return mapRow2(await sql8("project_audio_clips").where("id", id).first());
-}
-async function deleteProjectAudioClip(input) {
-  const deleted = await sql8("project_audio_clips").where({ id: input.id, project_id: input.projectId, script_id: input.scriptId }).delete();
-  if (deleted !== 1) throw new Error("\u58F0\u97F3\u7247\u6BB5\u4E0D\u5B58\u5728");
-  return { id: input.id };
-}
-var sql8, projectAudioKinds;
-var init_audioClips = __esm({
-  "src/services/composition/audioClips.ts"() {
-    "use strict";
-    init_dist_node();
-    init_db();
-    init_probe();
-    sql8 = db;
-    projectAudioKinds = ["sfx", "ambience", "bgm"];
-  }
-});
-
-// src/services/composition/qaJobs.ts
-function parseJson2(value) {
-  if (typeof value !== "string" || !value) return null;
-  try {
-    return JSON.parse(value);
-  } catch {
-    return null;
-  }
-}
-function mapReport(row) {
-  if (!row) return null;
-  return {
-    id: row.id,
-    projectId: row.project_id,
-    scriptId: row.script_id,
-    compositionJobId: row.composition_job_id,
-    timelineId: row.timeline_id,
-    outputChecksum: row.output_checksum,
-    status: row.status,
-    result: parseJson2(row.result),
-    taskId: row.task_id ?? null,
-    errorMessage: row.error_message ?? null,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
-  };
-}
-async function getLatestQaReport(input) {
-  return mapReport(await sql9("media_qa_reports").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first());
-}
-async function enqueueCompositionQa(input) {
-  const job = await sql9("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
-  if (!job || job.status !== "succeeded" || !job.output_path || !job.output_checksum) throw new Error("\u8BF7\u5148\u5B8C\u6210\u53EF\u7528\u7684\u6210\u7247\u6E32\u67D3");
-  if (!await utils_default.oss.fileExists(job.output_path)) throw new Error("\u6210\u7247\u6587\u4EF6\u4E0D\u5B58\u5728\uFF0C\u8BF7\u91CD\u65B0\u6E32\u67D3");
-  const previous = await sql9("media_qa_reports").where({ composition_job_id: job.id, output_checksum: job.output_checksum }).orderBy("created_at", "desc").first();
-  if (previous?.status === "succeeded") return { report: mapReport(previous), task: previous.task_id ? await generationTaskRepository.get(previous.task_id) : null, cached: true, deduped: true };
-  if (previous && ["queued", "running"].includes(previous.status) && previous.task_id) {
-    const task = await generationTaskRepository.get(previous.task_id);
-    if (task && !["cancelled", "failed", "succeeded"].includes(task.status)) return { report: mapReport(previous), task, cached: false, deduped: true };
-  }
-  const timeline = await sql9("project_timelines").where({ id: job.timeline_id, project_id: input.projectId, script_id: input.scriptId }).first();
-  if (!timeline) throw new Error("\u6210\u7247\u5BF9\u5E94\u7684\u65F6\u95F4\u7EBF\u4E0D\u5B58\u5728");
-  const reportId = v4_default();
-  const now2 = Date.now();
-  await sql9("media_qa_reports").insert({
-    id: reportId,
-    project_id: input.projectId,
-    script_id: input.scriptId,
-    composition_job_id: job.id,
-    timeline_id: timeline.id,
-    output_checksum: job.output_checksum,
-    status: "queued",
-    result: null,
-    task_id: null,
-    error_message: null,
-    created_at: now2,
-    updated_at: now2
-  });
-  const [legacyTaskId] = await sql9("o_tasks").insert({
-    projectId: input.projectId,
-    taskClass: "\u5A92\u4F53 QA",
-    relatedObjects: JSON.stringify({ reportId, compositionJobId: job.id }),
-    model: "ffmpeg-qa",
-    describe: `\u672C\u5730\u6210\u7247 QA\uFF1A\u65F6\u95F4\u7EBF v${job.timeline_version}`,
-    state: "\u6392\u961F\u4E2D",
-    startTime: now2
-  });
-  const payload = {
-    projectId: input.projectId,
-    scriptId: input.scriptId,
-    reportId,
-    compositionJobId: job.id,
-    timelineId: timeline.id,
-    outputPath: job.output_path,
-    outputChecksum: job.output_checksum,
-    expectedDurationMs: job.duration_ms,
-    preset: job.preset,
-    model: "local:ffmpeg-qa"
-  };
-  try {
-    const queued = await generationTaskRepository.enqueue({
-      projectId: input.projectId,
-      legacyTaskId,
-      lane: "qa",
-      type: "composition.qa",
-      resourceKey: `qa:composition:${job.id}`,
-      payload,
-      provider: "local",
-      idempotencyKey: stableIdempotencyKey({ type: "composition.qa", outputChecksum: job.output_checksum, requestId: input.requestId }),
-      maxAttempts: 2
-    });
-    if (queued.deduped) {
-      await Promise.all([sql9("media_qa_reports").where("id", reportId).delete(), sql9("o_tasks").where("id", legacyTaskId).delete()]);
-      const existingReport = await sql9("media_qa_reports").where("task_id", queued.task.id).first();
-      return { report: mapReport(existingReport), task: queued.task, cached: false, deduped: true };
-    }
-    await sql9("media_qa_reports").where("id", reportId).update({ task_id: queued.task.id, updated_at: Date.now() });
-    return { report: mapReport(await sql9("media_qa_reports").where("id", reportId).first()), task: queued.task, cached: false, deduped: queued.deduped };
-  } catch (error73) {
-    await Promise.all([sql9("media_qa_reports").where("id", reportId).delete(), sql9("o_tasks").where("id", legacyTaskId).delete()]);
-    throw error73;
-  }
-}
-var sql9;
-var init_qaJobs = __esm({
-  "src/services/composition/qaJobs.ts"() {
-    "use strict";
-    init_dist_node();
-    init_db();
-    init_utils3();
-    init_repository();
-    sql9 = db;
-  }
-});
-
-// src/services/composition/reviews.ts
-function mapRow3(row) {
-  return row ? {
-    id: row.id,
-    projectId: row.project_id,
-    scriptId: row.script_id,
-    compositionJobId: row.composition_job_id,
-    status: row.status,
-    note: row.note ?? null,
-    reviewer: row.reviewer,
-    createdAt: row.created_at
-  } : null;
-}
-async function getLatestCompositionReview(input) {
-  let query = sql10("composition_reviews").where({ project_id: input.projectId, script_id: input.scriptId });
-  if (input.compositionJobId) query = query.where("composition_job_id", input.compositionJobId);
-  return mapRow3(await query.orderBy("created_at", "desc").first());
-}
-async function recordCompositionReview(input) {
-  const job = await sql10("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
-  if (!job || job.status !== "succeeded") throw new Error("\u53EA\u80FD\u5BA1\u6838\u5DF2\u5B8C\u6210\u7684\u6210\u7247");
-  const row = {
-    id: v4_default(),
-    project_id: input.projectId,
-    script_id: input.scriptId,
-    composition_job_id: input.compositionJobId,
-    output_checksum: job.output_checksum,
-    status: input.status,
-    note: input.note?.trim() || null,
-    reviewer: input.reviewer,
-    created_at: Date.now()
-  };
-  await sql10("composition_reviews").insert(row);
-  return mapRow3(row);
-}
-var sql10, reviewStatuses;
-var init_reviews = __esm({
-  "src/services/composition/reviews.ts"() {
-    "use strict";
-    init_dist_node();
-    init_db();
-    sql10 = db;
-    reviewStatuses = ["approved", "rejected"];
-  }
-});
-
-// src/routes/composition/timeline.ts
-var import_express28, router28, filters, timeline_default;
-var init_timeline2 = __esm({
-  "src/routes/composition/timeline.ts"() {
-    "use strict";
-    import_express28 = __toESM(require_express2());
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_timeline();
-    init_jobs();
-    init_renderer();
-    init_audioClips();
-    init_qaJobs();
-    init_reviews();
-    router28 = import_express28.default.Router();
-    filters = {
-      projectId: external_exports.number().int().positive(),
-      scriptId: external_exports.number().int().positive()
-    };
-    router28.post("/build", validateFields(filters), async (req, res) => {
-      res.status(200).send(success3(await buildNormalizedTimeline(req.body)));
-    });
-    router28.post("/latest", validateFields(filters), async (req, res) => {
-      res.status(200).send(success3(await getLatestTimeline(req.body)));
-    });
-    router28.post("/list", validateFields(filters), async (req, res) => {
-      res.status(200).send(success3(await listTimelines(req.body)));
-    });
-    router28.post("/jobs/latest", validateFields(filters), async (req, res) => {
-      res.status(200).send(success3(await getLatestCompositionJob(req.body)));
-    });
-    router28.post("/audio/list", validateFields(filters), async (req, res) => {
-      res.status(200).send(success3(await listProjectAudioClips(req.body)));
-    });
-    router28.post("/qa/latest", validateFields(filters), async (req, res) => {
-      res.status(200).send(success3(await getLatestQaReport(req.body)));
-    });
-    router28.post(
-      "/review/latest",
-      validateFields({ ...filters, compositionJobId: external_exports.string().uuid().optional() }),
-      async (req, res) => {
-        res.status(200).send(success3(await getLatestCompositionReview(req.body)));
-      }
-    );
-    router28.post(
-      "/review/record",
-      validateFields({
-        ...filters,
-        compositionJobId: external_exports.string().uuid(),
-        status: external_exports.enum(reviewStatuses),
-        note: external_exports.string().trim().max(1e3).optional()
-      }),
-      async (req, res) => {
-        try {
-          res.status(200).send(success3(await recordCompositionReview({
-            ...req.body,
-            reviewer: String(req.user?.username || req.user?.name || "local-user")
-          })));
-        } catch (cause) {
-          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
-        }
-      }
-    );
-    router28.post(
-      "/qa/run",
-      validateFields({
-        ...filters,
-        compositionJobId: external_exports.string().uuid(),
-        requestId: external_exports.string().trim().min(1)
-      }),
-      async (req, res) => {
-        try {
-          res.status(200).send(success3(await enqueueCompositionQa(req.body)));
-        } catch (cause) {
-          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
-        }
-      }
-    );
-    router28.post(
-      "/audio/upsert",
-      validateFields({
-        ...filters,
-        id: external_exports.string().uuid().optional(),
-        kind: external_exports.enum(projectAudioKinds),
-        assetId: external_exports.number().int().positive(),
-        startMs: external_exports.number().int().nonnegative(),
-        inMs: external_exports.number().int().nonnegative(),
-        durationMs: external_exports.number().int().positive().optional(),
-        gainDb: external_exports.number().min(-60).max(24),
-        fadeInMs: external_exports.number().int().nonnegative().max(6e4),
-        fadeOutMs: external_exports.number().int().nonnegative().max(6e4)
-      }),
-      async (req, res) => {
-        try {
-          res.status(200).send(success3(await upsertProjectAudioClip(req.body)));
-        } catch (cause) {
-          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
-        }
-      }
-    );
-    router28.post(
-      "/audio/delete",
-      validateFields({ ...filters, id: external_exports.string().uuid() }),
-      async (req, res) => {
-        try {
-          res.status(200).send(success3(await deleteProjectAudioClip(req.body)));
-        } catch (cause) {
-          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
-        }
-      }
-    );
-    router28.post(
-      "/render",
-      validateFields({
-        ...filters,
-        timelineId: external_exports.string().uuid(),
-        preset: external_exports.enum(compositionRenderPresets),
-        requestId: external_exports.string().trim().min(1)
-      }),
-      async (req, res) => {
-        try {
-          res.status(200).send(success3(await enqueueCompositionRender(req.body)));
-        } catch (cause) {
-          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
-        }
-      }
-    );
-    timeline_default = router28;
-  }
-});
-
-// src/routes/cornerScape/batchBindAudio.ts
-var import_express29, router29, batchBindAudio_default;
-var init_batchBindAudio = __esm({
-  "src/routes/cornerScape/batchBindAudio.ts"() {
-    "use strict";
-    import_express29 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_dist22();
-    router29 = import_express29.default.Router();
-    batchBindAudio_default = router29.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        assetsIds: external_exports.array(external_exports.number()),
-        concurrentCount: external_exports.number().min(1).optional()
-      }),
-      async (req, res) => {
-        const { projectId, assetsIds, concurrentCount } = req.body;
-        const assetsData = await utils_default.db("o_assets").whereIn("id", assetsIds).andWhere("projectId", projectId).select("id", "name", "describe", "type");
-        const audioData = await utils_default.db("o_assets").where("type", "audio").whereNull("assetsId").andWhere("projectId", projectId).select("id", "name", "describe");
-        if (!audioData.length) return res.status(400).send(error50("\u6682\u65E0\u8BBE\u7F6E\u97F3\u9891\uFF0C\u8BF7\u5148\u524D\u5F80\u8D44\u4EA7\u4E2D\u5FC3\u4E0A\u4F20\u97F3\u9891"));
-        const batchSize = concurrentCount ?? 1;
-        async function processAsset(asset) {
-          try {
-            const resultTool = tool({
-              description: "\u5339\u914D\u5B8C\u6210\u540E\u5FC5\u987B\u8C03\u7528\u6B64\u5DE5\u5177\u63D0\u4EA4\u7ED3\u679C",
-              inputSchema: jsonSchema(
-                external_exports.object({
-                  audioId: external_exports.number().nullable().optional().describe("\u4E0E\u8BE5\u8D44\u4EA7\u5339\u914D\u7684\u97F3\u9891ID\u5217\u8868\uFF0C\u82E5\u65E0\u5408\u9002\u5339\u914D\u5219\u8FD4\u56DE\u7A7A\u6570\u7EC4")
-                }).toJSONSchema()
-              ),
-              execute: async (result) => {
-                await utils_default.db("o_assetsRole2Audio").where("assetsRoleId", asset.id).delete();
-                if (result?.audioId) await utils_default.db("o_assetsRole2Audio").insert({ assetsRoleId: asset.id, assetsAudioId: result.audioId });
-                await utils_default.db("o_assets").where("id", asset.id).update("audioBindState", "\u5DF2\u5B8C\u6210");
-                return "\u65E0\u9700\u56DE\u590D\u7528\u6237\u4EFB\u4F55\u5185\u5BB9";
-              }
-            });
-            const audioList = audioData.map((i) => `- ID:${i.id} | \u540D\u79F0:${i.name} | \u63CF\u8FF0:${i.describe ?? "\u65E0"}`).join("\n");
-            const promptData = await utils_default.db("o_prompt").where("type", "audioBindPrompt").first();
-            let audioBindPrompt = "";
-            if (promptData && promptData.useData) {
-              audioBindPrompt = promptData.useData;
-            } else {
-              audioBindPrompt = promptData?.data ?? void 0;
-            }
-            const { text: text2 } = await utils_default.Ai.Text("universalAi").invoke({
-              messages: [
-                {
-                  role: "system",
-                  content: `
-              ${audioBindPrompt}
-              `
-                },
-                {
-                  role: "user",
-                  content: `
-                ## \u5019\u9009\u97F3\u9891\u5217\u8868
-                ${audioList}
-                ## \u5F85\u5339\u914D\u8D44\u4EA7
-                - ID:${asset.id} | \u540D\u79F0:${asset.name} | \u63CF\u8FF0:${asset.describe ?? "\u65E0"} | \u7C7B\u578B\uFF1A${asset.type}
-                \u8BF7\u4ECE\u5019\u9009\u97F3\u9891\u5217\u8868\u4E2D\u4E3A\u8BE5\u8D44\u4EA7\u9009\u51FA\u6765\u4E00\u4E2A\u6700\u7B26\u5408\u8BE5\u89D2\u8272\u8BBE\u5B9A\u7684\u97F3\u8272\uFF0C\u5E76\u8C03\u7528 resultTool \u63D0\u4EA4\u7ED3\u679C\u3002
-           `
-                }
-              ],
-              tools: { resultTool }
-            });
-          } catch (e) {
-            await utils_default.db("o_assets").where("id", asset.id).update("audioBindState", "\u751F\u6210\u5931\u8D25");
-            console.error(`[bindAudio] \u8D44\u4EA7 ${asset.id} \u5904\u7406\u5931\u8D25:`, e);
-          }
-        }
-        async function runWithConcurrency() {
-          for (let i = 0; i < assetsData.length; i += batchSize) {
-            const batch = assetsData.slice(i, i + batchSize);
-            await Promise.all(batch.map((asset) => processAsset(asset)));
-          }
-        }
-        await utils_default.db("o_assets").whereIn(
-          "id",
-          assetsData.map((i) => i.id)
-        ).update("audioBindState", "\u751F\u6210\u4E2D");
-        runWithConcurrency();
-        res.status(200).send(success3());
-      }
-    );
-  }
-});
-
-// src/routes/cornerScape/getAllAssets.ts
-var import_express30, router30, getAllAssets_default;
-var init_getAllAssets = __esm({
-  "src/routes/cornerScape/getAllAssets.ts"() {
-    "use strict";
-    import_express30 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router30 = import_express30.default.Router();
-    getAllAssets_default = router30.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        type: external_exports.array(external_exports.string()).optional()
-      }),
-      async (req, res) => {
-        const { projectId, type } = req.body;
-        const data = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select(
-          "o_assets.*",
-          "o_image.filePath",
-          "o_image.state",
-          "o_image.model",
-          "o_image.resolution",
-          "o_image.errorReason",
-          "o_image.id as imageId"
-        ).where("o_assets.projectId", projectId).andWhere("o_assets.type", "<>", "clip").andWhere("o_assets.type", "<>", "audio").andWhere("o_assets.assetsId", null).modify((qb) => {
-          if (type && type.length > 0) qb.whereIn("o_assets.type", type);
-        }).orderByRaw(`CASE o_assets.type WHEN 'role' THEN 1 WHEN 'scene' THEN 2 WHEN 'tool' THEN 3 ELSE 4 END`);
-        const assets2AudioData = await utils_default.db("o_assetsRole2Audio").leftJoin("o_assets", "o_assets.id", "o_assetsRole2Audio.assetsAudioId").whereIn(
-          "o_assetsRole2Audio.assetsRoleId",
-          data.map((i) => i.id)
-        ).select("o_assets.id", "o_assets.name", "o_assetsRole2Audio.assetsRoleId");
-        const repleAssets = {};
-        assets2AudioData.forEach((item) => {
-          if (!repleAssets[item.assetsRoleId]) repleAssets[item.assetsRoleId] = [item];
-          else repleAssets[item.assetsRoleId].push(item);
-        });
-        const result = await Promise.all(
-          data.map(async (parent) => {
-            const historyImages = await utils_default.db("o_image").where("assetsId", parent.id).andWhere("state", "\u5DF2\u5B8C\u6210").select("id", "filePath");
-            const historyImagesWithUrl = await Promise.all(
-              historyImages.map(async (img) => ({
-                id: img.id,
-                filePath: img.filePath && await utils_default.oss.getSmallImageUrl(img.filePath)
-              }))
-            );
-            return {
-              ...parent,
-              filePath: parent.filePath && await utils_default.oss.getSmallImageUrl(parent.filePath),
-              historyImages: historyImagesWithUrl,
-              relepedAudio: repleAssets[parent.id] ?? []
-            };
-          })
-        );
-        res.status(200).send(success3(result));
-      }
-    );
-  }
-});
-
-// src/routes/cornerScape/pollingAudio.ts
-var import_express31, router31, pollingAudio_default;
-var init_pollingAudio = __esm({
-  "src/routes/cornerScape/pollingAudio.ts"() {
-    "use strict";
-    import_express31 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router31 = import_express31.default.Router();
-    pollingAudio_default = router31.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        const data = await utils_default.db("o_assets").whereIn("id", ids).whereNot("audioBindState", "\u751F\u6210\u4E2D").select("*");
-        res.status(200).send(success3(data));
-      }
-    );
-  }
-});
-
-// src/routes/cornerScape/updateAssetsAudio.ts
-var import_express32, router32, updateAssetsAudio_default;
-var init_updateAssetsAudio = __esm({
-  "src/routes/cornerScape/updateAssetsAudio.ts"() {
-    "use strict";
-    import_express32 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router32 = import_express32.default.Router();
-    updateAssetsAudio_default = router32.post(
-      "/",
-      validateFields({
-        assetsId: external_exports.number(),
-        audioIds: external_exports.array(external_exports.number()).optional()
-      }),
-      async (req, res) => {
-        const { assetsId, audioIds } = req.body;
-        if (audioIds && audioIds.length > 1) return res.status(400).send(error50("\u4EC5\u53EF\u7ED1\u5B9A\u4E00\u4E2A\u97F3\u8272"));
-        await utils_default.db("o_assetsRole2Audio").where("assetsRoleId", assetsId).delete();
-        if (audioIds && audioIds.length) {
-          await utils_default.db("o_assetsRole2Audio").insert({ assetsRoleId: assetsId, assetsAudioId: audioIds[0] });
-        }
-        res.status(200).send(success3({ message: "\u66F4\u65B0\u97F3\u9891\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/general/generalStatistics.ts
-var import_express33, router33, generalStatistics_default;
-var init_generalStatistics = __esm({
-  "src/routes/general/generalStatistics.ts"() {
-    "use strict";
-    import_express33 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router33 = import_express33.default.Router();
-    generalStatistics_default = router33.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId } = req.body;
-        const scripts = await utils_default.db("o_script").where("projectId", projectId).select("id");
-        const scriptIds = scripts.map((item) => item.id);
-        const roleCount = await utils_default.db("o_assets").where("projectId", projectId).where("type", "\u89D2\u8272").count("* as total").first();
-        const scriptCount = await utils_default.db("o_script").where("projectId", projectId).count("* as total").first();
-        const videoCount = await utils_default.db("o_video").whereIn("scriptId", scriptIds).count("* as total").first();
-        const storyboardCount = await utils_default.db("o_assets").whereIn("scriptId", scriptIds).where("type", "\u5206\u955C").count("* as total").first();
-        const data = {
-          roleCount: roleCount?.total || 0,
-          scriptCount: scriptCount?.total || 0,
-          videoCount: videoCount?.total || 0,
-          storyboardCount: storyboardCount?.total || 0
-        };
-        res.status(200).send(success3(data));
-      }
-    );
-  }
-});
-
-// src/routes/general/getSingleProject.ts
-var import_express34, router34, getSingleProject_default;
-var init_getSingleProject = __esm({
-  "src/routes/general/getSingleProject.ts"() {
-    "use strict";
-    import_express34 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router34 = import_express34.default.Router();
-    getSingleProject_default = router34.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        const data = await utils_default.db("o_project").where("id", id).select("*");
-        res.status(200).send(success3(data));
-      }
-    );
-  }
-});
-
-// src/routes/general/updateProject.ts
-var import_express35, router35, updateProject_default;
-var init_updateProject = __esm({
-  "src/routes/general/updateProject.ts"() {
-    "use strict";
-    import_express35 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router35 = import_express35.default.Router();
-    updateProject_default = router35.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        intro: external_exports.string().optional().nullable(),
-        type: external_exports.string().optional().nullable(),
-        artStyle: external_exports.string().optional().nullable(),
-        videoRatio: external_exports.string().optional().nullable(),
-        projectType: external_exports.string().optional().nullable()
-      }),
-      async (req, res) => {
-        const { id, intro, type, artStyle, videoRatio, projectType } = req.body;
-        await utils_default.db("o_project").where("id", id).update({
-          intro,
-          type,
-          artStyle,
-          videoRatio,
-          projectType
-        });
-        res.status(200).send(success3({ message: "\u4FEE\u6539\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/generationTasks/cancel.ts
-var import_express36, router36, cancel_default;
-var init_cancel = __esm({
-  "src/routes/generationTasks/cancel.ts"() {
-    "use strict";
-    import_express36 = __toESM(require_express2());
-    init_zod();
-    init_middleware();
-    init_responseFormat();
-    init_repository();
-    router36 = import_express36.default.Router();
-    cancel_default = router36.post("/", validateFields({ taskId: external_exports.string().uuid() }), async (req, res) => {
-      const task = await generationTaskRepository.requestCancel(req.body.taskId);
-      if (!task) return res.status(404).send({ message: "\u4EFB\u52A1\u4E0D\u5B58\u5728" });
-      return res.status(200).send(success3(task));
-    });
-  }
-});
-
-// src/routes/generationTasks/get.ts
-var import_express37, router37, get_default2;
-var init_get2 = __esm({
-  "src/routes/generationTasks/get.ts"() {
-    "use strict";
-    import_express37 = __toESM(require_express2());
-    init_zod();
-    init_middleware();
-    init_responseFormat();
-    init_repository();
-    router37 = import_express37.default.Router();
-    get_default2 = router37.post("/", validateFields({ taskId: external_exports.string().uuid() }), async (req, res) => {
-      const task = await generationTaskRepository.get(req.body.taskId);
-      if (!task) return res.status(404).send({ message: "\u4EFB\u52A1\u4E0D\u5B58\u5728" });
-      return res.status(200).send(success3(task));
-    });
-  }
-});
-
-// src/routes/generationTasks/limits.ts
-var import_express38, router38, limits_default;
-var init_limits = __esm({
-  "src/routes/generationTasks/limits.ts"() {
-    "use strict";
-    import_express38 = __toESM(require_express2());
-    init_zod();
-    init_middleware();
-    init_responseFormat();
-    init_generationTask();
-    init_db();
-    init_budget();
-    router38 = import_express38.default.Router();
-    router38.post("/list", async (_req, res) => {
-      const rows = await db("provider_limits").select("provider", "model", "lane", "max_concurrency as maxConcurrency", "rpm", "cooldown_ms as cooldownMs", "updated_at as updatedAt").orderBy(["provider", "model", "lane"]);
-      res.status(200).send(success3(rows));
-    });
-    router38.post(
-      "/upsert",
-      validateFields({
-        provider: external_exports.string().trim().min(1),
-        model: external_exports.string().trim().min(1).default("*"),
-        lane: external_exports.enum(generationTaskLanes),
-        maxConcurrency: external_exports.number().int().min(1).max(32),
-        rpm: external_exports.number().int().min(1).max(1e4),
-        cooldownMs: external_exports.number().int().min(0).max(6e4)
-      }),
-      async (req, res) => {
-        const { provider, model, lane, maxConcurrency, rpm, cooldownMs } = req.body;
-        const row = {
-          provider,
-          model,
-          lane,
-          max_concurrency: maxConcurrency,
-          rpm,
-          cooldown_ms: cooldownMs,
-          updated_at: Date.now()
-        };
-        await db("provider_limits").insert(row).onConflict(["provider", "model", "lane"]).merge(row);
-        res.status(200).send(success3(row));
-      }
-    );
-    router38.post("/budget/get", validateFields({ projectId: external_exports.number().int().positive() }), async (req, res) => {
-      res.status(200).send(success3(await getProjectBudget(req.body.projectId)));
-    });
-    router38.post(
-      "/budget/upsert",
-      validateFields({
-        projectId: external_exports.number().int().positive(),
-        budgetLimit: external_exports.number().nonnegative().nullable(),
-        currency: external_exports.enum(["CNY", "USD"]),
-        blockUnknownPrice: external_exports.boolean()
-      }),
-      async (req, res) => {
-        res.status(200).send(success3(await upsertProjectBudget(req.body)));
-      }
-    );
-    router38.post("/pricing/list", async (_req, res) => {
-      res.status(200).send(success3(await listPricingRules()));
-    });
-    router38.post(
-      "/pricing/upsert",
-      validateFields({
-        id: external_exports.string().uuid().optional(),
-        provider: external_exports.string().trim().min(1),
-        model: external_exports.string().trim().min(1),
-        lane: external_exports.enum(generationTaskLanes),
-        unitType: external_exports.enum(pricingUnitTypes),
-        unitPrice: external_exports.number().nonnegative(),
-        currency: external_exports.enum(["CNY", "USD"])
-      }),
-      async (req, res) => {
-        res.status(200).send(success3(await upsertPricingRule(req.body)));
-      }
-    );
-    router38.post("/pricing/delete", validateFields({ id: external_exports.string().uuid() }), async (req, res) => {
-      res.status(200).send(success3(await deletePricingRule(req.body.id)));
-    });
-    limits_default = router38;
-  }
-});
-
-// src/routes/generationTasks/list.ts
-var import_express39, router39, list_default;
-var init_list = __esm({
-  "src/routes/generationTasks/list.ts"() {
-    "use strict";
-    import_express39 = __toESM(require_express2());
-    init_zod();
-    init_middleware();
-    init_responseFormat();
-    init_generationTask();
-    init_repository();
-    router39 = import_express39.default.Router();
-    list_default = router39.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number().optional(),
-        lane: external_exports.enum(generationTaskLanes).optional(),
-        status: external_exports.enum(generationTaskStatuses).optional(),
-        type: external_exports.string().optional(),
-        page: external_exports.number().int().positive().optional(),
-        limit: external_exports.number().int().positive().max(100).optional()
-      }),
-      async (req, res) => {
-        res.status(200).send(success3(await generationTaskRepository.list(req.body)));
-      }
-    );
-  }
-});
-
-// src/routes/generationTasks/retry.ts
-var import_express40, router40, retry_default;
-var init_retry = __esm({
-  "src/routes/generationTasks/retry.ts"() {
-    "use strict";
-    import_express40 = __toESM(require_express2());
-    init_zod();
-    init_middleware();
-    init_responseFormat();
-    init_repository();
-    router40 = import_express40.default.Router();
-    retry_default = router40.post(
-      "/",
-      validateFields({ taskId: external_exports.string().uuid(), confirmUnknownProviderState: external_exports.boolean().optional() }),
-      async (req, res) => {
-        try {
-          const task = await generationTaskRepository.retry(req.body.taskId, req.body.confirmUnknownProviderState === true);
-          return res.status(200).send(success3(task));
-        } catch (error73) {
-          return res.status(409).send({ message: error73 instanceof Error ? error73.message : String(error73) });
-        }
-      }
-    );
-  }
-});
-
-// src/routes/login/login.ts
-function setToken(payload, expiresIn, secret) {
-  if (!payload || typeof secret !== "string" || !secret) {
-    throw new Error("\u53C2\u6570\u4E0D\u5408\u6CD5");
-  }
-  return import_jsonwebtoken4.default.sign(payload, secret, { expiresIn });
-}
-var import_express41, import_jsonwebtoken4, router41, login_default;
-var init_login = __esm({
-  "src/routes/login/login.ts"() {
-    "use strict";
-    import_express41 = __toESM(require_express2());
-    init_utils3();
-    import_jsonwebtoken4 = __toESM(require_jsonwebtoken());
-    init_responseFormat();
-    init_middleware();
-    init_zod();
-    init_password();
-    router41 = import_express41.default.Router();
-    login_default = router41.post(
-      "/",
-      validateFields({
-        username: external_exports.string(),
-        password: external_exports.string().min(1).max(256)
-      }),
-      async (req, res) => {
-        const { username, password } = req.body;
-        const data = await utils_default.db("o_user").where("name", "=", username).first();
-        if (!data) return res.status(400).send(error50("\u767B\u5F55\u5931\u8D25"));
-        const verified = await verifyPassword(password, String(data.password || ""));
-        if (verified.valid && data.name == username) {
-          if (verified.needsMigration) {
-            await utils_default.db("o_user").where("id", data.id).update({ password: await hashPassword(password) });
-          }
-          const tokenData = await utils_default.db("o_setting").where("key", "tokenKey").first();
-          if (!tokenData) return res.status(400).send(error50("\u672A\u627E\u5230tokenKey"));
-          const token = setToken(
-            {
-              id: data.id,
-              name: data.name
-            },
-            "180Days",
-            tokenData?.value
-          );
-          return res.status(200).send(success3({
-            token: "Bearer " + token,
-            name: data.name,
-            id: data.id,
-            mustChangePassword: data.must_change_password === 1
-          }, "\u767B\u5F55\u6210\u529F"));
-        } else {
-          return res.status(400).send(error50("\u7528\u6237\u540D\u6216\u5BC6\u7801\u9519\u8BEF"));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/modelSelect/getModelDetail.ts
-var import_express42, router42, getModelDetail_default;
-var init_getModelDetail = __esm({
-  "src/routes/modelSelect/getModelDetail.ts"() {
-    "use strict";
-    import_express42 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router42 = import_express42.default.Router();
-    getModelDetail_default = router42.post(
-      "/",
-      validateFields({
-        modelId: external_exports.string()
-      }),
-      async (req, res) => {
-        const { modelId } = req.body;
-        const [id, name28] = modelId.split(/:(.+)/);
-        const models = await utils_default.vendor.getModelList(id);
-        const findData = models.find((i) => i.modelName == name28);
-        res.status(200).send(success3(findData));
-      }
-    );
-  }
-});
-
-// src/routes/modelSelect/getModelList.ts
-var import_express43, router43, getModelList_default;
-var init_getModelList = __esm({
-  "src/routes/modelSelect/getModelList.ts"() {
-    "use strict";
-    import_express43 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router43 = import_express43.default.Router();
-    getModelList_default = router43.post(
-      "/",
-      validateFields({
-        type: external_exports.enum(["text", "image", "video", "all"])
-      }),
-      async (req, res) => {
-        const { type } = req.body;
-        const dataList = await utils_default.db("o_vendorConfig").select("id").where("enable", 1);
-        if (!dataList || dataList.length === 0) {
-          return res.status(404).send({ error: "\u6A21\u578B\u672A\u627E\u5230" });
-        }
-        const modelList = await Promise.all(dataList.map((i) => utils_default.vendor.getModelList(i.id)));
-        const result = await Promise.all(
-          dataList.map(async (data, index) => {
-            const vendorData2 = await utils_default.vendor.getVendor(data.id);
-            const models = modelList[index];
-            const filtered = type === "all" ? models.filter((item) => item.type !== "video") : models.filter((item) => item.type === type);
-            return filtered.map((item) => ({
-              id: data.id,
-              label: item.name,
-              value: item.modelName,
-              type: item.type,
-              name: vendorData2.name
-            }));
-          })
-        );
-        res.status(200).send(success3(result.flat()));
-      }
-    );
-  }
-});
-
-// src/routes/novel/addNovel.ts
-var import_express44, router44, addNovel_default;
-var init_addNovel = __esm({
-  "src/routes/novel/addNovel.ts"() {
-    "use strict";
-    import_express44 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router44 = import_express44.default.Router();
-    addNovel_default = router44.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        data: external_exports.array(
-          external_exports.object({
-            index: external_exports.number(),
-            reel: external_exports.string(),
-            chapter: external_exports.string(),
-            chapterData: external_exports.string()
-          })
-        )
-      }),
-      async (req, res) => {
-        const { projectId, data } = req.body;
-        const totalNovelId = [];
-        const getLastChapterIndex = await utils_default.db("o_novel").where("projectId", projectId).select("chapterIndex").orderBy("chapterIndex", "desc").first();
-        let lastChapterIndex = 0;
-        if (getLastChapterIndex) {
-          lastChapterIndex = getLastChapterIndex.chapterIndex;
-        }
-        for (const item of data) {
-          const [id] = await utils_default.db("o_novel").insert({
-            projectId,
-            chapterIndex: ++lastChapterIndex,
-            reel: item.reel,
-            chapter: item.chapter,
-            chapterData: item.chapterData,
-            createTime: Date.now(),
-            eventState: 0
-          });
-          totalNovelId.push(id);
-        }
-        const chapterAllList = await utils_default.db("o_novel").where("projectId", projectId).whereIn("id", totalNovelId);
-        const novelClass = new utils_default.cleanNovel();
-        novelClass.emitter.on("item", async (item) => {
-          await utils_default.db("o_novel").where("id", item.id).update({ event: item.event, eventState: item.event ? 1 : -1, errorReason: item?.errReason ?? null });
-        });
-        novelClass.start(chapterAllList, projectId);
-        res.status(200).send(success3({ message: "\u65B0\u589E\u539F\u6587\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/batchDeleteNovel.ts
-var import_express45, router45, batchDeleteNovel_default;
-var init_batchDeleteNovel = __esm({
-  "src/routes/novel/batchDeleteNovel.ts"() {
-    "use strict";
-    import_express45 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router45 = import_express45.default.Router();
-    batchDeleteNovel_default = router45.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        if (!ids.length) {
-          return res.status(400).send(error50("\u8BF7\u5148\u9009\u62E9\u9700\u8981\u5220\u9664\u7684\u5185\u5BB9"));
-        }
-        const chapterData = await utils_default.db("o_eventChapter").whereIn("novelId", ids);
-        await utils_default.db("o_eventChapter").whereIn("novelId", ids).delete();
-        const eventIds = chapterData.map((i) => i.id);
-        if (eventIds.length) await utils_default.db("o_event").whereIn("id", eventIds).delete();
-        await utils_default.db("o_novel").whereIn("id", ids).del();
-        res.status(200).send(success3({ message: "\u5220\u9664\u539F\u6587\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/delNovel.ts
-var import_express46, router46, delNovel_default;
-var init_delNovel = __esm({
-  "src/routes/novel/delNovel.ts"() {
-    "use strict";
-    import_express46 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router46 = import_express46.default.Router();
-    delNovel_default = router46.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        const chapterData = await utils_default.db("o_eventChapter").where("novelId", id);
-        await utils_default.db("o_eventChapter").where("novelId", id).delete();
-        const eventIds = chapterData.map((i) => i.id);
-        if (eventIds.length) await utils_default.db("o_event").whereIn("id", eventIds).delete();
-        await utils_default.db("o_novel").where("id", id).del();
-        res.status(200).send(success3({ message: "\u5220\u9664\u539F\u6587\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/event/batchDeleteEvent.ts
-var import_express47, router47, batchDeleteEvent_default;
-var init_batchDeleteEvent = __esm({
-  "src/routes/novel/event/batchDeleteEvent.ts"() {
-    "use strict";
-    import_express47 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router47 = import_express47.default.Router();
-    batchDeleteEvent_default = router47.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        await utils_default.db("o_event").whereIn("id", ids).del();
-        await utils_default.db("o_eventChapter").whereIn("eventId", ids).del();
-        res.status(200).send(success3({ message: "\u5220\u9664\u4E8B\u4EF6\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/event/deletEvent.ts
-var import_express48, router48, deletEvent_default;
-var init_deletEvent = __esm({
-  "src/routes/novel/event/deletEvent.ts"() {
-    "use strict";
-    import_express48 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router48 = import_express48.default.Router();
-    deletEvent_default = router48.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        await utils_default.db("o_event").where("id", id).del();
-        await utils_default.db("o_eventChapter").where("eventId", id).del();
-        res.status(200).send(success3({ message: "\u5220\u9664\u4E8B\u4EF6\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/event/generateEvents.ts
-var import_express49, router49, generateEvents_default;
-var init_generateEvents = __esm({
-  "src/routes/novel/event/generateEvents.ts"() {
-    "use strict";
-    import_express49 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router49 = import_express49.default.Router();
-    generateEvents_default = router49.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        novelIds: external_exports.array(external_exports.number()),
-        concurrentCount: external_exports.number().min(1).optional()
-      }),
-      async (req, res) => {
-        const { projectId, novelIds, concurrentCount = 5 } = req.body;
-        const [allChapters, novel] = await Promise.all([
-          utils_default.db("o_novel").where("projectId", projectId).whereIn("id", novelIds),
-          Promise.resolve(new utils_default.cleanNovel(concurrentCount))
-        ]);
-        if (allChapters.length === 0) {
-          return res.status(400).send(success3("\u6CA1\u6709\u5BF9\u5E94\u7AE0\u8282"));
-        }
-        await utils_default.db("o_novel").where("projectId", projectId).whereIn("id", novelIds).update({ eventState: 0, event: null });
-        novel.emitter.on("item", async (item) => {
-          await utils_default.db("o_novel").where("id", item.id).update({ event: item.event, eventState: item.event ? 1 : -1, errorReason: item?.errorReason ?? null });
-        });
-        novel.start(allChapters, projectId);
-        return res.status(200).send(success3("\u751F\u6210\u4E8B\u4EF6\u6210\u529F"));
-      }
-    );
-  }
-});
-
-// src/routes/novel/event/getEvent.ts
-var import_express50, router50, getEvent_default;
-var init_getEvent = __esm({
-  "src/routes/novel/event/getEvent.ts"() {
-    "use strict";
-    import_express50 = __toESM(require_express2());
-    init_utils3();
-    init_db();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router50 = import_express50.default.Router();
-    getEvent_default = router50.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        page: external_exports.number(),
-        limit: external_exports.number(),
-        search: external_exports.string().optional()
-      }),
-      async (req, res) => {
-        const { projectId, page, limit, search } = req.body;
-        const offset = (page - 1) * limit;
-        const baseQuery = utils_default.db("o_event as e").join("o_eventChapter as ec", "ec.eventId", "e.id").join("o_novel as n", "n.id", "ec.novelId").where("n.projectId", projectId);
-        if (search) {
-          baseQuery.where("e.name", "like", `%${search}%`);
-        }
-        const [{ total }] = await baseQuery.clone().countDistinct("e.id as total");
-        if (!Number(total)) {
-          return res.status(200).send(success3({ list: [], total: 0 }));
-        }
-        const rows = await baseQuery.clone().select("e.id", "e.name as eventName", "e.detail", "e.createTime", db.raw("GROUP_CONCAT(n.chapterIndex) as chapterIndexes")).groupBy("e.id").limit(limit).offset(offset);
-        const list2 = rows.map((e) => ({
-          id: e.id,
-          eventName: e.eventName,
-          detail: e.detail,
-          createTime: e.createTime,
-          chapters: e.chapterIndexes ? e.chapterIndexes.split(",").map(Number) : []
-        }));
-        res.status(200).send(success3({ list: list2, total: Number(total) }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/getNovel.ts
-var import_express51, router51, getNovel_default;
-var init_getNovel = __esm({
-  "src/routes/novel/getNovel.ts"() {
-    "use strict";
-    import_express51 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router51 = import_express51.default.Router();
-    getNovel_default = router51.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        page: external_exports.number(),
-        limit: external_exports.number(),
-        search: external_exports.string().optional()
-      }),
-      async (req, res) => {
-        const { projectId, page, limit, search } = req.body;
-        const offset = (page - 1) * limit;
-        const data = await utils_default.db("o_novel").where("projectId", projectId).select("id", "chapterIndex as index", "reel", "chapter", "chapterData", "event", "eventState", "errorReason").andWhere((qb) => {
-          if (search) {
-            qb.where("chapter", "like", `%${search}%`);
-          }
-        }).orderBy("chapterIndex", "asc").limit(limit).offset(offset);
-        const totalQuery = await utils_default.db("o_novel").where("projectId", projectId).andWhere((qb) => {
-          if (search) {
-            qb.where("chapter", "like", `%${search}%`);
-          }
-        }).count("* as total").first();
-        res.status(200).send(success3({ data, total: totalQuery.total }));
-      }
-    );
-  }
-});
-
-// src/routes/novel/getNovelData.ts
-var import_express52, router52, getNovelData_default;
-var init_getNovelData = __esm({
-  "src/routes/novel/getNovelData.ts"() {
-    "use strict";
-    import_express52 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router52 = import_express52.default.Router();
-    getNovelData_default = router52.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId } = req.body;
-        const data = await utils_default.db("o_novel").where("projectId", projectId).select("*");
-        res.status(200).send(success3(data));
-      }
-    );
-  }
-});
-
-// src/routes/novel/getNovelEventState.ts
-var import_express53, router53, getNovelEventState_default;
-var init_getNovelEventState = __esm({
-  "src/routes/novel/getNovelEventState.ts"() {
-    "use strict";
-    import_express53 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router53 = import_express53.default.Router();
-    getNovelEventState_default = router53.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        const data = await utils_default.db("o_novel").whereIn("id", ids).whereNot("eventState", 0).select("id", "event", "eventState", "errorReason");
-        res.status(200).send(success3(data));
-      }
-    );
-  }
-});
-
-// src/routes/novel/getNovelIndex.ts
-var import_express54, router54, getNovelIndex_default;
-var init_getNovelIndex = __esm({
-  "src/routes/novel/getNovelIndex.ts"() {
-    "use strict";
-    import_express54 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router54 = import_express54.default.Router();
-    getNovelIndex_default = router54.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId } = req.body;
-        const data = await utils_default.db("o_novel").where("projectId", projectId).select("id", "chapterIndex as index", "chapter").orderBy("chapterIndex", "asc");
-        res.status(200).send(success3(data));
-      }
-    );
-  }
-});
-
-// src/routes/novel/updateNovel.ts
-var import_express55, router55, updateNovel_default;
-var init_updateNovel = __esm({
-  "src/routes/novel/updateNovel.ts"() {
-    "use strict";
-    import_express55 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router55 = import_express55.default.Router();
-    updateNovel_default = router55.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        index: external_exports.union([external_exports.number(), external_exports.string()]),
-        reel: external_exports.string(),
-        chapter: external_exports.string(),
-        chapterData: external_exports.string(),
-        event: external_exports.string()
-      }),
-      async (req, res) => {
-        const { id, index, reel, chapter, chapterData, event } = req.body;
-        await utils_default.db("o_novel").where("id", id).update({
-          chapterIndex: index,
-          reel,
-          chapter,
-          chapterData,
-          event
-        });
-        res.status(200).send(success3({ message: "\u66F4\u65B0\u539F\u6587\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/other/deleteAllData.ts
-var import_express56, router56, deleteAllData_default;
-var init_deleteAllData = __esm({
-  "src/routes/other/deleteAllData.ts"() {
-    "use strict";
-    import_express56 = __toESM(require_express2());
-    init_initDB();
-    init_db();
-    init_responseFormat();
-    router56 = import_express56.default.Router();
-    deleteAllData_default = router56.post(
-      "/",
-      async (req, res) => {
-        await initDB_default(db, true);
-        res.status(200).send(success3({ message: "\u6E05\u7A7A\u6570\u636E\u8868\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/other/getVersion.ts
-var import_express57, router57, getVersion_default;
-var init_getVersion = __esm({
-  "src/routes/other/getVersion.ts"() {
-    "use strict";
-    import_express57 = __toESM(require_express2());
-    init_responseFormat();
-    init_writeVersion();
-    router57 = import_express57.default.Router();
-    getVersion_default = router57.get("/", async (req, res) => {
-      const version3 = await getVersion();
-      res.status(200).send(success3(version3));
-    });
-  }
-});
-
-// src/services/task-engine/enqueueImage.ts
-async function activeTask(projectId, type, resourceKey) {
-  const tasks = await generationTaskRepository.list({ projectId, type, limit: 100 });
-  return tasks.data.find((task) => task.resourceKey === resourceKey && !terminal.has(task.status));
-}
-async function enqueueAssetImageGeneration(input) {
-  const resourceKey = `image:asset:${input.assetId}`;
-  const existing = await activeTask(input.projectId, "asset.image.generate", resourceKey);
-  if (existing) return { task: existing, payload: existing.payload, deduped: true };
-  const costReservation = await prepareCostReservation({
-    projectId: input.projectId,
-    lane: "image",
-    model: input.model,
-    metrics: { request: 1 }
-  });
-  const savePath = `/${input.projectId}/assets/${input.scriptId}/${input.assetType}/${v4_default()}.jpg`;
-  const [imageId] = await utils_default.db("o_image").insert({
-    assetsId: input.assetId,
-    type: input.assetType,
-    state: "\u751F\u6210\u4E2D",
-    resolution: input.size,
-    model: input.model
-  });
-  await utils_default.db("o_assets").where("id", input.assetId).update({ imageId });
-  const [legacyTaskId] = await utils_default.db("o_tasks").insert({
-    projectId: input.projectId,
-    taskClass: "\u751F\u6210\u56FE\u7247",
-    relatedObjects: JSON.stringify({ assetId: input.assetId, imageId }),
-    model: input.model.split(/:(.+)/)[1] ?? input.model,
-    describe: "\u6301\u4E45\u961F\u5217\uFF1A\u8D44\u4EA7\u56FE\u7247\u751F\u6210",
-    state: "\u6392\u961F\u4E2D",
-    startTime: Date.now()
-  });
-  const payload = {
-    projectId: input.projectId,
-    scriptId: input.scriptId,
-    assetId: input.assetId,
-    imageId,
-    assetType: input.assetType,
-    describe: input.describe,
-    parentDescribe: input.parentDescribe,
-    parentImagePath: input.parentImagePath,
-    model: input.model,
-    size: input.size,
-    aspectRatio: "16:9",
-    savePath
-  };
-  const result = await generationTaskRepository.enqueue({
-    projectId: input.projectId,
-    legacyTaskId,
-    lane: "image",
-    type: "asset.image.generate",
-    resourceKey,
-    payload,
-    provider: input.model.split(/:(.+)/)[0],
-    idempotencyKey: stableIdempotencyKey({ requestId: input.requestId, resourceKey, type: "asset.image.generate" }),
-    maxAttempts: 3,
-    costReservation
-  });
-  if (result.deduped) {
-    await utils_default.db("o_image").where("id", imageId).delete();
-    await utils_default.db("o_tasks").where("id", legacyTaskId).delete();
-    const existingPayload = result.task.payload;
-    await utils_default.db("o_assets").where("id", input.assetId).update({ imageId: existingPayload.imageId });
-    return { task: result.task, payload: existingPayload, deduped: true };
-  }
-  return { task: result.task, payload, deduped: false };
-}
-async function enqueueStoryboardImageGeneration(input) {
-  const resourceKey = `image:storyboard:${input.storyboardId}`;
-  const existing = await activeTask(input.projectId, "storyboard.image.generate", resourceKey);
-  if (existing) return { task: existing, payload: existing.payload, deduped: true };
-  const costReservation = await prepareCostReservation({
-    projectId: input.projectId,
-    lane: "image",
-    model: input.model,
-    metrics: { request: 1 }
-  });
-  const [legacyTaskId] = await utils_default.db("o_tasks").insert({
-    projectId: input.projectId,
-    taskClass: "\u751F\u6210\u5206\u955C\u56FE\u7247",
-    relatedObjects: JSON.stringify({ storyboardId: input.storyboardId }),
-    model: input.model.split(/:(.+)/)[1] ?? input.model,
-    describe: "\u6301\u4E45\u961F\u5217\uFF1A\u5206\u955C\u56FE\u7247\u751F\u6210",
-    state: "\u6392\u961F\u4E2D",
-    startTime: Date.now()
-  });
-  const payload = {
-    projectId: input.projectId,
-    scriptId: input.scriptId,
-    storyboardId: input.storyboardId,
-    prompt: input.prompt,
-    referenceImageIds: input.referenceImageIds,
-    model: input.model,
-    size: input.size,
-    aspectRatio: input.aspectRatio,
-    savePath: `/${input.projectId}/assets/${input.scriptId}/${v4_default()}.jpg`
-  };
-  const result = await generationTaskRepository.enqueue({
-    projectId: input.projectId,
-    legacyTaskId,
-    lane: "image",
-    type: "storyboard.image.generate",
-    resourceKey,
-    payload,
-    provider: input.model.split(/:(.+)/)[0],
-    idempotencyKey: stableIdempotencyKey({ requestId: input.requestId, resourceKey, type: "storyboard.image.generate" }),
-    maxAttempts: 3,
-    costReservation
-  });
-  if (result.deduped) await utils_default.db("o_tasks").where("id", legacyTaskId).delete();
-  return { task: result.task, payload: result.task.payload, deduped: result.deduped };
-}
-var terminal;
-var init_enqueueImage = __esm({
-  "src/services/task-engine/enqueueImage.ts"() {
-    "use strict";
-    init_dist_node();
-    init_utils3();
-    init_repository();
-    init_budget();
-    terminal = /* @__PURE__ */ new Set(["cancelled", "succeeded", "failed"]);
-  }
-});
-
-// src/routes/production/assets/batchGenerateAssetsImage.ts
-var import_express58, router58, batchGenerateAssetsImage_default;
-var init_batchGenerateAssetsImage = __esm({
-  "src/routes/production/assets/batchGenerateAssetsImage.ts"() {
-    "use strict";
-    import_express58 = __toESM(require_express2());
-    init_zod();
-    init_dist_node();
-    init_utils3();
-    init_responseFormat();
-    init_middleware();
-    init_enqueueImage();
-    router58 = import_express58.default.Router();
-    batchGenerateAssetsImage_default = router58.post(
-      "/",
-      validateFields({
-        assetIds: external_exports.array(external_exports.number()),
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        concurrentCount: external_exports.number().min(1).optional(),
-        requestId: external_exports.string().optional()
-      }),
-      async (req, res) => {
-        const { assetIds, projectId, scriptId, requestId = v4_default() } = req.body;
-        const project = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality").first();
-        if (!project?.imageModel) return res.status(400).send(error50("\u9879\u76EE\u672A\u914D\u7F6E\u56FE\u7247\u6A21\u578B"));
-        const assets = await utils_default.db("o_assets").whereIn("id", assetIds).select("id", "describe", "type", "assetsId");
-        const parentIds = assets.map((item) => item.assetsId).filter((id) => typeof id === "number");
-        const parents = parentIds.length ? await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", parentIds).select("o_assets.id", "o_assets.describe", "o_image.filePath") : [];
-        const parentById = /* @__PURE__ */ new Map();
-        parents.forEach((item) => {
-          if (typeof item.id === "number") parentById.set(item.id, item);
-        });
-        await Promise.all(
-          assets.filter((item) => typeof item.id === "number").map((item) => {
-            const parent = typeof item.assetsId === "number" ? parentById.get(item.assetsId) : void 0;
-            return enqueueAssetImageGeneration({
-              projectId,
-              scriptId,
-              assetId: item.id,
-              assetType: ["role", "tool", "scene"].includes(item.type || "") ? item.type : "role",
-              describe: item.describe || "",
-              parentDescribe: parent?.describe || void 0,
-              parentImagePath: parent?.filePath || void 0,
-              model: project.imageModel,
-              size: project.imageQuality || "1K",
-              requestId: `${requestId}:${item.id}`
-            });
-          })
-        );
-        res.status(200).send(success3("\u8D44\u4EA7\u56FE\u7247\u5DF2\u8FDB\u5165\u6301\u4E45\u961F\u5217"));
-      }
-    );
-  }
-});
-
-// src/routes/production/assets/deleteAssetsDireve.ts
-var import_express59, router59, deleteAssetsDireve_default;
-var init_deleteAssetsDireve = __esm({
-  "src/routes/production/assets/deleteAssetsDireve.ts"() {
-    "use strict";
-    import_express59 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router59 = import_express59.default.Router();
-    deleteAssetsDireve_default = router59.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id, projectId } = req.body;
-        const assetsFirstData = await utils_default.db("o_assets").where("id", id).first();
-        if (!assetsFirstData) {
-          return res.status(404).send({ error: "\u8D44\u6E90\u672A\u627E\u5230" });
-        }
-        if (assetsFirstData?.flowId) await utils_default.db("o_imageFlow").where("id", assetsFirstData?.flowId).delete();
-        await utils_default.db("o_assets").where("id", id).delete();
-        await utils_default.db("o_assets2Storyboard").where("assetId", id).delete();
-        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/assets/pollingImage.ts
-var import_express60, router60, pollingImage_default;
-var init_pollingImage = __esm({
-  "src/routes/production/assets/pollingImage.ts"() {
-    "use strict";
-    import_express60 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router60 = import_express60.default.Router();
-    pollingImage_default = router60.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        const data = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", ids).whereNot("o_image.state", "\u751F\u6210\u4E2D").select("o_image.state", "o_assets.id", "o_image.filePath", "o_image.errorReason", "o_assets.prompt");
-        const result = await Promise.all(
-          data.map(async (item) => ({
-            ...item,
-            src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null
-          }))
-        );
-        res.status(200).send(success3(result));
-      }
-    );
-  }
-});
-
-// src/routes/production/assets/updateAssetsUrl.ts
-var import_express61, router61, updateAssetsUrl_default;
-var init_updateAssetsUrl = __esm({
-  "src/routes/production/assets/updateAssetsUrl.ts"() {
-    "use strict";
-    import_express61 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router61 = import_express61.default.Router();
-    updateAssetsUrl_default = router61.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        url: external_exports.string(),
-        flowId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id, url: url4, flowId } = req.body;
-        const [imageId] = await utils_default.db("o_image").insert({
-          filePath: utils_default.replaceUrl(url4),
-          state: "\u5DF2\u5B8C\u6210",
-          assetsId: id
-        });
-        await utils_default.db("o_assets").where({ id }).update({ flowId, imageId });
-        res.status(200).send(success3({ message: "\u66F4\u65B0\u63D0\u793A\u8BCD\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/services/task-engine/enqueueWorkflowImage.ts
-async function enqueueWorkflowImage(input) {
-  const project = await utils_default.db("o_project").where("id", input.projectId).first();
-  if (!project) throw new Error("\u9879\u76EE\u4E0D\u5B58\u5728");
-  for (const referencePath of input.referencePaths) {
-    if (!await utils_default.oss.fileExists(referencePath)) throw new Error(`\u53C2\u8003\u56FE\u7247\u4E0D\u5B58\u5728: ${referencePath}`);
-  }
-  const costReservation = await prepareCostReservation({ projectId: input.projectId, lane: "image", model: input.model, metrics: { request: 1 } });
-  const resourceKey = `image:workflow:${input.projectId}:${input.nodeId}`;
-  const payload = {
-    projectId: input.projectId,
-    model: input.model,
-    prompt: input.prompt,
-    size: input.size,
-    aspectRatio: input.aspectRatio,
-    referencePaths: input.referencePaths,
-    savePath: `/${input.projectId}/workFlow/${v4_default()}.jpg`
-  };
-  const [legacyTaskId] = await utils_default.db("o_tasks").insert({
-    projectId: input.projectId,
-    taskClass: "\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210",
-    relatedObjects: JSON.stringify({ nodeId: input.nodeId }),
-    model: input.model.split(/:(.+)/)[1] ?? input.model,
-    describe: "\u6301\u4E45\u961F\u5217\uFF1A\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210",
-    state: "\u6392\u961F\u4E2D",
-    startTime: Date.now()
-  });
-  try {
-    const queued = await generationTaskRepository.enqueue({
-      projectId: input.projectId,
-      legacyTaskId,
-      lane: "image",
-      type: "workflow.image.generate",
-      resourceKey,
-      payload,
-      provider: input.model.split(/:(.+)/)[0],
-      idempotencyKey: stableIdempotencyKey({ type: "workflow.image.generate", resourceKey, requestId: input.requestId }),
-      maxAttempts: 3,
-      costReservation
-    });
-    if (queued.deduped) await utils_default.db("o_tasks").where("id", legacyTaskId).delete();
-    return { task: queued.task, deduped: queued.deduped };
-  } catch (error73) {
-    await utils_default.db("o_tasks").where("id", legacyTaskId).delete();
-    throw error73;
-  }
-}
-var init_enqueueWorkflowImage = __esm({
-  "src/services/task-engine/enqueueWorkflowImage.ts"() {
-    "use strict";
-    init_dist_node();
-    init_repository();
-    init_budget();
-    init_utils3();
-  }
-});
-
-// src/routes/production/editImage/generateFlowImage.ts
-var import_express62, router62, generateFlowImage_default;
-var init_generateFlowImage = __esm({
-  "src/routes/production/editImage/generateFlowImage.ts"() {
-    "use strict";
-    import_express62 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_enqueueWorkflowImage();
-    router62 = import_express62.default.Router();
-    generateFlowImage_default = router62.post(
-      "/",
-      validateFields({
-        model: external_exports.string(),
-        references: external_exports.array(external_exports.string()).optional(),
-        quality: external_exports.enum(["1K", "2K", "4K"]),
-        ratio: external_exports.string().regex(/^\d+:\d+$/),
-        prompt: external_exports.string(),
-        projectId: external_exports.number(),
-        nodeId: external_exports.string().trim().min(1),
-        requestId: external_exports.string().trim().min(1)
-      }),
-      async (req, res) => {
-        const { model, references = [], quality, ratio, prompt, projectId } = req.body;
-        try {
-          const result = await enqueueWorkflowImage({
-            projectId,
-            nodeId: req.body.nodeId,
-            model,
-            prompt,
-            size: quality,
-            aspectRatio: ratio,
-            referencePaths: references.map((url4) => utils_default.replaceUrl(url4)).filter(Boolean),
-            requestId: req.body.requestId
-          });
-          return res.status(200).send(success3({ taskId: result.task.id, deduped: result.deduped, queued: true }));
-        } catch (e) {
-          res.status(400).send(error50(utils_default.error(e).message));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/production/editImage/getImageDefaultModle.ts
-var import_express63, router63, getImageDefaultModle_default;
-var init_getImageDefaultModle = __esm({
-  "src/routes/production/editImage/getImageDefaultModle.ts"() {
-    "use strict";
-    import_express63 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router63 = import_express63.default.Router();
-    getImageDefaultModle_default = router63.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId } = req.body;
-        const imageFlowData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality").first();
-        return res.status(200).send(success3(imageFlowData));
-      }
-    );
-  }
-});
-
-// src/routes/production/editImage/getImageFlow.ts
-var import_express64, router64, getImageFlow_default;
-var init_getImageFlow = __esm({
-  "src/routes/production/editImage/getImageFlow.ts"() {
-    "use strict";
-    import_express64 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router64 = import_express64.default.Router();
-    getImageFlow_default = router64.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id, type } = req.body;
-        const imageFlowData = await utils_default.db("o_imageFlow").where("id", id).first();
-        if (imageFlowData?.flowData) {
-          const parseFlow = JSON.parse(imageFlowData.flowData);
-          await Promise.all(
-            parseFlow.nodes.map(async (node) => {
-              if (node.type === "upload") {
-                node.data.image = node.data.image ? await utils_default.oss.getSmallImageUrl(node.data.image) : "";
-              } else if (node.type === "generated") {
-                node.data.generatedImage = node.data.generatedImage ? await utils_default.oss.getSmallImageUrl(node.data.generatedImage) : "";
-                node.data.references = await Promise.all(node.data.references.map(async (item) => {
-                  return {
-                    image: await utils_default.oss.getSmallImageUrl(item.image)
-                  };
-                }));
-              }
-            })
-          );
-          return res.status(200).send(success3({ ...parseFlow, id: imageFlowData.id }));
-        }
-        return res.status(200).send(success3(null));
-      }
-    );
-  }
-});
-
-// src/routes/production/editImage/saveImageFlow.ts
-var import_express65, router65, saveImageFlow_default;
-var init_saveImageFlow = __esm({
-  "src/routes/production/editImage/saveImageFlow.ts"() {
-    "use strict";
-    import_express65 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router65 = import_express65.default.Router();
-    saveImageFlow_default = router65.post(
-      "/",
-      validateFields({
-        edges: external_exports.any(),
-        nodes: external_exports.any()
-      }),
-      async (req, res) => {
-        const { edges, nodes } = req.body;
-        nodes.forEach((node) => {
-          if (node.type == "upload") {
-            node.data.image = node.data.image ? utils_default.replaceUrl(node.data.image) : "";
-          }
-          if (node.type == "generated") {
-            node.data.generatedImage = node.data.generatedImage ? utils_default.replaceUrl(node.data.generatedImage) : "";
-            node.data.references.forEach((item) => {
-              item.image = item.image ? utils_default.replaceUrl(item.image) : "";
-            });
-          }
-        });
-        const [insertFlowId] = await utils_default.db("o_imageFlow").insert({
-          flowData: JSON.stringify({ edges, nodes })
-        });
-        return res.status(200).send(success3({ id: insertFlowId }));
-      }
-    );
-  }
-});
-
-// src/routes/production/editImage/updateImageFlow.ts
-var import_express66, router66, updateImageFlow_default;
-var init_updateImageFlow = __esm({
-  "src/routes/production/editImage/updateImageFlow.ts"() {
-    "use strict";
-    import_express66 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router66 = import_express66.default.Router();
-    updateImageFlow_default = router66.post(
-      "/",
-      validateFields({
-        edges: external_exports.any(),
-        nodes: external_exports.any(),
-        flowId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { edges, nodes, flowId } = req.body;
-        nodes.forEach((node) => {
-          if (node.type == "upload") {
-            node.data.image = node.data.image ? utils_default.replaceUrl(node.data.image) : "";
-          }
-          if (node.type == "generated") {
-            node.data.generatedImage = node.data.generatedImage ? utils_default.replaceUrl(node.data.generatedImage) : "";
-            node.data.references.forEach((item) => {
-              item.image = item.image ? utils_default.replaceUrl(item.image) : "";
-            });
-          }
-        });
-        await utils_default.db("o_imageFlow").where("id", flowId).update({
-          flowData: JSON.stringify({ edges, nodes })
-        });
-        return res.status(200).send(success3());
-      }
-    );
-  }
-});
-
-// src/routes/production/editImage/uploadImage.ts
-var import_express67, router67, uploadImage_default;
-var init_uploadImage = __esm({
-  "src/routes/production/editImage/uploadImage.ts"() {
-    "use strict";
-    import_express67 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    init_middleware();
-    init_zod();
-    init_dist_node();
-    router67 = import_express67.default.Router();
-    uploadImage_default = router67.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        base64Data: external_exports.string()
-      }),
-      async (req, res) => {
-        const { base64Data, projectId, scriptId } = req.body;
-        function getExtFromBase642(base64Data2) {
-          const mime = base64Data2.match(/^data:([^;]+);base64,/)?.[1] ?? "";
-          const mimeMap = {
-            // 图片
-            "image/jpeg": "jpeg",
-            "image/jpg": "jpg",
-            "image/png": "png",
-            // 音频
-            "audio/mpeg": "mp3",
-            "audio/mp3": "mp3",
-            "audio/wav": "wav",
-            // 视频
-            "video/mp4": "mp4",
-            "video/webm": "webm"
-          };
-          return mimeMap[mime] ?? "bin";
-        }
-        const ext = getExtFromBase642(base64Data);
-        if (!["jpeg", "jpg", "png"].includes(ext)) {
-          return res.status(400).send(error50("\u4E0D\u652F\u6301\u7684\u6587\u4EF6\u7C7B\u578B"));
-        }
-        const savePath = `/${projectId}/imageFlow/${scriptId}/${v4_default()}.${ext}`;
-        await utils_default.oss.writeFile(savePath, Buffer.from(base64Data.match(/base64,([A-Za-z0-9+/=]+)/)[1] ?? "", "base64"));
-        const url4 = await utils_default.oss.getSmallImageUrl(savePath);
-        res.status(200).send(success3(url4));
-      }
-    );
-  }
-});
-
-// src/routes/production/getFlowData.ts
-var import_express68, router68, getFlowData_default;
-var init_getFlowData = __esm({
-  "src/routes/production/getFlowData.ts"() {
-    "use strict";
-    import_express68 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router68 = import_express68.default.Router();
-    getFlowData_default = router68.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        episodesId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId, episodesId } = req.body;
-        const sqlData = await utils_default.db("o_agentWorkData").where("projectId", String(projectId)).andWhere("episodesId", String(episodesId)).select("data").first();
-        const scriptData = await utils_default.db("o_script").where("projectId", projectId).where("id", episodesId).first();
-        const scriptAssets = await utils_default.db("o_scriptAssets").where("scriptId", episodesId);
-        const assetIds = scriptAssets.map((i) => i.assetId);
-        const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state", "o_image.errorReason").where("o_assets.id", "in", assetIds).andWhere("o_assets.assetsId", null).where("o_assets.projectId", projectId);
-        let childAssetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state", "o_image.errorReason").where("o_assets.projectId", projectId).where("o_assets.assetsId", "in", assetIds).whereNotNull("o_assets.assetsId");
-        if (!sqlData) {
-          const flowData = {
-            script: scriptData?.content ?? "",
-            scriptPlan: "",
-            assets: await Promise.all(
-              assetsData.map(async (item) => ({
-                id: item.id,
-                name: item.name ?? "",
-                type: item.type ?? "",
-                prompt: item.prompt ?? "",
-                desc: item.describe ?? "",
-                src: item.filePath && await utils_default.oss.getSmallImageUrl(item.filePath),
-                derive: await Promise.all(
-                  childAssetsData.filter((child) => child.assetsId === item.id).map(async (child) => ({
-                    id: child.id,
-                    assetsId: item.id,
-                    name: child.name ?? "",
-                    type: child.type,
-                    prompt: child.prompt,
-                    desc: child.describe ?? "",
-                    src: child.filePath && await utils_default.oss.getSmallImageUrl(child.filePath),
-                    state: child.state ?? "\u672A\u751F\u6210"
-                    //todo：矫正状态值
-                  }))
-                )
-              }))
-            ),
-            storyboardTable: "",
-            storyboard: [],
-            //todo：矫正workbench数据
-            //@ts-ignore
-            workbench: {
-              videoList: []
-            }
-            // //todo：矫正封面数据
-            // poster: {
-            //   items: [],
-            // },
-          };
-          return res.status(200).send(success3(flowData));
-        } else {
-          try {
-            const storyboardData = await utils_default.db("o_storyboard").where("scriptId", episodesId);
-            await Promise.all(
-              storyboardData.map(async (i) => {
-                if (i.filePath) {
-                  try {
-                    i.filePath = await utils_default.oss.getSmallImageUrl(i.filePath);
-                  } catch {
-                    i.filePath = "";
-                  }
-                } else {
-                  i.filePath = "";
-                }
-              })
-            );
-            const storyboardIds = storyboardData.map((i) => i.id);
-            const assetsIds = await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).orderBy("rowid");
-            const assets2StoryboardMap = {};
-            assetsIds.forEach((i) => {
-              if (!assets2StoryboardMap[i.storyboardId]) {
-                assets2StoryboardMap[i.storyboardId] = [];
-              }
-              assets2StoryboardMap[i.storyboardId].push(i.assetId);
-            });
-            const flowData = JSON.parse(sqlData.data ?? "{}");
-            flowData.assets = await Promise.all(
-              assetsData.map(async (item) => ({
-                id: item.id,
-                name: item.name ?? "",
-                type: item.type ?? "",
-                prompt: item.prompt ?? "",
-                desc: item.describe ?? "",
-                src: item.filePath && await utils_default.oss.getSmallImageUrl(item.filePath),
-                flowId: item.flowId,
-                derive: await Promise.all(
-                  childAssetsData.filter((child) => child.assetsId === item.id).map(async (child) => ({
-                    id: child.id,
-                    assetsId: item.id,
-                    name: child.name ?? "",
-                    prompt: child.prompt,
-                    type: child.type,
-                    desc: child.describe ?? "",
-                    src: child.filePath && await utils_default.oss.getSmallImageUrl(child.filePath),
-                    state: child.state ?? "\u672A\u751F\u6210",
-                    errorReason: child?.errorReason ?? "",
-                    flowId: child.flowId
-                  }))
-                )
-              }))
-            );
-            flowData.storyboard = storyboardData.map((i) => ({
-              id: i.id,
-              index: i.index,
-              duration: i.duration ? +i.duration : 0,
-              prompt: i.prompt,
-              associateAssetsIds: assets2StoryboardMap[i.id] ?? [],
-              src: i.filePath,
-              state: i.state,
-              videoDesc: i.videoDesc,
-              shouldGenerateImage: i.shouldGenerateImage,
-              reason: i?.reason ?? "",
-              flowId: i.flowId
-            })).sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
-            flowData.script = scriptData?.content ?? "";
-            res.status(200).send(success3(flowData));
-          } catch (err) {
-            res.status(400).send(error50());
-          }
-        }
-      }
-    );
-  }
-});
-
-// src/routes/production/getStoryboardData.ts
-var import_express69, router69, getStoryboardData_default;
-var init_getStoryboardData = __esm({
-  "src/routes/production/getStoryboardData.ts"() {
-    "use strict";
-    import_express69 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router69 = import_express69.default.Router();
-    getStoryboardData_default = router69.post(
-      "/",
-      validateFields({
-        scriptId: external_exports.number(),
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { scriptId, projectId } = req.body;
-        const storyboardData = await utils_default.db("o_storyboard").where({ scriptId, projectId }).orderBy("index", "asc");
-        const data = await Promise.all(
-          storyboardData.map(async (i) => {
-            return {
-              ...i,
-              filePath: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : ""
-            };
-          })
-        );
-        const storyboardIds = storyboardData.map((s) => s.id);
-        const storyboardConfigs = await utils_default.db("o_assets2Storyboard").leftJoin("o_assets", "o_assets2Storyboard.assetId", "o_assets.id").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets2Storyboard.storyboardId", storyboardIds).select("o_assets2Storyboard.storyboardId", "o_assets.id as assetId", "o_assets.name", "o_assets.type", "o_image.filePath as avatar");
-        const storyboardCharactersMap = storyboardConfigs.reduce((acc, cur) => {
-          const storyboardId = cur.storyboardId;
-          if (!acc[storyboardId]) {
-            acc[storyboardId] = [];
-          }
-          const character = {
-            name: cur.name ?? "",
-            type: cur.type ?? ""
-          };
-          if (cur.avatar) {
-            character.avatar = cur.avatar;
-          }
-          acc[storyboardId].push(character);
-          return acc;
-        }, {});
-        const result = await Promise.all(
-          data.map(async (item) => {
-            const characters = storyboardCharactersMap[item.id] ?? [];
-            const charactersWithUrl = await Promise.all(
-              characters.map(async (c) => {
-                if (c.avatar) {
-                  return { ...c, avatar: await utils_default.oss.getSmallImageUrl(c.avatar) };
-                }
-                return c;
-              })
-            );
-            return {
-              id: String(item.id),
-              createTime: item.createTime ?? void 0,
-              duration: item.duration ? Number(item.duration) : void 0,
-              filePath: item.filePath || void 0,
-              prompt: item.prompt ?? void 0,
-              scriptId: item.scriptId ?? void 0,
-              characters: charactersWithUrl,
-              index: item.index
-            };
-          })
-        );
-        res.status(200).send(success3(result));
-      }
-    );
-  }
-});
-
-// src/routes/production/saveFlowData.ts
-var import_express70, router70, saveFlowData_default;
-var init_saveFlowData = __esm({
-  "src/routes/production/saveFlowData.ts"() {
-    "use strict";
-    import_express70 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router70 = import_express70.default.Router();
-    saveFlowData_default = router70.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        episodesId: external_exports.number(),
-        data: external_exports.any()
-      }),
-      async (req, res) => {
-        const {
-          data,
-          projectId,
-          episodesId
-        } = req.body;
-        const sqlData = await utils_default.db("o_agentWorkData").where("projectId", String(projectId)).andWhere("episodesId", String(episodesId)).first();
-        if (data.storyboard && data.storyboard.length) {
-          const filterDatas = data?.storyboard.filter((i) => !i.id);
-          if (!filterDatas.length) {
-            try {
-              await Promise.all(
-                data.storyboard.filter((i) => i.id).map(async (i, index) => {
-                  await utils_default.db("o_storyboard").where("id", i.id).update({
-                    index
-                  });
-                })
-              );
-            } catch (error73) {
-              console.error("\u66F4\u65B0\u5206\u955C\u6392\u5E8F\u5931\u8D25", error73);
-            }
-          }
-        }
-        if (!sqlData) {
-          await utils_default.db("o_agentWorkData").insert({
-            projectId,
-            episodesId,
-            key: "productionAgent",
-            data: JSON.stringify(data)
-          });
-        } else {
-          await utils_default.db("o_agentWorkData").where("projectId", String(projectId)).where("key", "productionAgent").andWhere("episodesId", String(episodesId)).update({
-            data: JSON.stringify(data)
-          });
-        }
-        return res.status(200).send(success3());
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/addStoryboard.ts
-var import_express71, router71, addStoryboard_default;
-var init_addStoryboard = __esm({
-  "src/routes/production/storyboard/addStoryboard.ts"() {
-    "use strict";
-    import_express71 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router71 = import_express71.default.Router();
-    addStoryboard_default = router71.post(
-      "/",
-      validateFields({
-        prompt: external_exports.string(),
-        duration: external_exports.number(),
-        state: external_exports.string(),
-        videoDesc: external_exports.string(),
-        shouldGenerateImage: external_exports.number(),
-        src: external_exports.string().nullable(),
-        scriptId: external_exports.number(),
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { prompt, duration: duration4, state, src, scriptId, projectId, videoDesc, shouldGenerateImage } = req.body;
-        const trackId = Date.now();
-        await utils_default.db("o_videoTrack").insert({
-          id: trackId,
-          scriptId,
-          projectId
-        });
-        const [id] = await utils_default.db("o_storyboard").insert({
-          prompt,
-          duration: duration4,
-          state,
-          filePath: utils_default.replaceUrl(src),
-          trackId,
-          videoDesc,
-          shouldGenerateImage: src ? 1 : 0,
-          scriptId,
-          projectId
-        });
-        return res.status(200).send(success3({ id }));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/batchAddStoryboardInfo.ts
-var import_express72, router72, batchAddStoryboardInfo_default;
-var init_batchAddStoryboardInfo = __esm({
-  "src/routes/production/storyboard/batchAddStoryboardInfo.ts"() {
-    "use strict";
-    import_express72 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router72 = import_express72.default.Router();
-    batchAddStoryboardInfo_default = router72.post(
-      "/",
-      validateFields({
-        data: external_exports.array(
-          external_exports.object({
-            prompt: external_exports.string(),
-            duration: external_exports.number(),
-            track: external_exports.string(),
-            state: external_exports.string(),
-            src: external_exports.string().nullable(),
-            videoDesc: external_exports.string(),
-            shouldGenerateImage: external_exports.number(),
-            associateAssetsIds: external_exports.array(external_exports.number())
-          })
-        ),
-        scriptId: external_exports.number(),
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { data, scriptId, projectId } = req.body;
-        if (!data.length) return res.status(400).send({ success: false, message: "\u6570\u636E\u4E0D\u80FD\u4E3A\u7A7A" });
-        for (const item of data) {
-          const [id] = await utils_default.db("o_storyboard").insert({
-            prompt: item.prompt,
-            duration: String(item.duration),
-            state: item.state,
-            scriptId,
-            projectId,
-            track: item.track,
-            videoDesc: item.videoDesc,
-            shouldGenerateImage: item.shouldGenerateImage,
-            createTime: Date.now()
-          });
-          if (item.associateAssetsIds?.length) {
-            await utils_default.db("o_assets2Storyboard").insert(
-              item.associateAssetsIds.map((assetId) => ({
-                assetId,
-                storyboardId: id
-              }))
-            );
-          }
-          item.id = id;
-        }
-        const lastStoryboard = await utils_default.db("o_storyboard").where("scriptId", scriptId);
-        if (!lastStoryboard || !lastStoryboard.length) return res.status(400).send(error50("\u672A\u67E5\u5230\u5206\u955C\u6570\u636E"));
-        const storyboardGroupByTrack = {};
-        lastStoryboard.forEach((item) => {
-          if (!storyboardGroupByTrack[item.track]) {
-            storyboardGroupByTrack[item.track] = [];
-          }
-          storyboardGroupByTrack[item.track].push(item.id);
-        });
-        for (const track in storyboardGroupByTrack) {
-          const storyboardIds = storyboardGroupByTrack[track] ?? [];
-          const trackDuration = lastStoryboard.filter((item) => item.track == track).reduce((sum, item) => sum + Number(item.duration), 0);
-          const existingStoryboard = await utils_default.db("o_storyboard").where({ scriptId, track }).whereNotNull("trackId").first();
-          let trackId;
-          if (existingStoryboard?.trackId) {
-            trackId = existingStoryboard.trackId;
-            await utils_default.db("o_videoTrack").where("id", trackId).update({ duration: trackDuration });
-          } else {
-            const newTrackId = Date.now();
-            await utils_default.db("o_videoTrack").insert({
-              id: newTrackId,
-              scriptId,
-              projectId,
-              duration: trackDuration
-            });
-            trackId = newTrackId;
-          }
-          await utils_default.db("o_storyboard").whereIn("id", storyboardIds).update({ trackId });
-        }
-        const storyboardData = await Promise.all(
-          lastStoryboard.map(async (i) => {
-            return {
-              associateAssetsIds: await utils_default.db("o_assets2Storyboard").where("storyboardId", i.id).orderBy("rowid").select("assetId").pluck("assetId"),
-              src: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : "",
-              id: i.id,
-              trackId: i.trackId,
-              prompt: i.prompt,
-              duration: Number(i.duration),
-              state: i.state,
-              scriptId: i.scriptId,
-              reason: i.reason,
-              videoDesc: i.videoDesc
-            };
-          })
-        );
-        return res.status(200).send(success3(storyboardData));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/batchDelete.ts
-var import_express73, router73, batchDelete_default2;
-var init_batchDelete2 = __esm({
-  "src/routes/production/storyboard/batchDelete.ts"() {
-    "use strict";
-    import_express73 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router73 = import_express73.default.Router();
-    batchDelete_default2 = router73.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number()),
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { ids, projectId } = req.body;
-        if (!ids.length) return res.status(400).send(error50("\u8BF7\u5148\u9009\u62E9\u5206\u955C"));
-        const storyboardDataList = await utils_default.db("o_storyboard").whereIn("id", ids).where("projectId", projectId).select("id", "track", "trackId", "flowId");
-        if (!storyboardDataList.length) return res.status(400).send(error50("\u5F53\u524D\u9009\u62E9\u5206\u955C\u4E0D\u5B58\u5728"));
-        const flowIds = storyboardDataList.map((i) => i.flowId);
-        const storyBoardIds = storyboardDataList.map((i) => i.id);
-        if (flowIds.length)
-          await utils_default.db("o_imageFlow").whereIn("id", flowIds).delete();
-        await utils_default.db("o_storyboard").whereIn("id", storyBoardIds).delete();
-        await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyBoardIds).delete();
-        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/batchGenerateImage.ts
-var import_express74, router74, batchGenerateImage_default;
-var init_batchGenerateImage = __esm({
-  "src/routes/production/storyboard/batchGenerateImage.ts"() {
-    "use strict";
-    import_express74 = __toESM(require_express2());
-    init_zod();
-    init_dist_node();
-    init_utils3();
-    init_responseFormat();
-    init_middleware();
-    init_enqueueImage();
-    router74 = import_express74.default.Router();
-    batchGenerateImage_default = router74.post(
-      "/",
-      validateFields({
-        storyboardIds: external_exports.array(external_exports.number()),
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        concurrentCount: external_exports.number().min(1).optional(),
-        compulsory: external_exports.boolean().optional(),
-        requestId: external_exports.string().optional()
-      }),
-      async (req, res) => {
-        const { storyboardIds, projectId, scriptId, compulsory = false, requestId = v4_default() } = req.body;
-        if (!storyboardIds.length) return res.status(400).send(error50("storyboardIds\u4E0D\u80FD\u4E3A\u7A7A"));
-        const storyboardData = await utils_default.db("o_storyboard").where({ scriptId, projectId }).whereIn("id", storyboardIds);
-        if (!storyboardData.length) return res.status(404).send(error50("\u672A\u67E5\u5230\u5206\u955C\u6570\u636E"));
-        const storyIds = storyboardData.map((item) => item.id).filter((id) => typeof id === "number");
-        if (compulsory) {
-          await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).update({ state: "\u751F\u6210\u4E2D", shouldGenerateImage: 1 });
-        } else {
-          await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).where("shouldGenerateImage", 0).update({ state: "\u672A\u751F\u6210" });
-          await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).where("shouldGenerateImage", 1).update({ state: "\u751F\u6210\u4E2D" });
-        }
-        const project = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "videoRatio").first();
-        if (!project?.imageModel) return res.status(400).send(error50("\u9879\u76EE\u672A\u914D\u7F6E\u56FE\u7247\u6A21\u578B"));
-        const links = await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyIds).orderBy("rowid").select("storyboardId", "assetId");
-        const assetIds = [...new Set(links.map((row) => row.assetId).filter((id) => typeof id === "number"))];
-        const assetImageMap = /* @__PURE__ */ new Map();
-        if (assetIds.length) {
-          const rows = await utils_default.db("o_assets").whereIn("id", assetIds).select("id", "imageId");
-          rows.forEach((row) => {
-            if (typeof row.id === "number" && typeof row.imageId === "number") assetImageMap.set(row.id, row.imageId);
-          });
-        }
-        const referenceMap = /* @__PURE__ */ new Map();
-        links.forEach((row) => {
-          if (typeof row.storyboardId !== "number" || typeof row.assetId !== "number") return;
-          const imageId = assetImageMap.get(row.assetId);
-          if (imageId == null) return;
-          const list2 = referenceMap.get(row.storyboardId) || [];
-          list2.push(imageId);
-          referenceMap.set(row.storyboardId, list2);
-        });
-        const generateList = compulsory ? storyboardData : storyboardData.filter((item) => item.shouldGenerateImage !== 0);
-        await Promise.all(
-          generateList.filter((item) => typeof item.id === "number").map(
-            (item) => enqueueStoryboardImageGeneration({
-              projectId,
-              scriptId,
-              storyboardId: item.id,
-              prompt: item.prompt || "",
-              referenceImageIds: referenceMap.get(item.id) || [],
-              model: project.imageModel,
-              size: project.imageQuality || "1K",
-              aspectRatio: project.videoRatio || "16:9",
-              requestId: `${requestId}:${item.id}`
-            })
-          )
-        );
-        const refreshed = await utils_default.db("o_storyboard").where({ scriptId, projectId }).whereIn("id", storyIds);
-        res.status(200).send(
-          success3(
-            refreshed.map((item) => ({
-              id: item.id,
-              prompt: item.prompt,
-              associateAssetsIds: typeof item.id === "number" ? referenceMap.get(item.id) || [] : [],
-              src: null,
-              state: item.state,
-              videoDesc: item.videoDesc,
-              shouldGenerateImage: item.shouldGenerateImage
-            }))
-          )
-        );
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/downPreviewImage.ts
-var import_express75, import_sharp4, router75, downPreviewImage_default;
-var init_downPreviewImage = __esm({
-  "src/routes/production/storyboard/downPreviewImage.ts"() {
-    "use strict";
-    import_express75 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    import_sharp4 = __toESM(require("sharp"));
-    init_middleware();
-    router75 = import_express75.default.Router();
-    downPreviewImage_default = router75.post(
-      "/",
-      validateFields({
-        storyboardIds: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { storyboardIds } = req.body;
-        const storyboardImage = await utils_default.db("o_storyboard").whereIn("id", storyboardIds).select("id", "filePath");
-        const filePathMap = {};
-        storyboardImage.forEach((i) => {
-          filePathMap[i.id] = i.filePath || "";
-        });
-        const orderedFilePaths = storyboardIds.map((id) => filePathMap[id]);
-        const loaded = await Promise.all(
-          orderedFilePaths.map(async (filePath) => {
-            if (!filePath) return null;
-            const buffer = await utils_default.oss.getFile(filePath);
-            const metadata = await (0, import_sharp4.default)(buffer).metadata();
-            return { buffer, width: metadata.width || 0, height: metadata.height || 0 };
-          })
-        );
-        const validImages = loaded.filter((img) => img !== null && img.width > 0 && img.height > 0);
-        if (validImages.length === 0) {
-          res.status(204).end();
-          return;
-        }
-        const cols = Math.min(5, validImages.length);
-        const rows = Math.ceil(validImages.length / cols);
-        const colWidths = Array(cols).fill(0);
-        const rowHeights = Array(rows).fill(0);
-        validImages.forEach((img, idx) => {
-          const c = idx % cols;
-          const r = Math.floor(idx / cols);
-          colWidths[c] = Math.max(colWidths[c], img.width);
-          rowHeights[r] = Math.max(rowHeights[r], img.height);
-        });
-        const canvasWidth = colWidths.reduce((a, b) => a + b, 0);
-        const canvasHeight = rowHeights.reduce((a, b) => a + b, 0);
-        const compositeInputs = [];
-        for (let i = 0; i < validImages.length; i++) {
-          const img = validImages[i];
-          const c = i % cols;
-          const r = Math.floor(i / cols);
-          const x = colWidths.slice(0, c).reduce((a, b) => a + b, 0);
-          const y = rowHeights.slice(0, r).reduce((a, b) => a + b, 0);
-          compositeInputs.push({
-            input: img.buffer,
-            left: x,
-            top: y
-          });
-          const label = `S${String(i + 1).padStart(2, "0")}`;
-          const fontSize = Math.max(14, Math.min(img.width, img.height) * 0.06);
-          const padding = Math.round(fontSize * 0.4);
-          const textWidth = Math.round(label.length * fontSize * 0.65);
-          const bgW = textWidth + padding * 2;
-          const bgH = Math.round(fontSize) + padding * 2;
-          const labelSvg = Buffer.from(
-            `<svg xmlns="http://www.w3.org/2000/svg" width="${bgW}" height="${bgH}">
-          <rect x="0" y="0" width="${bgW}" height="${bgH}" rx="4" ry="4" fill="rgba(0,0,0,0.55)"/>
-          <text x="${padding}" y="${padding + fontSize * 0.85}" font-family="Arial, sans-serif" font-weight="bold" font-size="${fontSize}" fill="#fff">${label}</text>
-        </svg>`
-          );
-          compositeInputs.push({
-            input: labelSvg,
-            left: x + 4,
-            top: y + 4
-          });
-        }
-        const resultBuffer = await (0, import_sharp4.default)({
-          create: {
-            width: canvasWidth,
-            height: canvasHeight,
-            channels: 4,
-            background: { r: 255, g: 255, b: 255, alpha: 1 }
-          }
-        }).composite(compositeInputs).png({ compressionLevel: 3 }).toBuffer();
-        res.setHeader("Content-Type", "image/png");
-        res.setHeader("Content-Disposition", "attachment; filename=storyboard-preview.png");
-        res.setHeader("Content-Length", resultBuffer.length);
-        res.status(200).send(resultBuffer);
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/editStoryboardInfo.ts
-var import_express76, router76, editStoryboardInfo_default;
-var init_editStoryboardInfo = __esm({
-  "src/routes/production/storyboard/editStoryboardInfo.ts"() {
-    "use strict";
-    import_express76 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router76 = import_express76.default.Router();
-    editStoryboardInfo_default = router76.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        prompt: external_exports.string(),
-        videoDesc: external_exports.string()
-      }),
-      async (req, res) => {
-        const { id, prompt, videoDesc } = req.body;
-        await utils_default.db("o_storyboard").where({ id }).update({
-          prompt,
-          videoDesc
-        });
-        res.status(200).send(success3({ message: "\u66F4\u65B0\u63D0\u793A\u8BCD\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/getStoryboardData.ts
-var import_express77, router77, getStoryboardData_default2;
-var init_getStoryboardData2 = __esm({
-  "src/routes/production/storyboard/getStoryboardData.ts"() {
-    "use strict";
-    import_express77 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router77 = import_express77.default.Router();
-    getStoryboardData_default2 = router77.post(
-      "/",
-      validateFields({
-        scriptId: external_exports.number(),
-        page: external_exports.number(),
-        limit: external_exports.number(),
-        name: external_exports.string().optional().nullable()
-      }),
-      async (req, res) => {
-        const { scriptId, page, limit, name: name28 } = req.body;
-        const offset = (page - 1) * limit;
-        const storyboardData = await utils_default.db("o_storyboard").where({ scriptId }).modify((qb) => {
-          if (name28) {
-            qb.andWhere("title", "like", `%${name28}%`);
-          }
-        }).offset(offset).limit(limit);
-        const data = await Promise.all(
-          storyboardData.map(async (i) => {
-            return {
-              id: i.id,
-              prompt: i.prompt,
-              state: i.state,
-              src: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : ""
-            };
-          })
-        );
-        const totalQuery = await utils_default.db("o_storyboard").where({ scriptId }).modify((qb) => {
-          if (name28) {
-            qb.andWhere("title", "like", `%${name28}%`);
-          }
-        }).count("* as total").first();
-        res.status(200).send(success3({ data, total: totalQuery?.total }));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/pollingImage.ts
-var import_express78, router78, pollingImage_default2;
-var init_pollingImage2 = __esm({
-  "src/routes/production/storyboard/pollingImage.ts"() {
-    "use strict";
-    import_express78 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router78 = import_express78.default.Router();
-    pollingImage_default2 = router78.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        const data = await utils_default.db("o_storyboard").whereIn("id", ids).whereNot("state", "\u751F\u6210\u4E2D").select("id", "state", "reason", "filePath", "prompt");
-        const result = await Promise.all(
-          data.map(async (item) => ({
-            ...item,
-            src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null
-          }))
-        );
-        res.status(200).send(success3(result));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/previewImage.ts
-var import_express79, import_sharp5, router79, previewImage_default;
-var init_previewImage = __esm({
-  "src/routes/production/storyboard/previewImage.ts"() {
-    "use strict";
-    import_express79 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    import_sharp5 = __toESM(require("sharp"));
-    init_responseFormat();
-    init_middleware();
-    router79 = import_express79.default.Router();
-    previewImage_default = router79.post(
-      "/",
-      validateFields({
-        storyboardIds: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { storyboardIds } = req.body;
-        const storyboardImage = await utils_default.db("o_storyboard").whereIn("id", storyboardIds).select("id", "filePath");
-        const filePathMap = {};
-        storyboardImage.forEach((i) => {
-          filePathMap[i.id] = i.filePath || "";
-        });
-        const orderedFilePaths = storyboardIds.map((id) => filePathMap[id]);
-        const loaded = await Promise.all(
-          orderedFilePaths.map(async (filePath) => {
-            if (!filePath) return null;
-            const buffer = await utils_default.oss.getFile(filePath);
-            const metadata = await (0, import_sharp5.default)(buffer).metadata();
-            return { buffer, width: metadata.width || 0, height: metadata.height || 0 };
-          })
-        );
-        const validImages = loaded.filter((img) => img !== null && img.width > 0 && img.height > 0);
-        if (validImages.length === 0) {
-          return res.status(200).send(success3(null));
-        }
-        const maxThumbWidth = 512;
-        const resizedImages = await Promise.all(
-          validImages.map(async (img) => {
-            if (img.width <= maxThumbWidth) {
-              return img;
-            }
-            const scale = maxThumbWidth / img.width;
-            const newWidth = maxThumbWidth;
-            const newHeight = Math.round(img.height * scale);
-            const buffer = await (0, import_sharp5.default)(img.buffer).resize(newWidth, newHeight).toBuffer();
-            return { buffer, width: newWidth, height: newHeight };
-          })
-        );
-        const cols = Math.min(5, resizedImages.length);
-        const rows = Math.ceil(resizedImages.length / cols);
-        const colWidths = Array(cols).fill(0);
-        const rowHeights = Array(rows).fill(0);
-        resizedImages.forEach((img, idx) => {
-          const c = idx % cols;
-          const r = Math.floor(idx / cols);
-          colWidths[c] = Math.max(colWidths[c], img.width);
-          rowHeights[r] = Math.max(rowHeights[r], img.height);
-        });
-        const canvasWidth = colWidths.reduce((a, b) => a + b, 0);
-        const canvasHeight = rowHeights.reduce((a, b) => a + b, 0);
-        const compositeInputs = [];
-        for (let i = 0; i < resizedImages.length; i++) {
-          const img = resizedImages[i];
-          const c = i % cols;
-          const r = Math.floor(i / cols);
-          const x = colWidths.slice(0, c).reduce((a, b) => a + b, 0);
-          const y = rowHeights.slice(0, r).reduce((a, b) => a + b, 0);
-          compositeInputs.push({
-            input: img.buffer,
-            left: x,
-            top: y
-          });
-          const label = `S${String(i + 1).padStart(2, "0")}`;
-          const fontSize = Math.max(14, Math.min(img.width, img.height) * 0.06);
-          const padding = Math.round(fontSize * 0.4);
-          const textWidth = Math.round(label.length * fontSize * 0.65);
-          const bgW = textWidth + padding * 2;
-          const bgH = Math.round(fontSize) + padding * 2;
-          const labelSvg = Buffer.from(
-            `<svg xmlns="http://www.w3.org/2000/svg" width="${bgW}" height="${bgH}">
-          <rect x="0" y="0" width="${bgW}" height="${bgH}" rx="4" ry="4" fill="rgba(0,0,0,0.55)"/>
-          <text x="${padding}" y="${padding + fontSize * 0.85}" font-family="Arial, sans-serif" font-weight="bold" font-size="${fontSize}" fill="#fff">${label}</text>
-        </svg>`
-          );
-          compositeInputs.push({
-            input: labelSvg,
-            left: x + 4,
-            top: y + 4
-          });
-        }
-        const resultBuffer = await (0, import_sharp5.default)({
-          create: {
-            width: canvasWidth,
-            height: canvasHeight,
-            channels: 4,
-            background: { r: 255, g: 255, b: 255, alpha: 1 }
-          }
-        }).composite(compositeInputs).jpeg({ quality: 80 }).toBuffer();
-        const base644 = resultBuffer.toString("base64");
-        const dataUrl = `data:image/jpeg;base64,${base644}`;
-        return res.status(200).send(success3(dataUrl));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/removeFrame.ts
-var import_express80, router80, removeFrame_default;
-var init_removeFrame = __esm({
-  "src/routes/production/storyboard/removeFrame.ts"() {
-    "use strict";
-    import_express80 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router80 = import_express80.default.Router();
-    removeFrame_default = router80.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        const storyboardData = await utils_default.db("o_storyboard").where("id", id).select("id", "track", "trackId", "flowId").first();
-        if (!storyboardData) return res.status(400).send(error50("\u672A\u627E\u5230\u8BE5\u5206\u955C"));
-        if (storyboardData?.flowId) await utils_default.db("o_imageFlow").where("id", storyboardData?.flowId).delete();
-        const trackData = await utils_default.db("o_storyboard").where("track", storyboardData.track).select("id");
-        if (trackData.length == 1) await utils_default.db("o_videoTrack").where("id", storyboardData.trackId).delete();
-        await utils_default.db("o_storyboard").where("id", id).delete();
-        await utils_default.db("o_assets2Storyboard").where("storyboardId", id).delete();
-        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/storyboard/updateStoryboardUrl.ts
-var import_express81, router81, updateStoryboardUrl_default;
-var init_updateStoryboardUrl = __esm({
-  "src/routes/production/storyboard/updateStoryboardUrl.ts"() {
-    "use strict";
-    import_express81 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router81 = import_express81.default.Router();
-    updateStoryboardUrl_default = router81.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        url: external_exports.string(),
-        flowId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id, url: url4, flowId } = req.body;
-        await utils_default.db("o_storyboard").where({ id }).update({
-          filePath: utils_default.replaceUrl(url4),
-          flowId,
-          state: "\u5DF2\u5B8C\u6210",
-          shouldGenerateImage: url4 ? 1 : 0
-        });
-        res.status(200).send(success3({ message: "\u66F4\u65B0\u5206\u955C\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/addTrack.ts
-var import_express82, router82, addTrack_default;
-var init_addTrack = __esm({
-  "src/routes/production/workbench/addTrack.ts"() {
-    "use strict";
-    import_express82 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router82 = import_express82.default.Router();
-    addTrack_default = router82.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        duration: external_exports.number().optional()
-      }),
-      async (req, res) => {
-        const { projectId, scriptId, duration: duration4 } = req.body;
-        const data = await utils_default.db("o_project").where("id", projectId).first();
-        const video = data?.videoModel?.split(":");
-        const vemdor = await utils_default.vendor.getModelList(video?.[0]);
-        const trackId = Date.now();
-        await utils_default.db("o_videoTrack").insert({
-          id: trackId,
-          projectId,
-          scriptId,
-          duration: duration4
-        });
-        res.status(200).send(success3(trackId));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/batchGeneratePrompt.ts
-var import_express83, import_promises7, import_path12, router83, batchGeneratePrompt_default;
-var init_batchGeneratePrompt = __esm({
-  "src/routes/production/workbench/batchGeneratePrompt.ts"() {
-    "use strict";
-    import_express83 = __toESM(require_express2());
-    init_utils3();
-    init_p_limit();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    import_promises7 = __toESM(require("fs/promises"));
-    import_path12 = __toESM(require("path"));
-    router83 = import_express83.default.Router();
-    batchGeneratePrompt_default = router83.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        trackData: external_exports.array(
-          external_exports.object({
-            trackId: external_exports.number(),
-            info: external_exports.array(
-              external_exports.object({
-                id: external_exports.number(),
-                sources: external_exports.string()
-              })
-            )
-          })
-        ),
-        mode: external_exports.string(),
-        model: external_exports.string(),
-        concurrentCount: external_exports.number().optional()
-        //并发数
-      }),
-      async (req, res) => {
-        const { trackData, projectId, mode, model, concurrentCount = 5 } = req.body;
-        try {
-          const [id, modelData] = model.split(/:(.+)/);
-          const projectData = await utils_default.db("o_project").select("*").where({ id: projectId }).first();
-          const videoPrompt = await utils_default.db("o_prompt").where("type", "videoPromptGeneration").first();
-          let videoPromptGeneration = "";
-          const modelPromptData = await utils_default.db("o_modelPrompt").where("vendorId", id).where("model", modelData).first();
-          if (modelPromptData) {
-            const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
-            try {
-              const fullPath = import_path12.default.join(modelPromptRoot, modelPromptData?.path);
-              const content = await import_promises7.default.readFile(fullPath, "utf-8");
-              videoPromptGeneration = content ?? "";
-            } catch {
-            }
-          }
-          if (!videoPromptGeneration) {
-            const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
-            const videoPromptDir = import_path12.default.join(modelPromptRoot, "video");
-            const modelLower = (modelData ?? "").toLowerCase();
-            let fileName = null;
-            if (modelLower.includes("wan") && modelLower.includes("2.6")) {
-              fileName = "wan2.6Single-imageFirstFrameMode.md";
-            } else if (/seedance.*2[.\-]0/i.test(modelLower)) {
-              fileName = "seedance2Multi-parameterMode.md";
-            } else if (mode === "startEndRequired" || mode === "endFrameOptional" || mode === "startFrameOptional") {
-              fileName = "universalFirstAndLastFrameMode.md";
-            } else if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
-              fileName = "universalMulti-parameterMode.md";
-            }
-            if (fileName) {
-              try {
-                const fullPath = import_path12.default.join(videoPromptDir, fileName);
-                videoPromptGeneration = await import_promises7.default.readFile(fullPath, "utf-8");
-              } catch {
-              }
-            }
-          }
-          if (!videoPromptGeneration) {
-            if (videoPrompt && videoPrompt.useData) {
-              videoPromptGeneration = videoPrompt.useData;
-            } else {
-              videoPromptGeneration = videoPrompt?.data ?? void 0;
-            }
-          }
-          const artStyle = projectData?.artStyle || "\u65E0";
-          const visualManual = utils_default.getArtPrompt(artStyle, "art_skills", "art_storyboard_video");
-          await utils_default.db("o_videoTrack").whereIn(
-            "id",
-            trackData.map((t) => t.trackId)
-          ).update({ state: "\u751F\u6210\u4E2D" });
-          const limit = pLimit(concurrentCount ?? 5);
-          const tasks = trackData.map(
-            (track) => limit(async () => {
-              const images = await Promise.all(
-                track.info.map(async (item) => {
-                  if (item.sources === "storyboard") {
-                    const storyboard2 = await utils_default.db("o_storyboard").where("o_storyboard.id", item.id).select("videoDesc", "prompt", "track", "duration", "shouldGenerateImage").first();
-                    const assetRows = await utils_default.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("rowid").select("assetId");
-                    const associateAssetsIds = assetRows.map((row) => row.assetId);
-                    return {
-                      ...storyboard2,
-                      associateAssetsIds,
-                      _type: "storyboard"
-                    };
-                  }
-                  if (item.sources === "assets") {
-                    const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", item.id).select("o_assets.id", "o_assets.type", "o_assets.name", "o_image.filePath").first();
-                    return {
-                      ...assetsData,
-                      _type: "assets"
-                    };
-                  }
-                })
-              );
-              const assets = [];
-              const storyboard = [];
-              for (const item of images) {
-                if (!item) continue;
-                if (item._type === "assets")
-                  assets.push({
-                    id: item.id,
-                    type: item.type,
-                    name: item.name,
-                    filePath: item.filePath
-                  });
-                if (item._type === "storyboard")
-                  storyboard.push({
-                    videoDesc: item.videoDesc,
-                    prompt: item.prompt,
-                    track: item.track,
-                    duration: item.duration,
-                    associateAssetsIds: item.associateAssetsIds,
-                    shouldGenerateImage: item.shouldGenerateImage
-                  });
-              }
-              const content = `
-          **\u6A21\u578B\u540D\u79F0**\uFF1A${modelData},
-          **\u8D44\u4EA7\u4FE1\u606F**\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\u3001\u97F3\u9891):${assets.filter((i) => i.filePath).map((i) => `[${i.id},${i.type},${i.name}]`).join("\uFF0C")},
-          **\u5206\u955C\u4FE1\u606F**\uFF1A${storyboard.map(
-                (i) => `<storyboardItem
-  videoDesc='${i.videoDesc}'
-  duration='${i.duration}'
-></storyboardItem>`
-              )},
-          `;
-              try {
-                const { text: text2 } = await utils_default.Ai.Text("universalAi").invoke({
-                  system: videoPromptGeneration,
-                  messages: [
-                    {
-                      role: "assistant",
-                      content: `${visualManual}`
-                    },
-                    {
-                      role: "user",
-                      content
-                    }
-                  ]
-                });
-                await utils_default.db("o_videoTrack").where({ id: track.trackId }).update({
-                  prompt: text2,
-                  state: "\u5DF2\u5B8C\u6210"
-                });
-                return { trackId: track.trackId, text: text2 };
-              } catch (e) {
-                await utils_default.db("o_videoTrack").where({ id: track.trackId }).update({ state: "\u751F\u6210\u5931\u8D25", reason: utils_default.error(e).message });
-              }
-            })
-          );
-          Promise.all(tasks);
-          res.status(200).send(success3("\u5F00\u59CB\u751F\u6210\u63D0\u793A\u8BCD"));
-        } catch (e) {
-          res.status(400).send(error50(utils_default.error(e).message));
-        }
-      }
-    );
-  }
-});
-
-// src/services/task-engine/enqueueVideo.ts
-async function enqueueVideoGeneration(input) {
-  const resourceKey = `video:${input.projectId}:${input.scriptId}:${input.trackId}`;
-  const idempotencyKey = stableIdempotencyKey({ requestId: input.requestId, resourceKey, type: "video.generate" });
-  const existing = await generationTaskRepository.list({ projectId: input.projectId, type: "video.generate", limit: 100 });
-  const active = existing.data.find(
-    (task) => task.resourceKey === resourceKey && !["cancelled", "succeeded", "failed"].includes(task.status)
-  );
-  if (active) {
-    const payload2 = active.payload;
-    return { task: active, videoId: payload2.videoId, deduped: true };
-  }
-  const costReservation = await prepareCostReservation({
-    projectId: input.projectId,
-    lane: "video",
-    model: input.model,
-    metrics: { request: 1, second: input.duration }
-  });
-  const ratio = await utils_default.db("o_project").select("videoRatio").where("id", input.projectId).first();
-  const videoPath = `/${input.projectId}/video/${v4_default()}.mp4`;
-  const [videoId] = await utils_default.db("o_video").insert({
-    filePath: videoPath,
-    time: Date.now(),
-    state: "\u6392\u961F\u4E2D",
-    scriptId: input.scriptId,
-    projectId: input.projectId,
-    videoTrackId: input.trackId
-  });
-  const [legacyTaskId] = await utils_default.db("o_tasks").insert({
-    projectId: input.projectId,
-    taskClass: "\u89C6\u9891\u751F\u6210",
-    relatedObjects: JSON.stringify({ projectId: input.projectId, videoId, scriptId: input.scriptId, type: "\u89C6\u9891" }),
-    model: input.model.split(/:(.+)/)[1] ?? input.model,
-    describe: "\u6301\u4E45\u961F\u5217\uFF1A\u6839\u636E\u63D0\u793A\u8BCD\u751F\u6210\u89C6\u9891",
-    state: "\u6392\u961F\u4E2D",
-    startTime: Date.now()
-  });
-  const payload = {
-    projectId: input.projectId,
-    scriptId: input.scriptId,
-    trackId: input.trackId,
-    videoId,
-    videoPath,
-    uploadData: input.uploadData,
-    prompt: input.prompt,
-    duration: input.duration,
-    model: input.model,
-    mode: input.mode,
-    resolution: input.resolution,
-    audio: input.audio,
-    aspectRatio: ratio?.videoRatio || "16:9"
-  };
-  const result = await generationTaskRepository.enqueue({
-    projectId: input.projectId,
-    legacyTaskId,
-    lane: "video",
-    type: "video.generate",
-    resourceKey,
-    payload,
-    provider: input.model.split(/:(.+)/)[0],
-    idempotencyKey,
-    maxAttempts: 3,
-    costReservation
-  });
-  if (result.deduped) {
-    await utils_default.db("o_video").where("id", videoId).delete();
-    await utils_default.db("o_tasks").where("id", legacyTaskId).delete();
-    const existingPayload = result.task.payload;
-    return { task: result.task, videoId: existingPayload.videoId, deduped: true };
-  }
-  return { task: result.task, videoId, deduped: false };
-}
-var init_enqueueVideo = __esm({
-  "src/services/task-engine/enqueueVideo.ts"() {
-    "use strict";
-    init_dist_node();
-    init_utils3();
-    init_repository();
-    init_budget();
-  }
-});
-
-// src/routes/production/workbench/batchGenerateVideo.ts
-var import_express84, router84, batchGenerateVideo_default;
-var init_batchGenerateVideo = __esm({
-  "src/routes/production/workbench/batchGenerateVideo.ts"() {
-    "use strict";
-    import_express84 = __toESM(require_express2());
-    init_zod();
-    init_dist_node();
-    init_responseFormat();
-    init_middleware();
-    init_enqueueVideo();
-    router84 = import_express84.default.Router();
-    batchGenerateVideo_default = router84.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        trackData: external_exports.array(
-          external_exports.object({
-            uploadData: external_exports.array(
-              external_exports.object({
-                id: external_exports.number(),
-                sources: external_exports.string()
-              })
-            ),
-            trackId: external_exports.number(),
-            prompt: external_exports.string(),
-            duration: external_exports.number()
-          })
-        ),
-        model: external_exports.string(),
-        mode: external_exports.string(),
-        resolution: external_exports.string(),
-        audio: external_exports.boolean().optional(),
-        requestId: external_exports.string().optional()
-      }),
-      async (req, res) => {
-        const { scriptId, projectId, trackData, model, resolution, audio, mode, requestId = v4_default() } = req.body;
-        let modeData = [];
-        if (Array.isArray(mode)) {
-        } else if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
-          try {
-            modeData = JSON.parse(mode);
-          } catch (e) {
-          }
-        }
-        const tasks = await Promise.all(
-          trackData.map(
-            async ({ uploadData, trackId, prompt, duration: duration4 }) => {
-              const queued = await enqueueVideoGeneration({
-                projectId,
-                scriptId,
-                trackId,
-                uploadData,
-                prompt,
-                duration: duration4,
-                model,
-                mode: modeData.length > 0 ? modeData : mode,
-                resolution,
-                audio,
-                requestId: `${requestId}:${trackId}`
-              });
-              return {
-                videoId: queued.videoId,
-                trackId,
-                durableTaskId: queued.task.id,
-                deduped: queued.deduped
-              };
-            }
-          )
-        );
-        res.status(200).send(success3(tasks));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/checkVideoPrompt.ts
-var import_express85, router85, checkVideoPrompt_default;
-var init_checkVideoPrompt = __esm({
-  "src/routes/production/workbench/checkVideoPrompt.ts"() {
-    "use strict";
-    import_express85 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router85 = import_express85.default.Router();
-    checkVideoPrompt_default = router85.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        trackIds: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { projectId, scriptId, trackIds } = req.body;
-        const promptList = await utils_default.db("o_videoTrack").where("projectId", projectId).where("scriptId", scriptId).whereIn("id", trackIds).whereIn("state", ["\u5DF2\u5B8C\u6210", "\u751F\u6210\u5931\u8D25"]).select("id", "state", "reason", "prompt");
-        res.status(200).send(success3(promptList));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/checkVideoStateList.ts
-var import_express86, router86, checkVideoStateList_default;
-var init_checkVideoStateList = __esm({
-  "src/routes/production/workbench/checkVideoStateList.ts"() {
-    "use strict";
-    import_express86 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router86 = import_express86.default.Router();
-    checkVideoStateList_default = router86.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        videoIds: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { projectId, scriptId, videoIds } = req.body;
-        const videoList = await utils_default.db("o_video").whereIn("id", videoIds).whereIn("state", ["\u751F\u6210\u6210\u529F", "\u751F\u6210\u5931\u8D25", "\u9700\u4EBA\u5DE5\u786E\u8BA4", "\u5DF2\u53D6\u6D88", "\u5DF2\u963B\u585E"]).select("id", "state", "errorReason", "filePath");
-        res.status(200).send(
-          success3(
-            await Promise.all(
-              videoList.map(async (s) => ({
-                ...s,
-                src: s.filePath ? await utils_default.oss.getFileUrl(s.filePath) : ""
-              }))
-            )
-          )
-        );
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/deleteTrack.ts
-var import_express87, router87, deleteTrack_default;
-var init_deleteTrack = __esm({
-  "src/routes/production/workbench/deleteTrack.ts"() {
-    "use strict";
-    import_express87 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router87 = import_express87.default.Router();
-    deleteTrack_default = router87.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        await utils_default.db("o_videoTrack").where("id", id).delete();
-        await utils_default.db("o_storyboard").where("trackId", id).update({
-          trackId: null
-        });
-        res.status(200).send(success3({ message: "\u89C6\u9891\u6BB5\u5220\u9664\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/delVideo.ts
-var import_express88, router88, delVideo_default;
-var init_delVideo = __esm({
-  "src/routes/production/workbench/delVideo.ts"() {
-    "use strict";
-    import_express88 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router88 = import_express88.default.Router();
-    delVideo_default = router88.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        await utils_default.db("o_video").where("id", id).delete();
-        await utils_default.db("o_videoTrack").where("videoId", id).update({
-          videoId: null
-        });
-        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/generateVideo.ts
-var import_express89, router89, generateVideo_default;
-var init_generateVideo = __esm({
-  "src/routes/production/workbench/generateVideo.ts"() {
-    "use strict";
-    import_express89 = __toESM(require_express2());
-    init_zod();
-    init_dist_node();
-    init_responseFormat();
-    init_middleware();
-    init_enqueueVideo();
-    router89 = import_express89.default.Router();
-    generateVideo_default = router89.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number(),
-        uploadData: external_exports.array(external_exports.object({ id: external_exports.number(), sources: external_exports.string() })),
-        prompt: external_exports.string(),
-        model: external_exports.string(),
-        mode: external_exports.string(),
-        resolution: external_exports.string(),
-        duration: external_exports.number(),
-        audio: external_exports.boolean().optional(),
-        trackId: external_exports.number(),
-        requestId: external_exports.string().optional()
-      }),
-      async (req, res) => {
-        const { scriptId, projectId, prompt, uploadData, model, duration: duration4, resolution, audio, mode, trackId, requestId = v4_default() } = req.body;
-        let effectiveMode = mode;
-        if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
-          try {
-            effectiveMode = JSON.parse(mode);
-          } catch {
-            effectiveMode = mode;
-          }
-        }
-        const queued = await enqueueVideoGeneration({
-          projectId,
-          scriptId,
-          trackId,
-          uploadData,
-          prompt,
-          duration: duration4,
-          model,
-          mode: effectiveMode,
-          resolution,
-          audio,
-          requestId
-        });
-        res.status(200).send(success3(queued.videoId));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/generateVideoPrompt.ts
-var import_express90, import_promises8, import_path13, router90, generateVideoPrompt_default;
-var init_generateVideoPrompt = __esm({
-  "src/routes/production/workbench/generateVideoPrompt.ts"() {
-    "use strict";
-    import_express90 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    import_promises8 = __toESM(require("fs/promises"));
-    import_path13 = __toESM(require("path"));
-    router90 = import_express90.default.Router();
-    generateVideoPrompt_default = router90.post(
-      "/",
-      validateFields({
-        trackId: external_exports.number(),
-        projectId: external_exports.number(),
-        info: external_exports.array(
-          external_exports.object({
-            id: external_exports.number(),
-            sources: external_exports.string()
-          })
-        ),
-        model: external_exports.string(),
-        mode: external_exports.string()
-      }),
-      async (req, res) => {
-        const { trackId, projectId, info, model, mode } = req.body;
-        await utils_default.db("o_videoTrack").where({ id: trackId }).update({
-          state: "\u751F\u6210\u4E2D"
-        });
-        const images = await Promise.all(
-          info.map(async (item) => {
-            if (item.sources === "storyboard") {
-              const storyboard2 = await utils_default.db("o_storyboard").where("o_storyboard.id", item.id).select("videoDesc", "prompt", "track", "duration", "shouldGenerateImage").first();
-              const assetRows = await utils_default.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("rowid").select("assetId");
-              const associateAssetsIds = assetRows.map((row) => row.assetId);
-              return {
-                ...storyboard2,
-                associateAssetsIds,
-                _type: "storyboard"
-                // 标记类型，便于后续区分
-              };
-            }
-            if (item.sources === "assets") {
-              const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", item.id).select("o_assets.id", "o_assets.type", "o_assets.name", "o_image.filePath").first();
-              return {
-                ...assetsData,
-                _type: "assets"
-                // 标记类型
-              };
-            }
-          })
-        );
-        const assets = [];
-        const storyboard = [];
-        for (const item of images) {
-          if (!item) continue;
-          if (item._type === "assets")
-            assets.push({
-              id: item.id,
-              type: item.type,
-              name: item.name,
-              filePath: item.filePath
-            });
-          if (item._type === "storyboard")
-            storyboard.push({
-              videoDesc: item.videoDesc,
-              prompt: item.prompt,
-              track: item.track,
-              duration: item.duration,
-              associateAssetsIds: item.associateAssetsIds,
-              shouldGenerateImage: item.shouldGenerateImage
-            });
-        }
-        const assetsNotAudioIds = assets.filter((i) => i.type == "audio").map((i) => i.id);
-        const assets2Audio = await utils_default.db("o_assets").whereIn("o_assets.id", assetsNotAudioIds).join("o_assetsRole2Audio", "o_assetsRole2Audio.assetsAudioId", "o_assets.assetsId").select("o_assets.assetsId", "o_assets.id", "o_assetsRole2Audio.assetsAudioId", "o_assetsRole2Audio.assetsRoleId");
-        const assetsAudioRecord = {};
-        assets2Audio.forEach((i) => {
-          assetsAudioRecord[i.assetsRoleId] = i.id;
-        });
-        const [id, modelData] = model.split(/:(.+)/);
-        const projectData = await utils_default.db("o_project").select("*").where({ id: projectId }).first();
-        const videoPrompt = await utils_default.db("o_prompt").where("type", "videoPromptGeneration").first();
-        let videoPromptGeneration = "";
-        const modelPromptData = await utils_default.db("o_modelPrompt").where("vendorId", id).where("model", modelData).first();
-        if (modelPromptData) {
-          const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
-          try {
-            const fullPath = import_path13.default.join(modelPromptRoot, modelPromptData?.path);
-            const content2 = await import_promises8.default.readFile(fullPath, "utf-8");
-            videoPromptGeneration = content2 ?? "";
-          } catch {
-          }
-        }
-        if (!videoPromptGeneration) {
-          const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
-          const videoPromptDir = import_path13.default.join(modelPromptRoot, "video");
-          const modelLower = (modelData ?? "").toLowerCase();
-          let fileName = null;
-          if (modelLower.includes("wan") && modelLower.includes("2.6")) {
-            fileName = "wan2.6Single-imageFirstFrameMode.md";
-          } else if (/seedance.*2[.\-]0/i.test(modelData)) {
-            fileName = "seedance2Multi-parameterMode.md";
-          } else if (mode === "startEndRequired" || mode === "endFrameOptional" || mode === "startFrameOptional") {
-            fileName = "universalFirstAndLastFrameMode.md";
-          } else if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
-            fileName = "universalMulti-parameterMode.md";
-          }
-          if (fileName) {
-            try {
-              const fullPath = import_path13.default.join(videoPromptDir, fileName);
-              videoPromptGeneration = await import_promises8.default.readFile(fullPath, "utf-8");
-            } catch {
-            }
-          }
-        }
-        if (!videoPromptGeneration) {
-          if (videoPrompt && videoPrompt.useData) {
-            videoPromptGeneration = videoPrompt.useData;
-          } else {
-            videoPromptGeneration = videoPrompt?.data ?? void 0;
-          }
-        }
-        const artStyle = projectData?.artStyle || "\u65E0";
-        const visualManual = utils_default.getArtPrompt(artStyle, "art_skills", "art_storyboard_video");
-        const content = `
-          **\u6A21\u578B\u540D\u79F0**\uFF1A${modelData},
-
-          **\u8D44\u4EA7\u4FE1\u606F**\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\u3001\u97F3\u9891):${assets.filter((i) => i.filePath).map((i) => `[${i.id},${i.type},${i.name} ${assetsAudioRecord[i.id] ? `audio:${assetsAudioRecord[i.id]}` : ""} ] `).join("\uFF0C")},
-          **\u5206\u955C\u4FE1\u606F**\uFF1A${storyboard.map(
-          (i) => `<storyboardItem
-  videoDesc='${i.videoDesc}'
-  duration='${i.duration}'
-></storyboardItem>`
-        )},
-          `;
-        try {
-          const { text: text2 } = await utils_default.Ai.Text("universalAi").invoke({
-            system: videoPromptGeneration,
-            messages: [
-              {
-                role: "assistant",
-                content: `${visualManual}`
-              },
-              {
-                role: "user",
-                content
-              }
-            ]
-          });
-          await utils_default.db("o_videoTrack").where({ id: trackId }).update({
-            state: "\u5DF2\u5B8C\u6210",
-            prompt: text2
-          });
-          res.status(200).send(success3(text2));
-        } catch (e) {
-          await utils_default.db("o_videoTrack").where({ id: trackId }).update({
-            state: "\u751F\u6210\u5931\u8D25",
-            reason: utils_default.error(e).message
-          });
-          res.status(400).send(error50(utils_default.error(e).message));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/getAudioBindAssetsList.ts
-var import_express91, router91, getAudioBindAssetsList_default;
-var init_getAudioBindAssetsList = __esm({
-  "src/routes/production/workbench/getAudioBindAssetsList.ts"() {
-    "use strict";
-    import_express91 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router91 = import_express91.default.Router();
-    getAudioBindAssetsList_default = router91.post(
-      "/",
-      validateFields({
-        assetsIds: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { assetsIds } = req.body;
-        const assets2AudioData = await utils_default.db("o_assetsRole2Audio").whereIn("assetsRoleId", assetsIds).select("assetsAudioId", "assetsRoleId");
-        if (assets2AudioData.length) {
-          const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets.assetsId", assets2AudioData.map((i) => i.assetsAudioId)).select("o_assets.id", "o_image.filePath", "o_assets.prompt", "o_assets.assetsId");
-          await Promise.all(
-            assetsData.map(async (i) => {
-              i.filePath && (i.src = await utils_default.oss.getFileUrl(i.filePath));
-            })
-          );
-          return res.status(200).send(
-            success3(
-              assetsData.map((i) => ({
-                fileType: "audio",
-                sources: "assets",
-                src: i.src,
-                id: i.id,
-                prompt: i.prompt
-              }))
-            )
-          );
-        }
-        res.status(200).send(success3());
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/getFileUrl.ts
-var import_express92, router92, getFileUrl_default;
-var init_getFileUrl = __esm({
-  "src/routes/production/workbench/getFileUrl.ts"() {
-    "use strict";
-    import_express92 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router92 = import_express92.default.Router();
-    getFileUrl_default = router92.post(
-      "/",
-      validateFields({
-        items: external_exports.array(external_exports.object({
-          id: external_exports.number(),
-          sources: external_exports.string()
-        }))
-      }),
-      async (req, res) => {
-        const { items } = req.body;
-        const result = {};
-        const storyboardIds = items.filter((item) => item.sources == "storyboard").map((item) => item.id);
-        const totalFilePaths = [];
-        if (storyboardIds.length) {
-          const storyBoardPaths = await utils_default.db("o_storyboard").whereIn("id", storyboardIds).select("id", "filePath");
-          totalFilePaths.push(...storyBoardPaths.map((i) => ({ id: i.id, filePath: i.filePath, sources: "storyboard" })));
-        }
-        const assetsIds = items.filter((item) => item.sources == "assets").map((item) => item.id);
-        if (assetsIds.length) {
-          const assetsPaths = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets.id", assetsIds).select("o_assets.id", "o_image.filePath");
-          totalFilePaths.push(...assetsPaths.map((i) => ({ id: i.id, filePath: i.filePath, sources: "assets" })));
-        }
-        await Promise.all(
-          totalFilePaths.map(async (item) => {
-            result[`${item.id}:${item.sources}`] = item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : "";
-          })
-        );
-        res.status(200).send(success3({ data: result }));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/getGenerateData.ts
-var import_express93, router93, getGenerateData_default;
-var init_getGenerateData = __esm({
-  "src/routes/production/workbench/getGenerateData.ts"() {
-    "use strict";
-    import_express93 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router93 = import_express93.default.Router();
-    getGenerateData_default = router93.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId, scriptId } = req.body;
-        const projectData = await utils_default.db("o_project").where("id", projectId).select("id", "videoModel", "mode").first();
-        if (!projectData?.videoModel) {
-          return res.status(400).json(success3("\u9879\u76EE\u672A\u914D\u7F6E\u89C6\u9891\u6A21\u578B"));
-        }
-        let videoMode = "";
-        try {
-          videoMode = JSON.parse(projectData?.mode ?? "");
-        } catch (e) {
-          videoMode = projectData?.mode ?? "";
-        }
-        const isRef = Array.isArray(videoMode) ? true : false;
-        const storyboardList = await utils_default.db("o_storyboard").where({ scriptId, projectId }).orderBy("index", "asc");
-        await Promise.all(
-          storyboardList.map(async (i) => {
-            i.filePath = i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : "";
-          })
-        );
-        const storyboardTrackRecord = {};
-        storyboardList.forEach((i) => {
-          if (storyboardTrackRecord[i.trackId]) {
-            storyboardTrackRecord[i.trackId].push({
-              src: i.filePath,
-              fileType: "image",
-              sources: "storyboard",
-              ...i.prompt != null ? { prompt: i.videoDesc } : {},
-              ...i.id != null ? { id: i.id } : {},
-              index: i.index
-            });
-          } else {
-            storyboardTrackRecord[i.trackId] = [
-              {
-                src: i.filePath,
-                fileType: "image",
-                sources: "storyboard",
-                ...i.prompt != null ? { prompt: i.videoDesc } : {},
-                ...i.id != null ? { id: i.id } : {},
-                index: i.index
-              }
-            ];
-          }
-        });
-        const otherDataMap = {};
-        const audioReferenceCount = (() => {
-          if (!Array.isArray(videoMode)) return 0;
-          const item = videoMode.find((v) => v.toLowerCase().startsWith("audioreference:"));
-          if (!item) return 0;
-          const num = parseInt(item.split(":")[1], 10);
-          return isNaN(num) ? 0 : num;
-        })();
-        if (isRef) {
-          const storyIds = storyboardList.map((s) => s.id);
-          const assetDatas = await utils_default.db("o_assets2Storyboard").leftJoin("o_assets", "o_assets2Storyboard.assetId", "o_assets.id").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets2Storyboard.storyboardId", storyIds).select("o_assets.*", "o_image.filePath", "o_assets2Storyboard.storyboardId");
-          const queryAudioIds = [...assetDatas.map((i) => i.id), ...assetDatas.map((i) => i.assetsId)].filter(Boolean);
-          const assets2AudioData = await utils_default.db("o_assetsRole2Audio").leftJoin("o_assets", "o_assets.assetsId", "o_assetsRole2Audio.assetsAudioId").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assetsRole2Audio.assetsRoleId", queryAudioIds).select(
-            "o_assets.id",
-            "o_assets.name",
-            "o_assetsRole2Audio.assetsRoleId",
-            "o_assets.describe",
-            "o_assets.type",
-            "o_assets.prompt",
-            "o_image.filePath"
-          );
-          const audioRecord = {};
-          await Promise.all(
-            assets2AudioData.map(async (i) => {
-              if (!audioRecord[i.assetsRoleId]) audioRecord[i.assetsRoleId] = [];
-              audioRecord[i.assetsRoleId].push({
-                id: i.id,
-                name: i.name,
-                describe: i.describe,
-                type: i.type,
-                fileType: "audio",
-                sources: "assets",
-                prompt: i.prompt,
-                src: i.filePath ? await utils_default.oss.getFileUrl(i.filePath) : ""
-              });
-            })
-          );
-          await Promise.all(
-            assetDatas.map(async (i) => {
-              const item = {
-                id: i.id,
-                name: i.name,
-                describe: i.describe,
-                type: i.type,
-                fileType: "image",
-                sources: "assets",
-                src: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : ""
-              };
-              const sid = i.storyboardId;
-              if (!otherDataMap[sid]) otherDataMap[sid] = [];
-              otherDataMap[sid].push(item);
-              if (audioRecord[i.id]) otherDataMap[sid].push(...audioRecord[i.id]);
-              if (audioRecord[i.assetsId]) otherDataMap[sid].push(...audioRecord[i.assetsId]);
-            })
-          );
-        }
-        const trackData = await utils_default.db("o_videoTrack").where({ projectId, scriptId });
-        const videoList = await utils_default.db("o_video").whereIn(
-          "videoTrackId",
-          trackData.map((t) => t.id)
-        );
-        const trackList = [];
-        const trackIdMap = [...new Set(trackData.map((t) => t.id))];
-        for (const trackId of trackIdMap) {
-          const item = trackData.find((t) => t.id === trackId);
-          trackList.push({
-            id: trackId,
-            duration: item?.duration ?? 0,
-            prompt: item?.prompt || "",
-            state: item?.state ?? "\u672A\u751F\u6210",
-            reason: item?.reason ?? "",
-            selectVideoId: Number(item?.videoId),
-            medias: (() => {
-              const storyboardMedias = storyboardTrackRecord[trackId] ?? [];
-              const assetMedias = storyboardMedias.flatMap((s) => otherDataMap[s.id] ?? []);
-              const seenAssetIds = /* @__PURE__ */ new Set();
-              const uniqueAssets = assetMedias.filter((a) => {
-                if (seenAssetIds.has(a.id)) return false;
-                seenAssetIds.add(a.id);
-                return true;
-              });
-              const audioCountMap = {};
-              const filteredAssets = uniqueAssets.filter((a) => {
-                if (a.fileType !== "audio" || audioReferenceCount === 0) return true;
-                const key = String(a.id);
-                audioCountMap[key] = (audioCountMap[key] ?? 0) + 1;
-                const totalAudio = Object.values(audioCountMap).reduce((s, n) => s + n, 0);
-                return totalAudio <= audioReferenceCount;
-              });
-              const hasImageAssetData = filteredAssets.filter((i) => i.src);
-              const notHasImageAssetData = filteredAssets.filter((i) => !i.src);
-              return [...hasImageAssetData, ...storyboardMedias, ...notHasImageAssetData];
-            })(),
-            videoList: await Promise.all(
-              videoList.filter((v) => v.videoTrackId === trackId).map(async (v) => ({
-                id: v.id,
-                src: v.filePath ? await utils_default.oss.getFileUrl(v.filePath) : "",
-                state: v.state === "\u5DF2\u5B8C\u6210" ? "\u5DF2\u5B8C\u6210" : v.state === "\u751F\u6210\u4E2D" ? "\u751F\u6210\u4E2D" : v.state === "\u751F\u6210\u5931\u8D25" ? "\u751F\u6210\u5931\u8D25" : "\u672A\u751F\u6210",
-                errorReason: v?.errorReason ?? ""
-              }))
-            )
-          });
-        }
-        res.status(200).send(
-          success3({
-            storyboardList: await Promise.all(
-              storyboardList.map(async (s) => ({
-                ...s,
-                src: s.filePath
-              }))
-            ),
-            trackList
-          })
-        );
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/getVideoList.ts
-var import_express94, router94, getVideoList_default;
-var init_getVideoList = __esm({
-  "src/routes/production/workbench/getVideoList.ts"() {
-    "use strict";
-    import_express94 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router94 = import_express94.default.Router();
-    getVideoList_default = router94.post(
-      "/",
-      validateFields({
-        projectId: external_exports.number(),
-        scriptId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { projectId, scriptId } = req.body;
-        const storyboardList = await utils_default.db("o_storyboard").where({ scriptId, projectId }).orderBy("index", "asc");
-        const videoList = await utils_default.db("o_video").whereIn(
-          "videoTrackId",
-          storyboardList.map((s) => s.trackId)
-        );
-        res.status(200).send(
-          success3(
-            await Promise.all(
-              videoList.map(async (s) => ({
-                ...s,
-                src: s.filePath ? await utils_default.oss.getSmallImageUrl(s.filePath) : ""
-              }))
-            )
-          )
-        );
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/selectVideo.ts
-var import_express95, router95, selectVideo_default;
-var init_selectVideo = __esm({
-  "src/routes/production/workbench/selectVideo.ts"() {
-    "use strict";
-    import_express95 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router95 = import_express95.default.Router();
-    selectVideo_default = router95.post(
-      "/",
-      validateFields({
-        trackId: external_exports.number(),
-        videoId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { trackId, videoId } = req.body;
-        await utils_default.db("o_videoTrack").where("id", trackId).update({
-          videoId
-        });
-        res.status(200).send(success3({ message: "\u89C6\u9891\u9009\u62E9\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/updateVideoDuration.ts
-var import_express96, router96, updateVideoDuration_default;
-var init_updateVideoDuration = __esm({
-  "src/routes/production/workbench/updateVideoDuration.ts"() {
-    "use strict";
-    import_express96 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router96 = import_express96.default.Router();
-    updateVideoDuration_default = router96.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        duration: external_exports.number().optional()
-      }),
-      async (req, res) => {
-        const { id, duration: duration4 } = req.body;
-        await utils_default.db("o_videoTrack").where("id", id).update({
-          duration: duration4
-        });
-        res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
-      }
-    );
-  }
-});
-
-// src/routes/production/workbench/updateVideoPrompt.ts
-var import_express97, router97, updateVideoPrompt_default;
-var init_updateVideoPrompt = __esm({
-  "src/routes/production/workbench/updateVideoPrompt.ts"() {
-    "use strict";
-    import_express97 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router97 = import_express97.default.Router();
-    updateVideoPrompt_default = router97.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        prompt: external_exports.string().optional()
-      }),
-      async (req, res) => {
-        const { id, prompt, duration: duration4 } = req.body;
-        await utils_default.db("o_videoTrack").where("id", id).update({
-          prompt
-        });
-        res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
-      }
-    );
-  }
-});
-
-// src/routes/project/addDirectorManual.ts
-var import_express98, import_fs8, import_path14, router98, addDirectorManual_default;
-var init_addDirectorManual = __esm({
-  "src/routes/project/addDirectorManual.ts"() {
-    "use strict";
-    import_express98 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    import_fs8 = __toESM(require("fs"));
-    import_path14 = __toESM(require("path"));
-    init_middleware();
-    init_zod();
-    router98 = import_express98.default.Router();
-    addDirectorManual_default = router98.post(
-      "/",
-      validateFields({
-        name: external_exports.string(),
-        images: external_exports.array(external_exports.string()),
-        directorManual: external_exports.string(),
-        data: external_exports.array(
-          external_exports.object({
-            label: external_exports.string(),
-            value: external_exports.string(),
-            data: external_exports.string()
-          })
-        )
-      }),
-      async (req, res) => {
-        try {
-          const { name: name28, images, data, directorManual } = req.body;
-          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
-            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
-            return;
-          }
-          const mainPath = utils_default.getPath(["skills", "story_skills", directorManual]);
-          if (import_fs8.default.existsSync(mainPath)) {
-            return res.status(400).send(error50("\u8BF7\u52FF\u586B\u5199\u91CD\u590D\u540D\u79F0\u7684\u89C6\u89C9\u624B\u518C"));
-          }
-          const DATA_MAP3 = [
-            { value: "README" },
-            { value: "director_planning_narrative", subDir: "driector_skills" },
-            { value: "director_storyboard_table_narrative", subDir: "driector_skills" }
-          ];
-          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
-          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
-          for (const item of data) {
-            if (!VALID_KEYS.has(item.value)) continue;
-            const subDir = SUB_DIR_MAP.get(item.value);
-            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
-            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
-            const fileDir = import_path14.default.dirname(filePath);
-            if (!import_fs8.default.existsSync(fileDir)) {
-              import_fs8.default.mkdirSync(fileDir, { recursive: true });
-            }
-            import_fs8.default.writeFileSync(filePath, item.data, "utf-8");
-          }
-          const imagesDir = import_path14.default.join(mainPath, "images");
-          let existingFiles = [];
-          try {
-            const allFiles = import_fs8.default.readdirSync(imagesDir);
-            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
-          } catch {
-          }
-          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path14.default.basename(new URL(url4).pathname)));
-          for (const file3 of existingFiles) {
-            if (!retainedFileNames.has(file3)) {
-              const filePath = import_path14.default.join(imagesDir, file3);
-              if (import_fs8.default.existsSync(filePath)) import_fs8.default.unlinkSync(filePath);
-            }
-          }
-          if (!import_fs8.default.existsSync(imagesDir)) {
-            import_fs8.default.mkdirSync(imagesDir, { recursive: true });
-          }
-          for (const item of images) {
-            if (!item.startsWith("http")) {
-              const fileName = `${utils_default.uuid()}.jpg`;
-              const targetPath = import_path14.default.join(imagesDir, fileName);
-              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
-              import_fs8.default.writeFileSync(targetPath, buffer);
-            }
-          }
-          res.status(200).send(success3());
-        } catch (err) {
-          res.status(500).send({ error: String(err) });
-        }
-      }
-    );
-  }
-});
-
-// src/routes/project/addProject.ts
-var import_express99, router99, addProject_default;
-var init_addProject = __esm({
-  "src/routes/project/addProject.ts"() {
-    "use strict";
-    import_express99 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router99 = import_express99.default.Router();
-    addProject_default = router99.post(
-      "/",
-      validateFields({
-        projectType: external_exports.string(),
-        name: external_exports.string(),
-        intro: external_exports.string(),
-        type: external_exports.string(),
-        artStyle: external_exports.string(),
-        directorManual: external_exports.string(),
-        videoRatio: external_exports.string(),
-        imageModel: external_exports.string(),
-        videoModel: external_exports.string(),
-        imageQuality: external_exports.string(),
-        mode: external_exports.string()
-      }),
-      async (req, res) => {
-        const { projectType, name: name28, intro, type, directorManual, artStyle, videoRatio, imageModel, videoModel, imageQuality, mode } = req.body;
-        await utils_default.db("o_project").insert({
-          id: Date.now(),
-          projectType,
-          name: name28,
-          intro,
-          type,
-          artStyle,
-          videoRatio,
-          directorManual,
-          userId: 1,
-          imageModel,
-          videoModel,
-          createTime: Date.now(),
-          imageQuality,
-          mode
-        });
-        res.status(200).send(success3({ message: "\u65B0\u589E\u9879\u76EE\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/project/addVisualManual.ts
-var import_express100, import_fs9, import_path15, router100, addVisualManual_default;
-var init_addVisualManual = __esm({
-  "src/routes/project/addVisualManual.ts"() {
-    "use strict";
-    import_express100 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    import_fs9 = __toESM(require("fs"));
-    import_path15 = __toESM(require("path"));
-    init_middleware();
-    init_zod();
-    router100 = import_express100.default.Router();
-    addVisualManual_default = router100.post(
-      "/",
-      validateFields({
-        name: external_exports.string(),
-        images: external_exports.array(external_exports.string()),
-        stylePath: external_exports.string(),
-        data: external_exports.array(
-          external_exports.object({
-            label: external_exports.string(),
-            value: external_exports.string(),
-            data: external_exports.string()
-          })
-        )
-      }),
-      async (req, res) => {
-        try {
-          const { name: name28, images, data, stylePath } = req.body;
-          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
-            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
-            return;
-          }
-          const mainPath = utils_default.getPath(["skills", "art_skills", stylePath]);
-          if (import_fs9.default.existsSync(mainPath)) {
-            return res.status(400).send(error50("\u8BF7\u52FF\u586B\u5199\u91CD\u590D\u540D\u79F0\u7684\u89C6\u89C9\u624B\u518C"));
-          }
-          const DATA_MAP3 = [
-            { value: "README" },
-            { value: "prefix" },
-            { value: "art_character", subDir: "art_prompt" },
-            { value: "art_character_derivative", subDir: "art_prompt" },
-            { value: "art_prop", subDir: "art_prompt" },
-            { value: "art_prop_derivative", subDir: "art_prompt" },
-            { value: "art_scene", subDir: "art_prompt" },
-            { value: "art_scene_derivative", subDir: "art_prompt" },
-            { value: "director_storyboard", subDir: "driector_skills" },
-            { value: "art_storyboard_video", subDir: "art_prompt" },
-            { value: "director_planning_style", subDir: "driector_skills" },
-            { value: "director_storyboard_table_style", subDir: "driector_skills" }
-          ];
-          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
-          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
-          for (const item of data) {
-            if (!VALID_KEYS.has(item.value)) continue;
-            const subDir = SUB_DIR_MAP.get(item.value);
-            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
-            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
-            const fileDir = import_path15.default.dirname(filePath);
-            if (!import_fs9.default.existsSync(fileDir)) {
-              import_fs9.default.mkdirSync(fileDir, { recursive: true });
-            }
-            import_fs9.default.writeFileSync(filePath, item.data, "utf-8");
-          }
-          const imagesDir = import_path15.default.join(mainPath, "images");
-          let existingFiles = [];
-          try {
-            const allFiles = import_fs9.default.readdirSync(imagesDir);
-            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
-          } catch {
-          }
-          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path15.default.basename(new URL(url4).pathname)));
-          for (const file3 of existingFiles) {
-            if (!retainedFileNames.has(file3)) {
-              const filePath = import_path15.default.join(imagesDir, file3);
-              if (import_fs9.default.existsSync(filePath)) import_fs9.default.unlinkSync(filePath);
-            }
-          }
-          if (!import_fs9.default.existsSync(imagesDir)) {
-            import_fs9.default.mkdirSync(imagesDir, { recursive: true });
-          }
-          for (const item of images) {
-            if (!item.startsWith("http")) {
-              const fileName = `${utils_default.uuid()}.jpg`;
-              const targetPath = import_path15.default.join(imagesDir, fileName);
-              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
-              import_fs9.default.writeFileSync(targetPath, buffer);
-            }
-          }
-          res.status(200).send(success3());
-        } catch (err) {
-          res.status(500).send({ error: String(err) });
-        }
-      }
-    );
-  }
-});
-
-// src/routes/project/deleteDirectorManual.ts
-var import_express101, import_promises9, router101, deleteDirectorManual_default;
-var init_deleteDirectorManual = __esm({
-  "src/routes/project/deleteDirectorManual.ts"() {
-    "use strict";
-    import_express101 = __toESM(require_express2());
-    init_utils3();
-    import_promises9 = __toESM(require("node:fs/promises"));
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router101 = import_express101.default.Router();
-    deleteDirectorManual_default = router101.post(
-      "/",
-      validateFields({
-        name: external_exports.string()
-      }),
-      async (req, res) => {
-        try {
-          const { name: name28 } = req.body;
-          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
-            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
-            return;
-          }
-          const artPromptsDir = utils_default.getPath(["skills", "story_skills", name28]);
-          try {
-            const stat = await import_promises9.default.stat(artPromptsDir);
-            if (!stat.isDirectory()) {
-              throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
-            }
-            await import_promises9.default.rm(artPromptsDir, { recursive: true, force: true });
-          } catch (e) {
-            console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
-          }
-          res.status(200).send(success3({ message: "\u5220\u9664\u6210\u529F" }));
-        } catch (err) {
-          res.status(500).send(error50(utils_default.error(err).message || "\u5220\u9664\u5931\u8D25"));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/project/deleteVisualManual.ts
-var import_express102, import_promises10, router102, deleteVisualManual_default;
-var init_deleteVisualManual = __esm({
-  "src/routes/project/deleteVisualManual.ts"() {
-    "use strict";
-    import_express102 = __toESM(require_express2());
-    init_utils3();
-    import_promises10 = __toESM(require("node:fs/promises"));
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router102 = import_express102.default.Router();
-    deleteVisualManual_default = router102.post(
-      "/",
-      validateFields({
-        name: external_exports.string()
-      }),
-      async (req, res) => {
-        try {
-          const { name: name28 } = req.body;
-          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
-            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
-            return;
-          }
-          const artPromptsDir = utils_default.getPath(["skills", "art_skills", name28]);
-          try {
-            const stat = await import_promises10.default.stat(artPromptsDir);
-            if (!stat.isDirectory()) {
-              throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
-            }
-            await import_promises10.default.rm(artPromptsDir, { recursive: true, force: true });
-          } catch (e) {
-            console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
-          }
-          res.status(200).send(success3({ message: "\u5220\u9664\u6210\u529F" }));
-        } catch (err) {
-          res.status(500).send(error50(utils_default.error(err).message || "\u5220\u9664\u5931\u8D25"));
-        }
-      }
-    );
-  }
-});
-
-// src/routes/project/delProject.ts
-var import_express103, router103, delProject_default;
-var init_delProject = __esm({
-  "src/routes/project/delProject.ts"() {
-    "use strict";
-    import_express103 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router103 = import_express103.default.Router();
-    delProject_default = router103.post(
-      "/",
-      validateFields({
-        id: external_exports.number()
-      }),
-      async (req, res) => {
-        const { id } = req.body;
-        await utils_default.db("o_project").where("id", id).delete();
-        await utils_default.db("o_agentWorkData").where("projectId", id).delete();
-        await utils_default.db("o_novel").where("projectId", id).delete();
-        const scriptData = await utils_default.db("o_script").where("projectId", id).select("id");
-        const scriptIds = scriptData.map((item) => item.id);
-        if (scriptIds && scriptIds.length > 0) {
-          await utils_default.db("o_scriptAssets").whereIn("scriptId", scriptIds).delete();
-        }
-        await utils_default.db("o_script").where("projectId", id).delete();
-        await utils_default.db("o_tasks").where("projectId", id).delete();
-        const utteranceRows = await utils_default.db("utterances").where("project_id", id).select("id");
-        if (utteranceRows.length > 0) {
-          await utils_default.db("subtitle_cues").whereIn("utterance_id", utteranceRows.map((item) => item.id)).delete();
-        }
-        await utils_default.db("utterances").where("project_id", id).delete();
-        await utils_default.db("voice_cast").where("project_id", id).delete();
-        await utils_default.db("subtitle_cues").where("project_id", id).delete();
-        const generationTaskRows = await utils_default.db("generation_tasks").where("project_id", id).select("id");
-        if (generationTaskRows.length > 0) {
-          const generationTaskIds = generationTaskRows.map((item) => item.id);
-          await utils_default.db("task_dependencies").whereIn("task_id", generationTaskIds).orWhereIn("depends_on_task_id", generationTaskIds).delete();
-          await utils_default.db("usage_ledger").whereIn("task_id", generationTaskIds).delete();
-          await utils_default.db("generation_tasks").whereIn("id", generationTaskIds).delete();
-        }
-        await utils_default.db("project_events").where("project_id", id).delete();
-        await utils_default.db("composition_jobs").where("project_id", id).delete();
-        await utils_default.db("project_timelines").where("project_id", id).delete();
-        await utils_default.db("project_audio_clips").where("project_id", id).delete();
-        await utils_default.db("media_qa_reports").where("project_id", id).delete();
-        await utils_default.db("project_budget_controls").where("project_id", id).delete();
-        await utils_default.db("composition_reviews").where("project_id", id).delete();
-        await utils_default.db("script_import_items").where("project_id", id).delete();
-        await utils_default.db("script_import_batches").where("project_id", id).delete();
-        const storyboardData = await utils_default.db("o_storyboard").where("projectId", id).select("id");
-        const storyboardIds = storyboardData.map((item) => item.id);
-        if (storyboardIds.length > 0) {
-          await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).delete();
-        }
-        await utils_default.db("o_storyboard").where("projectId", id).delete();
-        const assetsData = await utils_default.db("o_assets").where("projectId", id).select("id");
-        const assetsIds = assetsData.map((item) => item.id);
-        if (assetsIds && assetsIds.length > 0) {
-          await utils_default.db("o_assets").whereIn("id", assetsIds).update({ imageId: null });
-          await utils_default.db("o_image").whereIn("assetsId", assetsIds).delete();
-        }
-        await utils_default.db("o_assets").where("projectId", id).delete();
-        await utils_default.db("o_videoTrack").where("projectId", id).delete();
-        await utils_default.db("o_video").where("projectId", id).delete();
-        await utils_default.db("memories").where("isolationKey", "like", `${id}:%`).delete();
-        try {
-          await utils_default.oss.deleteDirectory(`${id}/`);
-          console.log(`\u9879\u76EE ${id} \u7684OSS\u6587\u4EF6\u5939\u5220\u9664\u6210\u529F`);
-        } catch (error73) {
-          console.log(`\u9879\u76EE ${id} \u6CA1\u6709\u5BF9\u5E94\u7684OSS\u6587\u4EF6\u5939\uFF0C\u8DF3\u8FC7\u5220\u9664`);
-        }
-        res.status(200).send(success3({ message: "\u5220\u9664\u9879\u76EE\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/project/editDirectorlManual.ts
-var import_express104, import_fs10, import_path16, router104, editDirectorlManual_default;
-var init_editDirectorlManual = __esm({
-  "src/routes/project/editDirectorlManual.ts"() {
-    "use strict";
-    import_express104 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    import_fs10 = __toESM(require("fs"));
-    import_path16 = __toESM(require("path"));
-    init_middleware();
-    init_zod();
-    router104 = import_express104.default.Router();
-    editDirectorlManual_default = router104.post(
-      "/",
-      validateFields({
-        name: external_exports.string(),
-        directorManual: external_exports.string(),
-        images: external_exports.array(external_exports.string()),
-        data: external_exports.array(
-          external_exports.object({
-            label: external_exports.string(),
-            value: external_exports.string(),
-            data: external_exports.string()
-          })
-        )
-      }),
-      async (req, res) => {
-        try {
-          const { name: name28, directorManual, images, data } = req.body;
-          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
-            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
-            return;
-          }
-          const mainPath = utils_default.getPath(["skills", "story_skills", directorManual]);
-          if (!import_fs10.default.existsSync(mainPath)) {
-            return res.status(400).send(error50("\u5BFC\u6F14\u624B\u518C\u4E0D\u5B58\u5728"));
-          }
-          const DATA_MAP3 = [
-            { value: "README" },
-            { value: "director_planning_narrative", subDir: "driector_skills" },
-            { value: "director_storyboard_table_narrative", subDir: "driector_skills" }
-          ];
-          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
-          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
-          for (const item of data) {
-            if (!VALID_KEYS.has(item.value)) continue;
-            const subDir = SUB_DIR_MAP.get(item.value);
-            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
-            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
-            const fileDir = import_path16.default.dirname(filePath);
-            if (!import_fs10.default.existsSync(fileDir)) {
-              import_fs10.default.mkdirSync(fileDir, { recursive: true });
-            }
-            const content = item.value === "README" ? `${name28}
-${item.data}` : item.data;
-            import_fs10.default.writeFileSync(filePath, content, "utf-8");
-          }
-          const imagesDir = import_path16.default.join(mainPath, "images");
-          let existingFiles = [];
-          try {
-            const allFiles = import_fs10.default.readdirSync(imagesDir);
-            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
-          } catch {
-          }
-          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path16.default.basename(new URL(url4).pathname)));
-          for (const file3 of existingFiles) {
-            if (!retainedFileNames.has(file3)) {
-              const filePath = import_path16.default.join(imagesDir, file3);
-              if (import_fs10.default.existsSync(filePath)) import_fs10.default.unlinkSync(filePath);
-            }
-          }
-          if (!import_fs10.default.existsSync(imagesDir)) {
-            import_fs10.default.mkdirSync(imagesDir, { recursive: true });
-          }
-          for (const item of images) {
-            if (!item.startsWith("http")) {
-              const fileName = `${utils_default.uuid()}.jpg`;
-              const targetPath = import_path16.default.join(imagesDir, fileName);
-              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
-              import_fs10.default.writeFileSync(targetPath, buffer);
-            }
-          }
-          res.status(200).send(success3());
-        } catch (err) {
-          res.status(500).send({ error: String(err) });
-        }
-      }
-    );
-  }
-});
-
-// src/routes/project/editProject.ts
-var import_express105, router105, editProject_default;
-var init_editProject = __esm({
-  "src/routes/project/editProject.ts"() {
-    "use strict";
-    import_express105 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router105 = import_express105.default.Router();
-    editProject_default = router105.post(
-      "/",
-      validateFields({
-        id: external_exports.number(),
-        name: external_exports.string(),
-        intro: external_exports.string(),
-        type: external_exports.string(),
-        artStyle: external_exports.string(),
-        directorManual: external_exports.string(),
-        videoRatio: external_exports.string(),
-        imageModel: external_exports.string(),
-        videoModel: external_exports.string(),
-        projectType: external_exports.string(),
-        imageQuality: external_exports.string(),
-        mode: external_exports.string()
-      }),
-      async (req, res) => {
-        const { id, name: name28, intro, type, artStyle, videoRatio, directorManual, imageModel, videoModel, imageQuality, projectType, mode } = req.body;
-        await utils_default.db("o_project").where("id", id).update({
-          name: name28,
-          intro,
-          type,
-          artStyle,
-          videoRatio,
-          directorManual,
-          imageModel,
-          videoModel,
-          imageQuality,
-          projectType,
-          mode
-        });
-        res.status(200).send(success3({ message: "\u7F16\u8F91\u9879\u76EE\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/project/editVisualManual.ts
-var import_express106, import_fs11, import_path17, router106, editVisualManual_default;
-var init_editVisualManual = __esm({
-  "src/routes/project/editVisualManual.ts"() {
-    "use strict";
-    import_express106 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    import_fs11 = __toESM(require("fs"));
-    import_path17 = __toESM(require("path"));
-    init_middleware();
-    init_zod();
-    router106 = import_express106.default.Router();
-    editVisualManual_default = router106.post(
-      "/",
-      validateFields({
-        name: external_exports.string(),
-        stylePath: external_exports.string(),
-        images: external_exports.array(external_exports.string()),
-        data: external_exports.array(
-          external_exports.object({
-            label: external_exports.string(),
-            value: external_exports.string(),
-            data: external_exports.string()
-          })
-        )
-      }),
-      async (req, res) => {
-        try {
-          const { name: name28, stylePath, images, data } = req.body;
-          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
-            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
-            return;
-          }
-          const mainPath = utils_default.getPath(["skills", "art_skills", stylePath]);
-          if (!import_fs11.default.existsSync(mainPath)) {
-            return res.status(400).send(error50("\u89C6\u89C9\u624B\u518C\u4E0D\u5B58\u5728"));
-          }
-          const DATA_MAP3 = [
-            { value: "README" },
-            { value: "prefix" },
-            { value: "art_character", subDir: "art_prompt" },
-            { value: "art_character_derivative", subDir: "art_prompt" },
-            { value: "art_prop", subDir: "art_prompt" },
-            { value: "art_prop_derivative", subDir: "art_prompt" },
-            { value: "art_scene", subDir: "art_prompt" },
-            { value: "art_scene_derivative", subDir: "art_prompt" },
-            { value: "director_storyboard", subDir: "driector_skills" },
-            { value: "art_storyboard_video", subDir: "art_prompt" },
-            { value: "director_planning_style", subDir: "driector_skills" },
-            { value: "director_storyboard_table_style", subDir: "driector_skills" }
-          ];
-          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
-          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
-          for (const item of data) {
-            if (!VALID_KEYS.has(item.value)) continue;
-            const subDir = SUB_DIR_MAP.get(item.value);
-            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
-            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
-            const fileDir = import_path17.default.dirname(filePath);
-            if (!import_fs11.default.existsSync(fileDir)) {
-              import_fs11.default.mkdirSync(fileDir, { recursive: true });
-            }
-            const content = item.value === "README" ? `${name28}
-${item.data}` : item.data;
-            import_fs11.default.writeFileSync(filePath, content, "utf-8");
-          }
-          const imagesDir = import_path17.default.join(mainPath, "images");
-          let existingFiles = [];
-          try {
-            const allFiles = import_fs11.default.readdirSync(imagesDir);
-            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
-          } catch {
-          }
-          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path17.default.basename(new URL(url4).pathname)));
-          for (const file3 of existingFiles) {
-            if (!retainedFileNames.has(file3)) {
-              const filePath = import_path17.default.join(imagesDir, file3);
-              if (import_fs11.default.existsSync(filePath)) import_fs11.default.unlinkSync(filePath);
-            }
-          }
-          if (!import_fs11.default.existsSync(imagesDir)) {
-            import_fs11.default.mkdirSync(imagesDir, { recursive: true });
-          }
-          for (const item of images) {
-            if (!item.startsWith("http")) {
-              const fileName = `${utils_default.uuid()}.jpg`;
-              const targetPath = import_path17.default.join(imagesDir, fileName);
-              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
-              import_fs11.default.writeFileSync(targetPath, buffer);
-            }
-          }
-          res.status(200).send(success3());
-        } catch (err) {
-          res.status(500).send({ error: String(err) });
-        }
-      }
-    );
-  }
-});
-
-// src/routes/project/getModelDetails.ts
-var import_express107, router107, getModelDetails_default;
-var init_getModelDetails = __esm({
-  "src/routes/project/getModelDetails.ts"() {
-    "use strict";
-    import_express107 = __toESM(require_express2());
-    init_responseFormat();
-    init_utils3();
-    init_zod();
-    init_middleware();
-    router107 = import_express107.default.Router();
-    getModelDetails_default = router107.post(
-      "/",
-      validateFields({
-        key: external_exports.enum(["scriptAgent", "productionAgent"])
-      }),
-      async (req, res) => {
-        const { key } = req.body;
-        const data = await utils_default.db("o_agentDeploy").select("o_agentDeploy.*").where("o_agentDeploy.key", key).first();
-        const [id, modelName] = data ? data.modelName.split(/:(.+)/) : [];
-        const models = await utils_default.vendor.getModelList(id);
-        const model = models.find((m) => m.modelName === modelName);
-        if (!model) return res.status(400).send(error50("\u672A\u627E\u5230\u6A21\u578B"));
-        res.status(200).send(success3(model));
-      }
-    );
-  }
-});
-
-// src/routes/project/getProject.ts
-var import_express108, router108, getProject_default;
-var init_getProject = __esm({
-  "src/routes/project/getProject.ts"() {
-    "use strict";
-    import_express108 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    router108 = import_express108.default.Router();
-    getProject_default = router108.post("/", async (req, res) => {
-      const data = await utils_default.db("o_project").select("*");
-      res.status(200).send(success3(data));
-    });
-  }
-});
-
-// src/routes/project/getVisualManual.ts
-function readMd(filePath) {
-  try {
-    return import_fs12.default.readFileSync(filePath, "utf-8");
-  } catch {
-    return "";
-  }
-}
-async function readAllImages(imagesDir) {
-  try {
-    const ossPath = utils_default.getPath(import_path18.default.join("skills", "art_skills", imagesDir, "images"));
-    const files = import_fs12.default.readdirSync(ossPath);
-    const images = files.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f)).map((f) => import_path18.default.join("art_skills", imagesDir, "images", f));
-    if (images.length) {
-      return Promise.all(images.map(async (i) => await utils_default.oss.getFileUrl(i, "skills")));
-    } else {
-      return [];
-    }
-  } catch {
-    return [];
-  }
-}
-var import_express109, import_fs12, import_path18, router109, DATA_MAP, getVisualManual_default;
-var init_getVisualManual = __esm({
-  "src/routes/project/getVisualManual.ts"() {
-    "use strict";
-    import_express109 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    import_fs12 = __toESM(require("fs"));
-    import_path18 = __toESM(require("path"));
-    router109 = import_express109.default.Router();
-    DATA_MAP = [
-      { label: "README", value: "README" },
-      { label: "\u524D\u7F00", value: "prefix" },
-      { label: "\u89D2\u8272", value: "art_character", subDir: "art_prompt" },
-      { label: "\u89D2\u8272\u884D\u751F", value: "art_character_derivative", subDir: "art_prompt" },
-      { label: "\u9053\u5177", value: "art_prop", subDir: "art_prompt" },
-      { label: "\u9053\u5177\u884D\u751F", value: "art_prop_derivative", subDir: "art_prompt" },
-      { label: "\u573A\u666F", value: "art_scene", subDir: "art_prompt" },
-      { label: "\u573A\u666F\u884D\u751F", value: "art_scene_derivative", subDir: "art_prompt" },
-      { label: "\u5206\u955C", value: "director_storyboard", subDir: "driector_skills" },
-      { label: "\u5206\u955C\u89C6\u9891", value: "art_storyboard_video", subDir: "art_prompt" },
-      { label: "\u6280\u6CD5-\u5BFC\u6F14\u89C4\u5212", value: "director_planning_style", subDir: "driector_skills" },
-      { label: "\u6280\u6CD5-\u5206\u955C\u8868\u8BBE\u8BA1", value: "director_storyboard_table_style", subDir: "driector_skills" }
-    ];
-    getVisualManual_default = router109.post("/", async (req, res) => {
-      try {
-        const artPromptsDir = utils_default.getPath(["skills", "art_skills"]);
-        const styleDirs = import_fs12.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
-        const result = await Promise.all(
-          styleDirs.map(async (styleName) => {
-            const styleDir = import_path18.default.join(artPromptsDir, styleName);
-            const images = await readAllImages(styleName);
-            const readmePath = import_path18.default.join(styleDir, "README.md");
-            const readmeContent = import_fs12.default.readFileSync(readmePath, "utf-8");
-            const firstLine = readmeContent.split("\n")[0].replace(/--/g, "");
-            const data = DATA_MAP.map(({ label, value, subDir }) => {
-              let mdPath;
-              if (subDir) {
-                mdPath = import_path18.default.join(styleDir, subDir, `${value}.md`);
-              } else {
-                mdPath = import_path18.default.join(styleDir, `${value}.md`);
-              }
-              return {
-                label,
-                value,
-                data: readMd(mdPath)
-              };
-            });
-            return {
-              name: firstLine,
-              image: images,
-              stylePath: styleName,
-              data
-            };
-          })
-        );
-        res.status(200).send(success3(result));
-      } catch (err) {
-        res.status(500).send(error50(utils_default.error(err).message));
-      }
-    });
-  }
-});
-
-// src/routes/project/queryDirectorManual.ts
-function readMd2(filePath) {
-  try {
-    return import_fs13.default.readFileSync(filePath, "utf-8");
-  } catch {
-    return "";
-  }
-}
-async function readAllImages2(imagesDir) {
-  try {
-    const ossPath = utils_default.getPath(import_path19.default.join("skills", "story_skills", imagesDir, "images"));
-    const files = import_fs13.default.readdirSync(ossPath);
-    const images = files.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f)).map((f) => import_path19.default.join("story_skills", imagesDir, "images", f));
-    if (images.length) {
-      return Promise.all(images.map(async (i) => await utils_default.oss.getFileUrl(i, "skills")));
-    } else {
-      return [];
-    }
-  } catch {
-    return [];
-  }
-}
-var import_express110, import_fs13, import_path19, router110, DATA_MAP2, queryDirectorManual_default;
-var init_queryDirectorManual = __esm({
-  "src/routes/project/queryDirectorManual.ts"() {
-    "use strict";
-    import_express110 = __toESM(require_express2());
-    init_utils3();
-    init_responseFormat();
-    import_fs13 = __toESM(require("fs"));
-    import_path19 = __toESM(require("path"));
-    router110 = import_express110.default.Router();
-    DATA_MAP2 = [
-      { label: "README", value: "README" },
-      { label: "\u5BFC\u6F14\u89C4\u5212", value: "director_planning_narrative", subDir: "driector_skills" },
-      { label: "\u5206\u955C\u8868", value: "director_storyboard_table_narrative", subDir: "driector_skills" }
-    ];
-    queryDirectorManual_default = router110.post("/", async (req, res) => {
-      try {
-        const artPromptsDir = utils_default.getPath(["skills", "story_skills"]);
-        const styleDirs = import_fs13.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
-        const result = await Promise.all(
-          styleDirs.map(async (directorManual) => {
-            const styleDir = import_path19.default.join(artPromptsDir, directorManual);
-            const images = await readAllImages2(directorManual);
-            const readmePath = import_path19.default.join(styleDir, "README.md");
-            const readmeContent = import_fs13.default.readFileSync(readmePath, "utf-8");
-            const firstLine = readmeContent.split("\n")[0].replace(/--/g, "");
-            const data = DATA_MAP2.map(({ label, value, subDir }) => {
-              let mdPath;
-              if (subDir) {
-                mdPath = import_path19.default.join(styleDir, subDir, `${value}.md`);
-              } else {
-                mdPath = import_path19.default.join(styleDir, `${value}.md`);
-              }
-              return {
-                label,
-                value,
-                data: readMd2(mdPath)
-              };
-            });
-            return {
-              name: firstLine,
-              image: images,
-              directorManual,
-              data
-            };
-          })
-        );
-        res.status(200).send(success3(result));
-      } catch (err) {
-        res.status(500).send({ error: String(err) });
-      }
-    });
-  }
-});
-
-// src/routes/project/visualManual.ts
-var import_express111, import_fs14, import_path20, router111, visualManual_default;
-var init_visualManual = __esm({
-  "src/routes/project/visualManual.ts"() {
-    "use strict";
-    import_express111 = __toESM(require_express2());
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    init_getPath();
-    import_fs14 = __toESM(require("fs"));
-    import_path20 = __toESM(require("path"));
-    router111 = import_express111.default.Router();
-    visualManual_default = router111.post(
-      "/",
-      validateFields({
-        type: external_exports.string()
-      }),
-      async (req, res) => {
-        const { type } = req.body;
-        const basePath = getPath_default(["skills", "art_skills", "chinese_sweet_romance"]);
-        const findFile = (dir, target) => {
-          const entries = import_fs14.default.readdirSync(dir, { withFileTypes: true });
-          for (const entry of entries) {
-            const fullPath = import_path20.default.join(dir, entry.name);
-            if (entry.isDirectory()) {
-              const found = findFile(fullPath, target);
-              if (found) return found;
-            } else if (entry.isFile() && entry.name === target) {
-              return fullPath;
-            }
-          }
-          return null;
-        };
-        const filePath = findFile(basePath, `${type}.md`);
-        if (!filePath) {
-          res.status(404).json({ error: `\u672A\u627E\u5230\u5BF9\u5E94\u7684\u6587\u4EF6: ${type}.md` });
-          return;
-        }
-        const content = import_fs14.default.readFileSync(filePath, "utf-8");
-        res.status(200).send(success3(content));
-      }
-    );
-  }
-});
-
-// src/routes/script/addScript.ts
-var import_express112, router112, addScript_default;
-var init_addScript = __esm({
-  "src/routes/script/addScript.ts"() {
-    "use strict";
-    import_express112 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router112 = import_express112.default.Router();
-    addScript_default = router112.post(
-      "/",
-      validateFields({
-        name: external_exports.string(),
-        content: external_exports.string(),
-        projectId: external_exports.number(),
-        assets: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { name: name28, content, projectId, assets } = req.body;
-        const [scriptId] = await utils_default.db("o_script").insert({
-          name: name28,
-          content,
-          projectId,
-          createTime: Date.now()
-        });
-        if (assets.length) {
-          const assetsData = await utils_default.db("o_assets").whereIn("id", assets).select();
-          if (assetsData.length) {
-            const assetsIds = assetsData.map((item) => item.id);
-            const insertData = assetsIds.map((i) => {
-              return {
-                scriptId,
-                assetId: i
-              };
-            });
-            await utils_default.db("o_scriptAssets").insert(insertData);
-          }
-        }
-        res.status(200).send(success3({ message: "\u6DFB\u52A0\u5267\u672C\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/script/batchAddScript.ts
-var import_express113, router113, batchAddScript_default;
-var init_batchAddScript = __esm({
-  "src/routes/script/batchAddScript.ts"() {
-    "use strict";
-    import_express113 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router113 = import_express113.default.Router();
-    batchAddScript_default = router113.post(
-      "/",
-      validateFields({
-        data: external_exports.array(
-          external_exports.object({
-            scriptName: external_exports.string(),
-            scriptData: external_exports.string()
-          })
-        ),
-        projectId: external_exports.number()
-      }),
-      async (req, res) => {
-        const { data, projectId } = req.body;
-        await utils_default.db("o_script").insert(
-          data.map((i) => {
-            return {
-              name: i.scriptName,
-              content: i.scriptData,
-              projectId,
-              createTime: Date.now()
-            };
-          })
-        );
-        res.status(200).send(success3({ message: "\u6DFB\u52A0\u5267\u672C\u6210\u529F" }));
-      }
-    );
-  }
-});
-
-// src/routes/script/delScript.ts
-var import_express114, router114, delScript_default;
-var init_delScript = __esm({
-  "src/routes/script/delScript.ts"() {
-    "use strict";
-    import_express114 = __toESM(require_express2());
-    init_utils3();
-    init_zod();
-    init_responseFormat();
-    init_middleware();
-    router114 = import_express114.default.Router();
-    delScript_default = router114.post(
-      "/",
-      validateFields({
-        ids: external_exports.array(external_exports.number())
-      }),
-      async (req, res) => {
-        const { ids } = req.body;
-        const scriptData = await utils_default.db("o_script").whereIn("id", ids);
-        if (scriptData && scriptData.length) {
-          const scriptProjectId = new Set(scriptData.map((item) => item.projectId));
-          await utils_default.db("o_agentWorkData").whereIn("projectId", Array.from(scriptProjectId)).whereIn("episodesId", ids).delete();
-        }
-        const storyboardData = await utils_default.db("o_storyboard").whereIn("scriptId", ids);
-        if (storyboardData.length) {
-          await Promise.all(
-            storyboardData.map(async (item) => {
-              try {
-                item.filePath && await utils_default.oss.deleteFile(item.filePath);
-              } catch (e) {
-              }
-            })
-          );
-          const storyboardIds = storyboardData.map((item) => item.id);
-          await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).delete();
-        }
-        await utils_default.db("o_scriptAssets").whereIn("scriptId", ids).delete();
-        await utils_default.db("o_script").whereIn("id", ids).delete();
-        await utils_default.db("o_storyboard").whereIn("scriptId", ids).delete();
-        await utils_default.db("o_video").whereIn("scriptId", ids).delete();
-        res.status(200).send(success3({ message: "\u5220\u9664\u5267\u672C\u6210\u529F" }));
-      }
-    );
-  }
-});
-
 // node_modules/compressing/lib/utils.js
 var require_utils13 = __commonJS({
   "node_modules/compressing/lib/utils.js"(exports2) {
     "use strict";
-    var fs39 = require("fs");
-    var path35 = require("path");
+    var fs40 = require("fs");
+    var path36 = require("path");
     var { pipeline: pump } = require("stream");
     function isPathWithinParent(childPath, parentPath) {
-      const normalizedChild = path35.resolve(childPath);
-      const normalizedParent = path35.resolve(parentPath);
-      const parentWithSep = normalizedParent.endsWith(path35.sep) ? normalizedParent : normalizedParent + path35.sep;
+      const normalizedChild = path36.resolve(childPath);
+      const normalizedParent = path36.resolve(parentPath);
+      const parentWithSep = normalizedParent.endsWith(path36.sep) ? normalizedParent : normalizedParent + path36.sep;
       return normalizedChild === normalizedParent || normalizedChild.startsWith(parentWithSep);
     }
     exports2.sourceType = (source) => {
@@ -246391,14 +239234,14 @@ var require_utils13 = __commonJS({
       return (source, dest, opts) => {
         opts = opts || {};
         opts.source = source;
-        const destStream = destType(dest) === "path" ? fs39.createWriteStream(dest) : dest;
+        const destStream = destType(dest) === "path" ? fs40.createWriteStream(dest) : dest;
         const compressStream = new StreamClass(opts);
         return safePipe([compressStream, destStream]);
       };
     };
     exports2.makeCompressDirFn = (StreamClass) => {
       return (dir, dest, opts) => {
-        const destStream = destType(dest) === "path" ? fs39.createWriteStream(dest) : dest;
+        const destStream = destType(dest) === "path" ? fs40.createWriteStream(dest) : dest;
         const compressStream = new StreamClass();
         compressStream.addEntry(dir, opts);
         return safePipe([compressStream, destStream]);
@@ -246421,9 +239264,9 @@ var require_utils13 = __commonJS({
         const strip = opts.strip ? Number(opts.strip) : 0;
         delete opts.strip;
         return new Promise((resolve3, reject) => {
-          fs39.mkdir(destDir, { recursive: true }, (err) => {
+          fs40.mkdir(destDir, { recursive: true }, (err) => {
             if (err) return reject(err);
-            const resolvedDestDir = path35.resolve(destDir);
+            const resolvedDestDir = path36.resolve(destDir);
             let entryCount = 0;
             let successCount = 0;
             let isFinish = false;
@@ -246435,44 +239278,44 @@ var require_utils13 = __commonJS({
               done();
             }).on("error", reject).on("entry", (header, stream4, next) => {
               stream4.on("end", next);
-              const destFilePath = path35.join(resolvedDestDir, stripFileName(strip, header.name, header.type));
-              const resolvedDestPath = path35.resolve(destFilePath);
+              const destFilePath = path36.join(resolvedDestDir, stripFileName(strip, header.name, header.type));
+              const resolvedDestPath = path36.resolve(destFilePath);
               if (!isPathWithinParent(resolvedDestPath, resolvedDestDir)) {
                 console.warn(`[compressing] Skipping entry with path traversal: "${header.name}" -> "${resolvedDestPath}"`);
                 stream4.resume();
                 return;
               }
               if (header.type === "file") {
-                const dir = path35.dirname(destFilePath);
-                fs39.mkdir(dir, { recursive: true }, (err2) => {
+                const dir = path36.dirname(destFilePath);
+                fs40.mkdir(dir, { recursive: true }, (err2) => {
                   if (err2) return reject(err2);
                   entryCount++;
-                  pump(stream4, fs39.createWriteStream(destFilePath, { mode: opts.mode || header.mode }), (err3) => {
+                  pump(stream4, fs40.createWriteStream(destFilePath, { mode: opts.mode || header.mode }), (err3) => {
                     if (err3) return reject(err3);
                     successCount++;
                     done();
                   });
                 });
               } else if (header.type === "symlink") {
-                const dir = path35.dirname(destFilePath);
-                const target = path35.resolve(dir, header.linkname);
+                const dir = path36.dirname(destFilePath);
+                const target = path36.resolve(dir, header.linkname);
                 if (!isPathWithinParent(target, resolvedDestDir)) {
                   console.warn(`[compressing] Skipping symlink "${header.name}": target "${target}" escapes extraction directory`);
                   stream4.resume();
                   return;
                 }
                 entryCount++;
-                fs39.mkdir(dir, { recursive: true }, (err2) => {
+                fs40.mkdir(dir, { recursive: true }, (err2) => {
                   if (err2) return reject(err2);
-                  const relativeTarget = path35.relative(dir, target);
-                  fs39.symlink(relativeTarget, destFilePath, (err3) => {
+                  const relativeTarget = path36.relative(dir, target);
+                  fs40.symlink(relativeTarget, destFilePath, (err3) => {
                     if (err3) return reject(err3);
                     successCount++;
                     stream4.resume();
                   });
                 });
               } else {
-                fs39.mkdir(destFilePath, { recursive: true }, (err2) => {
+                fs40.mkdir(destFilePath, { recursive: true }, (err2) => {
                   if (err2) return reject(err2);
                   stream4.resume();
                 });
@@ -246501,7 +239344,7 @@ var require_utils13 = __commonJS({
     }
     exports2.safePipe = safePipe;
     function normalizePath(fileName) {
-      fileName = path35.normalize(fileName);
+      fileName = path36.normalize(fileName);
       if (process.platform === "win32") fileName = fileName.replace(/\\+/g, "/");
       return fileName;
     }
@@ -246839,7 +239682,7 @@ var require_buffer_crc32 = __commonJS({
 var require_yazl = __commonJS({
   "node_modules/yazl/index.js"(exports2) {
     "use strict";
-    var fs39 = require("fs");
+    var fs40 = require("fs");
     var Transform = require("stream").Transform;
     var PassThrough = require("stream").PassThrough;
     var zlib2 = require("zlib");
@@ -246863,14 +239706,14 @@ var require_yazl = __commonJS({
       if (options == null) options = {};
       var entry = new Entry(metadataPath, false, options);
       self2.entries.push(entry);
-      fs39.stat(realPath, function(err, stats) {
+      fs40.stat(realPath, function(err, stats) {
         if (err) return self2.emit("error", err);
         if (!stats.isFile()) return self2.emit("error", new Error("not a file: " + realPath));
         entry.uncompressedSize = stats.size;
         if (options.mtime == null) entry.setLastModDate(stats.mtime);
         if (options.mode == null) entry.setFileAttributesMode(stats.mode);
         entry.setFileDataPumpFunction(function() {
-          var readStream2 = fs39.createReadStream(realPath);
+          var readStream2 = fs40.createReadStream(realPath);
           entry.state = Entry.FILE_DATA_IN_PROGRESS;
           readStream2.on("error", function(err2) {
             self2.emit("error", err2);
@@ -251193,8 +244036,8 @@ var require_base_stream = __commonJS({
 var require_stream9 = __commonJS({
   "node_modules/compressing/lib/tar/stream.js"(exports2, module2) {
     "use strict";
-    var fs39 = require("fs");
-    var path35 = require("path");
+    var fs40 = require("fs");
+    var path36 = require("path");
     var stream4 = require("stream");
     var tar = require_tar_stream();
     var utils = require_utils13();
@@ -251229,7 +244072,7 @@ var require_stream9 = __commonJS({
         }
       }
       _addFileOrDirEntry(entry, opts) {
-        fs39.stat(entry, (err, stat) => {
+        fs40.stat(entry, (err, stat) => {
           if (err) return this.emit("error", err);
           if (stat.isDirectory()) return this._addDirEntry(entry, opts);
           if (stat.isFile()) return this._addFileEntry(entry, opts);
@@ -251239,27 +244082,27 @@ var require_stream9 = __commonJS({
         });
       }
       _addFileEntry(entry, opts) {
-        fs39.stat(entry, (err, stat) => {
+        fs40.stat(entry, (err, stat) => {
           if (err) return this.emit("error", err);
-          const entryStream = this._pack.entry({ name: opts.relativePath || path35.basename(entry), size: stat.size, mode: stat.mode & 511 }, this._onEntryFinish.bind(this));
-          const stream5 = fs39.createReadStream(entry, opts.fs);
+          const entryStream = this._pack.entry({ name: opts.relativePath || path36.basename(entry), size: stat.size, mode: stat.mode & 511 }, this._onEntryFinish.bind(this));
+          const stream5 = fs40.createReadStream(entry, opts.fs);
           stream5.on("error", (err2) => this.emit("error", err2));
           stream5.pipe(entryStream);
         });
       }
       _addDirEntry(entry, opts) {
-        fs39.readdir(entry, (err, files) => {
+        fs40.readdir(entry, (err, files) => {
           if (err) return this.emit("error", err);
           const relativePath = opts.relativePath || "";
           files.forEach((fileOrDir) => {
             const newOpts = utils.clone(opts);
             if (opts.ignoreBase) {
-              newOpts.relativePath = path35.posix.join(relativePath, fileOrDir);
+              newOpts.relativePath = path36.posix.join(relativePath, fileOrDir);
             } else {
-              newOpts.relativePath = path35.posix.join(relativePath, path35.basename(entry), fileOrDir);
+              newOpts.relativePath = path36.posix.join(relativePath, path36.basename(entry), fileOrDir);
             }
             newOpts.ignoreBase = true;
-            this.addEntry(path35.posix.join(entry, fileOrDir), newOpts);
+            this.addEntry(path36.posix.join(entry, fileOrDir), newOpts);
           });
           this._onEntryFinish();
         });
@@ -251316,7 +244159,7 @@ var require_stream9 = __commonJS({
 var require_stream10 = __commonJS({
   "node_modules/compressing/lib/zip/stream.js"(exports2, module2) {
     "use strict";
-    var path35 = require("path");
+    var path36 = require("path");
     var yazl = require_yazl();
     var TarStream = require_stream9();
     var ZipStream = class extends TarStream {
@@ -251328,7 +244171,7 @@ var require_stream10 = __commonJS({
         stream4.on("error", (err) => this.emit("error", err));
       }
       _addFileEntry(entry, opts) {
-        this._zipfile.addFile(entry, opts.relativePath || path35.basename(entry), opts);
+        this._zipfile.addFile(entry, opts.relativePath || path36.basename(entry), opts);
         this._onEntryFinish();
       }
       _addBufferEntry(entry, opts) {
@@ -251387,7 +244230,7 @@ var require_get_ready = __commonJS({
 var require_file_stream = __commonJS({
   "node_modules/compressing/lib/zip/file_stream.js"(exports2, module2) {
     "use strict";
-    var path35 = require("path");
+    var path36 = require("path");
     var yazl = require_yazl();
     var assert3 = require("assert");
     var stream4 = require("stream");
@@ -251409,7 +244252,7 @@ var require_file_stream = __commonJS({
           this.end();
         }
         if (sourceType === "file") {
-          zipfile.addFile(opts.source, opts.relativePath || path35.basename(opts.source), opts.yazl);
+          zipfile.addFile(opts.source, opts.relativePath || path36.basename(opts.source), opts.yazl);
         } else if (sourceType === "buffer") {
           zipfile.addBuffer(opts.source, opts.relativePath, opts.yazl);
         } else if (sourceType === "stream") {
@@ -251495,7 +244338,7 @@ var require_pend = __commonJS({
 var require_fd_slicer2 = __commonJS({
   "node_modules/fd-slicer2/index.js"(exports2) {
     "use strict";
-    var fs39 = require("fs");
+    var fs40 = require("fs");
     var { Readable: Readable2, Writable, PassThrough } = require("stream");
     var Pend = require_pend();
     var { EventEmitter: EventEmitter3 } = require("events");
@@ -251510,7 +244353,7 @@ var require_fd_slicer2 = __commonJS({
       }
       read(buffer, offset, length, position, callback) {
         this.pend.go((cb) => {
-          fs39.read(this.fd, buffer, offset, length, position, (err, bytesRead, buffer2) => {
+          fs40.read(this.fd, buffer, offset, length, position, (err, bytesRead, buffer2) => {
             cb();
             callback(err, bytesRead, buffer2);
           });
@@ -251518,7 +244361,7 @@ var require_fd_slicer2 = __commonJS({
       }
       write(buffer, offset, length, position, callback) {
         this.pend.go((cb) => {
-          fs39.write(this.fd, buffer, offset, length, position, (err, written, buffer2) => {
+          fs40.write(this.fd, buffer, offset, length, position, (err, written, buffer2) => {
             cb();
             callback(err, written, buffer2);
           });
@@ -251538,7 +244381,7 @@ var require_fd_slicer2 = __commonJS({
         if (this.refCount > 0) return;
         if (this.refCount < 0) throw new Error("invalid unref");
         if (this.autoClose) {
-          fs39.close(this.fd, (err) => {
+          fs40.close(this.fd, (err) => {
             if (err) {
               this.emit("error", err);
             } else {
@@ -251573,7 +244416,7 @@ var require_fd_slicer2 = __commonJS({
         this.context.pend.go((cb) => {
           if (this.destroyed) return cb();
           const buffer = Buffer.alloc(toRead);
-          fs39.read(this.context.fd, buffer, 0, toRead, this.pos, (err, bytesRead) => {
+          fs40.read(this.context.fd, buffer, 0, toRead, this.pos, (err, bytesRead) => {
             if (err) {
               this.destroy(err);
             } else if (bytesRead === 0) {
@@ -251619,7 +244462,7 @@ var require_fd_slicer2 = __commonJS({
         }
         this.context.pend.go((cb) => {
           if (this.destroyed) return cb();
-          fs39.write(this.context.fd, buffer, 0, buffer.length, this.pos, (err, bytes) => {
+          fs40.write(this.context.fd, buffer, 0, buffer.length, this.pos, (err, bytes) => {
             if (err) {
               this.destroy();
               cb();
@@ -251746,7 +244589,7 @@ var require_fd_slicer2 = __commonJS({
 var require_yauzl = __commonJS({
   "node_modules/@eggjs/yauzl/index.js"(exports2) {
     "use strict";
-    var fs39 = require("fs");
+    var fs40 = require("fs");
     var zlib2 = require("zlib");
     var fd_slicer = require_fd_slicer2();
     var crc32 = require_buffer_crc32();
@@ -251764,7 +244607,7 @@ var require_yauzl = __commonJS({
     exports2.ZipFile = ZipFile;
     exports2.Entry = Entry;
     exports2.RandomAccessReader = RandomAccessReader;
-    function open(path35, options, callback) {
+    function open(path36, options, callback) {
       if (typeof options === "function") {
         callback = options;
         options = null;
@@ -251776,10 +244619,10 @@ var require_yauzl = __commonJS({
       if (options.validateEntrySizes == null) options.validateEntrySizes = true;
       if (options.strictFileNames == null) options.strictFileNames = false;
       if (callback == null) callback = defaultCallback;
-      fs39.open(path35, "r", function(err, fd) {
+      fs40.open(path36, "r", function(err, fd) {
         if (err) return callback(err);
         fromFd(fd, options, function(err2, zipfile) {
-          if (err2) fs39.close(fd, defaultCallback);
+          if (err2) fs40.close(fd, defaultCallback);
           callback(err2, zipfile);
         });
       });
@@ -251796,7 +244639,7 @@ var require_yauzl = __commonJS({
       if (options.validateEntrySizes == null) options.validateEntrySizes = true;
       if (options.strictFileNames == null) options.strictFileNames = false;
       if (callback == null) callback = defaultCallback;
-      fs39.fstat(fd, function(err, stats) {
+      fs40.fstat(fd, function(err, stats) {
         if (err) return callback(err);
         var reader = fd_slicer.createFromFd(fd, { autoClose: true });
         fromRandomAccessReader(reader, stats.size, options, callback);
@@ -255384,7 +248227,7 @@ var require_dbcs_data2 = __commonJS({
       // == Japanese/ShiftJIS ====================================================
       // All japanese encodings are based on JIS X set of standards:
       // JIS X 0201 - Single-byte encoding of ASCII + ¥ + Kana chars at 0xA1-0xDF.
-      // JIS X 0208 - Main set of 6879 characters, placed in 94x94 plane, to be encoded by 2 bytes. 
+      // JIS X 0208 - Main set of 6879 characters, placed in 94x94 plane, to be encoded by 2 bytes.
       //              Has several variations in 1978, 1983, 1990 and 1997.
       // JIS X 0212 - Supplementary plane of 6067 chars in 94x94 plane. 1990. Effectively dead.
       // JIS X 0213 - Extension and modern replacement of 0208 and 0212. Total chars: 11233.
@@ -255401,7 +248244,7 @@ var require_dbcs_data2 = __commonJS({
       //               0x8F, (0xA1-0xFE)x2 - 0212 plane (94x94).
       //  * JIS X 208: 7-bit, direct encoding of 0208. Byte ranges: 0x21-0x7E (94 values). Uncommon.
       //               Used as-is in ISO2022 family.
-      //  * ISO2022-JP: Stateful encoding, with escape sequences to switch between ASCII, 
+      //  * ISO2022-JP: Stateful encoding, with escape sequences to switch between ASCII,
       //                0201-1976 Roman, 0208-1978, 0208-1983.
       //  * ISO2022-JP-1: Adds esc seq for 0212-1990.
       //  * ISO2022-JP-2: Adds esc seq for GB2313-1980, KSX1001-1992, ISO8859-1, ISO8859-7.
@@ -255512,7 +248355,7 @@ var require_dbcs_data2 = __commonJS({
       //  * Windows CP 951: Microsoft variant of Big5-HKSCS-2001. Seems to be never public. http://me.abelcheung.org/articles/research/what-is-cp951/
       //  * Big5-2003 (Taiwan standard) almost superset of cp950.
       //  * Unicode-at-on (UAO) / Mozilla 1.8. Falling out of use on the Web. Not supported by other browsers.
-      //  * Big5-HKSCS (-2001, -2004, -2008). Hong Kong standard. 
+      //  * Big5-HKSCS (-2001, -2004, -2008). Hong Kong standard.
       //    many unicode code points moved from PUA to Supplementary plane (U+2XXXX) over the years.
       //    Plus, it has 4 combining sequences.
       //    Seems that Mozilla refused to support it for 10 yrs. https://bugzilla.mozilla.org/show_bug.cgi?id=162431 https://bugzilla.mozilla.org/show_bug.cgi?id=310299
@@ -255523,7 +248366,7 @@ var require_dbcs_data2 = __commonJS({
       //    In the encoder, it might make sense to support encoding old PUA mappings to Big5 bytes seq-s.
       //    Official spec: http://www.ogcio.gov.hk/en/business/tech_promotion/ccli/terms/doc/2003cmp_2008.txt
       //                   http://www.ogcio.gov.hk/tc/business/tech_promotion/ccli/terms/doc/hkscs-2008-big5-iso.txt
-      // 
+      //
       // Current understanding of how to deal with Big5(-HKSCS) is in the Encoding Standard, http://encoding.spec.whatwg.org/#big5-encoder
       // Unicode mapping (http://www.unicode.org/Public/MAPPINGS/OBSOLETE/EASTASIA/OTHER/BIG5.TXT) is said to be wrong.
       "windows950": "cp950",
@@ -256116,7 +248959,7 @@ var require_lib8 = __commonJS({
 var require_file_stream2 = __commonJS({
   "node_modules/compressing/lib/gzip/file_stream.js"(exports2, module2) {
     "use strict";
-    var fs39 = require("fs");
+    var fs40 = require("fs");
     var zlib2 = require("zlib");
     var utils = require_utils13();
     var streamifier = require_lib8();
@@ -256126,7 +248969,7 @@ var require_file_stream2 = __commonJS({
         super(opts.zlib);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs39.createReadStream(opts.source, opts.fs);
+          const stream4 = fs40.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -256151,7 +248994,7 @@ var require_file_stream2 = __commonJS({
 var require_uncompress_stream2 = __commonJS({
   "node_modules/compressing/lib/gzip/uncompress_stream.js"(exports2, module2) {
     "use strict";
-    var fs39 = require("fs");
+    var fs40 = require("fs");
     var zlib2 = require("zlib");
     var utils = require_utils13();
     var streamifier = require_lib8();
@@ -256161,7 +249004,7 @@ var require_uncompress_stream2 = __commonJS({
         super(opts.zlib);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs39.createReadStream(opts.source, opts.fs);
+          const stream4 = fs40.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -256201,8 +249044,8 @@ var require_gzip = __commonJS({
 var require_file_stream3 = __commonJS({
   "node_modules/compressing/lib/tar/file_stream.js"(exports2, module2) {
     "use strict";
-    var fs39 = require("fs");
-    var path35 = require("path");
+    var fs40 = require("fs");
+    var path36 = require("path");
     var stream4 = require("stream");
     var tar = require_tar_stream();
     var utils = require_utils13();
@@ -256215,13 +249058,13 @@ var require_file_stream3 = __commonJS({
         pack.on("end", () => this.ready(true));
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          fs39.stat(opts.source, (err, stat) => {
+          fs40.stat(opts.source, (err, stat) => {
             if (err) return this.emit("error", err);
-            this.entry = pack.entry({ name: opts.relativePath || path35.basename(opts.source), size: stat.size, mode: stat.mode & 511 }, (err2) => {
+            this.entry = pack.entry({ name: opts.relativePath || path36.basename(opts.source), size: stat.size, mode: stat.mode & 511 }, (err2) => {
               if (err2) return this.emit("error", err2);
               pack.finalize();
             });
-            const stream5 = fs39.createReadStream(opts.source, opts.fs);
+            const stream5 = fs40.createReadStream(opts.source, opts.fs);
             stream5.on("error", (err2) => this.emit("error", err2));
             stream5.pipe(this);
           });
@@ -256280,7 +249123,7 @@ var require_file_stream3 = __commonJS({
 var require_uncompress_stream3 = __commonJS({
   "node_modules/compressing/lib/tar/uncompress_stream.js"(exports2, module2) {
     "use strict";
-    var fs39 = require("fs");
+    var fs40 = require("fs");
     var tar = require_tar_stream();
     var utils = require_utils13();
     var streamifier = require_lib8();
@@ -256290,7 +249133,7 @@ var require_uncompress_stream3 = __commonJS({
         super(opts);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs39.createReadStream(opts.source, opts.fs);
+          const stream4 = fs40.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -256432,7 +249275,7 @@ var require_FlushWritable = __commonJS({
 var require_uncompress_stream4 = __commonJS({
   "node_modules/compressing/lib/tgz/uncompress_stream.js"(exports2, module2) {
     "use strict";
-    var fs39 = require("fs");
+    var fs40 = require("fs");
     var utils = require_utils13();
     var ready = require_get_ready();
     var streamifier = require_lib8();
@@ -256450,7 +249293,7 @@ var require_uncompress_stream4 = __commonJS({
         this._gzipStream.pipe(tarStream);
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
-          const stream4 = fs39.createReadStream(opts.source, opts.fs);
+          const stream4 = fs40.createReadStream(opts.source, opts.fs);
           stream4.on("error", (err) => this.emit("error", err));
           stream4.pipe(this);
           return;
@@ -256508,15 +249351,7370 @@ var require_compressing = __commonJS({
   }
 });
 
+// src/lib/responseFormat.ts
+function success3(data = null, message = "\u6210\u529F") {
+  return {
+    code: 200,
+    data,
+    message
+  };
+}
+function error50(message = "", data = null) {
+  return {
+    code: 400,
+    data,
+    message
+  };
+}
+var init_responseFormat = __esm({
+  "src/lib/responseFormat.ts"() {
+    "use strict";
+  }
+});
+
+// node_modules/zod/locales/index.js
+var init_locales2 = __esm({
+  "node_modules/zod/locales/index.js"() {
+    "use strict";
+    init_locales();
+  }
+});
+
+// src/middleware/middleware.ts
+function validateFields(shape, source = "body") {
+  const schema = external_exports.object(shape);
+  return (req, res, next) => {
+    const data = req[source];
+    const parseResult = schema.safeParse(data);
+    if (!parseResult.success) {
+      const errors = parseResult.error.issues.map((issue3) => `\u5B57\u6BB5 ${issue3.path.join(".")} ${issue3.message}`);
+      console.error(errors);
+      return res.status(400).json({ message: "\u53C2\u6570\u9519\u8BEF", errors });
+    }
+    next();
+  };
+}
+var init_middleware = __esm({
+  "src/middleware/middleware.ts"() {
+    "use strict";
+    init_zod();
+    init_locales2();
+    external_exports.config(zh_CN_default());
+  }
+});
+
+// src/routes/agents/clearMemory.ts
+var import_express, router, clearMemory_default;
+var init_clearMemory = __esm({
+  "src/routes/agents/clearMemory.ts"() {
+    "use strict";
+    import_express = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router = import_express.default.Router();
+    clearMemory_default = router.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        episodesId: external_exports.number().optional(),
+        agentType: external_exports.enum(["scriptAgent", "productionAgent"]),
+        type: external_exports.enum(["message", "summary", "all"]).optional()
+      }),
+      async (req, res) => {
+        const { projectId, episodesId, agentType, type = "all" } = req.body;
+        const isolationKey = `${projectId}:${agentType}${episodesId ? `:${episodesId}` : ""}`;
+        if (type === "all") {
+          await utils_default.db("memories").where({ isolationKey }).del();
+        } else if (type === "message") {
+          await utils_default.db("memories").where({ isolationKey, type: "message" }).del();
+          await utils_default.db("memories").where({ isolationKey, type: "summary" }).del();
+        } else {
+          await utils_default.db("memories").where({ isolationKey, type: "message", summarized: 1 }).update({ summarized: 0 });
+          await utils_default.db("memories").where({ isolationKey, type: "summary" }).del();
+        }
+        res.status(200).send(success3(null));
+      }
+    );
+  }
+});
+
+// src/routes/agents/getMemory.ts
+function normalizeRole(role) {
+  return role?.startsWith("assistant") ? "assistant" : "user";
+}
+var import_express2, router2, getMemory_default;
+var init_getMemory = __esm({
+  "src/routes/agents/getMemory.ts"() {
+    "use strict";
+    import_express2 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router2 = import_express2.default.Router();
+    getMemory_default = router2.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        agentType: external_exports.enum(["scriptAgent", "productionAgent"]),
+        episodesId: external_exports.number().optional()
+      }),
+      async (req, res) => {
+        const { projectId, agentType, episodesId } = req.body;
+        const isolationKey = `${projectId}:${agentType}${episodesId ? `:${episodesId}` : ""}`;
+        const rows = await utils_default.db("memories").where({ isolationKey, type: "message" }).orderBy("createTime", "asc").select("id", "role", "name", "content", "createTime");
+        const history = rows.map((row) => ({
+          id: row.id,
+          role: normalizeRole(row.role),
+          name: row.name ?? void 0,
+          status: "complete",
+          datetime: new Date(row.createTime).toISOString(),
+          content: [{ type: "markdown", status: "complete", data: row.content }],
+          createTime: row.createTime
+        }));
+        res.status(200).send(success3(history));
+      }
+    );
+  }
+});
+
+// src/routes/artStyle/addArtStyle.ts
+var import_express3, router3, addArtStyle_default;
+var init_addArtStyle = __esm({
+  "src/routes/artStyle/addArtStyle.ts"() {
+    "use strict";
+    import_express3 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_dist_node();
+    init_responseFormat();
+    init_middleware();
+    router3 = import_express3.default.Router();
+    addArtStyle_default = router3.post(
+      "/",
+      validateFields({
+        name: external_exports.string(),
+        fileUrl: external_exports.string(),
+        prompt: external_exports.string()
+      }),
+      async (req, res) => {
+        const { name: name28, fileUrl, prompt } = req.body;
+        const imagePath = `/artStyle/${v4_default()}.jpg`;
+        const matches = fileUrl.match(/^data:image\/\w+;base64,(.+)$/);
+        const realBase64 = matches ? matches[1] : fileUrl;
+        await utils_default.oss.writeFile(imagePath, Buffer.from(realBase64, "base64"));
+        await utils_default.db("o_artStyle").insert({
+          name: name28,
+          fileUrl: imagePath,
+          label: name28,
+          prompt
+        });
+        res.status(200).send(success3("\u827A\u672F\u98CE\u683C\u6DFB\u52A0\u6210\u529F"));
+      }
+    );
+  }
+});
+
+// src/routes/artStyle/editArtStyle.ts
+var import_express4, router4, editArtStyle_default;
+var init_editArtStyle = __esm({
+  "src/routes/artStyle/editArtStyle.ts"() {
+    "use strict";
+    import_express4 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_dist_node();
+    init_responseFormat();
+    init_middleware();
+    router4 = import_express4.default.Router();
+    editArtStyle_default = router4.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        name: external_exports.string(),
+        fileUrl: external_exports.string(),
+        prompt: external_exports.string()
+      }),
+      async (req, res) => {
+        const { id, name: name28, fileUrl, prompt } = req.body;
+        const imagePath = `/artStyle/${v4_default()}.jpg`;
+        const matches = fileUrl.match(/^data:image\/\w+;base64,(.+)$/);
+        const realBase64 = matches ? matches[1] : fileUrl;
+        await utils_default.oss.writeFile(imagePath, Buffer.from(realBase64, "base64"));
+        await utils_default.db("o_artStyle").update({
+          name: name28,
+          fileUrl: imagePath,
+          label: name28,
+          prompt
+        }).where("id", id);
+        res.status(200).send(success3("\u827A\u672F\u98CE\u683C\u7F16\u8F91\u6210\u529F"));
+      }
+    );
+  }
+});
+
+// src/routes/artStyle/extractStylePrompt.ts
+var import_express5, router5, extractStylePrompt_default;
+var init_extractStylePrompt = __esm({
+  "src/routes/artStyle/extractStylePrompt.ts"() {
+    "use strict";
+    import_express5 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router5 = import_express5.default.Router();
+    extractStylePrompt_default = router5.post(
+      "/",
+      validateFields({
+        images: external_exports.array(external_exports.string())
+      }),
+      async (req, res) => {
+        const { images } = req.body;
+        try {
+          const resText = await utils_default.Ai.Text("universalAi").invoke({
+            system: '\u8BF7\u6839\u636E\u4EE5\u4E0B\u56FE\u7247\u6570\u636E\uFF0C\u63D0\u53D6\u51FA\u56FE\u7247\u7684\u753B\u98CE\u63D0\u793A\u8BCD\uFF0C\u7528\u4E8E\u751F\u6210\u56FE\u7247\u65F6\u6307\u5B9A\u98CE\u683C\uFF0C\u8981\u6C42\u7B80\u6D01\u4E14\u5177\u6709\u827A\u672F\u6027,\u53EA\u9700\u8981\u753B\u98CE\u63D0\u793A\u8BCD\uFF0C\u4E0D\u9700\u8981\u5176\u4ED6\u5185\u5BB9\uFF1A"\u6BD4\u5982\uFF1A`(\u753B\u98CE\uFF1A2D\u52A8\u6F2B\u98CE\u683C,2d animation style)`,`(\u753B\u98CE\uFF1A\u7167\u7247\u7EA7\u771F\u4EBA\u8D85\u5199\u5B9E,photorealistic, lifelike, ultra detailed)`\uFF0C`(\u753B\u98CE\uFF1A3D\u56FD\u521B,Chinese 3D animation style)`\u7B49,\u5982\u679C\u56FE\u7247\u98CE\u683C\u65E0\u6CD5\u63CF\u8FF0\uFF0C\u53EF\u4EE5\u8FD4\u56DE`\u65E0\u6CD5\u63CF\u8FF0`,\u591A\u5F20\u56FE\u7247\u65F6\uFF0C\u53EA\u8F93\u51FA\u4E00\u4E2A\u7EFC\u5408\u7684\u753B\u98CE\u63D0\u793A\u8BCD\uFF0C\u8981\u6C42\u5305\u542B\u6240\u6709\u56FE\u7247\u7684\u5171\u540C\u98CE\u683C\u7279\u5F81\uFF0C\u8F93\u51FA\u683C\u5F0F\u5FC5\u987B\u4E25\u683C\u6309\u7167\u793A\u4F8B\u4E2D\u7684\u683C\u5F0F\uFF0C\u5FC5\u987B\u5305\u542B`\u753B\u98CE`\u4E8C\u5B57\uFF0C\u4E14\u5FC5\u987B\u4F7F\u7528\u62EC\u53F7\u62EC\u8D77\u6765\uFF0C\u62EC\u53F7\u5185\u5FC5\u987B\u5305\u542B\u4E2D\u6587\u548C\u82F1\u6587\u7684\u753B\u98CE\u63CF\u8FF0\uFF0C\u5E76\u7528\u9017\u53F7\u5206\u9694\uFF0C\u82F1\u6587\u90E8\u5206\u9700\u8981\u7FFB\u8BD1\u6210\u5730\u9053\u7684\u82F1\u6587\u63D0\u793A\u8BCD',
+            messages: [
+              {
+                role: "user",
+                content: [
+                  ...images.map((image) => ({
+                    type: "image",
+                    image
+                  }))
+                ]
+              }
+            ]
+          });
+          res.status(200).send(success3(resText.text));
+        } catch (e) {
+          const err = utils_default.error(e);
+          res.status(500).send({ message: err.message });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/artStyle/getArtStyle.ts
+var import_express6, router6, getArtStyle_default;
+var init_getArtStyle = __esm({
+  "src/routes/artStyle/getArtStyle.ts"() {
+    "use strict";
+    import_express6 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    router6 = import_express6.default.Router();
+    getArtStyle_default = router6.post("/", async (req, res) => {
+      const list2 = await utils_default.db("o_artStyle").select("*");
+      const data = await Promise.all(
+        list2.map(async (item) => {
+          const fileUrl = await utils_default.oss.getSmallImageUrl(item.fileUrl);
+          return { ...item, fileUrl };
+        })
+      );
+      res.status(200).send(success3(data));
+    });
+  }
+});
+
+// src/routes/assets/addAssets.ts
+var import_express7, router7, addAssets_default;
+var init_addAssets = __esm({
+  "src/routes/assets/addAssets.ts"() {
+    "use strict";
+    import_express7 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router7 = import_express7.default.Router();
+    addAssets_default = router7.post(
+      "/",
+      validateFields({
+        name: external_exports.string(),
+        describe: external_exports.string(),
+        type: external_exports.string(),
+        projectId: external_exports.number(),
+        remark: external_exports.string().optional().nullable(),
+        prompt: external_exports.string().optional().nullable()
+      }),
+      async (req, res) => {
+        const { name: name28, describe: describe4, type, projectId, remark, prompt } = req.body;
+        await utils_default.db("o_assets").insert({
+          name: name28,
+          describe: describe4,
+          type,
+          projectId,
+          remark,
+          prompt,
+          startTime: Date.now()
+        });
+        res.status(200).send(success3({ message: "\u65B0\u589E\u8D44\u4EA7\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/assets/addAudioAssets.ts
+var import_express8, router8, addAudioAssets_default;
+var init_addAudioAssets = __esm({
+  "src/routes/assets/addAudioAssets.ts"() {
+    "use strict";
+    import_express8 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router8 = import_express8.default.Router();
+    addAudioAssets_default = router8.post(
+      "/",
+      validateFields({
+        name: external_exports.string(),
+        describe: external_exports.string(),
+        projectId: external_exports.number(),
+        assetsItem: external_exports.array(
+          external_exports.object({
+            base64: external_exports.string(),
+            prompt: external_exports.string(),
+            describe: external_exports.string(),
+            name: external_exports.string()
+          })
+        )
+      }),
+      async (req, res) => {
+        const { name: name28, describe: describe4, projectId, assetsItem } = req.body;
+        await Promise.all(
+          assetsItem.map(async (i) => {
+            if (i.base64) {
+              const mimeMatch = i.base64.match(/^data:audio\/([^;]+);base64,/);
+              const mimeExt = mimeMatch ? mimeMatch[1] : "mp3";
+              const mimeToExt = {
+                mpeg: "mp3",
+                "x-wav": "wav",
+                "x-aiff": "aiff",
+                "x-m4a": "m4a",
+                "x-flac": "flac"
+              };
+              const ext = mimeToExt[mimeExt] ?? mimeExt;
+              const savePath = `/${projectId}/assets/audio/${utils_default.uuid()}.${ext}`;
+              const base64Data = i.base64.replace(/^data:[^;]+;base64,/, "");
+              await utils_default.oss.writeFile(savePath, base64Data);
+              i.src = savePath;
+            }
+          })
+        );
+        const [id] = await utils_default.db("o_assets").insert({
+          name: name28,
+          describe: describe4,
+          type: "audio",
+          projectId,
+          startTime: Date.now()
+        });
+        for (const item of assetsItem) {
+          const [assetsId] = await utils_default.db("o_assets").insert({
+            prompt: item.prompt,
+            assetsId: id,
+            type: "audio",
+            describe: item.describe,
+            name: item.name,
+            projectId,
+            startTime: Date.now()
+          });
+          const [imageId] = await utils_default.db("o_image").insert({
+            filePath: item.src,
+            type: "audio",
+            assetsId,
+            state: "\u5DF2\u5B8C\u6210"
+          });
+          await utils_default.db("o_assets").where("id", assetsId).update({
+            imageId
+          });
+        }
+        res.status(200).send(success3({ message: "\u65B0\u589E\u8D44\u4EA7\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/assets/batchDelete.ts
+var import_express9, router9, batchDelete_default;
+var init_batchDelete = __esm({
+  "src/routes/assets/batchDelete.ts"() {
+    "use strict";
+    import_express9 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router9 = import_express9.default.Router();
+    batchDelete_default = router9.post(
+      "/",
+      validateFields({
+        id: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { id } = req.body;
+        await utils_default.db("o_assets").whereIn("id", id).delete();
+        res.status(200).send(success3({ message: "\u5220\u9664\u8D44\u4EA7\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/assets/batchGenerationData.ts
+var import_express10, router10, batchGenerationData_default;
+var init_batchGenerationData = __esm({
+  "src/routes/assets/batchGenerationData.ts"() {
+    "use strict";
+    import_express10 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router10 = import_express10.default.Router();
+    batchGenerationData_default = router10.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        type: external_exports.string(),
+        name: external_exports.string().optional(),
+        page: external_exports.number(),
+        limit: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId, type, name: name28, page = 1, limit = 10 } = req.body;
+        const offset = (page - 1) * limit;
+        let query = utils_default.db("o_assets").select("*").where("projectId", projectId).andWhere("type", type);
+        if (name28) {
+          query = query.andWhere("name", "like", `%${name28}%`);
+        }
+        const parentAssets = await query.offset(offset).limit(limit);
+        const totalQuery = await utils_default.db("o_assets").where("projectId", projectId).andWhere("type", type).andWhere((qb) => {
+          if (name28) {
+            qb.andWhere("name", "like", `%${name28}%`);
+          }
+        }).count("* as total").first();
+        res.status(200).send(success3({ data: parentAssets, total: totalQuery?.total }));
+      }
+    );
+  }
+});
+
+// src/routes/assets/delAssets.ts
+var import_express11, router11, delAssets_default;
+var init_delAssets = __esm({
+  "src/routes/assets/delAssets.ts"() {
+    "use strict";
+    import_express11 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router11 = import_express11.default.Router();
+    delAssets_default = router11.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id } = req.body;
+        const assetsData = await utils_default.db("o_image").where("assetsId", id);
+        await Promise.all(
+          assetsData.map(
+            (i) => i.filePath ? utils_default.oss.deleteFile(i.filePath).catch((e) => {
+              if (e?.code !== "ENOENT") throw e;
+            }) : Promise.resolve()
+          )
+        );
+        const imageIds = assetsData.map((i) => i.id).filter(Boolean);
+        if (imageIds.length > 0) {
+          await utils_default.db("o_assets").whereIn("imageId", imageIds).update({ imageId: null });
+        }
+        await utils_default.db("o_image").where({ assetsId: id }).delete();
+        await utils_default.db("o_assets").where({ id }).delete();
+        await utils_default.db("o_assets").where("assetsId", id).delete();
+        res.status(200).send(success3({ message: "\u5220\u9664\u8D44\u4EA7\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/assets/delImage.ts
+var import_express12, router12, delImage_default;
+var init_delImage = __esm({
+  "src/routes/assets/delImage.ts"() {
+    "use strict";
+    import_express12 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router12 = import_express12.default.Router();
+    delImage_default = router12.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id } = req.body;
+        await utils_default.db("o_assets").where({ imageId: id }).update({
+          imageId: null
+        });
+        await utils_default.db("o_image").where({ id }).delete();
+        const assetsData = await utils_default.db("o_image").where("id", id);
+        await Promise.all(assetsData.map((i) => i.filePath && utils_default.oss.deleteFile(i.filePath)));
+        res.status(200).send(success3({ message: "\u8D44\u4EA7\u56FE\u7247\u5220\u9664\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/assets/getAssetsApi.ts
+async function filterTypeGetFileUrl(url4, type) {
+  if (type == "role" || type == "tool" || type == "scene") {
+    return await utils_default.oss.getSmallImageUrl(url4);
+  } else {
+    return await utils_default.oss.getFileUrl(url4);
+  }
+}
+var import_express13, router13, getAssetsApi_default;
+var init_getAssetsApi = __esm({
+  "src/routes/assets/getAssetsApi.ts"() {
+    "use strict";
+    import_express13 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router13 = import_express13.default.Router();
+    getAssetsApi_default = router13.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        type: external_exports.string(),
+        name: external_exports.string().optional(),
+        page: external_exports.number(),
+        limit: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId, type, name: name28, page = 1, limit = 10 } = req.body;
+        const offset = (page - 1) * limit;
+        let query = utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state").where("o_assets.projectId", projectId).andWhere("o_assets.type", type);
+        if (name28) {
+          query = query.andWhere("name", "like", `%${name28}%`);
+        }
+        const parentAssets = await query.where("o_assets.assetsId", null).offset(offset).limit(limit);
+        let childQuery = utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state", "o_image.errorReason").where("o_assets.projectId", projectId).andWhere("o_assets.type", type).whereNotNull("o_assets.assetsId");
+        if (name28) {
+          childQuery = childQuery.andWhere("o_assets.name", "like", `%${name28}%`);
+        }
+        const childAssets = await childQuery;
+        const childAssetsWithSrc = await Promise.all(
+          childAssets.map(async (child) => ({
+            ...child,
+            src: child.filePath && await filterTypeGetFileUrl(child.filePath, child.type)
+          }))
+        );
+        const result = await Promise.all(
+          parentAssets.map(async (parent) => ({
+            ...parent,
+            sonAssets: childAssetsWithSrc.filter((child) => child.assetsId === parent.id),
+            src: parent.filePath && await filterTypeGetFileUrl(parent.filePath, parent.type),
+            ...parent.type == "audio" ? { sex: parent.describe?.split("|")[0], describe: parent.describe?.split("|")[1] } : {}
+          }))
+        );
+        const totalQuery = await utils_default.db("o_assets").where("projectId", projectId).andWhere("type", type).andWhere("assetsId", null).andWhere((qb) => {
+          if (name28) {
+            qb.andWhere("name", "like", `%${name28}%`);
+          }
+        }).count("* as total").first();
+        res.status(200).send(success3({ data: result, total: totalQuery?.total }));
+      }
+    );
+  }
+});
+
+// src/routes/assets/getImage.ts
+var import_express14, router14, getImage_default;
+var init_getImage = __esm({
+  "src/routes/assets/getImage.ts"() {
+    "use strict";
+    import_express14 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    init_zod();
+    init_middleware();
+    router14 = import_express14.default.Router();
+    getImage_default = router14.post(
+      "/",
+      validateFields({
+        assetsId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { assetsId } = req.body;
+        const assets = await utils_default.db("o_assets").where("id", assetsId).select("id", "imageId", "type").first();
+        const rawTempAssets = await utils_default.db("o_image").where("assetsId", assetsId).select("id", "filePath", "assetsId", "type", "state");
+        const tempAssets = await Promise.all(
+          rawTempAssets.map(async (item) => ({
+            ...item,
+            filePath: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : "",
+            selected: assets?.imageId != null && Number(item.id) === Number(assets.imageId)
+          }))
+        );
+        const data = {
+          id: assets.id,
+          imageId: assets.imageId ?? null,
+          tempAssets
+        };
+        res.status(200).send(success3(data));
+      }
+    );
+  }
+});
+
+// src/routes/assets/getMaterialData.ts
+var import_express15, router15, getMaterialData_default;
+var init_getMaterialData = __esm({
+  "src/routes/assets/getMaterialData.ts"() {
+    "use strict";
+    import_express15 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router15 = import_express15.default.Router();
+    getMaterialData_default = router15.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number().optional()
+      }),
+      async (req, res) => {
+        const { projectId, scriptId } = req.body;
+        const list2 = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.id", "=", "o_image.assetsId").where("o_assets.type", "clip").andWhere("o_assets.projectId", projectId).select("*");
+        const data = await Promise.all(
+          list2.map(async (item) => ({
+            ...item,
+            filePath: item.filePath ? await utils_default.oss.getFileUrl(item.filePath) : ""
+          }))
+        );
+        const ending = await utils_default.oss.getFileUrl("/ending.mp4", "assets");
+        data.push({
+          id: 0,
+          name: "Toonflow\u7247\u5C3E",
+          filePath: ending,
+          type: "clip"
+        });
+        const trackRows = await utils_default.db("o_videoTrack").where("o_videoTrack.scriptId", scriptId).andWhere("o_videoTrack.projectId", projectId).select("o_videoTrack.id as trackId", "o_videoTrack.videoId");
+        const video = await Promise.all(
+          trackRows.map(async (track) => {
+            const videoItems = await utils_default.db("o_video").where("o_video.videoTrackId", track.trackId).andWhere("o_video.state", "\u751F\u6210\u6210\u529F").select("*");
+            const videoList = await Promise.all(
+              videoItems.map(async (v) => ({
+                id: v.id,
+                filePath: v.filePath ? await utils_default.oss.getFileUrl(v.filePath) : "",
+                videoTrackId: v.videoTrackId
+              }))
+            );
+            return {
+              id: track.trackId,
+              videoId: track.videoId,
+              video: videoList
+            };
+          })
+        ).then((tracks) => tracks.filter((track) => track.video.length > 0));
+        res.status(200).send(success3({ data, video }));
+      }
+    );
+  }
+});
+
+// src/routes/assets/pollingImageAssets.ts
+var import_express16, router16, pollingImageAssets_default;
+var init_pollingImageAssets = __esm({
+  "src/routes/assets/pollingImageAssets.ts"() {
+    "use strict";
+    import_express16 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router16 = import_express16.default.Router();
+    pollingImageAssets_default = router16.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        const data = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", ids).whereNot("o_image.state", "\u751F\u6210\u4E2D").select("o_image.state", "o_assets.id", "o_image.filePath");
+        const result = await Promise.all(
+          data.map(async (item) => ({
+            ...item,
+            filePath: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null
+          }))
+        );
+        res.status(200).send(success3(result));
+      }
+    );
+  }
+});
+
+// src/routes/assets/pollingPromptAssets.ts
+var import_express17, router17, pollingPromptAssets_default;
+var init_pollingPromptAssets = __esm({
+  "src/routes/assets/pollingPromptAssets.ts"() {
+    "use strict";
+    import_express17 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router17 = import_express17.default.Router();
+    pollingPromptAssets_default = router17.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        const data = await utils_default.db("o_assets").whereIn("id", ids).whereNot("promptState", "\u751F\u6210\u4E2D").select("*");
+        res.status(200).send(success3(data));
+      }
+    );
+  }
+});
+
+// src/routes/assets/saveAssets.ts
+var import_express18, router18, saveAssets_default;
+var init_saveAssets = __esm({
+  "src/routes/assets/saveAssets.ts"() {
+    "use strict";
+    import_express18 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_dist_node();
+    init_responseFormat();
+    init_middleware();
+    router18 = import_express18.default.Router();
+    saveAssets_default = router18.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        projectId: external_exports.number(),
+        base64: external_exports.string().optional().nullable(),
+        type: external_exports.enum(["role", "scene", "tool"]),
+        prompt: external_exports.string().optional().nullable(),
+        imageId: external_exports.number().optional().nullable()
+      }),
+      async (req, res) => {
+        const { id, base64: base644, type, prompt, projectId, imageId } = req.body;
+        if (base644) {
+          const matches = base644.match(/^data:image\/\w+;base64,(.+)$/);
+          const realBase64 = matches ? matches[1] : base644;
+          const savePath = `/${projectId}/${type}/${v4_default()}.png`;
+          await utils_default.oss.writeFile(savePath, Buffer.from(realBase64, "base64"));
+          const [idData] = await utils_default.db("o_image").insert({
+            assetsId: id,
+            filePath: savePath,
+            type,
+            state: "\u5DF2\u5B8C\u6210"
+          });
+          await utils_default.db("o_assets").where("id", id).update({
+            prompt: prompt ?? "",
+            imageId: idData
+          });
+        } else {
+          await utils_default.db("o_assets").where("id", id).update({
+            prompt: prompt ?? "",
+            imageId
+          });
+        }
+        res.status(200).send(success3({ message: "\u4FDD\u5B58\u8D44\u4EA7\u56FE\u7247\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/assets/updateAssets.ts
+var import_express19, router19, updateAssets_default;
+var init_updateAssets = __esm({
+  "src/routes/assets/updateAssets.ts"() {
+    "use strict";
+    import_express19 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router19 = import_express19.default.Router();
+    updateAssets_default = router19.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        name: external_exports.string(),
+        describe: external_exports.string(),
+        remark: external_exports.string().optional().nullable(),
+        prompt: external_exports.string().optional().nullable()
+      }),
+      async (req, res) => {
+        const { id, name: name28, describe: describe4, remark, prompt } = req.body;
+        await utils_default.db("o_assets").where({ id }).update({
+          name: name28,
+          describe: describe4,
+          remark,
+          prompt
+        });
+        res.status(200).send(success3({ message: "\u66F4\u65B0\u8D44\u4EA7\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/assets/updateAudioAssets.ts
+var import_express20, router20, updateAudioAssets_default;
+var init_updateAudioAssets = __esm({
+  "src/routes/assets/updateAudioAssets.ts"() {
+    "use strict";
+    import_express20 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router20 = import_express20.default.Router();
+    updateAudioAssets_default = router20.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        name: external_exports.string(),
+        describe: external_exports.string(),
+        projectId: external_exports.number(),
+        assetsItem: external_exports.array(
+          external_exports.object({
+            src: external_exports.string().optional(),
+            id: external_exports.number().optional(),
+            base64: external_exports.string().optional(),
+            prompt: external_exports.string(),
+            describe: external_exports.string(),
+            name: external_exports.string()
+          })
+        )
+      }),
+      async (req, res) => {
+        const { id, name: name28, describe: describe4, projectId, assetsItem } = req.body;
+        await Promise.all(
+          assetsItem.map(async (i) => {
+            if (i.src) {
+              i.src = utils_default.replaceUrl(i.src);
+            }
+            if (i.base64) {
+              const mimeMatch = i.base64.match(/^data:audio\/([^;]+);base64,/);
+              const mimeExt = mimeMatch ? mimeMatch[1] : "mp3";
+              const mimeToExt = {
+                mpeg: "mp3",
+                "x-wav": "wav",
+                "x-aiff": "aiff",
+                "x-m4a": "m4a",
+                "x-flac": "flac"
+              };
+              const ext = mimeToExt[mimeExt] ?? mimeExt;
+              const savePath = `/${projectId}/assets/audio/${utils_default.uuid()}.${ext}`;
+              const base64Data = i.base64.replace(/^data:[^;]+;base64,/, "");
+              await utils_default.oss.writeFile(savePath, base64Data);
+              i.src = savePath;
+            }
+          })
+        );
+        await utils_default.db("o_assets").where("id", id).update({
+          name: name28,
+          describe: describe4
+        });
+        const existingItems = await utils_default.db("o_assets").where("assetsId", id).select("id");
+        const existingIds = existingItems.map((i) => i.id);
+        const incomingIds = assetsItem.filter((i) => i.id).map((i) => i.id);
+        const toDeleteIds = existingIds.filter((eid) => !incomingIds.includes(eid));
+        if (toDeleteIds.length > 0) {
+          const deleteItems = await utils_default.db("o_assets").whereIn("id", toDeleteIds).select("imageId");
+          const deleteImageIds = deleteItems.map((i) => i.imageId).filter(Boolean);
+          await utils_default.db("o_assets").whereIn("id", toDeleteIds).update({ imageId: null });
+          if (deleteImageIds.length > 0) {
+            await utils_default.db("o_image").whereIn("id", deleteImageIds).delete();
+          }
+          await utils_default.db("o_assets").whereIn("id", toDeleteIds).delete();
+        }
+        for (const item of assetsItem) {
+          if (item.id) {
+            await utils_default.db("o_assets").where("id", item.id).update({
+              prompt: item.prompt,
+              describe: item.describe,
+              name: item.name
+            });
+            const itemData = await utils_default.db("o_assets").where("id", item.id).select("imageId").first();
+            await utils_default.db("o_image").where("id", itemData?.imageId).update({
+              filePath: item.src
+            });
+          } else {
+            const [assetsId] = await utils_default.db("o_assets").insert({
+              prompt: item.prompt,
+              assetsId: id,
+              type: "audio",
+              projectId,
+              describe: item.describe,
+              name: item.name,
+              startTime: Date.now()
+            });
+            const [imageId] = await utils_default.db("o_image").insert({
+              filePath: item.src,
+              type: "audio",
+              assetsId,
+              state: "\u5DF2\u5B8C\u6210"
+            });
+            await utils_default.db("o_assets").where("id", assetsId).update({
+              imageId
+            });
+          }
+        }
+        res.status(200).send(success3({ message: "\u65B0\u589E\u8D44\u4EA7\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/assets/uploadClip.ts
+function getExtFromBase64(base64Data) {
+  const mime = base64Data.match(/^data:([^;]+);base64,/)?.[1] ?? "";
+  const mimeMap = {
+    // 图片
+    "image/jpeg": "jpeg",
+    "image/jpg": "jpg",
+    "image/png": "png",
+    // 音频
+    "audio/mpeg": "mp3",
+    "audio/mp3": "mp3",
+    "audio/wav": "wav",
+    // 视频
+    "video/mp4": "mp4",
+    "video/webm": "webm"
+  };
+  return mimeMap[mime] ?? "bin";
+}
+var import_express21, router21, uploadClip_default;
+var init_uploadClip = __esm({
+  "src/routes/assets/uploadClip.ts"() {
+    "use strict";
+    import_express21 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    init_middleware();
+    init_zod();
+    init_dist_node();
+    router21 = import_express21.default.Router();
+    uploadClip_default = router21.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        base64Data: external_exports.string(),
+        type: external_exports.string().optional().default("clip"),
+        name: external_exports.string()
+      }),
+      async (req, res) => {
+        const { base64Data, projectId, type = "clip", name: name28 } = req.body;
+        const ext = getExtFromBase64(base64Data);
+        const savePath = `/${projectId}/assets/${v4_default()}.${ext}`;
+        await utils_default.oss.writeFile(savePath, Buffer.from(base64Data.match(/base64,([A-Za-z0-9+/=]+)/)[1] ?? "", "base64"));
+        const [id] = await utils_default.db("o_assets").insert({
+          type,
+          projectId,
+          name: name28,
+          startTime: Date.now()
+        });
+        const [imageId] = await utils_default.db("o_image").insert({
+          filePath: savePath,
+          type,
+          assetsId: id,
+          state: "\u5DF2\u5B8C\u6210"
+        });
+        await utils_default.db("o_assets").where("id", id).update({
+          imageId
+        });
+        res.status(200).send(success3("\u4E0A\u4F20\u6210\u529F"));
+      }
+    );
+  }
+});
+
+// node_modules/yocto-queue/index.js
+var Node, Queue;
+var init_yocto_queue = __esm({
+  "node_modules/yocto-queue/index.js"() {
+    "use strict";
+    Node = class {
+      value;
+      next;
+      constructor(value) {
+        this.value = value;
+      }
+    };
+    Queue = class {
+      #head;
+      #tail;
+      #size;
+      constructor() {
+        this.clear();
+      }
+      enqueue(value) {
+        const node = new Node(value);
+        if (this.#head) {
+          this.#tail.next = node;
+          this.#tail = node;
+        } else {
+          this.#head = node;
+          this.#tail = node;
+        }
+        this.#size++;
+      }
+      dequeue() {
+        const current = this.#head;
+        if (!current) {
+          return;
+        }
+        this.#head = this.#head.next;
+        this.#size--;
+        if (!this.#head) {
+          this.#tail = void 0;
+        }
+        return current.value;
+      }
+      peek() {
+        if (!this.#head) {
+          return;
+        }
+        return this.#head.value;
+      }
+      clear() {
+        this.#head = void 0;
+        this.#tail = void 0;
+        this.#size = 0;
+      }
+      get size() {
+        return this.#size;
+      }
+      *[Symbol.iterator]() {
+        let current = this.#head;
+        while (current) {
+          yield current.value;
+          current = current.next;
+        }
+      }
+      *drain() {
+        while (this.#head) {
+          yield this.dequeue();
+        }
+      }
+    };
+  }
+});
+
+// node_modules/p-limit/index.js
+function pLimit(concurrency) {
+  let rejectOnClear = false;
+  if (typeof concurrency === "object") {
+    ({ concurrency, rejectOnClear = false } = concurrency);
+  }
+  validateConcurrency(concurrency);
+  if (typeof rejectOnClear !== "boolean") {
+    throw new TypeError("Expected `rejectOnClear` to be a boolean");
+  }
+  const queue = new Queue();
+  let activeCount = 0;
+  const resumeNext = () => {
+    if (activeCount < concurrency && queue.size > 0) {
+      activeCount++;
+      queue.dequeue().run();
+    }
+  };
+  const next = () => {
+    activeCount--;
+    resumeNext();
+  };
+  const run = async (function_, resolve3, arguments_) => {
+    const result = (async () => function_(...arguments_))();
+    resolve3(result);
+    try {
+      await result;
+    } catch {
+    }
+    next();
+  };
+  const enqueue = (function_, resolve3, reject, arguments_) => {
+    const queueItem = { reject };
+    new Promise((internalResolve) => {
+      queueItem.run = internalResolve;
+      queue.enqueue(queueItem);
+    }).then(run.bind(void 0, function_, resolve3, arguments_));
+    if (activeCount < concurrency) {
+      resumeNext();
+    }
+  };
+  const generator = (function_, ...arguments_) => new Promise((resolve3, reject) => {
+    enqueue(function_, resolve3, reject, arguments_);
+  });
+  Object.defineProperties(generator, {
+    activeCount: {
+      get: () => activeCount
+    },
+    pendingCount: {
+      get: () => queue.size
+    },
+    clearQueue: {
+      value() {
+        if (!rejectOnClear) {
+          queue.clear();
+          return;
+        }
+        const abortError = AbortSignal.abort().reason;
+        while (queue.size > 0) {
+          queue.dequeue().reject(abortError);
+        }
+      }
+    },
+    concurrency: {
+      get: () => concurrency,
+      set(newConcurrency) {
+        validateConcurrency(newConcurrency);
+        concurrency = newConcurrency;
+        queueMicrotask(() => {
+          while (activeCount < concurrency && queue.size > 0) {
+            resumeNext();
+          }
+        });
+      }
+    },
+    map: {
+      async value(iterable, function_) {
+        const promises6 = Array.from(iterable, (value, index) => this(function_, value, index));
+        return Promise.all(promises6);
+      }
+    }
+  });
+  return generator;
+}
+function validateConcurrency(concurrency) {
+  if (!((Number.isInteger(concurrency) || concurrency === Number.POSITIVE_INFINITY) && concurrency > 0)) {
+    throw new TypeError("Expected `concurrency` to be a number from 1 and up");
+  }
+}
+var init_p_limit = __esm({
+  "node_modules/p-limit/index.js"() {
+    "use strict";
+    init_yocto_queue();
+  }
+});
+
+// src/routes/assetsGenerate/batchGenerateImageAssets.ts
+function buildPrompt(cfg, artStyle, name28, prompt) {
+  return `
+    \u8BF7\u6839\u636E\u4EE5\u4E0B\u53C2\u6570\u751F\u6210${cfg.promptTitle}\uFF1A
+
+    **\u57FA\u7840\u53C2\u6570\uFF1A**
+    - \u753B\u98CE\u98CE\u683C: ${artStyle || "\u672A\u6307\u5B9A"}
+
+    **${cfg.label}\u8BBE\u5B9A\uFF1A**
+    - \u540D\u79F0:${name28},
+    - \u63D0\u793A\u8BCD:${prompt},
+
+    \u8BF7\u4E25\u683C\u6309\u7167\u7CFB\u7EDF\u89C4\u8303\u751F\u6210${cfg.promptEnd}\u3002
+  `;
+}
+var import_express22, router22, assetTypeConfig, requestSchema, batchGenerateImageAssets_default;
+var init_batchGenerateImageAssets = __esm({
+  "src/routes/assetsGenerate/batchGenerateImageAssets.ts"() {
+    "use strict";
+    import_express22 = __toESM(require_express2());
+    init_p_limit();
+    init_utils3();
+    init_zod();
+    init_dist_node();
+    init_responseFormat();
+    init_middleware();
+    router22 = import_express22.default.Router();
+    assetTypeConfig = {
+      role: {
+        label: "\u89D2\u8272",
+        taskClass: "\u89D2\u8272\u56FE\u751F\u6210",
+        dir: "role",
+        promptTitle: "\u89D2\u8272\u6807\u51C6\u56DB\u89C6\u56FE",
+        promptEnd: "\u4EBA\u7269\u89D2\u8272\u56DB\u89C6\u56FE"
+      },
+      scene: {
+        label: "\u573A\u666F",
+        taskClass: "\u573A\u666F\u56FE\u751F\u6210",
+        dir: "scene",
+        promptTitle: "\u6807\u51C6\u573A\u666F\u56FE",
+        promptEnd: "\u6807\u51C6\u573A\u666F\u56FE"
+      },
+      tool: {
+        label: "\u9053\u5177",
+        taskClass: "\u9053\u5177\u56FE\u751F\u6210",
+        dir: "props",
+        promptTitle: "\u6807\u51C6\u9053\u5177\u56FE",
+        promptEnd: "\u6807\u51C6\u9053\u5177\u56FE"
+      }
+    };
+    requestSchema = {
+      projectId: external_exports.number(),
+      model: external_exports.string(),
+      resolution: external_exports.string(),
+      concurrentCount: external_exports.number().int().min(1).optional(),
+      items: external_exports.array(
+        external_exports.object({
+          id: external_exports.number(),
+          type: external_exports.enum(["role", "scene", "tool", "storyboard"]),
+          name: external_exports.string(),
+          prompt: external_exports.string(),
+          base64: external_exports.string().optional().nullable()
+        })
+      )
+    };
+    batchGenerateImageAssets_default = router22.post("/", validateFields(requestSchema), async (req, res) => {
+      const { projectId, model, resolution, concurrentCount, items } = req.body;
+      const project = await utils_default.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
+      if (!project) return res.status(500).send(error50("\u9879\u76EE\u4E3A\u7A7A"));
+      const totalNovelId = [];
+      for (const item of items) {
+        const [imageId] = await utils_default.db("o_image").insert({
+          type: item.type,
+          state: "\u751F\u6210\u4E2D",
+          assetsId: item.id
+        });
+        await utils_default.db("o_assets").where("id", item.id).update({ imageId });
+        totalNovelId.push(imageId);
+      }
+      const limit = pLimit(concurrentCount ?? 1);
+      const tasks = items.map(
+        (item, index) => limit(async () => {
+          const imageId = totalNovelId[index];
+          const data = await utils_default.db("o_image").where("id", imageId).select("state").first();
+          if (data?.state === "\u751F\u6210\u5931\u8D25") {
+            return;
+          }
+          const cfg = assetTypeConfig[item.type];
+          if (!cfg) return;
+          await utils_default.db("o_assets").where("id", item.id).update({ imageId });
+          const imagePath = `/${projectId}/${cfg.dir}/${v4_default()}.jpg`;
+          const userPrompt = buildPrompt(cfg, project.artStyle ?? "", item.name, item.prompt);
+          const describe4 = `\u751F\u6210${cfg.label}\u56FE\uFF0C\u540D\u79F0\uFF1A${item.name}\uFF0C\u63D0\u793A\u8BCD\uFF1A${item.prompt}`;
+          const relatedObjects = { id: item.id, projectId, type: cfg.label };
+          try {
+            const aiImage = utils_default.Ai.Image(model);
+            await aiImage.run(
+              {
+                prompt: userPrompt,
+                referenceList: item.base64 ? [{ base64: item.base64, type: "image" }] : [],
+                size: resolution,
+                aspectRatio: "16:9"
+              },
+              {
+                taskClass: cfg.taskClass,
+                describe: describe4,
+                projectId,
+                relatedObjects: JSON.stringify(relatedObjects)
+              }
+            );
+            aiImage.save(imagePath);
+            const imageData = await utils_default.db("o_image").where("id", imageId).select("*").first();
+            if (!imageData) return res.status(500).send("\u8D44\u4EA7\u5DF2\u88AB\u5220\u9664");
+            if (!imageData) return;
+            if (imageData.state === "\u751F\u6210\u5931\u8D25") return;
+            await utils_default.db("o_image").where("id", imageId).update({
+              state: "\u5DF2\u5B8C\u6210",
+              filePath: imagePath,
+              type: item.type,
+              model: model.split(/:(.+)/)[1],
+              resolution
+            });
+            await utils_default.db("o_assets").where("id", item.id).update({ imageId });
+          } catch (e) {
+            await utils_default.db("o_image").where("id", imageId).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(e).message });
+          }
+        })
+      );
+      Promise.all(tasks).catch(() => {
+      });
+      return res.status(200).send(success3({ total: items.length }));
+    });
+  }
+});
+
+// src/routes/assetsGenerate/batchPolishAssetsPrompt.ts
+var import_express23, router23, batchPolishAssetsPrompt_default;
+var init_batchPolishAssetsPrompt = __esm({
+  "src/routes/assetsGenerate/batchPolishAssetsPrompt.ts"() {
+    "use strict";
+    import_express23 = __toESM(require_express2());
+    init_utils3();
+    init_p_limit();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router23 = import_express23.default.Router();
+    batchPolishAssetsPrompt_default = router23.post(
+      "/",
+      validateFields({
+        items: array(
+          object({
+            assetsId: number2(),
+            type: string2(),
+            name: string2(),
+            describe: string2()
+          })
+        ),
+        projectId: number2(),
+        concurrentCount: number2().int().min(1).optional(),
+        otherTextPrompt: string2()
+      }),
+      async (req, res) => {
+        const { projectId, items, concurrentCount, otherTextPrompt } = req.body;
+        const project = await utils_default.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
+        if (!project) return res.status(500).send(success3({ message: "\u9879\u76EE\u4E3A\u7A7A" }));
+        const assetsIds = items.map((item) => item.assetsId);
+        const assetsDataList = await utils_default.db("o_assets").whereIn("id", assetsIds).select("id", "assetsId");
+        if (!assetsDataList || assetsDataList.length === 0) return res.status(500).send(error50("\u8D44\u4EA7\u4E0D\u5B58\u5728"));
+        const assetsDataMap = new Map(assetsDataList.map((a) => [a.id, a]));
+        await utils_default.db("o_assets").whereIn("id", assetsIds).update({ promptState: "\u751F\u6210\u4E2D" });
+        const getTypeConfig = (isDerivative) => ({
+          role: {
+            promptKey: "role-polish",
+            itemType: "characters",
+            label: "\u89D2\u8272\u6807\u51C6\u56DB\u89C6\u56FE",
+            nameLabel: "\u89D2\u8272",
+            visualManual: isDerivative ? "art_character_derivative" : "art_character"
+          },
+          scene: {
+            promptKey: "scene-polish",
+            itemType: "scenes",
+            label: "\u573A\u666F\u56FE",
+            nameLabel: "\u573A\u666F",
+            visualManual: isDerivative ? "art_scene_derivative" : "art_scene"
+          },
+          tool: {
+            promptKey: "tool-polish",
+            itemType: "props",
+            label: "\u9053\u5177\u56FE",
+            nameLabel: "\u9053\u5177",
+            visualManual: isDerivative ? "art_prop_derivative" : "art_prop"
+          }
+        });
+        const limit = pLimit(concurrentCount ?? 1);
+        const tasks = items.map(
+          (item) => limit(async () => {
+            const assetData = assetsDataMap.get(item.assetsId);
+            if (!assetData) return;
+            const typeConfig = getTypeConfig(!!assetData.assetsId);
+            const config3 = typeConfig[item.type];
+            if (!config3) return;
+            const visualManual = await utils_default.getArtPrompt(project.artStyle, "art_skills", config3.visualManual);
+            if (!visualManual) {
+              await utils_default.db("o_assets").where("id", item.assetsId).update({ promptState: "\u751F\u6210\u5931\u8D25", promptErrorReason: "\u89C6\u89C9\u624B\u518C\u672A\u5B9A\u4E49" });
+              return;
+            }
+            const systemPrompt = visualManual;
+            try {
+              const { _output } = await utils_default.Ai.Text("universalAi").invoke({
+                system: systemPrompt + "\n" + otherTextPrompt,
+                messages: [
+                  {
+                    role: "user",
+                    content: `
+                    **\u57FA\u7840\u53C2\u6570\uFF1A**
+      **${config3.nameLabel}\u8BBE\u5B9A\uFF1A**
+      - ${config3.nameLabel}\u540D\u79F0:${item.name},
+      - ${config3.nameLabel}\u63CF\u8FF0:${item.describe},`
+                  }
+                ]
+              });
+              if (!_output) {
+                await utils_default.db("o_assets").where("id", item.assetsId).update({ promptState: "\u751F\u6210\u5931\u8D25" });
+                return;
+              }
+              await utils_default.db("o_assets").where("id", item.assetsId).update({ prompt: _output, promptState: "\u5DF2\u5B8C\u6210" });
+            } catch (e) {
+              await utils_default.db("o_assets").where("id", item.assetsId).update({ promptState: "\u5931\u8D25", promptErrorReason: utils_default.error(e).message });
+            }
+          })
+        );
+        Promise.all(tasks).catch((err) => {
+          res.status(500).send(error50(err));
+        });
+        return res.status(200).send(success3({ total: items.length }));
+      }
+    );
+  }
+});
+
+// src/routes/assetsGenerate/cancelGenerate.ts
+var import_express24, router24, cancelGenerate_default;
+var init_cancelGenerate = __esm({
+  "src/routes/assetsGenerate/cancelGenerate.ts"() {
+    "use strict";
+    import_express24 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router24 = import_express24.default.Router();
+    cancelGenerate_default = router24.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id } = req.body;
+        await utils_default.db("o_image").where("id", id).update({
+          state: "\u751F\u6210\u5931\u8D25"
+        });
+        res.status(200).send(success3({ message: "\u53D6\u6D88\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/services/task-engine/budget.ts
+async function getProjectBudget(projectId) {
+  const control = await sql6("project_budget_controls").where("project_id", projectId).first();
+  const usage = await sql6("usage_ledger").leftJoin("generation_tasks", "generation_tasks.id", "usage_ledger.task_id").where("generation_tasks.project_id", projectId).sum({ reserved: sql6.raw("coalesce(actual_cost, estimated_cost, 0)") }).first();
+  return {
+    projectId,
+    budgetLimit: control?.budget_limit ?? null,
+    currency: control?.currency ?? "CNY",
+    blockUnknownPrice: control?.block_unknown_price === 1,
+    reservedCost: Number(usage?.reserved ?? 0),
+    remaining: control?.budget_limit == null ? null : Math.max(0, Number(control.budget_limit) - Number(usage?.reserved ?? 0))
+  };
+}
+async function upsertProjectBudget(input) {
+  const project = await sql6("o_project").where("id", input.projectId).first();
+  if (!project) throw new Error("\u9879\u76EE\u4E0D\u5B58\u5728");
+  const row = {
+    project_id: input.projectId,
+    budget_limit: input.budgetLimit,
+    currency: input.currency,
+    block_unknown_price: input.blockUnknownPrice ? 1 : 0,
+    updated_at: Date.now()
+  };
+  await sql6("project_budget_controls").insert(row).onConflict("project_id").merge(row);
+  return getProjectBudget(input.projectId);
+}
+async function listPricingRules() {
+  return (await sql6("pricing_rules").orderBy(["provider", "model", "lane"])).map((row) => ({
+    id: row.id,
+    provider: row.provider,
+    model: row.model,
+    lane: row.lane,
+    unitType: row.unit_type,
+    unitPrice: row.unit_price,
+    currency: row.currency,
+    updatedAt: row.updated_at
+  }));
+}
+async function upsertPricingRule(input) {
+  const existing = input.id ? null : await sql6("pricing_rules").where({ provider: input.provider, model: input.model, lane: input.lane }).first();
+  const id = input.id ?? existing?.id ?? v4_default();
+  const row = {
+    id,
+    provider: input.provider,
+    model: input.model,
+    lane: input.lane,
+    unit_type: input.unitType,
+    unit_price: input.unitPrice,
+    currency: input.currency,
+    updated_at: Date.now()
+  };
+  if (input.id || existing) {
+    const updated = await sql6("pricing_rules").where("id", id).update(row);
+    if (updated !== 1) throw new Error("\u4EF7\u683C\u89C4\u5219\u4E0D\u5B58\u5728");
+  } else {
+    await sql6("pricing_rules").insert(row);
+  }
+  return row;
+}
+async function deletePricingRule(id) {
+  await sql6("pricing_rules").where("id", id).delete();
+  return { id };
+}
+async function prepareCostReservation(input) {
+  const [provider, model] = input.model.split(/:(.+)/);
+  const exact = await sql6("pricing_rules").where({ provider, model, lane: input.lane }).first();
+  const rule = exact || await sql6("pricing_rules").where({ provider, model: "*", lane: input.lane }).first();
+  const budget = await getProjectBudget(input.projectId);
+  if (!rule) {
+    if (budget.blockUnknownPrice) throw new Error(`\u6A21\u578B ${provider}:${model} \u6CA1\u6709\u4EF7\u683C\u89C4\u5219\uFF0C\u9879\u76EE\u5DF2\u8BBE\u7F6E\u963B\u6B62\u672A\u77E5\u4EF7\u683C\u4EFB\u52A1`);
+    return null;
+  }
+  if (rule.currency !== budget.currency) throw new Error(`\u4EF7\u683C\u89C4\u5219\u4F7F\u7528 ${rule.currency}\uFF0C\u9879\u76EE\u9884\u7B97\u4F7F\u7528 ${budget.currency}\uFF0C\u8BF7\u7EDF\u4E00\u5E01\u79CD`);
+  const units = Number(input.metrics[rule.unit_type] ?? 0);
+  if (!Number.isFinite(units) || units <= 0) throw new Error(`\u4EF7\u683C\u89C4\u5219\u8981\u6C42 ${rule.unit_type} \u5355\u4F4D\uFF0C\u4F46\u4EFB\u52A1\u65E0\u6CD5\u63D0\u4F9B\u6709\u6548\u6570\u91CF`);
+  const estimatedCost = Number((units * Number(rule.unit_price)).toFixed(6));
+  if (budget.budgetLimit != null && budget.reservedCost + estimatedCost > budget.budgetLimit) {
+    throw new Error(`\u9884\u8BA1\u8D39\u7528 ${estimatedCost} ${budget.currency} \u5C06\u8D85\u8FC7\u9879\u76EE\u5269\u4F59\u9884\u7B97 ${budget.remaining} ${budget.currency}`);
+  }
+  return {
+    provider,
+    model,
+    units,
+    estimatedCost,
+    currency: rule.currency,
+    pricingSnapshot: { ruleId: rule.id, unitType: rule.unit_type, unitPrice: rule.unit_price, capturedAt: Date.now() }
+  };
+}
+var sql6, pricingUnitTypes;
+var init_budget = __esm({
+  "src/services/task-engine/budget.ts"() {
+    "use strict";
+    init_dist_node();
+    init_db();
+    sql6 = db;
+    pricingUnitTypes = ["request", "second", "character"];
+  }
+});
+
+// src/services/task-engine/enqueueSingleAssetImage.ts
+async function enqueueSingleAssetImage(input) {
+  const resourceKey = `image:asset:${input.assetId}`;
+  const existing = await generationTaskRepository.list({ projectId: input.projectId, lane: "image", limit: 100 });
+  const active = existing.data.find((task) => task.resourceKey === resourceKey && !["cancelled", "succeeded", "failed"].includes(task.status));
+  if (active) return { task: active, payload: active.payload, deduped: true };
+  const asset = await utils_default.db("o_assets").where({ id: input.assetId, projectId: input.projectId }).first();
+  if (!asset) throw new Error("\u8D44\u4EA7\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
+  const costReservation = await prepareCostReservation({ projectId: input.projectId, lane: "image", model: input.model, metrics: { request: 1 } });
+  let referencePath;
+  if (input.referenceBase64) {
+    referencePath = `/${input.projectId}/task-inputs/${v4_default()}.png`;
+    await utils_default.oss.writeFile(referencePath, input.referenceBase64);
+  }
+  let imageId;
+  let legacyTaskId;
+  try {
+    [imageId] = await utils_default.db("o_image").insert({
+      type: input.assetType,
+      state: "\u751F\u6210\u4E2D",
+      assetsId: input.assetId,
+      model: input.model.split(/:(.+)/)[1] ?? input.model,
+      resolution: input.size
+    });
+    if (imageId == null) throw new Error("\u521B\u5EFA\u56FE\u7247\u5360\u4F4D\u8BB0\u5F55\u5931\u8D25");
+    await utils_default.db("o_assets").where("id", input.assetId).update({ imageId });
+    [legacyTaskId] = await utils_default.db("o_tasks").insert({
+      projectId: input.projectId,
+      taskClass: "\u5355\u5F20\u8D44\u4EA7\u56FE\u7247",
+      relatedObjects: JSON.stringify({ assetId: input.assetId, imageId }),
+      model: input.model.split(/:(.+)/)[1] ?? input.model,
+      describe: "\u6301\u4E45\u961F\u5217\uFF1A\u5355\u5F20\u8D44\u4EA7\u56FE\u7247\u751F\u6210",
+      state: "\u6392\u961F\u4E2D",
+      startTime: Date.now()
+    });
+    if (legacyTaskId == null) throw new Error("\u521B\u5EFA\u56FE\u7247\u4EFB\u52A1\u8BB0\u5F55\u5931\u8D25");
+    const payload = {
+      projectId: input.projectId,
+      assetId: input.assetId,
+      imageId,
+      assetType: input.assetType,
+      model: input.model,
+      prompt: input.prompt,
+      size: input.size,
+      aspectRatio: input.aspectRatio,
+      savePath: `/${input.projectId}/assets/single/${v4_default()}.jpg`,
+      referencePath
+    };
+    const queued = await generationTaskRepository.enqueue({
+      projectId: input.projectId,
+      legacyTaskId,
+      lane: "image",
+      type: "asset.image.single.generate",
+      resourceKey,
+      payload,
+      provider: input.model.split(/:(.+)/)[0],
+      idempotencyKey: stableIdempotencyKey({ type: "asset.image.single.generate", resourceKey, requestId: input.requestId }),
+      maxAttempts: 3,
+      costReservation
+    });
+    if (queued.deduped) {
+      await Promise.all([utils_default.db("o_image").where("id", imageId).delete(), utils_default.db("o_tasks").where("id", legacyTaskId).delete()]);
+      if (referencePath) await utils_default.oss.deleteFile(referencePath).catch(() => void 0);
+      const existingPayload = queued.task.payload;
+      await utils_default.db("o_assets").where("id", input.assetId).update({ imageId: existingPayload.imageId });
+      return { task: queued.task, payload: existingPayload, deduped: true };
+    }
+    return { task: queued.task, payload, deduped: false };
+  } catch (error73) {
+    const cleanup = [utils_default.db("o_assets").where("id", input.assetId).update({ imageId: asset.imageId ?? null })];
+    if (imageId) cleanup.push(utils_default.db("o_image").where("id", imageId).delete());
+    if (legacyTaskId) cleanup.push(utils_default.db("o_tasks").where("id", legacyTaskId).delete());
+    await Promise.all(cleanup);
+    if (referencePath) await utils_default.oss.deleteFile(referencePath).catch(() => void 0);
+    throw error73;
+  }
+}
+var init_enqueueSingleAssetImage = __esm({
+  "src/services/task-engine/enqueueSingleAssetImage.ts"() {
+    "use strict";
+    init_dist_node();
+    init_utils3();
+    init_repository();
+    init_budget();
+  }
+});
+
+// src/routes/assetsGenerate/generateAssets.ts
+function buildPrompt2(cfg, artStyle, name28, prompt) {
+  return `
+    \u8BF7\u6839\u636E\u4EE5\u4E0B\u53C2\u6570\u751F\u6210${cfg.promptTitle}\uFF1A
+
+    **\u57FA\u7840\u53C2\u6570\uFF1A**
+    - \u753B\u98CE\u98CE\u683C: ${artStyle || "\u672A\u6307\u5B9A"}
+
+    **${cfg.label}\u8BBE\u5B9A\uFF1A**
+    - \u540D\u79F0:${name28},
+    - \u63D0\u793A\u8BCD:${prompt},
+
+    \u8BF7\u4E25\u683C\u6309\u7167\u7CFB\u7EDF\u89C4\u8303\u751F\u6210${cfg.promptEnd}\u3002
+  `;
+}
+var import_express25, router25, assetTypeConfig2, requestSchema2, generateAssets_default;
+var init_generateAssets = __esm({
+  "src/routes/assetsGenerate/generateAssets.ts"() {
+    "use strict";
+    import_express25 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_enqueueSingleAssetImage();
+    router25 = import_express25.default.Router();
+    assetTypeConfig2 = {
+      role: {
+        label: "\u89D2\u8272",
+        taskClass: "\u89D2\u8272\u56FE\u751F\u6210",
+        dir: "role",
+        promptTitle: "\u89D2\u8272\u6807\u51C6\u56DB\u89C6\u56FE",
+        promptEnd: "\u4EBA\u7269\u89D2\u8272\u56DB\u89C6\u56FE"
+      },
+      scene: {
+        label: "\u573A\u666F",
+        taskClass: "\u573A\u666F\u56FE\u751F\u6210",
+        dir: "scene",
+        promptTitle: "\u6807\u51C6\u573A\u666F\u56FE",
+        promptEnd: "\u6807\u51C6\u573A\u666F\u56FE"
+      },
+      tool: {
+        label: "\u9053\u5177",
+        taskClass: "\u9053\u5177\u56FE\u751F\u6210",
+        dir: "props",
+        promptTitle: "\u6807\u51C6\u9053\u5177\u56FE",
+        promptEnd: "\u6807\u51C6\u9053\u5177\u56FE"
+      }
+    };
+    requestSchema2 = {
+      projectId: external_exports.number(),
+      model: external_exports.string(),
+      resolution: external_exports.enum(["1K", "2K", "4K"]),
+      id: external_exports.number(),
+      type: external_exports.enum(["role", "scene", "tool"]),
+      name: external_exports.string(),
+      prompt: external_exports.string(),
+      base64: external_exports.string().optional().nullable(),
+      requestId: external_exports.string().trim().min(1).optional()
+    };
+    generateAssets_default = router25.post("/", validateFields(requestSchema2), async (req, res) => {
+      const { projectId, model, resolution, id, type, name: name28, prompt, base64: base644 } = req.body;
+      const project = await utils_default.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
+      if (!project) return res.status(500).send(success3({ message: "\u9879\u76EE\u4E3A\u7A7A" }));
+      const cfg = assetTypeConfig2[type];
+      if (!cfg) return res.status(400).send(error50("\u4E0D\u652F\u6301\u7684\u7C7B\u578B"));
+      const userPrompt = buildPrompt2(cfg, project.artStyle, name28, prompt);
+      try {
+        const result = await enqueueSingleAssetImage({
+          projectId,
+          assetId: id,
+          assetType: type,
+          model,
+          prompt: userPrompt,
+          size: resolution,
+          aspectRatio: "16:9",
+          referenceBase64: base644 || void 0,
+          requestId: req.body.requestId || `${Date.now()}-${id}`
+        });
+        return res.status(200).send(success3({
+          queued: true,
+          taskId: result.task.id,
+          imageId: result.payload.imageId,
+          assetsId: id,
+          deduped: result.deduped
+        }));
+      } catch (e) {
+        return res.status(400).send(error50(utils_default.error(e).message || "\u56FE\u7247\u751F\u6210\u5931\u8D25"));
+      }
+    });
+  }
+});
+
+// src/routes/assetsGenerate/polishAssetsPrompt.ts
+var import_express26, router26, polishAssetsPrompt_default;
+var init_polishAssetsPrompt = __esm({
+  "src/routes/assetsGenerate/polishAssetsPrompt.ts"() {
+    "use strict";
+    import_express26 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router26 = import_express26.default.Router();
+    polishAssetsPrompt_default = router26.post(
+      "/",
+      validateFields({
+        assetsId: number2(),
+        projectId: number2(),
+        type: string2(),
+        name: string2(),
+        describe: string2()
+      }),
+      async (req, res) => {
+        const { assetsId, projectId, type, name: name28, describe: describe4 } = req.body;
+        const project = await utils_default.db("o_project").where("id", projectId).select("artStyle", "type", "intro").first();
+        if (!project) return res.status(500).send(success3({ message: "\u9879\u76EE\u4E3A\u7A7A" }));
+        await utils_default.db("o_assets").where("id", assetsId).update({ promptState: "\u751F\u6210\u4E2D" });
+        const assetsData = await utils_default.db("o_assets").where("id", assetsId).select("assetsId").first();
+        if (!assetsData) return { code: 500, message: "\u8D44\u4EA7\u4E0D\u5B58\u5728" };
+        const typeConfig = {
+          role: {
+            promptKey: "role-polish",
+            itemType: "characters",
+            label: "\u89D2\u8272\u6807\u51C6\u56DB\u89C6\u56FE",
+            nameLabel: "\u89D2\u8272",
+            visualManual: assetsData.assetsId ? "art_character_derivative" : "art_character"
+          },
+          scene: {
+            promptKey: "scene-polish",
+            itemType: "scenes",
+            label: "\u573A\u666F\u56FE",
+            nameLabel: "\u573A\u666F",
+            visualManual: assetsData.assetsId ? "art_scene_derivative" : "art_scene"
+          },
+          tool: {
+            promptKey: "tool-polish",
+            itemType: "props",
+            label: "\u9053\u5177\u56FE",
+            nameLabel: "\u9053\u5177",
+            visualManual: assetsData.assetsId ? "art_prop_derivative" : "art_prop"
+          }
+        };
+        const config3 = typeConfig[type];
+        if (!config3) return res.status(500).send(error50("\u4E0D\u652F\u6301\u7684\u7C7B\u578B"));
+        if (!config3.visualManual) return res.status(500).send(error50("\u89C6\u89C9\u624B\u518C\u672A\u5B9A\u4E49"));
+        const visualManual = await utils_default.getArtPrompt(project.artStyle, "art_skills", config3.visualManual);
+        if (!visualManual) return res.status(500).send(error50("\u89C6\u89C9\u624B\u518C\u672A\u5B9A\u4E49"));
+        const systemPrompt = visualManual;
+        try {
+          const { _output } = await utils_default.Ai.Text("universalAi").invoke({
+            system: systemPrompt,
+            messages: [
+              {
+                role: "user",
+                content: `**\u57FA\u7840\u53C2\u6570\uFF1A**
+      **${config3.nameLabel}\u8BBE\u5B9A\uFF1A**
+      - ${config3.nameLabel}\u540D\u79F0:${name28},
+      - ${config3.nameLabel}\u63CF\u8FF0:${describe4},`
+              }
+            ]
+          });
+          if (!_output) return res.status(500).send("\u5931\u8D25");
+          await utils_default.db("o_assets").where("id", assetsId).update({ prompt: _output, promptState: "\u5DF2\u5B8C\u6210" });
+          res.status(200).send(success3({ prompt: _output, assetsId }));
+        } catch (e) {
+          await utils_default.db("o_assets").where("id", assetsId).update({ promptState: "\u5931\u8D25", promptErrorReason: utils_default.error(e).message });
+          return res.status(500).send(error50(e?.data?.error?.message ?? e?.message ?? "\u751F\u6210\u5931\u8D25"));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/common/getBigImage.ts
+var import_express27, router27, getBigImage_default;
+var init_getBigImage = __esm({
+  "src/routes/common/getBigImage.ts"() {
+    "use strict";
+    import_express27 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    init_zod();
+    init_middleware();
+    router27 = import_express27.default.Router();
+    getBigImage_default = router27.post(
+      "/",
+      validateFields({
+        url: external_exports.string()
+      }),
+      async (req, res) => {
+        let { url: url4 } = req.body;
+        if (url4.startsWith("/oss/")) {
+          url4 = utils_default.replaceUrl(url4).replace("/smallImage", "");
+        }
+        const bigImageUrl = await utils_default.oss.getFileUrl(utils_default.replaceUrl(url4));
+        res.status(200).send(success3(bigImageUrl));
+      }
+    );
+  }
+});
+
+// src/services/composition/timeline.ts
+function mapTimelineRow(row) {
+  return {
+    id: row.id,
+    projectId: row.project_id,
+    scriptId: row.script_id,
+    version: row.version,
+    status: row.status,
+    payload: JSON.parse(row.payload),
+    checksum: row.checksum,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+function safeStyle(value) {
+  if (typeof value !== "string" || !value) return null;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+}
+async function buildNormalizedTimeline(input) {
+  const [project, script] = await Promise.all([
+    sql7("o_project").where("id", input.projectId).first(),
+    sql7("o_script").where({ id: input.scriptId, projectId: input.projectId }).first()
+  ]);
+  if (!project || !script) throw new Error("\u9879\u76EE\u6216\u5267\u672C\u4E0D\u5B58\u5728");
+  const [tracks, storyboards, utterances, cueRows, projectAudioRows] = await Promise.all([
+    sql7("o_videoTrack").where({ projectId: input.projectId, scriptId: input.scriptId }),
+    sql7("o_storyboard").where({ projectId: input.projectId, scriptId: input.scriptId }).orderBy("index", "asc"),
+    sql7("utterances").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("ordinal", "asc"),
+    sql7("subtitle_cues").leftJoin("utterances", "utterances.id", "subtitle_cues.utterance_id").where("subtitle_cues.project_id", input.projectId).where("utterances.script_id", input.scriptId).select("subtitle_cues.*").orderBy("subtitle_cues.start_ms", "asc"),
+    sql7("project_audio_clips").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("start_ms", "asc")
+  ]);
+  const firstStoryboardIndex = /* @__PURE__ */ new Map();
+  for (const storyboard of storyboards) {
+    if (storyboard.trackId != null && !firstStoryboardIndex.has(storyboard.trackId)) {
+      firstStoryboardIndex.set(storyboard.trackId, Number(storyboard.index ?? Number.MAX_SAFE_INTEGER));
+    }
+  }
+  tracks.sort(
+    (a, b) => (firstStoryboardIndex.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (firstStoryboardIndex.get(b.id) ?? Number.MAX_SAFE_INTEGER)
+  );
+  const selectedIds = tracks.map((track) => track.videoId).filter((id2) => typeof id2 === "number");
+  const videos = selectedIds.length ? await sql7("o_video").whereIn("id", selectedIds) : [];
+  const videoById = new Map(videos.map((video) => [video.id, video]));
+  const warnings = [];
+  const videoClips = [];
+  let cursor = 0;
+  for (const track of tracks) {
+    const selected = videoById.get(track.videoId);
+    const durationMs = Math.max(1e3, Math.round((Number(track.duration) || 5) * 1e3));
+    if (!selected?.filePath || !["\u751F\u6210\u6210\u529F", "\u5DF2\u5B8C\u6210"].includes(selected.state)) {
+      warnings.push(`\u89C6\u9891\u8F68\u9053 ${track.id} \u5C1A\u672A\u9009\u62E9\u5DF2\u6210\u529F\u7684\u89C6\u9891\uFF0C\u672A\u52A0\u5165\u65F6\u95F4\u7EBF`);
+      continue;
+    }
+    videoClips.push({
+      id: `video-${selected.id}`,
+      sourceType: "selected_video",
+      sourceId: selected.id,
+      storyboardTrackId: track.id,
+      path: selected.filePath,
+      startMs: cursor,
+      inMs: 0,
+      outMs: durationMs,
+      durationMs,
+      transitionOut: { type: "cut", durationMs: 0 }
+    });
+    cursor += durationMs;
+  }
+  const nativeClips = videoClips.map((clip) => ({
+    id: `native-${clip.sourceId}`,
+    sourceType: "embedded_video_audio",
+    sourceId: clip.sourceId,
+    path: clip.path,
+    startMs: clip.startMs,
+    inMs: clip.inMs,
+    durationMs: clip.durationMs,
+    gainDb: 0,
+    fadeInMs: 0,
+    fadeOutMs: 0
+  }));
+  const utteranceById = new Map(utterances.map((row) => [row.id, row]));
+  const dialogueClips = [];
+  const narrationClips = [];
+  for (const cue of cueRows) {
+    const utterance = utteranceById.get(cue.utterance_id);
+    if (!utterance?.audio_path || utterance.status !== "succeeded") continue;
+    const target = utterance.kind === "narration" ? narrationClips : dialogueClips;
+    target.push({
+      id: `utterance-${utterance.id}`,
+      sourceType: "utterance_audio",
+      sourceId: utterance.id,
+      path: utterance.audio_path,
+      startMs: cue.start_ms,
+      inMs: 0,
+      durationMs: utterance.duration_ms ?? Math.max(1, cue.end_ms - cue.start_ms),
+      gainDb: 0,
+      fadeInMs: 10,
+      fadeOutMs: 30
+    });
+  }
+  if (cueRows.some((cue) => cue.end_ms > cursor) && cursor > 0) {
+    warnings.push("\u90E8\u5206\u5B57\u5E55\u6216\u914D\u97F3\u8D85\u51FA\u5DF2\u9009\u89C6\u9891\u603B\u65F6\u957F");
+  }
+  const projectAudioByKind = /* @__PURE__ */ new Map();
+  for (const row of projectAudioRows) {
+    const kind = row.kind;
+    const target = projectAudioByKind.get(kind) || [];
+    target.push({
+      id: row.id,
+      sourceType: "project_audio_asset",
+      sourceId: row.asset_id,
+      path: row.path,
+      startMs: row.start_ms,
+      inMs: row.in_ms,
+      durationMs: row.duration_ms,
+      gainDb: row.gain_db,
+      fadeInMs: row.fade_in_ms,
+      fadeOutMs: row.fade_out_ms
+    });
+    projectAudioByKind.set(kind, target);
+    if (cursor > 0 && row.start_ms + row.duration_ms > cursor) warnings.push(`${row.name} \u97F3\u9891\u8D85\u51FA\u89C6\u9891\u603B\u65F6\u957F`);
+  }
+  const ratio = project.videoRatio === "9:16" ? "9:16" : "16:9";
+  const payload = {
+    schemaVersion: 1,
+    projectId: input.projectId,
+    scriptId: input.scriptId,
+    settings: {
+      width: ratio === "9:16" ? 1080 : 1920,
+      height: ratio === "9:16" ? 1920 : 1080,
+      fps: 24,
+      colorSpace: "bt709",
+      audioSampleRate: 48e3,
+      loudnessTargetLufs: -16,
+      truePeakDb: -1.5
+    },
+    durationMs: cursor,
+    videoTracks: [{ id: "video-main", clips: videoClips }],
+    audioTracks: [
+      { id: "audio-native", kind: "native", clips: nativeClips },
+      { id: "audio-dialogue", kind: "dialogue", clips: dialogueClips },
+      { id: "audio-narration", kind: "narration", clips: narrationClips },
+      { id: "audio-sfx", kind: "sfx", clips: projectAudioByKind.get("sfx") || [] },
+      { id: "audio-ambience", kind: "ambience", clips: projectAudioByKind.get("ambience") || [] },
+      { id: "audio-bgm", kind: "bgm", clips: projectAudioByKind.get("bgm") || [] }
+    ],
+    subtitleTracks: [
+      {
+        id: "subtitles-main",
+        cues: cueRows.map((cue) => ({
+          id: cue.id,
+          utteranceId: cue.utterance_id,
+          startMs: cue.start_ms,
+          endMs: cue.end_ms,
+          text: cue.text,
+          style: safeStyle(cue.style),
+          locked: cue.locked === 1
+        }))
+      }
+    ],
+    warnings
+  };
+  const serialized = JSON.stringify(payload);
+  const checksum = import_node_crypto8.default.createHash("sha256").update(serialized).digest("hex");
+  const latest = await sql7("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
+  if (latest?.checksum === checksum) return { timeline: mapTimelineRow(latest), deduped: true };
+  const now2 = Date.now();
+  const id = v4_default();
+  await sql7("project_timelines").insert({
+    id,
+    project_id: input.projectId,
+    script_id: input.scriptId,
+    version: Number(latest?.version ?? 0) + 1,
+    status: "draft",
+    payload: serialized,
+    checksum,
+    created_at: now2,
+    updated_at: now2
+  });
+  return { timeline: mapTimelineRow(await sql7("project_timelines").where("id", id).first()), deduped: false };
+}
+async function getLatestTimeline(input) {
+  const row = await sql7("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
+  return row ? mapTimelineRow(row) : null;
+}
+async function listTimelines(input) {
+  const rows = await sql7("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc");
+  return rows.map(mapTimelineRow);
+}
+var import_node_crypto8, sql7;
+var init_timeline = __esm({
+  "src/services/composition/timeline.ts"() {
+    "use strict";
+    import_node_crypto8 = __toESM(require("node:crypto"));
+    init_dist_node();
+    init_db();
+    sql7 = db;
+  }
+});
+
+// src/services/composition/jobs.ts
+async function mapJob(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    projectId: row.project_id,
+    scriptId: row.script_id,
+    timelineId: row.timeline_id,
+    timelineVersion: row.timeline_version,
+    renderer: row.renderer,
+    preset: row.preset,
+    status: row.status,
+    outputPath: row.output_path ?? null,
+    outputUrl: row.output_path ? await utils_default.oss.getFileUrl(row.output_path) : null,
+    inputChecksum: row.input_checksum,
+    outputChecksum: row.output_checksum ?? null,
+    durationMs: row.duration_ms ?? null,
+    taskId: row.task_id ?? null,
+    errorMessage: row.error_message ?? null,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+async function getLatestCompositionJob(input) {
+  const row = await sql8("composition_jobs").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first();
+  return mapJob(row);
+}
+async function enqueueCompositionRender(input) {
+  const timeline = await sql8("project_timelines").where({ id: input.timelineId, project_id: input.projectId, script_id: input.scriptId }).first();
+  if (!timeline) throw new Error("\u65F6\u95F4\u7EBF\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u5267\u672C");
+  const payload = JSON.parse(timeline.payload);
+  const clipCount = (payload.videoTracks || []).reduce((total, track) => total + (track.clips?.length || 0), 0);
+  if (clipCount === 0) throw new Error("\u65F6\u95F4\u7EBF\u6CA1\u6709\u5DF2\u9009\u89C6\u9891\uFF0C\u8BF7\u5148\u5B8C\u6210\u9009\u7247\u5E76\u91CD\u65B0\u6784\u5EFA\u65F6\u95F4\u7EBF");
+  const inputChecksum = stableIdempotencyKey({
+    renderer: "ffmpeg",
+    rendererVersion: 3,
+    preset: input.preset,
+    timelineChecksum: timeline.checksum
+  });
+  const previous = await sql8("composition_jobs").where({ timeline_id: timeline.id, preset: input.preset, input_checksum: inputChecksum }).orderBy("created_at", "desc").first();
+  if (previous?.status === "succeeded" && previous.output_path && await utils_default.oss.fileExists(previous.output_path)) {
+    return { job: await mapJob(previous), task: previous.task_id ? await generationTaskRepository.get(previous.task_id) : null, cached: true, deduped: true };
+  }
+  if (previous && ["queued", "rendering"].includes(previous.status) && previous.task_id) {
+    const task = await generationTaskRepository.get(previous.task_id);
+    if (task && !["cancelled", "succeeded", "failed"].includes(task.status)) {
+      return { job: await mapJob(previous), task, cached: false, deduped: true };
+    }
+  }
+  const jobId = v4_default();
+  const outputPath = `/${input.projectId}/composition/${input.scriptId}/timeline-v${timeline.version}-${timeline.checksum.slice(0, 12)}-${input.preset}.mp4`;
+  const now2 = Date.now();
+  await sql8("composition_jobs").insert({
+    id: jobId,
+    project_id: input.projectId,
+    script_id: input.scriptId,
+    timeline_id: timeline.id,
+    timeline_version: timeline.version,
+    renderer: "ffmpeg",
+    preset: input.preset,
+    status: "queued",
+    output_path: null,
+    input_checksum: inputChecksum,
+    task_id: null,
+    error_message: null,
+    created_at: now2,
+    updated_at: now2
+  });
+  const [legacyTaskId] = await sql8("o_tasks").insert({
+    projectId: input.projectId,
+    taskClass: "\u89C6\u9891\u5408\u6210",
+    relatedObjects: JSON.stringify({ compositionJobId: jobId, timelineId: timeline.id }),
+    model: "ffmpeg",
+    describe: `${input.preset === "final-high" ? "\u672C\u5730\u9AD8\u6E05\u6210\u7247" : "\u672C\u5730\u4F4E\u6E05\u9884\u89C8"}\uFF1A\u65F6\u95F4\u7EBF v${timeline.version}\uFF0C${clipCount} \u4E2A\u7247\u6BB5`,
+    state: "\u6392\u961F\u4E2D",
+    startTime: now2
+  });
+  const taskPayload = {
+    projectId: input.projectId,
+    scriptId: input.scriptId,
+    compositionJobId: jobId,
+    timelineId: timeline.id,
+    timelineVersion: timeline.version,
+    timelineChecksum: timeline.checksum,
+    preset: input.preset,
+    outputPath,
+    model: "local:ffmpeg"
+  };
+  try {
+    const result = await generationTaskRepository.enqueue({
+      projectId: input.projectId,
+      legacyTaskId,
+      lane: "compose",
+      type: "composition.render",
+      resourceKey: `composition:timeline:${timeline.id}:${input.preset}`,
+      payload: taskPayload,
+      provider: "local",
+      idempotencyKey: stableIdempotencyKey({ type: "composition.render", inputChecksum, requestId: input.requestId }),
+      maxAttempts: 2
+    });
+    if (result.deduped) {
+      await Promise.all([
+        sql8("composition_jobs").where("id", jobId).delete(),
+        sql8("o_tasks").where("id", legacyTaskId).delete()
+      ]);
+      const existingJob = await sql8("composition_jobs").where("task_id", result.task.id).first();
+      return { job: await mapJob(existingJob), task: result.task, cached: false, deduped: true };
+    }
+    await sql8("composition_jobs").where("id", jobId).update({ task_id: result.task.id, updated_at: Date.now() });
+    return { job: await mapJob(await sql8("composition_jobs").where("id", jobId).first()), task: result.task, cached: false, deduped: false };
+  } catch (error73) {
+    await Promise.all([
+      sql8("composition_jobs").where("id", jobId).delete(),
+      sql8("o_tasks").where("id", legacyTaskId).delete()
+    ]);
+    throw error73;
+  }
+}
+var sql8;
+var init_jobs = __esm({
+  "src/services/composition/jobs.ts"() {
+    "use strict";
+    init_dist_node();
+    init_utils3();
+    init_db();
+    init_repository();
+    sql8 = db;
+  }
+});
+
+// src/services/composition/audioClips.ts
+function mapRow2(row) {
+  return {
+    id: row.id,
+    projectId: row.project_id,
+    scriptId: row.script_id,
+    kind: row.kind,
+    assetId: row.asset_id,
+    name: row.name,
+    path: row.path,
+    startMs: row.start_ms,
+    inMs: row.in_ms,
+    durationMs: row.duration_ms,
+    gainDb: row.gain_db,
+    fadeInMs: row.fade_in_ms,
+    fadeOutMs: row.fade_out_ms,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+async function listProjectAudioClips(input) {
+  const rows = await sql9("project_audio_clips").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("start_ms", "asc");
+  return rows.map(mapRow2);
+}
+async function upsertProjectAudioClip(input) {
+  const [script, asset] = await Promise.all([
+    sql9("o_script").where({ id: input.scriptId, projectId: input.projectId }).first(),
+    sql9("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where({ "o_assets.id": input.assetId, "o_assets.projectId": input.projectId, "o_assets.type": "audio" }).select("o_assets.id", "o_assets.name", "o_image.filePath").first()
+  ]);
+  if (!script) throw new Error("\u5267\u672C\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
+  if (!asset?.filePath) throw new Error("\u58F0\u97F3\u7D20\u6750\u4E0D\u5B58\u5728\u3001\u672A\u5B8C\u6210\u6216\u6CA1\u6709\u672C\u5730\u6587\u4EF6");
+  const media = await probeMedia(asset.filePath);
+  if (!media?.hasAudio) throw new Error("\u58F0\u97F3\u7D20\u6750\u65E0\u6CD5\u8BFB\u53D6\u6709\u6548\u97F3\u8F68");
+  if (input.inMs >= media.durationMs) throw new Error("\u58F0\u97F3\u7D20\u6750\u5165\u70B9\u4E0D\u80FD\u8D85\u8FC7\u6587\u4EF6\u65F6\u957F");
+  const availableMs = media.durationMs - input.inMs;
+  const durationMs = Math.min(input.durationMs ?? availableMs, availableMs);
+  if (durationMs <= 0) throw new Error("\u58F0\u97F3\u7D20\u6750\u7247\u6BB5\u65F6\u957F\u5FC5\u987B\u5927\u4E8E 0");
+  const now2 = Date.now();
+  const id = input.id ?? v4_default();
+  const values = {
+    project_id: input.projectId,
+    script_id: input.scriptId,
+    kind: input.kind,
+    asset_id: input.assetId,
+    name: asset.name || `${input.kind}-${input.assetId}`,
+    path: asset.filePath,
+    start_ms: input.startMs,
+    in_ms: input.inMs,
+    duration_ms: durationMs,
+    gain_db: input.gainDb,
+    fade_in_ms: Math.min(input.fadeInMs, durationMs),
+    fade_out_ms: Math.min(input.fadeOutMs, durationMs),
+    updated_at: now2
+  };
+  if (input.id) {
+    const updated = await sql9("project_audio_clips").where({ id: input.id, project_id: input.projectId, script_id: input.scriptId }).update(values);
+    if (updated !== 1) throw new Error("\u58F0\u97F3\u7247\u6BB5\u4E0D\u5B58\u5728");
+  } else {
+    await sql9("project_audio_clips").insert({ id, ...values, created_at: now2 });
+  }
+  return mapRow2(await sql9("project_audio_clips").where("id", id).first());
+}
+async function deleteProjectAudioClip(input) {
+  const deleted = await sql9("project_audio_clips").where({ id: input.id, project_id: input.projectId, script_id: input.scriptId }).delete();
+  if (deleted !== 1) throw new Error("\u58F0\u97F3\u7247\u6BB5\u4E0D\u5B58\u5728");
+  return { id: input.id };
+}
+var sql9, projectAudioKinds;
+var init_audioClips = __esm({
+  "src/services/composition/audioClips.ts"() {
+    "use strict";
+    init_dist_node();
+    init_db();
+    init_probe();
+    sql9 = db;
+    projectAudioKinds = ["sfx", "ambience", "bgm"];
+  }
+});
+
+// src/services/composition/qaJobs.ts
+function parseJson2(value) {
+  if (typeof value !== "string" || !value) return null;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+}
+function mapReport(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    projectId: row.project_id,
+    scriptId: row.script_id,
+    compositionJobId: row.composition_job_id,
+    timelineId: row.timeline_id,
+    outputChecksum: row.output_checksum,
+    status: row.status,
+    result: parseJson2(row.result),
+    taskId: row.task_id ?? null,
+    errorMessage: row.error_message ?? null,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+async function getLatestQaReport(input) {
+  return mapReport(await sql10("media_qa_reports").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first());
+}
+async function enqueueCompositionQa(input) {
+  const job = await sql10("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
+  if (!job || job.status !== "succeeded" || !job.output_path || !job.output_checksum) throw new Error("\u8BF7\u5148\u5B8C\u6210\u53EF\u7528\u7684\u6210\u7247\u6E32\u67D3");
+  if (!await utils_default.oss.fileExists(job.output_path)) throw new Error("\u6210\u7247\u6587\u4EF6\u4E0D\u5B58\u5728\uFF0C\u8BF7\u91CD\u65B0\u6E32\u67D3");
+  const previous = await sql10("media_qa_reports").where({ composition_job_id: job.id, output_checksum: job.output_checksum }).orderBy("created_at", "desc").first();
+  if (previous?.status === "succeeded") return { report: mapReport(previous), task: previous.task_id ? await generationTaskRepository.get(previous.task_id) : null, cached: true, deduped: true };
+  if (previous && ["queued", "running"].includes(previous.status) && previous.task_id) {
+    const task = await generationTaskRepository.get(previous.task_id);
+    if (task && !["cancelled", "failed", "succeeded"].includes(task.status)) return { report: mapReport(previous), task, cached: false, deduped: true };
+  }
+  const timeline = await sql10("project_timelines").where({ id: job.timeline_id, project_id: input.projectId, script_id: input.scriptId }).first();
+  if (!timeline) throw new Error("\u6210\u7247\u5BF9\u5E94\u7684\u65F6\u95F4\u7EBF\u4E0D\u5B58\u5728");
+  const reportId = v4_default();
+  const now2 = Date.now();
+  await sql10("media_qa_reports").insert({
+    id: reportId,
+    project_id: input.projectId,
+    script_id: input.scriptId,
+    composition_job_id: job.id,
+    timeline_id: timeline.id,
+    output_checksum: job.output_checksum,
+    status: "queued",
+    result: null,
+    task_id: null,
+    error_message: null,
+    created_at: now2,
+    updated_at: now2
+  });
+  const [legacyTaskId] = await sql10("o_tasks").insert({
+    projectId: input.projectId,
+    taskClass: "\u5A92\u4F53 QA",
+    relatedObjects: JSON.stringify({ reportId, compositionJobId: job.id }),
+    model: "ffmpeg-qa",
+    describe: `\u672C\u5730\u6210\u7247 QA\uFF1A\u65F6\u95F4\u7EBF v${job.timeline_version}`,
+    state: "\u6392\u961F\u4E2D",
+    startTime: now2
+  });
+  const payload = {
+    projectId: input.projectId,
+    scriptId: input.scriptId,
+    reportId,
+    compositionJobId: job.id,
+    timelineId: timeline.id,
+    outputPath: job.output_path,
+    outputChecksum: job.output_checksum,
+    expectedDurationMs: job.duration_ms,
+    preset: job.preset,
+    model: "local:ffmpeg-qa"
+  };
+  try {
+    const queued = await generationTaskRepository.enqueue({
+      projectId: input.projectId,
+      legacyTaskId,
+      lane: "qa",
+      type: "composition.qa",
+      resourceKey: `qa:composition:${job.id}`,
+      payload,
+      provider: "local",
+      idempotencyKey: stableIdempotencyKey({ type: "composition.qa", outputChecksum: job.output_checksum, requestId: input.requestId }),
+      maxAttempts: 2
+    });
+    if (queued.deduped) {
+      await Promise.all([sql10("media_qa_reports").where("id", reportId).delete(), sql10("o_tasks").where("id", legacyTaskId).delete()]);
+      const existingReport = await sql10("media_qa_reports").where("task_id", queued.task.id).first();
+      return { report: mapReport(existingReport), task: queued.task, cached: false, deduped: true };
+    }
+    await sql10("media_qa_reports").where("id", reportId).update({ task_id: queued.task.id, updated_at: Date.now() });
+    return { report: mapReport(await sql10("media_qa_reports").where("id", reportId).first()), task: queued.task, cached: false, deduped: queued.deduped };
+  } catch (error73) {
+    await Promise.all([sql10("media_qa_reports").where("id", reportId).delete(), sql10("o_tasks").where("id", legacyTaskId).delete()]);
+    throw error73;
+  }
+}
+var sql10;
+var init_qaJobs = __esm({
+  "src/services/composition/qaJobs.ts"() {
+    "use strict";
+    init_dist_node();
+    init_db();
+    init_utils3();
+    init_repository();
+    sql10 = db;
+  }
+});
+
+// src/services/composition/reviews.ts
+function mapRow3(row) {
+  return row ? {
+    id: row.id,
+    projectId: row.project_id,
+    scriptId: row.script_id,
+    compositionJobId: row.composition_job_id,
+    status: row.status,
+    note: row.note ?? null,
+    reviewer: row.reviewer,
+    createdAt: row.created_at
+  } : null;
+}
+async function getLatestCompositionReview(input) {
+  let query = sql11("composition_reviews").where({ project_id: input.projectId, script_id: input.scriptId });
+  if (input.compositionJobId) query = query.where("composition_job_id", input.compositionJobId);
+  return mapRow3(await query.orderBy("created_at", "desc").first());
+}
+async function recordCompositionReview(input) {
+  const job = await sql11("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
+  if (!job || job.status !== "succeeded") throw new Error("\u53EA\u80FD\u5BA1\u6838\u5DF2\u5B8C\u6210\u7684\u6210\u7247");
+  const row = {
+    id: v4_default(),
+    project_id: input.projectId,
+    script_id: input.scriptId,
+    composition_job_id: input.compositionJobId,
+    output_checksum: job.output_checksum,
+    status: input.status,
+    note: input.note?.trim() || null,
+    reviewer: input.reviewer,
+    created_at: Date.now()
+  };
+  await sql11("composition_reviews").insert(row);
+  return mapRow3(row);
+}
+var sql11, reviewStatuses;
+var init_reviews = __esm({
+  "src/services/composition/reviews.ts"() {
+    "use strict";
+    init_dist_node();
+    init_db();
+    sql11 = db;
+    reviewStatuses = ["approved", "rejected"];
+  }
+});
+
+// src/services/composition/publish.ts
+function parseJson3(value) {
+  if (typeof value !== "string" || !value) return value ?? null;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+}
+async function mapPackage(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    projectId: row.project_id,
+    scriptId: row.script_id,
+    compositionJobId: row.composition_job_id,
+    outputChecksum: row.output_checksum,
+    qaReportId: row.qa_report_id,
+    reviewId: row.review_id,
+    status: row.status,
+    packagePath: row.package_path ?? null,
+    packageUrl: row.package_path ? await utils_default.oss.getFileUrl(row.package_path) : null,
+    packageChecksum: row.package_checksum ?? null,
+    sizeBytes: row.size_bytes ?? null,
+    manifest: parseJson3(row.manifest),
+    taskId: row.task_id ?? null,
+    errorMessage: row.error_message ?? null,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+async function getLatestPublishPackage(input) {
+  return mapPackage(await sql12("publish_packages").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first());
+}
+async function enqueuePublishPackage(input) {
+  const job = await sql12("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
+  if (!job || job.status !== "succeeded" || job.preset !== "final-high" || !job.output_path || !job.output_checksum) throw new Error("\u8BF7\u5148\u5B8C\u6210\u9AD8\u6E05\u6210\u7247\u6E32\u67D3");
+  if (!await utils_default.oss.fileExists(job.output_path)) throw new Error("\u9AD8\u6E05\u6210\u7247\u6587\u4EF6\u4E0D\u5B58\u5728\uFF0C\u8BF7\u91CD\u65B0\u6E32\u67D3");
+  const qa = await sql12("media_qa_reports").where({ composition_job_id: job.id, output_checksum: job.output_checksum }).orderBy("created_at", "desc").first();
+  const qaResult = parseJson3(qa?.result);
+  if (!qa || qa.status !== "succeeded" || !qaResult?.summary) throw new Error("\u8BF7\u5148\u5B8C\u6210\u5F53\u524D\u9AD8\u6E05\u6210\u7247\u7684\u5A92\u4F53 QA");
+  if (qaResult.summary.status === "failed") throw new Error("\u5A92\u4F53 QA \u4ECD\u6709\u963B\u65AD\u9519\u8BEF\uFF0C\u4E0D\u80FD\u521B\u5EFA\u53D1\u5E03\u5305");
+  const review = await sql12("composition_reviews").where({ composition_job_id: job.id, output_checksum: job.output_checksum }).orderBy("created_at", "desc").first();
+  if (!review || review.status !== "approved") throw new Error("\u8BF7\u5148\u5BA1\u6838\u901A\u8FC7\u5F53\u524D\u9AD8\u6E05\u6210\u7247");
+  const previous = await sql12("publish_packages").where({ composition_job_id: job.id, output_checksum: job.output_checksum, qa_report_id: qa.id, review_id: review.id }).first();
+  if (previous?.status === "succeeded" && previous.package_path && await utils_default.oss.fileExists(previous.package_path)) {
+    return { package: await mapPackage(previous), task: previous.task_id ? await generationTaskRepository.get(previous.task_id) : null, cached: true, deduped: true };
+  }
+  if (previous && ["queued", "running"].includes(previous.status) && previous.task_id) {
+    const task = await generationTaskRepository.get(previous.task_id);
+    if (task && !["cancelled", "failed", "succeeded"].includes(task.status)) return { package: await mapPackage(previous), task, cached: false, deduped: true };
+  }
+  const packageId = previous?.id ?? v4_default();
+  const createdPackage = !previous;
+  const now2 = Date.now();
+  const packagePath = `/${input.projectId}/publish/${input.scriptId}/delivery-${job.output_checksum.slice(0, 16)}.zip`;
+  const packageRow = {
+    project_id: input.projectId,
+    script_id: input.scriptId,
+    composition_job_id: job.id,
+    output_checksum: job.output_checksum,
+    qa_report_id: qa.id,
+    review_id: review.id,
+    status: "queued",
+    package_path: null,
+    package_checksum: null,
+    size_bytes: null,
+    manifest: null,
+    task_id: null,
+    error_message: null,
+    updated_at: now2
+  };
+  if (createdPackage) await sql12("publish_packages").insert({ id: packageId, ...packageRow, created_at: now2 });
+  const [legacyTaskId] = await sql12("o_tasks").insert({
+    projectId: input.projectId,
+    taskClass: "\u53D1\u5E03\u4EA4\u4ED8\u5305",
+    relatedObjects: JSON.stringify({ packageId, compositionJobId: job.id }),
+    model: "local-zip",
+    describe: `\u9AD8\u6E05\u6210\u7247\u53D1\u5E03\u5305\uFF1A\u65F6\u95F4\u7EBF v${job.timeline_version}`,
+    state: "\u6392\u961F\u4E2D",
+    startTime: now2
+  });
+  const payload = {
+    projectId: input.projectId,
+    scriptId: input.scriptId,
+    packageId,
+    compositionJobId: job.id,
+    outputPath: job.output_path,
+    outputChecksum: job.output_checksum,
+    timelineId: job.timeline_id,
+    qaReportId: qa.id,
+    reviewId: review.id,
+    packagePath,
+    model: "local:publish-zip"
+  };
+  try {
+    const queued = await generationTaskRepository.enqueue({
+      projectId: input.projectId,
+      legacyTaskId,
+      lane: "publish",
+      type: "composition.publish",
+      resourceKey: `publish:composition:${job.id}`,
+      payload,
+      provider: "local",
+      idempotencyKey: stableIdempotencyKey({ type: "composition.publish", outputChecksum: job.output_checksum, qaReportId: qa.id, reviewId: review.id, requestId: input.requestId }),
+      maxAttempts: 2
+    });
+    if (queued.deduped) {
+      await sql12("o_tasks").where("id", legacyTaskId).delete();
+      if (createdPackage) await sql12("publish_packages").where("id", packageId).delete();
+      const existingPackage = await sql12("publish_packages").where("task_id", queued.task.id).first();
+      return { package: await mapPackage(existingPackage || previous), task: queued.task, cached: false, deduped: true };
+    }
+    await sql12("publish_packages").where("id", packageId).update({ ...packageRow, task_id: queued.task.id, updated_at: Date.now() });
+    return { package: await mapPackage(await sql12("publish_packages").where("id", packageId).first()), task: queued.task, cached: false, deduped: false };
+  } catch (error73) {
+    await sql12("o_tasks").where("id", legacyTaskId).delete();
+    if (createdPackage) await sql12("publish_packages").where("id", packageId).delete();
+    throw error73;
+  }
+}
+var sql12;
+var init_publish = __esm({
+  "src/services/composition/publish.ts"() {
+    "use strict";
+    init_dist_node();
+    init_utils3();
+    init_db();
+    init_repository();
+    sql12 = db;
+  }
+});
+
+// src/routes/composition/timeline.ts
+var import_express28, router28, filters, timeline_default;
+var init_timeline2 = __esm({
+  "src/routes/composition/timeline.ts"() {
+    "use strict";
+    import_express28 = __toESM(require_express2());
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_timeline();
+    init_jobs();
+    init_renderer();
+    init_audioClips();
+    init_qaJobs();
+    init_reviews();
+    init_publish();
+    router28 = import_express28.default.Router();
+    filters = {
+      projectId: external_exports.number().int().positive(),
+      scriptId: external_exports.number().int().positive()
+    };
+    router28.post("/build", validateFields(filters), async (req, res) => {
+      res.status(200).send(success3(await buildNormalizedTimeline(req.body)));
+    });
+    router28.post("/latest", validateFields(filters), async (req, res) => {
+      res.status(200).send(success3(await getLatestTimeline(req.body)));
+    });
+    router28.post("/list", validateFields(filters), async (req, res) => {
+      res.status(200).send(success3(await listTimelines(req.body)));
+    });
+    router28.post("/jobs/latest", validateFields(filters), async (req, res) => {
+      res.status(200).send(success3(await getLatestCompositionJob(req.body)));
+    });
+    router28.post("/audio/list", validateFields(filters), async (req, res) => {
+      res.status(200).send(success3(await listProjectAudioClips(req.body)));
+    });
+    router28.post("/qa/latest", validateFields(filters), async (req, res) => {
+      res.status(200).send(success3(await getLatestQaReport(req.body)));
+    });
+    router28.post("/publish/latest", validateFields(filters), async (req, res) => {
+      res.status(200).send(success3(await getLatestPublishPackage(req.body)));
+    });
+    router28.post(
+      "/publish/create",
+      validateFields({ ...filters, compositionJobId: external_exports.string().uuid(), requestId: external_exports.string().trim().min(1) }),
+      async (req, res) => {
+        try {
+          res.status(200).send(success3(await enqueuePublishPackage(req.body)));
+        } catch (cause) {
+          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
+        }
+      }
+    );
+    router28.post(
+      "/review/latest",
+      validateFields({ ...filters, compositionJobId: external_exports.string().uuid().optional() }),
+      async (req, res) => {
+        res.status(200).send(success3(await getLatestCompositionReview(req.body)));
+      }
+    );
+    router28.post(
+      "/review/record",
+      validateFields({
+        ...filters,
+        compositionJobId: external_exports.string().uuid(),
+        status: external_exports.enum(reviewStatuses),
+        note: external_exports.string().trim().max(1e3).optional()
+      }),
+      async (req, res) => {
+        try {
+          res.status(200).send(success3(await recordCompositionReview({
+            ...req.body,
+            reviewer: String(req.user?.username || req.user?.name || "local-user")
+          })));
+        } catch (cause) {
+          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
+        }
+      }
+    );
+    router28.post(
+      "/qa/run",
+      validateFields({
+        ...filters,
+        compositionJobId: external_exports.string().uuid(),
+        requestId: external_exports.string().trim().min(1)
+      }),
+      async (req, res) => {
+        try {
+          res.status(200).send(success3(await enqueueCompositionQa(req.body)));
+        } catch (cause) {
+          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
+        }
+      }
+    );
+    router28.post(
+      "/audio/upsert",
+      validateFields({
+        ...filters,
+        id: external_exports.string().uuid().optional(),
+        kind: external_exports.enum(projectAudioKinds),
+        assetId: external_exports.number().int().positive(),
+        startMs: external_exports.number().int().nonnegative(),
+        inMs: external_exports.number().int().nonnegative(),
+        durationMs: external_exports.number().int().positive().optional(),
+        gainDb: external_exports.number().min(-60).max(24),
+        fadeInMs: external_exports.number().int().nonnegative().max(6e4),
+        fadeOutMs: external_exports.number().int().nonnegative().max(6e4)
+      }),
+      async (req, res) => {
+        try {
+          res.status(200).send(success3(await upsertProjectAudioClip(req.body)));
+        } catch (cause) {
+          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
+        }
+      }
+    );
+    router28.post(
+      "/audio/delete",
+      validateFields({ ...filters, id: external_exports.string().uuid() }),
+      async (req, res) => {
+        try {
+          res.status(200).send(success3(await deleteProjectAudioClip(req.body)));
+        } catch (cause) {
+          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
+        }
+      }
+    );
+    router28.post(
+      "/render",
+      validateFields({
+        ...filters,
+        timelineId: external_exports.string().uuid(),
+        preset: external_exports.enum(compositionRenderPresets),
+        requestId: external_exports.string().trim().min(1)
+      }),
+      async (req, res) => {
+        try {
+          res.status(200).send(success3(await enqueueCompositionRender(req.body)));
+        } catch (cause) {
+          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
+        }
+      }
+    );
+    timeline_default = router28;
+  }
+});
+
+// src/routes/cornerScape/batchBindAudio.ts
+var import_express29, router29, batchBindAudio_default;
+var init_batchBindAudio = __esm({
+  "src/routes/cornerScape/batchBindAudio.ts"() {
+    "use strict";
+    import_express29 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_dist22();
+    router29 = import_express29.default.Router();
+    batchBindAudio_default = router29.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        assetsIds: external_exports.array(external_exports.number()),
+        concurrentCount: external_exports.number().min(1).optional()
+      }),
+      async (req, res) => {
+        const { projectId, assetsIds, concurrentCount } = req.body;
+        const assetsData = await utils_default.db("o_assets").whereIn("id", assetsIds).andWhere("projectId", projectId).select("id", "name", "describe", "type");
+        const audioData = await utils_default.db("o_assets").where("type", "audio").whereNull("assetsId").andWhere("projectId", projectId).select("id", "name", "describe");
+        if (!audioData.length) return res.status(400).send(error50("\u6682\u65E0\u8BBE\u7F6E\u97F3\u9891\uFF0C\u8BF7\u5148\u524D\u5F80\u8D44\u4EA7\u4E2D\u5FC3\u4E0A\u4F20\u97F3\u9891"));
+        const batchSize = concurrentCount ?? 1;
+        async function processAsset(asset) {
+          try {
+            const resultTool = tool({
+              description: "\u5339\u914D\u5B8C\u6210\u540E\u5FC5\u987B\u8C03\u7528\u6B64\u5DE5\u5177\u63D0\u4EA4\u7ED3\u679C",
+              inputSchema: jsonSchema(
+                external_exports.object({
+                  audioId: external_exports.number().nullable().optional().describe("\u4E0E\u8BE5\u8D44\u4EA7\u5339\u914D\u7684\u97F3\u9891ID\u5217\u8868\uFF0C\u82E5\u65E0\u5408\u9002\u5339\u914D\u5219\u8FD4\u56DE\u7A7A\u6570\u7EC4")
+                }).toJSONSchema()
+              ),
+              execute: async (result) => {
+                await utils_default.db("o_assetsRole2Audio").where("assetsRoleId", asset.id).delete();
+                if (result?.audioId) await utils_default.db("o_assetsRole2Audio").insert({ assetsRoleId: asset.id, assetsAudioId: result.audioId });
+                await utils_default.db("o_assets").where("id", asset.id).update("audioBindState", "\u5DF2\u5B8C\u6210");
+                return "\u65E0\u9700\u56DE\u590D\u7528\u6237\u4EFB\u4F55\u5185\u5BB9";
+              }
+            });
+            const audioList = audioData.map((i) => `- ID:${i.id} | \u540D\u79F0:${i.name} | \u63CF\u8FF0:${i.describe ?? "\u65E0"}`).join("\n");
+            const promptData = await utils_default.db("o_prompt").where("type", "audioBindPrompt").first();
+            let audioBindPrompt = "";
+            if (promptData && promptData.useData) {
+              audioBindPrompt = promptData.useData;
+            } else {
+              audioBindPrompt = promptData?.data ?? void 0;
+            }
+            const { text: text2 } = await utils_default.Ai.Text("universalAi").invoke({
+              messages: [
+                {
+                  role: "system",
+                  content: `
+              ${audioBindPrompt}
+              `
+                },
+                {
+                  role: "user",
+                  content: `
+                ## \u5019\u9009\u97F3\u9891\u5217\u8868
+                ${audioList}
+                ## \u5F85\u5339\u914D\u8D44\u4EA7
+                - ID:${asset.id} | \u540D\u79F0:${asset.name} | \u63CF\u8FF0:${asset.describe ?? "\u65E0"} | \u7C7B\u578B\uFF1A${asset.type}
+                \u8BF7\u4ECE\u5019\u9009\u97F3\u9891\u5217\u8868\u4E2D\u4E3A\u8BE5\u8D44\u4EA7\u9009\u51FA\u6765\u4E00\u4E2A\u6700\u7B26\u5408\u8BE5\u89D2\u8272\u8BBE\u5B9A\u7684\u97F3\u8272\uFF0C\u5E76\u8C03\u7528 resultTool \u63D0\u4EA4\u7ED3\u679C\u3002
+           `
+                }
+              ],
+              tools: { resultTool }
+            });
+          } catch (e) {
+            await utils_default.db("o_assets").where("id", asset.id).update("audioBindState", "\u751F\u6210\u5931\u8D25");
+            console.error(`[bindAudio] \u8D44\u4EA7 ${asset.id} \u5904\u7406\u5931\u8D25:`, e);
+          }
+        }
+        async function runWithConcurrency() {
+          for (let i = 0; i < assetsData.length; i += batchSize) {
+            const batch = assetsData.slice(i, i + batchSize);
+            await Promise.all(batch.map((asset) => processAsset(asset)));
+          }
+        }
+        await utils_default.db("o_assets").whereIn(
+          "id",
+          assetsData.map((i) => i.id)
+        ).update("audioBindState", "\u751F\u6210\u4E2D");
+        runWithConcurrency();
+        res.status(200).send(success3());
+      }
+    );
+  }
+});
+
+// src/routes/cornerScape/getAllAssets.ts
+var import_express30, router30, getAllAssets_default;
+var init_getAllAssets = __esm({
+  "src/routes/cornerScape/getAllAssets.ts"() {
+    "use strict";
+    import_express30 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router30 = import_express30.default.Router();
+    getAllAssets_default = router30.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        type: external_exports.array(external_exports.string()).optional()
+      }),
+      async (req, res) => {
+        const { projectId, type } = req.body;
+        const data = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select(
+          "o_assets.*",
+          "o_image.filePath",
+          "o_image.state",
+          "o_image.model",
+          "o_image.resolution",
+          "o_image.errorReason",
+          "o_image.id as imageId"
+        ).where("o_assets.projectId", projectId).andWhere("o_assets.type", "<>", "clip").andWhere("o_assets.type", "<>", "audio").andWhere("o_assets.assetsId", null).modify((qb) => {
+          if (type && type.length > 0) qb.whereIn("o_assets.type", type);
+        }).orderByRaw(`CASE o_assets.type WHEN 'role' THEN 1 WHEN 'scene' THEN 2 WHEN 'tool' THEN 3 ELSE 4 END`);
+        const assets2AudioData = await utils_default.db("o_assetsRole2Audio").leftJoin("o_assets", "o_assets.id", "o_assetsRole2Audio.assetsAudioId").whereIn(
+          "o_assetsRole2Audio.assetsRoleId",
+          data.map((i) => i.id)
+        ).select("o_assets.id", "o_assets.name", "o_assetsRole2Audio.assetsRoleId");
+        const repleAssets = {};
+        assets2AudioData.forEach((item) => {
+          if (!repleAssets[item.assetsRoleId]) repleAssets[item.assetsRoleId] = [item];
+          else repleAssets[item.assetsRoleId].push(item);
+        });
+        const result = await Promise.all(
+          data.map(async (parent) => {
+            const historyImages = await utils_default.db("o_image").where("assetsId", parent.id).andWhere("state", "\u5DF2\u5B8C\u6210").select("id", "filePath");
+            const historyImagesWithUrl = await Promise.all(
+              historyImages.map(async (img) => ({
+                id: img.id,
+                filePath: img.filePath && await utils_default.oss.getSmallImageUrl(img.filePath)
+              }))
+            );
+            return {
+              ...parent,
+              filePath: parent.filePath && await utils_default.oss.getSmallImageUrl(parent.filePath),
+              historyImages: historyImagesWithUrl,
+              relepedAudio: repleAssets[parent.id] ?? []
+            };
+          })
+        );
+        res.status(200).send(success3(result));
+      }
+    );
+  }
+});
+
+// src/routes/cornerScape/pollingAudio.ts
+var import_express31, router31, pollingAudio_default;
+var init_pollingAudio = __esm({
+  "src/routes/cornerScape/pollingAudio.ts"() {
+    "use strict";
+    import_express31 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router31 = import_express31.default.Router();
+    pollingAudio_default = router31.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        const data = await utils_default.db("o_assets").whereIn("id", ids).whereNot("audioBindState", "\u751F\u6210\u4E2D").select("*");
+        res.status(200).send(success3(data));
+      }
+    );
+  }
+});
+
+// src/routes/cornerScape/updateAssetsAudio.ts
+var import_express32, router32, updateAssetsAudio_default;
+var init_updateAssetsAudio = __esm({
+  "src/routes/cornerScape/updateAssetsAudio.ts"() {
+    "use strict";
+    import_express32 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router32 = import_express32.default.Router();
+    updateAssetsAudio_default = router32.post(
+      "/",
+      validateFields({
+        assetsId: external_exports.number(),
+        audioIds: external_exports.array(external_exports.number()).optional()
+      }),
+      async (req, res) => {
+        const { assetsId, audioIds } = req.body;
+        if (audioIds && audioIds.length > 1) return res.status(400).send(error50("\u4EC5\u53EF\u7ED1\u5B9A\u4E00\u4E2A\u97F3\u8272"));
+        await utils_default.db("o_assetsRole2Audio").where("assetsRoleId", assetsId).delete();
+        if (audioIds && audioIds.length) {
+          await utils_default.db("o_assetsRole2Audio").insert({ assetsRoleId: assetsId, assetsAudioId: audioIds[0] });
+        }
+        res.status(200).send(success3({ message: "\u66F4\u65B0\u97F3\u9891\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/general/generalStatistics.ts
+var import_express33, router33, generalStatistics_default;
+var init_generalStatistics = __esm({
+  "src/routes/general/generalStatistics.ts"() {
+    "use strict";
+    import_express33 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router33 = import_express33.default.Router();
+    generalStatistics_default = router33.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId } = req.body;
+        const scripts = await utils_default.db("o_script").where("projectId", projectId).select("id");
+        const scriptIds = scripts.map((item) => item.id);
+        const roleCount = await utils_default.db("o_assets").where("projectId", projectId).where("type", "\u89D2\u8272").count("* as total").first();
+        const scriptCount = await utils_default.db("o_script").where("projectId", projectId).count("* as total").first();
+        const videoCount = await utils_default.db("o_video").whereIn("scriptId", scriptIds).count("* as total").first();
+        const storyboardCount = await utils_default.db("o_assets").whereIn("scriptId", scriptIds).where("type", "\u5206\u955C").count("* as total").first();
+        const data = {
+          roleCount: roleCount?.total || 0,
+          scriptCount: scriptCount?.total || 0,
+          videoCount: videoCount?.total || 0,
+          storyboardCount: storyboardCount?.total || 0
+        };
+        res.status(200).send(success3(data));
+      }
+    );
+  }
+});
+
+// src/routes/general/getSingleProject.ts
+var import_express34, router34, getSingleProject_default;
+var init_getSingleProject = __esm({
+  "src/routes/general/getSingleProject.ts"() {
+    "use strict";
+    import_express34 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router34 = import_express34.default.Router();
+    getSingleProject_default = router34.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id } = req.body;
+        const data = await utils_default.db("o_project").where("id", id).select("*");
+        res.status(200).send(success3(data));
+      }
+    );
+  }
+});
+
+// src/routes/general/updateProject.ts
+var import_express35, router35, updateProject_default;
+var init_updateProject = __esm({
+  "src/routes/general/updateProject.ts"() {
+    "use strict";
+    import_express35 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router35 = import_express35.default.Router();
+    updateProject_default = router35.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        intro: external_exports.string().optional().nullable(),
+        type: external_exports.string().optional().nullable(),
+        artStyle: external_exports.string().optional().nullable(),
+        videoRatio: external_exports.string().optional().nullable(),
+        projectType: external_exports.string().optional().nullable()
+      }),
+      async (req, res) => {
+        const { id, intro, type, artStyle, videoRatio, projectType } = req.body;
+        await utils_default.db("o_project").where("id", id).update({
+          intro,
+          type,
+          artStyle,
+          videoRatio,
+          projectType
+        });
+        res.status(200).send(success3({ message: "\u4FEE\u6539\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/generationTasks/cancel.ts
+var import_express36, router36, cancel_default;
+var init_cancel = __esm({
+  "src/routes/generationTasks/cancel.ts"() {
+    "use strict";
+    import_express36 = __toESM(require_express2());
+    init_zod();
+    init_middleware();
+    init_responseFormat();
+    init_repository();
+    router36 = import_express36.default.Router();
+    cancel_default = router36.post("/", validateFields({ taskId: external_exports.string().uuid() }), async (req, res) => {
+      const task = await generationTaskRepository.requestCancel(req.body.taskId);
+      if (!task) return res.status(404).send({ message: "\u4EFB\u52A1\u4E0D\u5B58\u5728" });
+      return res.status(200).send(success3(task));
+    });
+  }
+});
+
+// src/routes/generationTasks/get.ts
+var import_express37, router37, get_default2;
+var init_get2 = __esm({
+  "src/routes/generationTasks/get.ts"() {
+    "use strict";
+    import_express37 = __toESM(require_express2());
+    init_zod();
+    init_middleware();
+    init_responseFormat();
+    init_repository();
+    router37 = import_express37.default.Router();
+    get_default2 = router37.post("/", validateFields({ taskId: external_exports.string().uuid() }), async (req, res) => {
+      const task = await generationTaskRepository.get(req.body.taskId);
+      if (!task) return res.status(404).send({ message: "\u4EFB\u52A1\u4E0D\u5B58\u5728" });
+      return res.status(200).send(success3(task));
+    });
+  }
+});
+
+// src/routes/generationTasks/limits.ts
+var import_express38, router38, limits_default;
+var init_limits = __esm({
+  "src/routes/generationTasks/limits.ts"() {
+    "use strict";
+    import_express38 = __toESM(require_express2());
+    init_zod();
+    init_middleware();
+    init_responseFormat();
+    init_generationTask();
+    init_db();
+    init_budget();
+    router38 = import_express38.default.Router();
+    router38.post("/list", async (_req, res) => {
+      const rows = await db("provider_limits").select("provider", "model", "lane", "max_concurrency as maxConcurrency", "rpm", "cooldown_ms as cooldownMs", "updated_at as updatedAt").orderBy(["provider", "model", "lane"]);
+      res.status(200).send(success3(rows));
+    });
+    router38.post(
+      "/upsert",
+      validateFields({
+        provider: external_exports.string().trim().min(1),
+        model: external_exports.string().trim().min(1).default("*"),
+        lane: external_exports.enum(generationTaskLanes),
+        maxConcurrency: external_exports.number().int().min(1).max(32),
+        rpm: external_exports.number().int().min(1).max(1e4),
+        cooldownMs: external_exports.number().int().min(0).max(6e4)
+      }),
+      async (req, res) => {
+        const { provider, model, lane, maxConcurrency, rpm, cooldownMs } = req.body;
+        const row = {
+          provider,
+          model,
+          lane,
+          max_concurrency: maxConcurrency,
+          rpm,
+          cooldown_ms: cooldownMs,
+          updated_at: Date.now()
+        };
+        await db("provider_limits").insert(row).onConflict(["provider", "model", "lane"]).merge(row);
+        res.status(200).send(success3(row));
+      }
+    );
+    router38.post("/budget/get", validateFields({ projectId: external_exports.number().int().positive() }), async (req, res) => {
+      res.status(200).send(success3(await getProjectBudget(req.body.projectId)));
+    });
+    router38.post(
+      "/budget/upsert",
+      validateFields({
+        projectId: external_exports.number().int().positive(),
+        budgetLimit: external_exports.number().nonnegative().nullable(),
+        currency: external_exports.enum(["CNY", "USD"]),
+        blockUnknownPrice: external_exports.boolean()
+      }),
+      async (req, res) => {
+        res.status(200).send(success3(await upsertProjectBudget(req.body)));
+      }
+    );
+    router38.post("/pricing/list", async (_req, res) => {
+      res.status(200).send(success3(await listPricingRules()));
+    });
+    router38.post(
+      "/pricing/upsert",
+      validateFields({
+        id: external_exports.string().uuid().optional(),
+        provider: external_exports.string().trim().min(1),
+        model: external_exports.string().trim().min(1),
+        lane: external_exports.enum(generationTaskLanes),
+        unitType: external_exports.enum(pricingUnitTypes),
+        unitPrice: external_exports.number().nonnegative(),
+        currency: external_exports.enum(["CNY", "USD"])
+      }),
+      async (req, res) => {
+        res.status(200).send(success3(await upsertPricingRule(req.body)));
+      }
+    );
+    router38.post("/pricing/delete", validateFields({ id: external_exports.string().uuid() }), async (req, res) => {
+      res.status(200).send(success3(await deletePricingRule(req.body.id)));
+    });
+    limits_default = router38;
+  }
+});
+
+// src/routes/generationTasks/list.ts
+var import_express39, router39, list_default;
+var init_list = __esm({
+  "src/routes/generationTasks/list.ts"() {
+    "use strict";
+    import_express39 = __toESM(require_express2());
+    init_zod();
+    init_middleware();
+    init_responseFormat();
+    init_generationTask();
+    init_repository();
+    router39 = import_express39.default.Router();
+    list_default = router39.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number().optional(),
+        lane: external_exports.enum(generationTaskLanes).optional(),
+        status: external_exports.enum(generationTaskStatuses).optional(),
+        type: external_exports.string().optional(),
+        page: external_exports.number().int().positive().optional(),
+        limit: external_exports.number().int().positive().max(100).optional()
+      }),
+      async (req, res) => {
+        res.status(200).send(success3(await generationTaskRepository.list(req.body)));
+      }
+    );
+  }
+});
+
+// src/routes/generationTasks/retry.ts
+var import_express40, router40, retry_default;
+var init_retry = __esm({
+  "src/routes/generationTasks/retry.ts"() {
+    "use strict";
+    import_express40 = __toESM(require_express2());
+    init_zod();
+    init_middleware();
+    init_responseFormat();
+    init_repository();
+    router40 = import_express40.default.Router();
+    retry_default = router40.post(
+      "/",
+      validateFields({ taskId: external_exports.string().uuid(), confirmUnknownProviderState: external_exports.boolean().optional() }),
+      async (req, res) => {
+        try {
+          const task = await generationTaskRepository.retry(req.body.taskId, req.body.confirmUnknownProviderState === true);
+          return res.status(200).send(success3(task));
+        } catch (error73) {
+          return res.status(409).send({ message: error73 instanceof Error ? error73.message : String(error73) });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/login/login.ts
+function setToken(payload, expiresIn, secret) {
+  if (!payload || typeof secret !== "string" || !secret) {
+    throw new Error("\u53C2\u6570\u4E0D\u5408\u6CD5");
+  }
+  return import_jsonwebtoken4.default.sign(payload, secret, { expiresIn });
+}
+var import_express41, import_jsonwebtoken4, router41, login_default;
+var init_login = __esm({
+  "src/routes/login/login.ts"() {
+    "use strict";
+    import_express41 = __toESM(require_express2());
+    init_utils3();
+    import_jsonwebtoken4 = __toESM(require_jsonwebtoken());
+    init_responseFormat();
+    init_middleware();
+    init_zod();
+    init_password();
+    router41 = import_express41.default.Router();
+    login_default = router41.post(
+      "/",
+      validateFields({
+        username: external_exports.string(),
+        password: external_exports.string().min(1).max(256)
+      }),
+      async (req, res) => {
+        const { username, password } = req.body;
+        const data = await utils_default.db("o_user").where("name", "=", username).first();
+        if (!data) return res.status(400).send(error50("\u767B\u5F55\u5931\u8D25"));
+        const verified = await verifyPassword(password, String(data.password || ""));
+        if (verified.valid && data.name == username) {
+          if (verified.needsMigration) {
+            await utils_default.db("o_user").where("id", data.id).update({ password: await hashPassword(password) });
+          }
+          const tokenData = await utils_default.db("o_setting").where("key", "tokenKey").first();
+          if (!tokenData) return res.status(400).send(error50("\u672A\u627E\u5230tokenKey"));
+          const token = setToken(
+            {
+              id: data.id,
+              name: data.name
+            },
+            "180Days",
+            tokenData?.value
+          );
+          return res.status(200).send(success3({
+            token: "Bearer " + token,
+            name: data.name,
+            id: data.id,
+            mustChangePassword: data.must_change_password === 1
+          }, "\u767B\u5F55\u6210\u529F"));
+        } else {
+          return res.status(400).send(error50("\u7528\u6237\u540D\u6216\u5BC6\u7801\u9519\u8BEF"));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/modelSelect/getModelDetail.ts
+var import_express42, router42, getModelDetail_default;
+var init_getModelDetail = __esm({
+  "src/routes/modelSelect/getModelDetail.ts"() {
+    "use strict";
+    import_express42 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router42 = import_express42.default.Router();
+    getModelDetail_default = router42.post(
+      "/",
+      validateFields({
+        modelId: external_exports.string()
+      }),
+      async (req, res) => {
+        const { modelId } = req.body;
+        const [id, name28] = modelId.split(/:(.+)/);
+        const models = await utils_default.vendor.getModelList(id);
+        const findData = models.find((i) => i.modelName == name28);
+        res.status(200).send(success3(findData));
+      }
+    );
+  }
+});
+
+// src/routes/modelSelect/getModelList.ts
+var import_express43, router43, getModelList_default;
+var init_getModelList = __esm({
+  "src/routes/modelSelect/getModelList.ts"() {
+    "use strict";
+    import_express43 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router43 = import_express43.default.Router();
+    getModelList_default = router43.post(
+      "/",
+      validateFields({
+        type: external_exports.enum(["text", "image", "video", "all"])
+      }),
+      async (req, res) => {
+        const { type } = req.body;
+        const dataList = await utils_default.db("o_vendorConfig").select("id").where("enable", 1);
+        if (!dataList || dataList.length === 0) {
+          return res.status(404).send({ error: "\u6A21\u578B\u672A\u627E\u5230" });
+        }
+        const modelList = await Promise.all(dataList.map((i) => utils_default.vendor.getModelList(i.id)));
+        const result = await Promise.all(
+          dataList.map(async (data, index) => {
+            const vendorData2 = await utils_default.vendor.getVendor(data.id);
+            const models = modelList[index];
+            const filtered = type === "all" ? models.filter((item) => item.type !== "video") : models.filter((item) => item.type === type);
+            return filtered.map((item) => ({
+              id: data.id,
+              label: item.name,
+              value: item.modelName,
+              type: item.type,
+              name: vendorData2.name
+            }));
+          })
+        );
+        res.status(200).send(success3(result.flat()));
+      }
+    );
+  }
+});
+
+// src/routes/novel/addNovel.ts
+var import_express44, router44, addNovel_default;
+var init_addNovel = __esm({
+  "src/routes/novel/addNovel.ts"() {
+    "use strict";
+    import_express44 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router44 = import_express44.default.Router();
+    addNovel_default = router44.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        data: external_exports.array(
+          external_exports.object({
+            index: external_exports.number(),
+            reel: external_exports.string(),
+            chapter: external_exports.string(),
+            chapterData: external_exports.string()
+          })
+        )
+      }),
+      async (req, res) => {
+        const { projectId, data } = req.body;
+        const totalNovelId = [];
+        const getLastChapterIndex = await utils_default.db("o_novel").where("projectId", projectId).select("chapterIndex").orderBy("chapterIndex", "desc").first();
+        let lastChapterIndex = 0;
+        if (getLastChapterIndex) {
+          lastChapterIndex = getLastChapterIndex.chapterIndex;
+        }
+        for (const item of data) {
+          const [id] = await utils_default.db("o_novel").insert({
+            projectId,
+            chapterIndex: ++lastChapterIndex,
+            reel: item.reel,
+            chapter: item.chapter,
+            chapterData: item.chapterData,
+            createTime: Date.now(),
+            eventState: 0
+          });
+          totalNovelId.push(id);
+        }
+        const chapterAllList = await utils_default.db("o_novel").where("projectId", projectId).whereIn("id", totalNovelId);
+        const novelClass = new utils_default.cleanNovel();
+        novelClass.emitter.on("item", async (item) => {
+          await utils_default.db("o_novel").where("id", item.id).update({ event: item.event, eventState: item.event ? 1 : -1, errorReason: item?.errReason ?? null });
+        });
+        novelClass.start(chapterAllList, projectId);
+        res.status(200).send(success3({ message: "\u65B0\u589E\u539F\u6587\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/batchDeleteNovel.ts
+var import_express45, router45, batchDeleteNovel_default;
+var init_batchDeleteNovel = __esm({
+  "src/routes/novel/batchDeleteNovel.ts"() {
+    "use strict";
+    import_express45 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router45 = import_express45.default.Router();
+    batchDeleteNovel_default = router45.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        if (!ids.length) {
+          return res.status(400).send(error50("\u8BF7\u5148\u9009\u62E9\u9700\u8981\u5220\u9664\u7684\u5185\u5BB9"));
+        }
+        const chapterData = await utils_default.db("o_eventChapter").whereIn("novelId", ids);
+        await utils_default.db("o_eventChapter").whereIn("novelId", ids).delete();
+        const eventIds = chapterData.map((i) => i.id);
+        if (eventIds.length) await utils_default.db("o_event").whereIn("id", eventIds).delete();
+        await utils_default.db("o_novel").whereIn("id", ids).del();
+        res.status(200).send(success3({ message: "\u5220\u9664\u539F\u6587\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/delNovel.ts
+var import_express46, router46, delNovel_default;
+var init_delNovel = __esm({
+  "src/routes/novel/delNovel.ts"() {
+    "use strict";
+    import_express46 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router46 = import_express46.default.Router();
+    delNovel_default = router46.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id } = req.body;
+        const chapterData = await utils_default.db("o_eventChapter").where("novelId", id);
+        await utils_default.db("o_eventChapter").where("novelId", id).delete();
+        const eventIds = chapterData.map((i) => i.id);
+        if (eventIds.length) await utils_default.db("o_event").whereIn("id", eventIds).delete();
+        await utils_default.db("o_novel").where("id", id).del();
+        res.status(200).send(success3({ message: "\u5220\u9664\u539F\u6587\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/event/batchDeleteEvent.ts
+var import_express47, router47, batchDeleteEvent_default;
+var init_batchDeleteEvent = __esm({
+  "src/routes/novel/event/batchDeleteEvent.ts"() {
+    "use strict";
+    import_express47 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router47 = import_express47.default.Router();
+    batchDeleteEvent_default = router47.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        await utils_default.db("o_event").whereIn("id", ids).del();
+        await utils_default.db("o_eventChapter").whereIn("eventId", ids).del();
+        res.status(200).send(success3({ message: "\u5220\u9664\u4E8B\u4EF6\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/event/deletEvent.ts
+var import_express48, router48, deletEvent_default;
+var init_deletEvent = __esm({
+  "src/routes/novel/event/deletEvent.ts"() {
+    "use strict";
+    import_express48 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router48 = import_express48.default.Router();
+    deletEvent_default = router48.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id } = req.body;
+        await utils_default.db("o_event").where("id", id).del();
+        await utils_default.db("o_eventChapter").where("eventId", id).del();
+        res.status(200).send(success3({ message: "\u5220\u9664\u4E8B\u4EF6\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/event/generateEvents.ts
+var import_express49, router49, generateEvents_default;
+var init_generateEvents = __esm({
+  "src/routes/novel/event/generateEvents.ts"() {
+    "use strict";
+    import_express49 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router49 = import_express49.default.Router();
+    generateEvents_default = router49.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        novelIds: external_exports.array(external_exports.number()),
+        concurrentCount: external_exports.number().min(1).optional()
+      }),
+      async (req, res) => {
+        const { projectId, novelIds, concurrentCount = 5 } = req.body;
+        const [allChapters, novel] = await Promise.all([
+          utils_default.db("o_novel").where("projectId", projectId).whereIn("id", novelIds),
+          Promise.resolve(new utils_default.cleanNovel(concurrentCount))
+        ]);
+        if (allChapters.length === 0) {
+          return res.status(400).send(success3("\u6CA1\u6709\u5BF9\u5E94\u7AE0\u8282"));
+        }
+        await utils_default.db("o_novel").where("projectId", projectId).whereIn("id", novelIds).update({ eventState: 0, event: null });
+        novel.emitter.on("item", async (item) => {
+          await utils_default.db("o_novel").where("id", item.id).update({ event: item.event, eventState: item.event ? 1 : -1, errorReason: item?.errorReason ?? null });
+        });
+        novel.start(allChapters, projectId);
+        return res.status(200).send(success3("\u751F\u6210\u4E8B\u4EF6\u6210\u529F"));
+      }
+    );
+  }
+});
+
+// src/routes/novel/event/getEvent.ts
+var import_express50, router50, getEvent_default;
+var init_getEvent = __esm({
+  "src/routes/novel/event/getEvent.ts"() {
+    "use strict";
+    import_express50 = __toESM(require_express2());
+    init_utils3();
+    init_db();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router50 = import_express50.default.Router();
+    getEvent_default = router50.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        page: external_exports.number(),
+        limit: external_exports.number(),
+        search: external_exports.string().optional()
+      }),
+      async (req, res) => {
+        const { projectId, page, limit, search } = req.body;
+        const offset = (page - 1) * limit;
+        const baseQuery = utils_default.db("o_event as e").join("o_eventChapter as ec", "ec.eventId", "e.id").join("o_novel as n", "n.id", "ec.novelId").where("n.projectId", projectId);
+        if (search) {
+          baseQuery.where("e.name", "like", `%${search}%`);
+        }
+        const [{ total }] = await baseQuery.clone().countDistinct("e.id as total");
+        if (!Number(total)) {
+          return res.status(200).send(success3({ list: [], total: 0 }));
+        }
+        const rows = await baseQuery.clone().select("e.id", "e.name as eventName", "e.detail", "e.createTime", db.raw("GROUP_CONCAT(n.chapterIndex) as chapterIndexes")).groupBy("e.id").limit(limit).offset(offset);
+        const list2 = rows.map((e) => ({
+          id: e.id,
+          eventName: e.eventName,
+          detail: e.detail,
+          createTime: e.createTime,
+          chapters: e.chapterIndexes ? e.chapterIndexes.split(",").map(Number) : []
+        }));
+        res.status(200).send(success3({ list: list2, total: Number(total) }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/getNovel.ts
+var import_express51, router51, getNovel_default;
+var init_getNovel = __esm({
+  "src/routes/novel/getNovel.ts"() {
+    "use strict";
+    import_express51 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router51 = import_express51.default.Router();
+    getNovel_default = router51.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        page: external_exports.number(),
+        limit: external_exports.number(),
+        search: external_exports.string().optional()
+      }),
+      async (req, res) => {
+        const { projectId, page, limit, search } = req.body;
+        const offset = (page - 1) * limit;
+        const data = await utils_default.db("o_novel").where("projectId", projectId).select("id", "chapterIndex as index", "reel", "chapter", "chapterData", "event", "eventState", "errorReason").andWhere((qb) => {
+          if (search) {
+            qb.where("chapter", "like", `%${search}%`);
+          }
+        }).orderBy("chapterIndex", "asc").limit(limit).offset(offset);
+        const totalQuery = await utils_default.db("o_novel").where("projectId", projectId).andWhere((qb) => {
+          if (search) {
+            qb.where("chapter", "like", `%${search}%`);
+          }
+        }).count("* as total").first();
+        res.status(200).send(success3({ data, total: totalQuery.total }));
+      }
+    );
+  }
+});
+
+// src/routes/novel/getNovelData.ts
+var import_express52, router52, getNovelData_default;
+var init_getNovelData = __esm({
+  "src/routes/novel/getNovelData.ts"() {
+    "use strict";
+    import_express52 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router52 = import_express52.default.Router();
+    getNovelData_default = router52.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId } = req.body;
+        const data = await utils_default.db("o_novel").where("projectId", projectId).select("*");
+        res.status(200).send(success3(data));
+      }
+    );
+  }
+});
+
+// src/routes/novel/getNovelEventState.ts
+var import_express53, router53, getNovelEventState_default;
+var init_getNovelEventState = __esm({
+  "src/routes/novel/getNovelEventState.ts"() {
+    "use strict";
+    import_express53 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router53 = import_express53.default.Router();
+    getNovelEventState_default = router53.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        const data = await utils_default.db("o_novel").whereIn("id", ids).whereNot("eventState", 0).select("id", "event", "eventState", "errorReason");
+        res.status(200).send(success3(data));
+      }
+    );
+  }
+});
+
+// src/routes/novel/getNovelIndex.ts
+var import_express54, router54, getNovelIndex_default;
+var init_getNovelIndex = __esm({
+  "src/routes/novel/getNovelIndex.ts"() {
+    "use strict";
+    import_express54 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router54 = import_express54.default.Router();
+    getNovelIndex_default = router54.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId } = req.body;
+        const data = await utils_default.db("o_novel").where("projectId", projectId).select("id", "chapterIndex as index", "chapter").orderBy("chapterIndex", "asc");
+        res.status(200).send(success3(data));
+      }
+    );
+  }
+});
+
+// src/routes/novel/updateNovel.ts
+var import_express55, router55, updateNovel_default;
+var init_updateNovel = __esm({
+  "src/routes/novel/updateNovel.ts"() {
+    "use strict";
+    import_express55 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router55 = import_express55.default.Router();
+    updateNovel_default = router55.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        index: external_exports.union([external_exports.number(), external_exports.string()]),
+        reel: external_exports.string(),
+        chapter: external_exports.string(),
+        chapterData: external_exports.string(),
+        event: external_exports.string()
+      }),
+      async (req, res) => {
+        const { id, index, reel, chapter, chapterData, event } = req.body;
+        await utils_default.db("o_novel").where("id", id).update({
+          chapterIndex: index,
+          reel,
+          chapter,
+          chapterData,
+          event
+        });
+        res.status(200).send(success3({ message: "\u66F4\u65B0\u539F\u6587\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/other/deleteAllData.ts
+var import_express56, router56, deleteAllData_default;
+var init_deleteAllData = __esm({
+  "src/routes/other/deleteAllData.ts"() {
+    "use strict";
+    import_express56 = __toESM(require_express2());
+    init_initDB();
+    init_db();
+    init_responseFormat();
+    router56 = import_express56.default.Router();
+    deleteAllData_default = router56.post(
+      "/",
+      async (req, res) => {
+        await initDB_default(db, true);
+        res.status(200).send(success3({ message: "\u6E05\u7A7A\u6570\u636E\u8868\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/other/getVersion.ts
+var import_express57, router57, getVersion_default;
+var init_getVersion = __esm({
+  "src/routes/other/getVersion.ts"() {
+    "use strict";
+    import_express57 = __toESM(require_express2());
+    init_responseFormat();
+    init_writeVersion();
+    router57 = import_express57.default.Router();
+    getVersion_default = router57.get("/", async (req, res) => {
+      const version3 = await getVersion();
+      res.status(200).send(success3(version3));
+    });
+  }
+});
+
+// src/services/task-engine/enqueueImage.ts
+async function activeTask(projectId, type, resourceKey) {
+  const tasks = await generationTaskRepository.list({ projectId, type, limit: 100 });
+  return tasks.data.find((task) => task.resourceKey === resourceKey && !terminal.has(task.status));
+}
+async function enqueueAssetImageGeneration(input) {
+  const resourceKey = `image:asset:${input.assetId}`;
+  const existing = await activeTask(input.projectId, "asset.image.generate", resourceKey);
+  if (existing) return { task: existing, payload: existing.payload, deduped: true };
+  const costReservation = await prepareCostReservation({
+    projectId: input.projectId,
+    lane: "image",
+    model: input.model,
+    metrics: { request: 1 }
+  });
+  const savePath = `/${input.projectId}/assets/${input.scriptId}/${input.assetType}/${v4_default()}.jpg`;
+  const [imageId] = await utils_default.db("o_image").insert({
+    assetsId: input.assetId,
+    type: input.assetType,
+    state: "\u751F\u6210\u4E2D",
+    resolution: input.size,
+    model: input.model
+  });
+  await utils_default.db("o_assets").where("id", input.assetId).update({ imageId });
+  const [legacyTaskId] = await utils_default.db("o_tasks").insert({
+    projectId: input.projectId,
+    taskClass: "\u751F\u6210\u56FE\u7247",
+    relatedObjects: JSON.stringify({ assetId: input.assetId, imageId }),
+    model: input.model.split(/:(.+)/)[1] ?? input.model,
+    describe: "\u6301\u4E45\u961F\u5217\uFF1A\u8D44\u4EA7\u56FE\u7247\u751F\u6210",
+    state: "\u6392\u961F\u4E2D",
+    startTime: Date.now()
+  });
+  const payload = {
+    projectId: input.projectId,
+    scriptId: input.scriptId,
+    assetId: input.assetId,
+    imageId,
+    assetType: input.assetType,
+    describe: input.describe,
+    parentDescribe: input.parentDescribe,
+    parentImagePath: input.parentImagePath,
+    model: input.model,
+    size: input.size,
+    aspectRatio: "16:9",
+    savePath
+  };
+  const result = await generationTaskRepository.enqueue({
+    projectId: input.projectId,
+    legacyTaskId,
+    lane: "image",
+    type: "asset.image.generate",
+    resourceKey,
+    payload,
+    provider: input.model.split(/:(.+)/)[0],
+    idempotencyKey: stableIdempotencyKey({ requestId: input.requestId, resourceKey, type: "asset.image.generate" }),
+    maxAttempts: 3,
+    costReservation
+  });
+  if (result.deduped) {
+    await utils_default.db("o_image").where("id", imageId).delete();
+    await utils_default.db("o_tasks").where("id", legacyTaskId).delete();
+    const existingPayload = result.task.payload;
+    await utils_default.db("o_assets").where("id", input.assetId).update({ imageId: existingPayload.imageId });
+    return { task: result.task, payload: existingPayload, deduped: true };
+  }
+  return { task: result.task, payload, deduped: false };
+}
+async function enqueueStoryboardImageGeneration(input) {
+  const resourceKey = `image:storyboard:${input.storyboardId}`;
+  const existing = await activeTask(input.projectId, "storyboard.image.generate", resourceKey);
+  if (existing) return { task: existing, payload: existing.payload, deduped: true };
+  const costReservation = await prepareCostReservation({
+    projectId: input.projectId,
+    lane: "image",
+    model: input.model,
+    metrics: { request: 1 }
+  });
+  const [legacyTaskId] = await utils_default.db("o_tasks").insert({
+    projectId: input.projectId,
+    taskClass: "\u751F\u6210\u5206\u955C\u56FE\u7247",
+    relatedObjects: JSON.stringify({ storyboardId: input.storyboardId }),
+    model: input.model.split(/:(.+)/)[1] ?? input.model,
+    describe: "\u6301\u4E45\u961F\u5217\uFF1A\u5206\u955C\u56FE\u7247\u751F\u6210",
+    state: "\u6392\u961F\u4E2D",
+    startTime: Date.now()
+  });
+  const payload = {
+    projectId: input.projectId,
+    scriptId: input.scriptId,
+    storyboardId: input.storyboardId,
+    prompt: input.prompt,
+    referenceImageIds: input.referenceImageIds,
+    model: input.model,
+    size: input.size,
+    aspectRatio: input.aspectRatio,
+    savePath: `/${input.projectId}/assets/${input.scriptId}/${v4_default()}.jpg`
+  };
+  const result = await generationTaskRepository.enqueue({
+    projectId: input.projectId,
+    legacyTaskId,
+    lane: "image",
+    type: "storyboard.image.generate",
+    resourceKey,
+    payload,
+    provider: input.model.split(/:(.+)/)[0],
+    idempotencyKey: stableIdempotencyKey({ requestId: input.requestId, resourceKey, type: "storyboard.image.generate" }),
+    maxAttempts: 3,
+    costReservation
+  });
+  if (result.deduped) await utils_default.db("o_tasks").where("id", legacyTaskId).delete();
+  return { task: result.task, payload: result.task.payload, deduped: result.deduped };
+}
+var terminal;
+var init_enqueueImage = __esm({
+  "src/services/task-engine/enqueueImage.ts"() {
+    "use strict";
+    init_dist_node();
+    init_utils3();
+    init_repository();
+    init_budget();
+    terminal = /* @__PURE__ */ new Set(["cancelled", "succeeded", "failed"]);
+  }
+});
+
+// src/routes/production/assets/batchGenerateAssetsImage.ts
+var import_express58, router58, batchGenerateAssetsImage_default;
+var init_batchGenerateAssetsImage = __esm({
+  "src/routes/production/assets/batchGenerateAssetsImage.ts"() {
+    "use strict";
+    import_express58 = __toESM(require_express2());
+    init_zod();
+    init_dist_node();
+    init_utils3();
+    init_responseFormat();
+    init_middleware();
+    init_enqueueImage();
+    router58 = import_express58.default.Router();
+    batchGenerateAssetsImage_default = router58.post(
+      "/",
+      validateFields({
+        assetIds: external_exports.array(external_exports.number()),
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        concurrentCount: external_exports.number().min(1).optional(),
+        requestId: external_exports.string().optional()
+      }),
+      async (req, res) => {
+        const { assetIds, projectId, scriptId, requestId = v4_default() } = req.body;
+        const project = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality").first();
+        if (!project?.imageModel) return res.status(400).send(error50("\u9879\u76EE\u672A\u914D\u7F6E\u56FE\u7247\u6A21\u578B"));
+        const assets = await utils_default.db("o_assets").whereIn("id", assetIds).select("id", "describe", "type", "assetsId");
+        const parentIds = assets.map((item) => item.assetsId).filter((id) => typeof id === "number");
+        const parents = parentIds.length ? await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", parentIds).select("o_assets.id", "o_assets.describe", "o_image.filePath") : [];
+        const parentById = /* @__PURE__ */ new Map();
+        parents.forEach((item) => {
+          if (typeof item.id === "number") parentById.set(item.id, item);
+        });
+        await Promise.all(
+          assets.filter((item) => typeof item.id === "number").map((item) => {
+            const parent = typeof item.assetsId === "number" ? parentById.get(item.assetsId) : void 0;
+            return enqueueAssetImageGeneration({
+              projectId,
+              scriptId,
+              assetId: item.id,
+              assetType: ["role", "tool", "scene"].includes(item.type || "") ? item.type : "role",
+              describe: item.describe || "",
+              parentDescribe: parent?.describe || void 0,
+              parentImagePath: parent?.filePath || void 0,
+              model: project.imageModel,
+              size: project.imageQuality || "1K",
+              requestId: `${requestId}:${item.id}`
+            });
+          })
+        );
+        res.status(200).send(success3("\u8D44\u4EA7\u56FE\u7247\u5DF2\u8FDB\u5165\u6301\u4E45\u961F\u5217"));
+      }
+    );
+  }
+});
+
+// src/routes/production/assets/deleteAssetsDireve.ts
+var import_express59, router59, deleteAssetsDireve_default;
+var init_deleteAssetsDireve = __esm({
+  "src/routes/production/assets/deleteAssetsDireve.ts"() {
+    "use strict";
+    import_express59 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router59 = import_express59.default.Router();
+    deleteAssetsDireve_default = router59.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id, projectId } = req.body;
+        const assetsFirstData = await utils_default.db("o_assets").where("id", id).first();
+        if (!assetsFirstData) {
+          return res.status(404).send({ error: "\u8D44\u6E90\u672A\u627E\u5230" });
+        }
+        if (assetsFirstData?.flowId) await utils_default.db("o_imageFlow").where("id", assetsFirstData?.flowId).delete();
+        await utils_default.db("o_assets").where("id", id).delete();
+        await utils_default.db("o_assets2Storyboard").where("assetId", id).delete();
+        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/assets/pollingImage.ts
+var import_express60, router60, pollingImage_default;
+var init_pollingImage = __esm({
+  "src/routes/production/assets/pollingImage.ts"() {
+    "use strict";
+    import_express60 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router60 = import_express60.default.Router();
+    pollingImage_default = router60.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        const data = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", ids).whereNot("o_image.state", "\u751F\u6210\u4E2D").select("o_image.state", "o_assets.id", "o_image.filePath", "o_image.errorReason", "o_assets.prompt");
+        const result = await Promise.all(
+          data.map(async (item) => ({
+            ...item,
+            src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null
+          }))
+        );
+        res.status(200).send(success3(result));
+      }
+    );
+  }
+});
+
+// src/routes/production/assets/updateAssetsUrl.ts
+var import_express61, router61, updateAssetsUrl_default;
+var init_updateAssetsUrl = __esm({
+  "src/routes/production/assets/updateAssetsUrl.ts"() {
+    "use strict";
+    import_express61 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router61 = import_express61.default.Router();
+    updateAssetsUrl_default = router61.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        url: external_exports.string(),
+        flowId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id, url: url4, flowId } = req.body;
+        const [imageId] = await utils_default.db("o_image").insert({
+          filePath: utils_default.replaceUrl(url4),
+          state: "\u5DF2\u5B8C\u6210",
+          assetsId: id
+        });
+        await utils_default.db("o_assets").where({ id }).update({ flowId, imageId });
+        res.status(200).send(success3({ message: "\u66F4\u65B0\u63D0\u793A\u8BCD\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/services/task-engine/enqueueWorkflowImage.ts
+async function enqueueWorkflowImage(input) {
+  const project = await utils_default.db("o_project").where("id", input.projectId).first();
+  if (!project) throw new Error("\u9879\u76EE\u4E0D\u5B58\u5728");
+  for (const referencePath of input.referencePaths) {
+    if (!await utils_default.oss.fileExists(referencePath)) throw new Error(`\u53C2\u8003\u56FE\u7247\u4E0D\u5B58\u5728: ${referencePath}`);
+  }
+  const costReservation = await prepareCostReservation({ projectId: input.projectId, lane: "image", model: input.model, metrics: { request: 1 } });
+  const resourceKey = `image:workflow:${input.projectId}:${input.nodeId}`;
+  const payload = {
+    projectId: input.projectId,
+    model: input.model,
+    prompt: input.prompt,
+    size: input.size,
+    aspectRatio: input.aspectRatio,
+    referencePaths: input.referencePaths,
+    savePath: `/${input.projectId}/workFlow/${v4_default()}.jpg`
+  };
+  const [legacyTaskId] = await utils_default.db("o_tasks").insert({
+    projectId: input.projectId,
+    taskClass: "\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210",
+    relatedObjects: JSON.stringify({ nodeId: input.nodeId }),
+    model: input.model.split(/:(.+)/)[1] ?? input.model,
+    describe: "\u6301\u4E45\u961F\u5217\uFF1A\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210",
+    state: "\u6392\u961F\u4E2D",
+    startTime: Date.now()
+  });
+  try {
+    const queued = await generationTaskRepository.enqueue({
+      projectId: input.projectId,
+      legacyTaskId,
+      lane: "image",
+      type: "workflow.image.generate",
+      resourceKey,
+      payload,
+      provider: input.model.split(/:(.+)/)[0],
+      idempotencyKey: stableIdempotencyKey({ type: "workflow.image.generate", resourceKey, requestId: input.requestId }),
+      maxAttempts: 3,
+      costReservation
+    });
+    if (queued.deduped) await utils_default.db("o_tasks").where("id", legacyTaskId).delete();
+    return { task: queued.task, deduped: queued.deduped };
+  } catch (error73) {
+    await utils_default.db("o_tasks").where("id", legacyTaskId).delete();
+    throw error73;
+  }
+}
+var init_enqueueWorkflowImage = __esm({
+  "src/services/task-engine/enqueueWorkflowImage.ts"() {
+    "use strict";
+    init_dist_node();
+    init_repository();
+    init_budget();
+    init_utils3();
+  }
+});
+
+// src/routes/production/editImage/generateFlowImage.ts
+var import_express62, router62, generateFlowImage_default;
+var init_generateFlowImage = __esm({
+  "src/routes/production/editImage/generateFlowImage.ts"() {
+    "use strict";
+    import_express62 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_enqueueWorkflowImage();
+    router62 = import_express62.default.Router();
+    generateFlowImage_default = router62.post(
+      "/",
+      validateFields({
+        model: external_exports.string(),
+        references: external_exports.array(external_exports.string()).optional(),
+        quality: external_exports.enum(["1K", "2K", "4K"]),
+        ratio: external_exports.string().regex(/^\d+:\d+$/),
+        prompt: external_exports.string(),
+        projectId: external_exports.number(),
+        nodeId: external_exports.string().trim().min(1),
+        requestId: external_exports.string().trim().min(1)
+      }),
+      async (req, res) => {
+        const { model, references = [], quality, ratio, prompt, projectId } = req.body;
+        try {
+          const result = await enqueueWorkflowImage({
+            projectId,
+            nodeId: req.body.nodeId,
+            model,
+            prompt,
+            size: quality,
+            aspectRatio: ratio,
+            referencePaths: references.map((url4) => utils_default.replaceUrl(url4)).filter(Boolean),
+            requestId: req.body.requestId
+          });
+          return res.status(200).send(success3({ taskId: result.task.id, deduped: result.deduped, queued: true }));
+        } catch (e) {
+          res.status(400).send(error50(utils_default.error(e).message));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/production/editImage/getImageDefaultModle.ts
+var import_express63, router63, getImageDefaultModle_default;
+var init_getImageDefaultModle = __esm({
+  "src/routes/production/editImage/getImageDefaultModle.ts"() {
+    "use strict";
+    import_express63 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router63 = import_express63.default.Router();
+    getImageDefaultModle_default = router63.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId } = req.body;
+        const imageFlowData = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality").first();
+        return res.status(200).send(success3(imageFlowData));
+      }
+    );
+  }
+});
+
+// src/routes/production/editImage/getImageFlow.ts
+var import_express64, router64, getImageFlow_default;
+var init_getImageFlow = __esm({
+  "src/routes/production/editImage/getImageFlow.ts"() {
+    "use strict";
+    import_express64 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router64 = import_express64.default.Router();
+    getImageFlow_default = router64.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id, type } = req.body;
+        const imageFlowData = await utils_default.db("o_imageFlow").where("id", id).first();
+        if (imageFlowData?.flowData) {
+          const parseFlow = JSON.parse(imageFlowData.flowData);
+          await Promise.all(
+            parseFlow.nodes.map(async (node) => {
+              if (node.type === "upload") {
+                node.data.image = node.data.image ? await utils_default.oss.getSmallImageUrl(node.data.image) : "";
+              } else if (node.type === "generated") {
+                node.data.generatedImage = node.data.generatedImage ? await utils_default.oss.getSmallImageUrl(node.data.generatedImage) : "";
+                node.data.references = await Promise.all(node.data.references.map(async (item) => {
+                  return {
+                    image: await utils_default.oss.getSmallImageUrl(item.image)
+                  };
+                }));
+              }
+            })
+          );
+          return res.status(200).send(success3({ ...parseFlow, id: imageFlowData.id }));
+        }
+        return res.status(200).send(success3(null));
+      }
+    );
+  }
+});
+
+// src/routes/production/editImage/saveImageFlow.ts
+var import_express65, router65, saveImageFlow_default;
+var init_saveImageFlow = __esm({
+  "src/routes/production/editImage/saveImageFlow.ts"() {
+    "use strict";
+    import_express65 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router65 = import_express65.default.Router();
+    saveImageFlow_default = router65.post(
+      "/",
+      validateFields({
+        edges: external_exports.any(),
+        nodes: external_exports.any()
+      }),
+      async (req, res) => {
+        const { edges, nodes } = req.body;
+        nodes.forEach((node) => {
+          if (node.type == "upload") {
+            node.data.image = node.data.image ? utils_default.replaceUrl(node.data.image) : "";
+          }
+          if (node.type == "generated") {
+            node.data.generatedImage = node.data.generatedImage ? utils_default.replaceUrl(node.data.generatedImage) : "";
+            node.data.references.forEach((item) => {
+              item.image = item.image ? utils_default.replaceUrl(item.image) : "";
+            });
+          }
+        });
+        const [insertFlowId] = await utils_default.db("o_imageFlow").insert({
+          flowData: JSON.stringify({ edges, nodes })
+        });
+        return res.status(200).send(success3({ id: insertFlowId }));
+      }
+    );
+  }
+});
+
+// src/routes/production/editImage/updateImageFlow.ts
+var import_express66, router66, updateImageFlow_default;
+var init_updateImageFlow = __esm({
+  "src/routes/production/editImage/updateImageFlow.ts"() {
+    "use strict";
+    import_express66 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router66 = import_express66.default.Router();
+    updateImageFlow_default = router66.post(
+      "/",
+      validateFields({
+        edges: external_exports.any(),
+        nodes: external_exports.any(),
+        flowId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { edges, nodes, flowId } = req.body;
+        nodes.forEach((node) => {
+          if (node.type == "upload") {
+            node.data.image = node.data.image ? utils_default.replaceUrl(node.data.image) : "";
+          }
+          if (node.type == "generated") {
+            node.data.generatedImage = node.data.generatedImage ? utils_default.replaceUrl(node.data.generatedImage) : "";
+            node.data.references.forEach((item) => {
+              item.image = item.image ? utils_default.replaceUrl(item.image) : "";
+            });
+          }
+        });
+        await utils_default.db("o_imageFlow").where("id", flowId).update({
+          flowData: JSON.stringify({ edges, nodes })
+        });
+        return res.status(200).send(success3());
+      }
+    );
+  }
+});
+
+// src/routes/production/editImage/uploadImage.ts
+var import_express67, router67, uploadImage_default;
+var init_uploadImage = __esm({
+  "src/routes/production/editImage/uploadImage.ts"() {
+    "use strict";
+    import_express67 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    init_middleware();
+    init_zod();
+    init_dist_node();
+    router67 = import_express67.default.Router();
+    uploadImage_default = router67.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        base64Data: external_exports.string()
+      }),
+      async (req, res) => {
+        const { base64Data, projectId, scriptId } = req.body;
+        function getExtFromBase642(base64Data2) {
+          const mime = base64Data2.match(/^data:([^;]+);base64,/)?.[1] ?? "";
+          const mimeMap = {
+            // 图片
+            "image/jpeg": "jpeg",
+            "image/jpg": "jpg",
+            "image/png": "png",
+            // 音频
+            "audio/mpeg": "mp3",
+            "audio/mp3": "mp3",
+            "audio/wav": "wav",
+            // 视频
+            "video/mp4": "mp4",
+            "video/webm": "webm"
+          };
+          return mimeMap[mime] ?? "bin";
+        }
+        const ext = getExtFromBase642(base64Data);
+        if (!["jpeg", "jpg", "png"].includes(ext)) {
+          return res.status(400).send(error50("\u4E0D\u652F\u6301\u7684\u6587\u4EF6\u7C7B\u578B"));
+        }
+        const savePath = `/${projectId}/imageFlow/${scriptId}/${v4_default()}.${ext}`;
+        await utils_default.oss.writeFile(savePath, Buffer.from(base64Data.match(/base64,([A-Za-z0-9+/=]+)/)[1] ?? "", "base64"));
+        const url4 = await utils_default.oss.getSmallImageUrl(savePath);
+        res.status(200).send(success3(url4));
+      }
+    );
+  }
+});
+
+// src/routes/production/getFlowData.ts
+var import_express68, router68, getFlowData_default;
+var init_getFlowData = __esm({
+  "src/routes/production/getFlowData.ts"() {
+    "use strict";
+    import_express68 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router68 = import_express68.default.Router();
+    getFlowData_default = router68.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        episodesId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId, episodesId } = req.body;
+        const sqlData = await utils_default.db("o_agentWorkData").where("projectId", String(projectId)).andWhere("episodesId", String(episodesId)).select("data").first();
+        const scriptData = await utils_default.db("o_script").where("projectId", projectId).where("id", episodesId).first();
+        const scriptAssets = await utils_default.db("o_scriptAssets").where("scriptId", episodesId);
+        const assetIds = scriptAssets.map((i) => i.assetId);
+        const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state", "o_image.errorReason").where("o_assets.id", "in", assetIds).andWhere("o_assets.assetsId", null).where("o_assets.projectId", projectId);
+        let childAssetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").select("o_assets.*", "o_image.filePath", "o_image.state", "o_image.errorReason").where("o_assets.projectId", projectId).where("o_assets.assetsId", "in", assetIds).whereNotNull("o_assets.assetsId");
+        if (!sqlData) {
+          const flowData = {
+            script: scriptData?.content ?? "",
+            scriptPlan: "",
+            assets: await Promise.all(
+              assetsData.map(async (item) => ({
+                id: item.id,
+                name: item.name ?? "",
+                type: item.type ?? "",
+                prompt: item.prompt ?? "",
+                desc: item.describe ?? "",
+                src: item.filePath && await utils_default.oss.getSmallImageUrl(item.filePath),
+                derive: await Promise.all(
+                  childAssetsData.filter((child) => child.assetsId === item.id).map(async (child) => ({
+                    id: child.id,
+                    assetsId: item.id,
+                    name: child.name ?? "",
+                    type: child.type,
+                    prompt: child.prompt,
+                    desc: child.describe ?? "",
+                    src: child.filePath && await utils_default.oss.getSmallImageUrl(child.filePath),
+                    state: child.state ?? "\u672A\u751F\u6210"
+                    //todo：矫正状态值
+                  }))
+                )
+              }))
+            ),
+            storyboardTable: "",
+            storyboard: [],
+            //todo：矫正workbench数据
+            //@ts-ignore
+            workbench: {
+              videoList: []
+            }
+            // //todo：矫正封面数据
+            // poster: {
+            //   items: [],
+            // },
+          };
+          return res.status(200).send(success3(flowData));
+        } else {
+          try {
+            const storyboardData = await utils_default.db("o_storyboard").where("scriptId", episodesId);
+            await Promise.all(
+              storyboardData.map(async (i) => {
+                if (i.filePath) {
+                  try {
+                    i.filePath = await utils_default.oss.getSmallImageUrl(i.filePath);
+                  } catch {
+                    i.filePath = "";
+                  }
+                } else {
+                  i.filePath = "";
+                }
+              })
+            );
+            const storyboardIds = storyboardData.map((i) => i.id);
+            const assetsIds = await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).orderBy("rowid");
+            const assets2StoryboardMap = {};
+            assetsIds.forEach((i) => {
+              if (!assets2StoryboardMap[i.storyboardId]) {
+                assets2StoryboardMap[i.storyboardId] = [];
+              }
+              assets2StoryboardMap[i.storyboardId].push(i.assetId);
+            });
+            const flowData = JSON.parse(sqlData.data ?? "{}");
+            flowData.assets = await Promise.all(
+              assetsData.map(async (item) => ({
+                id: item.id,
+                name: item.name ?? "",
+                type: item.type ?? "",
+                prompt: item.prompt ?? "",
+                desc: item.describe ?? "",
+                src: item.filePath && await utils_default.oss.getSmallImageUrl(item.filePath),
+                flowId: item.flowId,
+                derive: await Promise.all(
+                  childAssetsData.filter((child) => child.assetsId === item.id).map(async (child) => ({
+                    id: child.id,
+                    assetsId: item.id,
+                    name: child.name ?? "",
+                    prompt: child.prompt,
+                    type: child.type,
+                    desc: child.describe ?? "",
+                    src: child.filePath && await utils_default.oss.getSmallImageUrl(child.filePath),
+                    state: child.state ?? "\u672A\u751F\u6210",
+                    errorReason: child?.errorReason ?? "",
+                    flowId: child.flowId
+                  }))
+                )
+              }))
+            );
+            flowData.storyboard = storyboardData.map((i) => ({
+              id: i.id,
+              index: i.index,
+              duration: i.duration ? +i.duration : 0,
+              prompt: i.prompt,
+              associateAssetsIds: assets2StoryboardMap[i.id] ?? [],
+              src: i.filePath,
+              state: i.state,
+              videoDesc: i.videoDesc,
+              shouldGenerateImage: i.shouldGenerateImage,
+              reason: i?.reason ?? "",
+              flowId: i.flowId
+            })).sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
+            flowData.script = scriptData?.content ?? "";
+            res.status(200).send(success3(flowData));
+          } catch (err) {
+            res.status(400).send(error50());
+          }
+        }
+      }
+    );
+  }
+});
+
+// src/routes/production/getStoryboardData.ts
+var import_express69, router69, getStoryboardData_default;
+var init_getStoryboardData = __esm({
+  "src/routes/production/getStoryboardData.ts"() {
+    "use strict";
+    import_express69 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router69 = import_express69.default.Router();
+    getStoryboardData_default = router69.post(
+      "/",
+      validateFields({
+        scriptId: external_exports.number(),
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { scriptId, projectId } = req.body;
+        const storyboardData = await utils_default.db("o_storyboard").where({ scriptId, projectId }).orderBy("index", "asc");
+        const data = await Promise.all(
+          storyboardData.map(async (i) => {
+            return {
+              ...i,
+              filePath: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : ""
+            };
+          })
+        );
+        const storyboardIds = storyboardData.map((s) => s.id);
+        const storyboardConfigs = await utils_default.db("o_assets2Storyboard").leftJoin("o_assets", "o_assets2Storyboard.assetId", "o_assets.id").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets2Storyboard.storyboardId", storyboardIds).select("o_assets2Storyboard.storyboardId", "o_assets.id as assetId", "o_assets.name", "o_assets.type", "o_image.filePath as avatar");
+        const storyboardCharactersMap = storyboardConfigs.reduce((acc, cur) => {
+          const storyboardId = cur.storyboardId;
+          if (!acc[storyboardId]) {
+            acc[storyboardId] = [];
+          }
+          const character = {
+            name: cur.name ?? "",
+            type: cur.type ?? ""
+          };
+          if (cur.avatar) {
+            character.avatar = cur.avatar;
+          }
+          acc[storyboardId].push(character);
+          return acc;
+        }, {});
+        const result = await Promise.all(
+          data.map(async (item) => {
+            const characters = storyboardCharactersMap[item.id] ?? [];
+            const charactersWithUrl = await Promise.all(
+              characters.map(async (c) => {
+                if (c.avatar) {
+                  return { ...c, avatar: await utils_default.oss.getSmallImageUrl(c.avatar) };
+                }
+                return c;
+              })
+            );
+            return {
+              id: String(item.id),
+              createTime: item.createTime ?? void 0,
+              duration: item.duration ? Number(item.duration) : void 0,
+              filePath: item.filePath || void 0,
+              prompt: item.prompt ?? void 0,
+              scriptId: item.scriptId ?? void 0,
+              characters: charactersWithUrl,
+              index: item.index
+            };
+          })
+        );
+        res.status(200).send(success3(result));
+      }
+    );
+  }
+});
+
+// src/routes/production/saveFlowData.ts
+var import_express70, router70, saveFlowData_default;
+var init_saveFlowData = __esm({
+  "src/routes/production/saveFlowData.ts"() {
+    "use strict";
+    import_express70 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router70 = import_express70.default.Router();
+    saveFlowData_default = router70.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        episodesId: external_exports.number(),
+        data: external_exports.any()
+      }),
+      async (req, res) => {
+        const {
+          data,
+          projectId,
+          episodesId
+        } = req.body;
+        const sqlData = await utils_default.db("o_agentWorkData").where("projectId", String(projectId)).andWhere("episodesId", String(episodesId)).first();
+        if (data.storyboard && data.storyboard.length) {
+          const filterDatas = data?.storyboard.filter((i) => !i.id);
+          if (!filterDatas.length) {
+            try {
+              await Promise.all(
+                data.storyboard.filter((i) => i.id).map(async (i, index) => {
+                  await utils_default.db("o_storyboard").where("id", i.id).update({
+                    index
+                  });
+                })
+              );
+            } catch (error73) {
+              console.error("\u66F4\u65B0\u5206\u955C\u6392\u5E8F\u5931\u8D25", error73);
+            }
+          }
+        }
+        if (!sqlData) {
+          await utils_default.db("o_agentWorkData").insert({
+            projectId,
+            episodesId,
+            key: "productionAgent",
+            data: JSON.stringify(data)
+          });
+        } else {
+          await utils_default.db("o_agentWorkData").where("projectId", String(projectId)).where("key", "productionAgent").andWhere("episodesId", String(episodesId)).update({
+            data: JSON.stringify(data)
+          });
+        }
+        return res.status(200).send(success3());
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/addStoryboard.ts
+var import_express71, router71, addStoryboard_default;
+var init_addStoryboard = __esm({
+  "src/routes/production/storyboard/addStoryboard.ts"() {
+    "use strict";
+    import_express71 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router71 = import_express71.default.Router();
+    addStoryboard_default = router71.post(
+      "/",
+      validateFields({
+        prompt: external_exports.string(),
+        duration: external_exports.number(),
+        state: external_exports.string(),
+        videoDesc: external_exports.string(),
+        shouldGenerateImage: external_exports.number(),
+        src: external_exports.string().nullable(),
+        scriptId: external_exports.number(),
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { prompt, duration: duration4, state, src, scriptId, projectId, videoDesc, shouldGenerateImage } = req.body;
+        const trackId = Date.now();
+        await utils_default.db("o_videoTrack").insert({
+          id: trackId,
+          scriptId,
+          projectId
+        });
+        const [id] = await utils_default.db("o_storyboard").insert({
+          prompt,
+          duration: duration4,
+          state,
+          filePath: utils_default.replaceUrl(src),
+          trackId,
+          videoDesc,
+          shouldGenerateImage: src ? 1 : 0,
+          scriptId,
+          projectId
+        });
+        return res.status(200).send(success3({ id }));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/batchAddStoryboardInfo.ts
+var import_express72, router72, batchAddStoryboardInfo_default;
+var init_batchAddStoryboardInfo = __esm({
+  "src/routes/production/storyboard/batchAddStoryboardInfo.ts"() {
+    "use strict";
+    import_express72 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router72 = import_express72.default.Router();
+    batchAddStoryboardInfo_default = router72.post(
+      "/",
+      validateFields({
+        data: external_exports.array(
+          external_exports.object({
+            prompt: external_exports.string(),
+            duration: external_exports.number(),
+            track: external_exports.string(),
+            state: external_exports.string(),
+            src: external_exports.string().nullable(),
+            videoDesc: external_exports.string(),
+            shouldGenerateImage: external_exports.number(),
+            associateAssetsIds: external_exports.array(external_exports.number())
+          })
+        ),
+        scriptId: external_exports.number(),
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { data, scriptId, projectId } = req.body;
+        if (!data.length) return res.status(400).send({ success: false, message: "\u6570\u636E\u4E0D\u80FD\u4E3A\u7A7A" });
+        for (const item of data) {
+          const [id] = await utils_default.db("o_storyboard").insert({
+            prompt: item.prompt,
+            duration: String(item.duration),
+            state: item.state,
+            scriptId,
+            projectId,
+            track: item.track,
+            videoDesc: item.videoDesc,
+            shouldGenerateImage: item.shouldGenerateImage,
+            createTime: Date.now()
+          });
+          if (item.associateAssetsIds?.length) {
+            await utils_default.db("o_assets2Storyboard").insert(
+              item.associateAssetsIds.map((assetId) => ({
+                assetId,
+                storyboardId: id
+              }))
+            );
+          }
+          item.id = id;
+        }
+        const lastStoryboard = await utils_default.db("o_storyboard").where("scriptId", scriptId);
+        if (!lastStoryboard || !lastStoryboard.length) return res.status(400).send(error50("\u672A\u67E5\u5230\u5206\u955C\u6570\u636E"));
+        const storyboardGroupByTrack = {};
+        lastStoryboard.forEach((item) => {
+          if (!storyboardGroupByTrack[item.track]) {
+            storyboardGroupByTrack[item.track] = [];
+          }
+          storyboardGroupByTrack[item.track].push(item.id);
+        });
+        for (const track in storyboardGroupByTrack) {
+          const storyboardIds = storyboardGroupByTrack[track] ?? [];
+          const trackDuration = lastStoryboard.filter((item) => item.track == track).reduce((sum, item) => sum + Number(item.duration), 0);
+          const existingStoryboard = await utils_default.db("o_storyboard").where({ scriptId, track }).whereNotNull("trackId").first();
+          let trackId;
+          if (existingStoryboard?.trackId) {
+            trackId = existingStoryboard.trackId;
+            await utils_default.db("o_videoTrack").where("id", trackId).update({ duration: trackDuration });
+          } else {
+            const newTrackId = Date.now();
+            await utils_default.db("o_videoTrack").insert({
+              id: newTrackId,
+              scriptId,
+              projectId,
+              duration: trackDuration
+            });
+            trackId = newTrackId;
+          }
+          await utils_default.db("o_storyboard").whereIn("id", storyboardIds).update({ trackId });
+        }
+        const storyboardData = await Promise.all(
+          lastStoryboard.map(async (i) => {
+            return {
+              associateAssetsIds: await utils_default.db("o_assets2Storyboard").where("storyboardId", i.id).orderBy("rowid").select("assetId").pluck("assetId"),
+              src: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : "",
+              id: i.id,
+              trackId: i.trackId,
+              prompt: i.prompt,
+              duration: Number(i.duration),
+              state: i.state,
+              scriptId: i.scriptId,
+              reason: i.reason,
+              videoDesc: i.videoDesc
+            };
+          })
+        );
+        return res.status(200).send(success3(storyboardData));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/batchDelete.ts
+var import_express73, router73, batchDelete_default2;
+var init_batchDelete2 = __esm({
+  "src/routes/production/storyboard/batchDelete.ts"() {
+    "use strict";
+    import_express73 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router73 = import_express73.default.Router();
+    batchDelete_default2 = router73.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number()),
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { ids, projectId } = req.body;
+        if (!ids.length) return res.status(400).send(error50("\u8BF7\u5148\u9009\u62E9\u5206\u955C"));
+        const storyboardDataList = await utils_default.db("o_storyboard").whereIn("id", ids).where("projectId", projectId).select("id", "track", "trackId", "flowId");
+        if (!storyboardDataList.length) return res.status(400).send(error50("\u5F53\u524D\u9009\u62E9\u5206\u955C\u4E0D\u5B58\u5728"));
+        const flowIds = storyboardDataList.map((i) => i.flowId);
+        const storyBoardIds = storyboardDataList.map((i) => i.id);
+        if (flowIds.length)
+          await utils_default.db("o_imageFlow").whereIn("id", flowIds).delete();
+        await utils_default.db("o_storyboard").whereIn("id", storyBoardIds).delete();
+        await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyBoardIds).delete();
+        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/batchGenerateImage.ts
+var import_express74, router74, batchGenerateImage_default;
+var init_batchGenerateImage = __esm({
+  "src/routes/production/storyboard/batchGenerateImage.ts"() {
+    "use strict";
+    import_express74 = __toESM(require_express2());
+    init_zod();
+    init_dist_node();
+    init_utils3();
+    init_responseFormat();
+    init_middleware();
+    init_enqueueImage();
+    router74 = import_express74.default.Router();
+    batchGenerateImage_default = router74.post(
+      "/",
+      validateFields({
+        storyboardIds: external_exports.array(external_exports.number()),
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        concurrentCount: external_exports.number().min(1).optional(),
+        compulsory: external_exports.boolean().optional(),
+        requestId: external_exports.string().optional()
+      }),
+      async (req, res) => {
+        const { storyboardIds, projectId, scriptId, compulsory = false, requestId = v4_default() } = req.body;
+        if (!storyboardIds.length) return res.status(400).send(error50("storyboardIds\u4E0D\u80FD\u4E3A\u7A7A"));
+        const storyboardData = await utils_default.db("o_storyboard").where({ scriptId, projectId }).whereIn("id", storyboardIds);
+        if (!storyboardData.length) return res.status(404).send(error50("\u672A\u67E5\u5230\u5206\u955C\u6570\u636E"));
+        const storyIds = storyboardData.map((item) => item.id).filter((id) => typeof id === "number");
+        if (compulsory) {
+          await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).update({ state: "\u751F\u6210\u4E2D", shouldGenerateImage: 1 });
+        } else {
+          await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).where("shouldGenerateImage", 0).update({ state: "\u672A\u751F\u6210" });
+          await utils_default.db("o_storyboard").whereIn("id", storyIds).where("scriptId", scriptId).where("shouldGenerateImage", 1).update({ state: "\u751F\u6210\u4E2D" });
+        }
+        const project = await utils_default.db("o_project").where("id", projectId).select("imageModel", "imageQuality", "videoRatio").first();
+        if (!project?.imageModel) return res.status(400).send(error50("\u9879\u76EE\u672A\u914D\u7F6E\u56FE\u7247\u6A21\u578B"));
+        const links = await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyIds).orderBy("rowid").select("storyboardId", "assetId");
+        const assetIds = [...new Set(links.map((row) => row.assetId).filter((id) => typeof id === "number"))];
+        const assetImageMap = /* @__PURE__ */ new Map();
+        if (assetIds.length) {
+          const rows = await utils_default.db("o_assets").whereIn("id", assetIds).select("id", "imageId");
+          rows.forEach((row) => {
+            if (typeof row.id === "number" && typeof row.imageId === "number") assetImageMap.set(row.id, row.imageId);
+          });
+        }
+        const referenceMap = /* @__PURE__ */ new Map();
+        links.forEach((row) => {
+          if (typeof row.storyboardId !== "number" || typeof row.assetId !== "number") return;
+          const imageId = assetImageMap.get(row.assetId);
+          if (imageId == null) return;
+          const list2 = referenceMap.get(row.storyboardId) || [];
+          list2.push(imageId);
+          referenceMap.set(row.storyboardId, list2);
+        });
+        const generateList = compulsory ? storyboardData : storyboardData.filter((item) => item.shouldGenerateImage !== 0);
+        await Promise.all(
+          generateList.filter((item) => typeof item.id === "number").map(
+            (item) => enqueueStoryboardImageGeneration({
+              projectId,
+              scriptId,
+              storyboardId: item.id,
+              prompt: item.prompt || "",
+              referenceImageIds: referenceMap.get(item.id) || [],
+              model: project.imageModel,
+              size: project.imageQuality || "1K",
+              aspectRatio: project.videoRatio || "16:9",
+              requestId: `${requestId}:${item.id}`
+            })
+          )
+        );
+        const refreshed = await utils_default.db("o_storyboard").where({ scriptId, projectId }).whereIn("id", storyIds);
+        res.status(200).send(
+          success3(
+            refreshed.map((item) => ({
+              id: item.id,
+              prompt: item.prompt,
+              associateAssetsIds: typeof item.id === "number" ? referenceMap.get(item.id) || [] : [],
+              src: null,
+              state: item.state,
+              videoDesc: item.videoDesc,
+              shouldGenerateImage: item.shouldGenerateImage
+            }))
+          )
+        );
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/downPreviewImage.ts
+var import_express75, import_sharp4, router75, downPreviewImage_default;
+var init_downPreviewImage = __esm({
+  "src/routes/production/storyboard/downPreviewImage.ts"() {
+    "use strict";
+    import_express75 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    import_sharp4 = __toESM(require("sharp"));
+    init_middleware();
+    router75 = import_express75.default.Router();
+    downPreviewImage_default = router75.post(
+      "/",
+      validateFields({
+        storyboardIds: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { storyboardIds } = req.body;
+        const storyboardImage = await utils_default.db("o_storyboard").whereIn("id", storyboardIds).select("id", "filePath");
+        const filePathMap = {};
+        storyboardImage.forEach((i) => {
+          filePathMap[i.id] = i.filePath || "";
+        });
+        const orderedFilePaths = storyboardIds.map((id) => filePathMap[id]);
+        const loaded = await Promise.all(
+          orderedFilePaths.map(async (filePath) => {
+            if (!filePath) return null;
+            const buffer = await utils_default.oss.getFile(filePath);
+            const metadata = await (0, import_sharp4.default)(buffer).metadata();
+            return { buffer, width: metadata.width || 0, height: metadata.height || 0 };
+          })
+        );
+        const validImages = loaded.filter((img) => img !== null && img.width > 0 && img.height > 0);
+        if (validImages.length === 0) {
+          res.status(204).end();
+          return;
+        }
+        const cols = Math.min(5, validImages.length);
+        const rows = Math.ceil(validImages.length / cols);
+        const colWidths = Array(cols).fill(0);
+        const rowHeights = Array(rows).fill(0);
+        validImages.forEach((img, idx) => {
+          const c = idx % cols;
+          const r = Math.floor(idx / cols);
+          colWidths[c] = Math.max(colWidths[c], img.width);
+          rowHeights[r] = Math.max(rowHeights[r], img.height);
+        });
+        const canvasWidth = colWidths.reduce((a, b) => a + b, 0);
+        const canvasHeight = rowHeights.reduce((a, b) => a + b, 0);
+        const compositeInputs = [];
+        for (let i = 0; i < validImages.length; i++) {
+          const img = validImages[i];
+          const c = i % cols;
+          const r = Math.floor(i / cols);
+          const x = colWidths.slice(0, c).reduce((a, b) => a + b, 0);
+          const y = rowHeights.slice(0, r).reduce((a, b) => a + b, 0);
+          compositeInputs.push({
+            input: img.buffer,
+            left: x,
+            top: y
+          });
+          const label = `S${String(i + 1).padStart(2, "0")}`;
+          const fontSize = Math.max(14, Math.min(img.width, img.height) * 0.06);
+          const padding = Math.round(fontSize * 0.4);
+          const textWidth = Math.round(label.length * fontSize * 0.65);
+          const bgW = textWidth + padding * 2;
+          const bgH = Math.round(fontSize) + padding * 2;
+          const labelSvg = Buffer.from(
+            `<svg xmlns="http://www.w3.org/2000/svg" width="${bgW}" height="${bgH}">
+          <rect x="0" y="0" width="${bgW}" height="${bgH}" rx="4" ry="4" fill="rgba(0,0,0,0.55)"/>
+          <text x="${padding}" y="${padding + fontSize * 0.85}" font-family="Arial, sans-serif" font-weight="bold" font-size="${fontSize}" fill="#fff">${label}</text>
+        </svg>`
+          );
+          compositeInputs.push({
+            input: labelSvg,
+            left: x + 4,
+            top: y + 4
+          });
+        }
+        const resultBuffer = await (0, import_sharp4.default)({
+          create: {
+            width: canvasWidth,
+            height: canvasHeight,
+            channels: 4,
+            background: { r: 255, g: 255, b: 255, alpha: 1 }
+          }
+        }).composite(compositeInputs).png({ compressionLevel: 3 }).toBuffer();
+        res.setHeader("Content-Type", "image/png");
+        res.setHeader("Content-Disposition", "attachment; filename=storyboard-preview.png");
+        res.setHeader("Content-Length", resultBuffer.length);
+        res.status(200).send(resultBuffer);
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/editStoryboardInfo.ts
+var import_express76, router76, editStoryboardInfo_default;
+var init_editStoryboardInfo = __esm({
+  "src/routes/production/storyboard/editStoryboardInfo.ts"() {
+    "use strict";
+    import_express76 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router76 = import_express76.default.Router();
+    editStoryboardInfo_default = router76.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        prompt: external_exports.string(),
+        videoDesc: external_exports.string()
+      }),
+      async (req, res) => {
+        const { id, prompt, videoDesc } = req.body;
+        await utils_default.db("o_storyboard").where({ id }).update({
+          prompt,
+          videoDesc
+        });
+        res.status(200).send(success3({ message: "\u66F4\u65B0\u63D0\u793A\u8BCD\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/getStoryboardData.ts
+var import_express77, router77, getStoryboardData_default2;
+var init_getStoryboardData2 = __esm({
+  "src/routes/production/storyboard/getStoryboardData.ts"() {
+    "use strict";
+    import_express77 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router77 = import_express77.default.Router();
+    getStoryboardData_default2 = router77.post(
+      "/",
+      validateFields({
+        scriptId: external_exports.number(),
+        page: external_exports.number(),
+        limit: external_exports.number(),
+        name: external_exports.string().optional().nullable()
+      }),
+      async (req, res) => {
+        const { scriptId, page, limit, name: name28 } = req.body;
+        const offset = (page - 1) * limit;
+        const storyboardData = await utils_default.db("o_storyboard").where({ scriptId }).modify((qb) => {
+          if (name28) {
+            qb.andWhere("title", "like", `%${name28}%`);
+          }
+        }).offset(offset).limit(limit);
+        const data = await Promise.all(
+          storyboardData.map(async (i) => {
+            return {
+              id: i.id,
+              prompt: i.prompt,
+              state: i.state,
+              src: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : ""
+            };
+          })
+        );
+        const totalQuery = await utils_default.db("o_storyboard").where({ scriptId }).modify((qb) => {
+          if (name28) {
+            qb.andWhere("title", "like", `%${name28}%`);
+          }
+        }).count("* as total").first();
+        res.status(200).send(success3({ data, total: totalQuery?.total }));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/pollingImage.ts
+var import_express78, router78, pollingImage_default2;
+var init_pollingImage2 = __esm({
+  "src/routes/production/storyboard/pollingImage.ts"() {
+    "use strict";
+    import_express78 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router78 = import_express78.default.Router();
+    pollingImage_default2 = router78.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        const data = await utils_default.db("o_storyboard").whereIn("id", ids).whereNot("state", "\u751F\u6210\u4E2D").select("id", "state", "reason", "filePath", "prompt");
+        const result = await Promise.all(
+          data.map(async (item) => ({
+            ...item,
+            src: item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : null
+          }))
+        );
+        res.status(200).send(success3(result));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/previewImage.ts
+var import_express79, import_sharp5, router79, previewImage_default;
+var init_previewImage = __esm({
+  "src/routes/production/storyboard/previewImage.ts"() {
+    "use strict";
+    import_express79 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    import_sharp5 = __toESM(require("sharp"));
+    init_responseFormat();
+    init_middleware();
+    router79 = import_express79.default.Router();
+    previewImage_default = router79.post(
+      "/",
+      validateFields({
+        storyboardIds: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { storyboardIds } = req.body;
+        const storyboardImage = await utils_default.db("o_storyboard").whereIn("id", storyboardIds).select("id", "filePath");
+        const filePathMap = {};
+        storyboardImage.forEach((i) => {
+          filePathMap[i.id] = i.filePath || "";
+        });
+        const orderedFilePaths = storyboardIds.map((id) => filePathMap[id]);
+        const loaded = await Promise.all(
+          orderedFilePaths.map(async (filePath) => {
+            if (!filePath) return null;
+            const buffer = await utils_default.oss.getFile(filePath);
+            const metadata = await (0, import_sharp5.default)(buffer).metadata();
+            return { buffer, width: metadata.width || 0, height: metadata.height || 0 };
+          })
+        );
+        const validImages = loaded.filter((img) => img !== null && img.width > 0 && img.height > 0);
+        if (validImages.length === 0) {
+          return res.status(200).send(success3(null));
+        }
+        const maxThumbWidth = 512;
+        const resizedImages = await Promise.all(
+          validImages.map(async (img) => {
+            if (img.width <= maxThumbWidth) {
+              return img;
+            }
+            const scale = maxThumbWidth / img.width;
+            const newWidth = maxThumbWidth;
+            const newHeight = Math.round(img.height * scale);
+            const buffer = await (0, import_sharp5.default)(img.buffer).resize(newWidth, newHeight).toBuffer();
+            return { buffer, width: newWidth, height: newHeight };
+          })
+        );
+        const cols = Math.min(5, resizedImages.length);
+        const rows = Math.ceil(resizedImages.length / cols);
+        const colWidths = Array(cols).fill(0);
+        const rowHeights = Array(rows).fill(0);
+        resizedImages.forEach((img, idx) => {
+          const c = idx % cols;
+          const r = Math.floor(idx / cols);
+          colWidths[c] = Math.max(colWidths[c], img.width);
+          rowHeights[r] = Math.max(rowHeights[r], img.height);
+        });
+        const canvasWidth = colWidths.reduce((a, b) => a + b, 0);
+        const canvasHeight = rowHeights.reduce((a, b) => a + b, 0);
+        const compositeInputs = [];
+        for (let i = 0; i < resizedImages.length; i++) {
+          const img = resizedImages[i];
+          const c = i % cols;
+          const r = Math.floor(i / cols);
+          const x = colWidths.slice(0, c).reduce((a, b) => a + b, 0);
+          const y = rowHeights.slice(0, r).reduce((a, b) => a + b, 0);
+          compositeInputs.push({
+            input: img.buffer,
+            left: x,
+            top: y
+          });
+          const label = `S${String(i + 1).padStart(2, "0")}`;
+          const fontSize = Math.max(14, Math.min(img.width, img.height) * 0.06);
+          const padding = Math.round(fontSize * 0.4);
+          const textWidth = Math.round(label.length * fontSize * 0.65);
+          const bgW = textWidth + padding * 2;
+          const bgH = Math.round(fontSize) + padding * 2;
+          const labelSvg = Buffer.from(
+            `<svg xmlns="http://www.w3.org/2000/svg" width="${bgW}" height="${bgH}">
+          <rect x="0" y="0" width="${bgW}" height="${bgH}" rx="4" ry="4" fill="rgba(0,0,0,0.55)"/>
+          <text x="${padding}" y="${padding + fontSize * 0.85}" font-family="Arial, sans-serif" font-weight="bold" font-size="${fontSize}" fill="#fff">${label}</text>
+        </svg>`
+          );
+          compositeInputs.push({
+            input: labelSvg,
+            left: x + 4,
+            top: y + 4
+          });
+        }
+        const resultBuffer = await (0, import_sharp5.default)({
+          create: {
+            width: canvasWidth,
+            height: canvasHeight,
+            channels: 4,
+            background: { r: 255, g: 255, b: 255, alpha: 1 }
+          }
+        }).composite(compositeInputs).jpeg({ quality: 80 }).toBuffer();
+        const base644 = resultBuffer.toString("base64");
+        const dataUrl = `data:image/jpeg;base64,${base644}`;
+        return res.status(200).send(success3(dataUrl));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/removeFrame.ts
+var import_express80, router80, removeFrame_default;
+var init_removeFrame = __esm({
+  "src/routes/production/storyboard/removeFrame.ts"() {
+    "use strict";
+    import_express80 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router80 = import_express80.default.Router();
+    removeFrame_default = router80.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id } = req.body;
+        const storyboardData = await utils_default.db("o_storyboard").where("id", id).select("id", "track", "trackId", "flowId").first();
+        if (!storyboardData) return res.status(400).send(error50("\u672A\u627E\u5230\u8BE5\u5206\u955C"));
+        if (storyboardData?.flowId) await utils_default.db("o_imageFlow").where("id", storyboardData?.flowId).delete();
+        const trackData = await utils_default.db("o_storyboard").where("track", storyboardData.track).select("id");
+        if (trackData.length == 1) await utils_default.db("o_videoTrack").where("id", storyboardData.trackId).delete();
+        await utils_default.db("o_storyboard").where("id", id).delete();
+        await utils_default.db("o_assets2Storyboard").where("storyboardId", id).delete();
+        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/storyboard/updateStoryboardUrl.ts
+var import_express81, router81, updateStoryboardUrl_default;
+var init_updateStoryboardUrl = __esm({
+  "src/routes/production/storyboard/updateStoryboardUrl.ts"() {
+    "use strict";
+    import_express81 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router81 = import_express81.default.Router();
+    updateStoryboardUrl_default = router81.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        url: external_exports.string(),
+        flowId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id, url: url4, flowId } = req.body;
+        await utils_default.db("o_storyboard").where({ id }).update({
+          filePath: utils_default.replaceUrl(url4),
+          flowId,
+          state: "\u5DF2\u5B8C\u6210",
+          shouldGenerateImage: url4 ? 1 : 0
+        });
+        res.status(200).send(success3({ message: "\u66F4\u65B0\u5206\u955C\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/addTrack.ts
+var import_express82, router82, addTrack_default;
+var init_addTrack = __esm({
+  "src/routes/production/workbench/addTrack.ts"() {
+    "use strict";
+    import_express82 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router82 = import_express82.default.Router();
+    addTrack_default = router82.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        duration: external_exports.number().optional()
+      }),
+      async (req, res) => {
+        const { projectId, scriptId, duration: duration4 } = req.body;
+        const data = await utils_default.db("o_project").where("id", projectId).first();
+        const video = data?.videoModel?.split(":");
+        const vemdor = await utils_default.vendor.getModelList(video?.[0]);
+        const trackId = Date.now();
+        await utils_default.db("o_videoTrack").insert({
+          id: trackId,
+          projectId,
+          scriptId,
+          duration: duration4
+        });
+        res.status(200).send(success3(trackId));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/batchGeneratePrompt.ts
+var import_express83, import_promises9, import_path12, router83, batchGeneratePrompt_default;
+var init_batchGeneratePrompt = __esm({
+  "src/routes/production/workbench/batchGeneratePrompt.ts"() {
+    "use strict";
+    import_express83 = __toESM(require_express2());
+    init_utils3();
+    init_p_limit();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    import_promises9 = __toESM(require("fs/promises"));
+    import_path12 = __toESM(require("path"));
+    router83 = import_express83.default.Router();
+    batchGeneratePrompt_default = router83.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        trackData: external_exports.array(
+          external_exports.object({
+            trackId: external_exports.number(),
+            info: external_exports.array(
+              external_exports.object({
+                id: external_exports.number(),
+                sources: external_exports.string()
+              })
+            )
+          })
+        ),
+        mode: external_exports.string(),
+        model: external_exports.string(),
+        concurrentCount: external_exports.number().optional()
+        //并发数
+      }),
+      async (req, res) => {
+        const { trackData, projectId, mode, model, concurrentCount = 5 } = req.body;
+        try {
+          const [id, modelData] = model.split(/:(.+)/);
+          const projectData = await utils_default.db("o_project").select("*").where({ id: projectId }).first();
+          const videoPrompt = await utils_default.db("o_prompt").where("type", "videoPromptGeneration").first();
+          let videoPromptGeneration = "";
+          const modelPromptData = await utils_default.db("o_modelPrompt").where("vendorId", id).where("model", modelData).first();
+          if (modelPromptData) {
+            const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
+            try {
+              const fullPath = import_path12.default.join(modelPromptRoot, modelPromptData?.path);
+              const content = await import_promises9.default.readFile(fullPath, "utf-8");
+              videoPromptGeneration = content ?? "";
+            } catch {
+            }
+          }
+          if (!videoPromptGeneration) {
+            const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
+            const videoPromptDir = import_path12.default.join(modelPromptRoot, "video");
+            const modelLower = (modelData ?? "").toLowerCase();
+            let fileName = null;
+            if (modelLower.includes("wan") && modelLower.includes("2.6")) {
+              fileName = "wan2.6Single-imageFirstFrameMode.md";
+            } else if (/seedance.*2[.\-]0/i.test(modelLower)) {
+              fileName = "seedance2Multi-parameterMode.md";
+            } else if (mode === "startEndRequired" || mode === "endFrameOptional" || mode === "startFrameOptional") {
+              fileName = "universalFirstAndLastFrameMode.md";
+            } else if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
+              fileName = "universalMulti-parameterMode.md";
+            }
+            if (fileName) {
+              try {
+                const fullPath = import_path12.default.join(videoPromptDir, fileName);
+                videoPromptGeneration = await import_promises9.default.readFile(fullPath, "utf-8");
+              } catch {
+              }
+            }
+          }
+          if (!videoPromptGeneration) {
+            if (videoPrompt && videoPrompt.useData) {
+              videoPromptGeneration = videoPrompt.useData;
+            } else {
+              videoPromptGeneration = videoPrompt?.data ?? void 0;
+            }
+          }
+          const artStyle = projectData?.artStyle || "\u65E0";
+          const visualManual = utils_default.getArtPrompt(artStyle, "art_skills", "art_storyboard_video");
+          await utils_default.db("o_videoTrack").whereIn(
+            "id",
+            trackData.map((t) => t.trackId)
+          ).update({ state: "\u751F\u6210\u4E2D" });
+          const limit = pLimit(concurrentCount ?? 5);
+          const tasks = trackData.map(
+            (track) => limit(async () => {
+              const images = await Promise.all(
+                track.info.map(async (item) => {
+                  if (item.sources === "storyboard") {
+                    const storyboard2 = await utils_default.db("o_storyboard").where("o_storyboard.id", item.id).select("videoDesc", "prompt", "track", "duration", "shouldGenerateImage").first();
+                    const assetRows = await utils_default.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("rowid").select("assetId");
+                    const associateAssetsIds = assetRows.map((row) => row.assetId);
+                    return {
+                      ...storyboard2,
+                      associateAssetsIds,
+                      _type: "storyboard"
+                    };
+                  }
+                  if (item.sources === "assets") {
+                    const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", item.id).select("o_assets.id", "o_assets.type", "o_assets.name", "o_image.filePath").first();
+                    return {
+                      ...assetsData,
+                      _type: "assets"
+                    };
+                  }
+                })
+              );
+              const assets = [];
+              const storyboard = [];
+              for (const item of images) {
+                if (!item) continue;
+                if (item._type === "assets")
+                  assets.push({
+                    id: item.id,
+                    type: item.type,
+                    name: item.name,
+                    filePath: item.filePath
+                  });
+                if (item._type === "storyboard")
+                  storyboard.push({
+                    videoDesc: item.videoDesc,
+                    prompt: item.prompt,
+                    track: item.track,
+                    duration: item.duration,
+                    associateAssetsIds: item.associateAssetsIds,
+                    shouldGenerateImage: item.shouldGenerateImage
+                  });
+              }
+              const content = `
+          **\u6A21\u578B\u540D\u79F0**\uFF1A${modelData},
+          **\u8D44\u4EA7\u4FE1\u606F**\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\u3001\u97F3\u9891):${assets.filter((i) => i.filePath).map((i) => `[${i.id},${i.type},${i.name}]`).join("\uFF0C")},
+          **\u5206\u955C\u4FE1\u606F**\uFF1A${storyboard.map(
+                (i) => `<storyboardItem
+  videoDesc='${i.videoDesc}'
+  duration='${i.duration}'
+></storyboardItem>`
+              )},
+          `;
+              try {
+                const { text: text2 } = await utils_default.Ai.Text("universalAi").invoke({
+                  system: videoPromptGeneration,
+                  messages: [
+                    {
+                      role: "assistant",
+                      content: `${visualManual}`
+                    },
+                    {
+                      role: "user",
+                      content
+                    }
+                  ]
+                });
+                await utils_default.db("o_videoTrack").where({ id: track.trackId }).update({
+                  prompt: text2,
+                  state: "\u5DF2\u5B8C\u6210"
+                });
+                return { trackId: track.trackId, text: text2 };
+              } catch (e) {
+                await utils_default.db("o_videoTrack").where({ id: track.trackId }).update({ state: "\u751F\u6210\u5931\u8D25", reason: utils_default.error(e).message });
+              }
+            })
+          );
+          Promise.all(tasks);
+          res.status(200).send(success3("\u5F00\u59CB\u751F\u6210\u63D0\u793A\u8BCD"));
+        } catch (e) {
+          res.status(400).send(error50(utils_default.error(e).message));
+        }
+      }
+    );
+  }
+});
+
+// src/services/task-engine/enqueueVideo.ts
+async function enqueueVideoGeneration(input) {
+  const resourceKey = `video:${input.projectId}:${input.scriptId}:${input.trackId}`;
+  const idempotencyKey = stableIdempotencyKey({ requestId: input.requestId, resourceKey, type: "video.generate" });
+  const existing = await generationTaskRepository.list({ projectId: input.projectId, type: "video.generate", limit: 100 });
+  const active = existing.data.find(
+    (task) => task.resourceKey === resourceKey && !["cancelled", "succeeded", "failed"].includes(task.status)
+  );
+  if (active) {
+    const payload2 = active.payload;
+    return { task: active, videoId: payload2.videoId, deduped: true };
+  }
+  const costReservation = await prepareCostReservation({
+    projectId: input.projectId,
+    lane: "video",
+    model: input.model,
+    metrics: { request: 1, second: input.duration }
+  });
+  const ratio = await utils_default.db("o_project").select("videoRatio").where("id", input.projectId).first();
+  const videoPath = `/${input.projectId}/video/${v4_default()}.mp4`;
+  const [videoId] = await utils_default.db("o_video").insert({
+    filePath: videoPath,
+    time: Date.now(),
+    state: "\u6392\u961F\u4E2D",
+    scriptId: input.scriptId,
+    projectId: input.projectId,
+    videoTrackId: input.trackId
+  });
+  const [legacyTaskId] = await utils_default.db("o_tasks").insert({
+    projectId: input.projectId,
+    taskClass: "\u89C6\u9891\u751F\u6210",
+    relatedObjects: JSON.stringify({ projectId: input.projectId, videoId, scriptId: input.scriptId, type: "\u89C6\u9891" }),
+    model: input.model.split(/:(.+)/)[1] ?? input.model,
+    describe: "\u6301\u4E45\u961F\u5217\uFF1A\u6839\u636E\u63D0\u793A\u8BCD\u751F\u6210\u89C6\u9891",
+    state: "\u6392\u961F\u4E2D",
+    startTime: Date.now()
+  });
+  const payload = {
+    projectId: input.projectId,
+    scriptId: input.scriptId,
+    trackId: input.trackId,
+    videoId,
+    videoPath,
+    uploadData: input.uploadData,
+    prompt: input.prompt,
+    duration: input.duration,
+    model: input.model,
+    mode: input.mode,
+    resolution: input.resolution,
+    audio: input.audio,
+    aspectRatio: ratio?.videoRatio || "16:9"
+  };
+  const result = await generationTaskRepository.enqueue({
+    projectId: input.projectId,
+    legacyTaskId,
+    lane: "video",
+    type: "video.generate",
+    resourceKey,
+    payload,
+    provider: input.model.split(/:(.+)/)[0],
+    idempotencyKey,
+    maxAttempts: 3,
+    costReservation
+  });
+  if (result.deduped) {
+    await utils_default.db("o_video").where("id", videoId).delete();
+    await utils_default.db("o_tasks").where("id", legacyTaskId).delete();
+    const existingPayload = result.task.payload;
+    return { task: result.task, videoId: existingPayload.videoId, deduped: true };
+  }
+  return { task: result.task, videoId, deduped: false };
+}
+var init_enqueueVideo = __esm({
+  "src/services/task-engine/enqueueVideo.ts"() {
+    "use strict";
+    init_dist_node();
+    init_utils3();
+    init_repository();
+    init_budget();
+  }
+});
+
+// src/routes/production/workbench/batchGenerateVideo.ts
+var import_express84, router84, batchGenerateVideo_default;
+var init_batchGenerateVideo = __esm({
+  "src/routes/production/workbench/batchGenerateVideo.ts"() {
+    "use strict";
+    import_express84 = __toESM(require_express2());
+    init_zod();
+    init_dist_node();
+    init_responseFormat();
+    init_middleware();
+    init_enqueueVideo();
+    router84 = import_express84.default.Router();
+    batchGenerateVideo_default = router84.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        trackData: external_exports.array(
+          external_exports.object({
+            uploadData: external_exports.array(
+              external_exports.object({
+                id: external_exports.number(),
+                sources: external_exports.string()
+              })
+            ),
+            trackId: external_exports.number(),
+            prompt: external_exports.string(),
+            duration: external_exports.number()
+          })
+        ),
+        model: external_exports.string(),
+        mode: external_exports.string(),
+        resolution: external_exports.string(),
+        audio: external_exports.boolean().optional(),
+        requestId: external_exports.string().optional()
+      }),
+      async (req, res) => {
+        const { scriptId, projectId, trackData, model, resolution, audio, mode, requestId = v4_default() } = req.body;
+        let modeData = [];
+        if (Array.isArray(mode)) {
+        } else if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
+          try {
+            modeData = JSON.parse(mode);
+          } catch (e) {
+          }
+        }
+        const tasks = await Promise.all(
+          trackData.map(
+            async ({ uploadData, trackId, prompt, duration: duration4 }) => {
+              const queued = await enqueueVideoGeneration({
+                projectId,
+                scriptId,
+                trackId,
+                uploadData,
+                prompt,
+                duration: duration4,
+                model,
+                mode: modeData.length > 0 ? modeData : mode,
+                resolution,
+                audio,
+                requestId: `${requestId}:${trackId}`
+              });
+              return {
+                videoId: queued.videoId,
+                trackId,
+                durableTaskId: queued.task.id,
+                deduped: queued.deduped
+              };
+            }
+          )
+        );
+        res.status(200).send(success3(tasks));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/checkVideoPrompt.ts
+var import_express85, router85, checkVideoPrompt_default;
+var init_checkVideoPrompt = __esm({
+  "src/routes/production/workbench/checkVideoPrompt.ts"() {
+    "use strict";
+    import_express85 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router85 = import_express85.default.Router();
+    checkVideoPrompt_default = router85.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        trackIds: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { projectId, scriptId, trackIds } = req.body;
+        const promptList = await utils_default.db("o_videoTrack").where("projectId", projectId).where("scriptId", scriptId).whereIn("id", trackIds).whereIn("state", ["\u5DF2\u5B8C\u6210", "\u751F\u6210\u5931\u8D25"]).select("id", "state", "reason", "prompt");
+        res.status(200).send(success3(promptList));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/checkVideoStateList.ts
+var import_express86, router86, checkVideoStateList_default;
+var init_checkVideoStateList = __esm({
+  "src/routes/production/workbench/checkVideoStateList.ts"() {
+    "use strict";
+    import_express86 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router86 = import_express86.default.Router();
+    checkVideoStateList_default = router86.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        videoIds: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { projectId, scriptId, videoIds } = req.body;
+        const videoList = await utils_default.db("o_video").whereIn("id", videoIds).whereIn("state", ["\u751F\u6210\u6210\u529F", "\u751F\u6210\u5931\u8D25", "\u9700\u4EBA\u5DE5\u786E\u8BA4", "\u5DF2\u53D6\u6D88", "\u5DF2\u963B\u585E"]).select("id", "state", "errorReason", "filePath");
+        res.status(200).send(
+          success3(
+            await Promise.all(
+              videoList.map(async (s) => ({
+                ...s,
+                src: s.filePath ? await utils_default.oss.getFileUrl(s.filePath) : ""
+              }))
+            )
+          )
+        );
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/deleteTrack.ts
+var import_express87, router87, deleteTrack_default;
+var init_deleteTrack = __esm({
+  "src/routes/production/workbench/deleteTrack.ts"() {
+    "use strict";
+    import_express87 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router87 = import_express87.default.Router();
+    deleteTrack_default = router87.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id } = req.body;
+        await utils_default.db("o_videoTrack").where("id", id).delete();
+        await utils_default.db("o_storyboard").where("trackId", id).update({
+          trackId: null
+        });
+        res.status(200).send(success3({ message: "\u89C6\u9891\u6BB5\u5220\u9664\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/delVideo.ts
+var import_express88, router88, delVideo_default;
+var init_delVideo = __esm({
+  "src/routes/production/workbench/delVideo.ts"() {
+    "use strict";
+    import_express88 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router88 = import_express88.default.Router();
+    delVideo_default = router88.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id } = req.body;
+        await utils_default.db("o_video").where("id", id).delete();
+        await utils_default.db("o_videoTrack").where("videoId", id).update({
+          videoId: null
+        });
+        res.status(200).send(success3({ message: "\u89C6\u9891\u5220\u9664\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/generateVideo.ts
+var import_express89, router89, generateVideo_default;
+var init_generateVideo = __esm({
+  "src/routes/production/workbench/generateVideo.ts"() {
+    "use strict";
+    import_express89 = __toESM(require_express2());
+    init_zod();
+    init_dist_node();
+    init_responseFormat();
+    init_middleware();
+    init_enqueueVideo();
+    router89 = import_express89.default.Router();
+    generateVideo_default = router89.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        uploadData: external_exports.array(external_exports.object({ id: external_exports.number(), sources: external_exports.string() })),
+        prompt: external_exports.string(),
+        model: external_exports.string(),
+        mode: external_exports.string(),
+        resolution: external_exports.string(),
+        duration: external_exports.number(),
+        audio: external_exports.boolean().optional(),
+        trackId: external_exports.number(),
+        requestId: external_exports.string().optional()
+      }),
+      async (req, res) => {
+        const { scriptId, projectId, prompt, uploadData, model, duration: duration4, resolution, audio, mode, trackId, requestId = v4_default() } = req.body;
+        let effectiveMode = mode;
+        if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
+          try {
+            effectiveMode = JSON.parse(mode);
+          } catch {
+            effectiveMode = mode;
+          }
+        }
+        const queued = await enqueueVideoGeneration({
+          projectId,
+          scriptId,
+          trackId,
+          uploadData,
+          prompt,
+          duration: duration4,
+          model,
+          mode: effectiveMode,
+          resolution,
+          audio,
+          requestId
+        });
+        res.status(200).send(success3(queued.videoId));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/generateVideoPrompt.ts
+var import_express90, import_promises10, import_path13, router90, generateVideoPrompt_default;
+var init_generateVideoPrompt = __esm({
+  "src/routes/production/workbench/generateVideoPrompt.ts"() {
+    "use strict";
+    import_express90 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    import_promises10 = __toESM(require("fs/promises"));
+    import_path13 = __toESM(require("path"));
+    router90 = import_express90.default.Router();
+    generateVideoPrompt_default = router90.post(
+      "/",
+      validateFields({
+        trackId: external_exports.number(),
+        projectId: external_exports.number(),
+        info: external_exports.array(
+          external_exports.object({
+            id: external_exports.number(),
+            sources: external_exports.string()
+          })
+        ),
+        model: external_exports.string(),
+        mode: external_exports.string()
+      }),
+      async (req, res) => {
+        const { trackId, projectId, info, model, mode } = req.body;
+        await utils_default.db("o_videoTrack").where({ id: trackId }).update({
+          state: "\u751F\u6210\u4E2D"
+        });
+        const images = await Promise.all(
+          info.map(async (item) => {
+            if (item.sources === "storyboard") {
+              const storyboard2 = await utils_default.db("o_storyboard").where("o_storyboard.id", item.id).select("videoDesc", "prompt", "track", "duration", "shouldGenerateImage").first();
+              const assetRows = await utils_default.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("rowid").select("assetId");
+              const associateAssetsIds = assetRows.map((row) => row.assetId);
+              return {
+                ...storyboard2,
+                associateAssetsIds,
+                _type: "storyboard"
+                // 标记类型，便于后续区分
+              };
+            }
+            if (item.sources === "assets") {
+              const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", item.id).select("o_assets.id", "o_assets.type", "o_assets.name", "o_image.filePath").first();
+              return {
+                ...assetsData,
+                _type: "assets"
+                // 标记类型
+              };
+            }
+          })
+        );
+        const assets = [];
+        const storyboard = [];
+        for (const item of images) {
+          if (!item) continue;
+          if (item._type === "assets")
+            assets.push({
+              id: item.id,
+              type: item.type,
+              name: item.name,
+              filePath: item.filePath
+            });
+          if (item._type === "storyboard")
+            storyboard.push({
+              videoDesc: item.videoDesc,
+              prompt: item.prompt,
+              track: item.track,
+              duration: item.duration,
+              associateAssetsIds: item.associateAssetsIds,
+              shouldGenerateImage: item.shouldGenerateImage
+            });
+        }
+        const assetsNotAudioIds = assets.filter((i) => i.type == "audio").map((i) => i.id);
+        const assets2Audio = await utils_default.db("o_assets").whereIn("o_assets.id", assetsNotAudioIds).join("o_assetsRole2Audio", "o_assetsRole2Audio.assetsAudioId", "o_assets.assetsId").select("o_assets.assetsId", "o_assets.id", "o_assetsRole2Audio.assetsAudioId", "o_assetsRole2Audio.assetsRoleId");
+        const assetsAudioRecord = {};
+        assets2Audio.forEach((i) => {
+          assetsAudioRecord[i.assetsRoleId] = i.id;
+        });
+        const [id, modelData] = model.split(/:(.+)/);
+        const projectData = await utils_default.db("o_project").select("*").where({ id: projectId }).first();
+        const videoPrompt = await utils_default.db("o_prompt").where("type", "videoPromptGeneration").first();
+        let videoPromptGeneration = "";
+        const modelPromptData = await utils_default.db("o_modelPrompt").where("vendorId", id).where("model", modelData).first();
+        if (modelPromptData) {
+          const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
+          try {
+            const fullPath = import_path13.default.join(modelPromptRoot, modelPromptData?.path);
+            const content2 = await import_promises10.default.readFile(fullPath, "utf-8");
+            videoPromptGeneration = content2 ?? "";
+          } catch {
+          }
+        }
+        if (!videoPromptGeneration) {
+          const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
+          const videoPromptDir = import_path13.default.join(modelPromptRoot, "video");
+          const modelLower = (modelData ?? "").toLowerCase();
+          let fileName = null;
+          if (modelLower.includes("wan") && modelLower.includes("2.6")) {
+            fileName = "wan2.6Single-imageFirstFrameMode.md";
+          } else if (/seedance.*2[.\-]0/i.test(modelData)) {
+            fileName = "seedance2Multi-parameterMode.md";
+          } else if (mode === "startEndRequired" || mode === "endFrameOptional" || mode === "startFrameOptional") {
+            fileName = "universalFirstAndLastFrameMode.md";
+          } else if (typeof mode === "string" && mode.startsWith('["') && mode.endsWith('"]')) {
+            fileName = "universalMulti-parameterMode.md";
+          }
+          if (fileName) {
+            try {
+              const fullPath = import_path13.default.join(videoPromptDir, fileName);
+              videoPromptGeneration = await import_promises10.default.readFile(fullPath, "utf-8");
+            } catch {
+            }
+          }
+        }
+        if (!videoPromptGeneration) {
+          if (videoPrompt && videoPrompt.useData) {
+            videoPromptGeneration = videoPrompt.useData;
+          } else {
+            videoPromptGeneration = videoPrompt?.data ?? void 0;
+          }
+        }
+        const artStyle = projectData?.artStyle || "\u65E0";
+        const visualManual = utils_default.getArtPrompt(artStyle, "art_skills", "art_storyboard_video");
+        const content = `
+          **\u6A21\u578B\u540D\u79F0**\uFF1A${modelData},
+
+          **\u8D44\u4EA7\u4FE1\u606F**\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\u3001\u97F3\u9891):${assets.filter((i) => i.filePath).map((i) => `[${i.id},${i.type},${i.name} ${assetsAudioRecord[i.id] ? `audio:${assetsAudioRecord[i.id]}` : ""} ] `).join("\uFF0C")},
+          **\u5206\u955C\u4FE1\u606F**\uFF1A${storyboard.map(
+          (i) => `<storyboardItem
+  videoDesc='${i.videoDesc}'
+  duration='${i.duration}'
+></storyboardItem>`
+        )},
+          `;
+        try {
+          const { text: text2 } = await utils_default.Ai.Text("universalAi").invoke({
+            system: videoPromptGeneration,
+            messages: [
+              {
+                role: "assistant",
+                content: `${visualManual}`
+              },
+              {
+                role: "user",
+                content
+              }
+            ]
+          });
+          await utils_default.db("o_videoTrack").where({ id: trackId }).update({
+            state: "\u5DF2\u5B8C\u6210",
+            prompt: text2
+          });
+          res.status(200).send(success3(text2));
+        } catch (e) {
+          await utils_default.db("o_videoTrack").where({ id: trackId }).update({
+            state: "\u751F\u6210\u5931\u8D25",
+            reason: utils_default.error(e).message
+          });
+          res.status(400).send(error50(utils_default.error(e).message));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/getAudioBindAssetsList.ts
+var import_express91, router91, getAudioBindAssetsList_default;
+var init_getAudioBindAssetsList = __esm({
+  "src/routes/production/workbench/getAudioBindAssetsList.ts"() {
+    "use strict";
+    import_express91 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router91 = import_express91.default.Router();
+    getAudioBindAssetsList_default = router91.post(
+      "/",
+      validateFields({
+        assetsIds: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { assetsIds } = req.body;
+        const assets2AudioData = await utils_default.db("o_assetsRole2Audio").whereIn("assetsRoleId", assetsIds).select("assetsAudioId", "assetsRoleId");
+        if (assets2AudioData.length) {
+          const assetsData = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets.assetsId", assets2AudioData.map((i) => i.assetsAudioId)).select("o_assets.id", "o_image.filePath", "o_assets.prompt", "o_assets.assetsId");
+          await Promise.all(
+            assetsData.map(async (i) => {
+              i.filePath && (i.src = await utils_default.oss.getFileUrl(i.filePath));
+            })
+          );
+          return res.status(200).send(
+            success3(
+              assetsData.map((i) => ({
+                fileType: "audio",
+                sources: "assets",
+                src: i.src,
+                id: i.id,
+                prompt: i.prompt
+              }))
+            )
+          );
+        }
+        res.status(200).send(success3());
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/getFileUrl.ts
+var import_express92, router92, getFileUrl_default;
+var init_getFileUrl = __esm({
+  "src/routes/production/workbench/getFileUrl.ts"() {
+    "use strict";
+    import_express92 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router92 = import_express92.default.Router();
+    getFileUrl_default = router92.post(
+      "/",
+      validateFields({
+        items: external_exports.array(external_exports.object({
+          id: external_exports.number(),
+          sources: external_exports.string()
+        }))
+      }),
+      async (req, res) => {
+        const { items } = req.body;
+        const result = {};
+        const storyboardIds = items.filter((item) => item.sources == "storyboard").map((item) => item.id);
+        const totalFilePaths = [];
+        if (storyboardIds.length) {
+          const storyBoardPaths = await utils_default.db("o_storyboard").whereIn("id", storyboardIds).select("id", "filePath");
+          totalFilePaths.push(...storyBoardPaths.map((i) => ({ id: i.id, filePath: i.filePath, sources: "storyboard" })));
+        }
+        const assetsIds = items.filter((item) => item.sources == "assets").map((item) => item.id);
+        if (assetsIds.length) {
+          const assetsPaths = await utils_default.db("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets.id", assetsIds).select("o_assets.id", "o_image.filePath");
+          totalFilePaths.push(...assetsPaths.map((i) => ({ id: i.id, filePath: i.filePath, sources: "assets" })));
+        }
+        await Promise.all(
+          totalFilePaths.map(async (item) => {
+            result[`${item.id}:${item.sources}`] = item.filePath ? await utils_default.oss.getSmallImageUrl(item.filePath) : "";
+          })
+        );
+        res.status(200).send(success3({ data: result }));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/getGenerateData.ts
+var import_express93, router93, getGenerateData_default;
+var init_getGenerateData = __esm({
+  "src/routes/production/workbench/getGenerateData.ts"() {
+    "use strict";
+    import_express93 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router93 = import_express93.default.Router();
+    getGenerateData_default = router93.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId, scriptId } = req.body;
+        const projectData = await utils_default.db("o_project").where("id", projectId).select("id", "videoModel", "mode").first();
+        if (!projectData?.videoModel) {
+          return res.status(400).json(success3("\u9879\u76EE\u672A\u914D\u7F6E\u89C6\u9891\u6A21\u578B"));
+        }
+        let videoMode = "";
+        try {
+          videoMode = JSON.parse(projectData?.mode ?? "");
+        } catch (e) {
+          videoMode = projectData?.mode ?? "";
+        }
+        const isRef = Array.isArray(videoMode) ? true : false;
+        const storyboardList = await utils_default.db("o_storyboard").where({ scriptId, projectId }).orderBy("index", "asc");
+        await Promise.all(
+          storyboardList.map(async (i) => {
+            i.filePath = i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : "";
+          })
+        );
+        const storyboardTrackRecord = {};
+        storyboardList.forEach((i) => {
+          if (storyboardTrackRecord[i.trackId]) {
+            storyboardTrackRecord[i.trackId].push({
+              src: i.filePath,
+              fileType: "image",
+              sources: "storyboard",
+              ...i.prompt != null ? { prompt: i.videoDesc } : {},
+              ...i.id != null ? { id: i.id } : {},
+              index: i.index
+            });
+          } else {
+            storyboardTrackRecord[i.trackId] = [
+              {
+                src: i.filePath,
+                fileType: "image",
+                sources: "storyboard",
+                ...i.prompt != null ? { prompt: i.videoDesc } : {},
+                ...i.id != null ? { id: i.id } : {},
+                index: i.index
+              }
+            ];
+          }
+        });
+        const otherDataMap = {};
+        const audioReferenceCount = (() => {
+          if (!Array.isArray(videoMode)) return 0;
+          const item = videoMode.find((v) => v.toLowerCase().startsWith("audioreference:"));
+          if (!item) return 0;
+          const num = parseInt(item.split(":")[1], 10);
+          return isNaN(num) ? 0 : num;
+        })();
+        if (isRef) {
+          const storyIds = storyboardList.map((s) => s.id);
+          const assetDatas = await utils_default.db("o_assets2Storyboard").leftJoin("o_assets", "o_assets2Storyboard.assetId", "o_assets.id").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assets2Storyboard.storyboardId", storyIds).select("o_assets.*", "o_image.filePath", "o_assets2Storyboard.storyboardId");
+          const queryAudioIds = [...assetDatas.map((i) => i.id), ...assetDatas.map((i) => i.assetsId)].filter(Boolean);
+          const assets2AudioData = await utils_default.db("o_assetsRole2Audio").leftJoin("o_assets", "o_assets.assetsId", "o_assetsRole2Audio.assetsAudioId").leftJoin("o_image", "o_image.id", "o_assets.imageId").whereIn("o_assetsRole2Audio.assetsRoleId", queryAudioIds).select(
+            "o_assets.id",
+            "o_assets.name",
+            "o_assetsRole2Audio.assetsRoleId",
+            "o_assets.describe",
+            "o_assets.type",
+            "o_assets.prompt",
+            "o_image.filePath"
+          );
+          const audioRecord = {};
+          await Promise.all(
+            assets2AudioData.map(async (i) => {
+              if (!audioRecord[i.assetsRoleId]) audioRecord[i.assetsRoleId] = [];
+              audioRecord[i.assetsRoleId].push({
+                id: i.id,
+                name: i.name,
+                describe: i.describe,
+                type: i.type,
+                fileType: "audio",
+                sources: "assets",
+                prompt: i.prompt,
+                src: i.filePath ? await utils_default.oss.getFileUrl(i.filePath) : ""
+              });
+            })
+          );
+          await Promise.all(
+            assetDatas.map(async (i) => {
+              const item = {
+                id: i.id,
+                name: i.name,
+                describe: i.describe,
+                type: i.type,
+                fileType: "image",
+                sources: "assets",
+                src: i.filePath ? await utils_default.oss.getSmallImageUrl(i.filePath) : ""
+              };
+              const sid = i.storyboardId;
+              if (!otherDataMap[sid]) otherDataMap[sid] = [];
+              otherDataMap[sid].push(item);
+              if (audioRecord[i.id]) otherDataMap[sid].push(...audioRecord[i.id]);
+              if (audioRecord[i.assetsId]) otherDataMap[sid].push(...audioRecord[i.assetsId]);
+            })
+          );
+        }
+        const trackData = await utils_default.db("o_videoTrack").where({ projectId, scriptId });
+        const videoList = await utils_default.db("o_video").whereIn(
+          "videoTrackId",
+          trackData.map((t) => t.id)
+        );
+        const trackList = [];
+        const trackIdMap = [...new Set(trackData.map((t) => t.id))];
+        for (const trackId of trackIdMap) {
+          const item = trackData.find((t) => t.id === trackId);
+          trackList.push({
+            id: trackId,
+            duration: item?.duration ?? 0,
+            prompt: item?.prompt || "",
+            state: item?.state ?? "\u672A\u751F\u6210",
+            reason: item?.reason ?? "",
+            selectVideoId: Number(item?.videoId),
+            medias: (() => {
+              const storyboardMedias = storyboardTrackRecord[trackId] ?? [];
+              const assetMedias = storyboardMedias.flatMap((s) => otherDataMap[s.id] ?? []);
+              const seenAssetIds = /* @__PURE__ */ new Set();
+              const uniqueAssets = assetMedias.filter((a) => {
+                if (seenAssetIds.has(a.id)) return false;
+                seenAssetIds.add(a.id);
+                return true;
+              });
+              const audioCountMap = {};
+              const filteredAssets = uniqueAssets.filter((a) => {
+                if (a.fileType !== "audio" || audioReferenceCount === 0) return true;
+                const key = String(a.id);
+                audioCountMap[key] = (audioCountMap[key] ?? 0) + 1;
+                const totalAudio = Object.values(audioCountMap).reduce((s, n) => s + n, 0);
+                return totalAudio <= audioReferenceCount;
+              });
+              const hasImageAssetData = filteredAssets.filter((i) => i.src);
+              const notHasImageAssetData = filteredAssets.filter((i) => !i.src);
+              return [...hasImageAssetData, ...storyboardMedias, ...notHasImageAssetData];
+            })(),
+            videoList: await Promise.all(
+              videoList.filter((v) => v.videoTrackId === trackId).map(async (v) => ({
+                id: v.id,
+                src: v.filePath ? await utils_default.oss.getFileUrl(v.filePath) : "",
+                state: v.state === "\u5DF2\u5B8C\u6210" ? "\u5DF2\u5B8C\u6210" : v.state === "\u751F\u6210\u4E2D" ? "\u751F\u6210\u4E2D" : v.state === "\u751F\u6210\u5931\u8D25" ? "\u751F\u6210\u5931\u8D25" : "\u672A\u751F\u6210",
+                errorReason: v?.errorReason ?? ""
+              }))
+            )
+          });
+        }
+        res.status(200).send(
+          success3({
+            storyboardList: await Promise.all(
+              storyboardList.map(async (s) => ({
+                ...s,
+                src: s.filePath
+              }))
+            ),
+            trackList
+          })
+        );
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/getVideoList.ts
+var import_express94, router94, getVideoList_default;
+var init_getVideoList = __esm({
+  "src/routes/production/workbench/getVideoList.ts"() {
+    "use strict";
+    import_express94 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router94 = import_express94.default.Router();
+    getVideoList_default = router94.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { projectId, scriptId } = req.body;
+        const storyboardList = await utils_default.db("o_storyboard").where({ scriptId, projectId }).orderBy("index", "asc");
+        const videoList = await utils_default.db("o_video").whereIn(
+          "videoTrackId",
+          storyboardList.map((s) => s.trackId)
+        );
+        res.status(200).send(
+          success3(
+            await Promise.all(
+              videoList.map(async (s) => ({
+                ...s,
+                src: s.filePath ? await utils_default.oss.getSmallImageUrl(s.filePath) : ""
+              }))
+            )
+          )
+        );
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/selectVideo.ts
+var import_express95, router95, selectVideo_default;
+var init_selectVideo = __esm({
+  "src/routes/production/workbench/selectVideo.ts"() {
+    "use strict";
+    import_express95 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router95 = import_express95.default.Router();
+    selectVideo_default = router95.post(
+      "/",
+      validateFields({
+        trackId: external_exports.number(),
+        videoId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { trackId, videoId } = req.body;
+        await utils_default.db("o_videoTrack").where("id", trackId).update({
+          videoId
+        });
+        res.status(200).send(success3({ message: "\u89C6\u9891\u9009\u62E9\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/updateVideoDuration.ts
+var import_express96, router96, updateVideoDuration_default;
+var init_updateVideoDuration = __esm({
+  "src/routes/production/workbench/updateVideoDuration.ts"() {
+    "use strict";
+    import_express96 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router96 = import_express96.default.Router();
+    updateVideoDuration_default = router96.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        duration: external_exports.number().optional()
+      }),
+      async (req, res) => {
+        const { id, duration: duration4 } = req.body;
+        await utils_default.db("o_videoTrack").where("id", id).update({
+          duration: duration4
+        });
+        res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
+      }
+    );
+  }
+});
+
+// src/routes/production/workbench/updateVideoPrompt.ts
+var import_express97, router97, updateVideoPrompt_default;
+var init_updateVideoPrompt = __esm({
+  "src/routes/production/workbench/updateVideoPrompt.ts"() {
+    "use strict";
+    import_express97 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router97 = import_express97.default.Router();
+    updateVideoPrompt_default = router97.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        prompt: external_exports.string().optional()
+      }),
+      async (req, res) => {
+        const { id, prompt, duration: duration4 } = req.body;
+        await utils_default.db("o_videoTrack").where("id", id).update({
+          prompt
+        });
+        res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
+      }
+    );
+  }
+});
+
+// src/routes/project/addDirectorManual.ts
+var import_express98, import_fs8, import_path14, router98, addDirectorManual_default;
+var init_addDirectorManual = __esm({
+  "src/routes/project/addDirectorManual.ts"() {
+    "use strict";
+    import_express98 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    import_fs8 = __toESM(require("fs"));
+    import_path14 = __toESM(require("path"));
+    init_middleware();
+    init_zod();
+    router98 = import_express98.default.Router();
+    addDirectorManual_default = router98.post(
+      "/",
+      validateFields({
+        name: external_exports.string(),
+        images: external_exports.array(external_exports.string()),
+        directorManual: external_exports.string(),
+        data: external_exports.array(
+          external_exports.object({
+            label: external_exports.string(),
+            value: external_exports.string(),
+            data: external_exports.string()
+          })
+        )
+      }),
+      async (req, res) => {
+        try {
+          const { name: name28, images, data, directorManual } = req.body;
+          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
+            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
+            return;
+          }
+          const mainPath = utils_default.getPath(["skills", "story_skills", directorManual]);
+          if (import_fs8.default.existsSync(mainPath)) {
+            return res.status(400).send(error50("\u8BF7\u52FF\u586B\u5199\u91CD\u590D\u540D\u79F0\u7684\u89C6\u89C9\u624B\u518C"));
+          }
+          const DATA_MAP3 = [
+            { value: "README" },
+            { value: "director_planning_narrative", subDir: "driector_skills" },
+            { value: "director_storyboard_table_narrative", subDir: "driector_skills" }
+          ];
+          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
+          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
+          for (const item of data) {
+            if (!VALID_KEYS.has(item.value)) continue;
+            const subDir = SUB_DIR_MAP.get(item.value);
+            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
+            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
+            const fileDir = import_path14.default.dirname(filePath);
+            if (!import_fs8.default.existsSync(fileDir)) {
+              import_fs8.default.mkdirSync(fileDir, { recursive: true });
+            }
+            import_fs8.default.writeFileSync(filePath, item.data, "utf-8");
+          }
+          const imagesDir = import_path14.default.join(mainPath, "images");
+          let existingFiles = [];
+          try {
+            const allFiles = import_fs8.default.readdirSync(imagesDir);
+            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
+          } catch {
+          }
+          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path14.default.basename(new URL(url4).pathname)));
+          for (const file3 of existingFiles) {
+            if (!retainedFileNames.has(file3)) {
+              const filePath = import_path14.default.join(imagesDir, file3);
+              if (import_fs8.default.existsSync(filePath)) import_fs8.default.unlinkSync(filePath);
+            }
+          }
+          if (!import_fs8.default.existsSync(imagesDir)) {
+            import_fs8.default.mkdirSync(imagesDir, { recursive: true });
+          }
+          for (const item of images) {
+            if (!item.startsWith("http")) {
+              const fileName = `${utils_default.uuid()}.jpg`;
+              const targetPath = import_path14.default.join(imagesDir, fileName);
+              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
+              import_fs8.default.writeFileSync(targetPath, buffer);
+            }
+          }
+          res.status(200).send(success3());
+        } catch (err) {
+          res.status(500).send({ error: String(err) });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/project/addProject.ts
+var import_express99, router99, addProject_default;
+var init_addProject = __esm({
+  "src/routes/project/addProject.ts"() {
+    "use strict";
+    import_express99 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router99 = import_express99.default.Router();
+    addProject_default = router99.post(
+      "/",
+      validateFields({
+        projectType: external_exports.string(),
+        name: external_exports.string(),
+        intro: external_exports.string(),
+        type: external_exports.string(),
+        artStyle: external_exports.string(),
+        directorManual: external_exports.string(),
+        videoRatio: external_exports.string(),
+        imageModel: external_exports.string(),
+        videoModel: external_exports.string(),
+        imageQuality: external_exports.string(),
+        mode: external_exports.string()
+      }),
+      async (req, res) => {
+        const { projectType, name: name28, intro, type, directorManual, artStyle, videoRatio, imageModel, videoModel, imageQuality, mode } = req.body;
+        await utils_default.db("o_project").insert({
+          id: Date.now(),
+          projectType,
+          name: name28,
+          intro,
+          type,
+          artStyle,
+          videoRatio,
+          directorManual,
+          userId: 1,
+          imageModel,
+          videoModel,
+          createTime: Date.now(),
+          imageQuality,
+          mode
+        });
+        res.status(200).send(success3({ message: "\u65B0\u589E\u9879\u76EE\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/project/addVisualManual.ts
+var import_express100, import_fs9, import_path15, router100, addVisualManual_default;
+var init_addVisualManual = __esm({
+  "src/routes/project/addVisualManual.ts"() {
+    "use strict";
+    import_express100 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    import_fs9 = __toESM(require("fs"));
+    import_path15 = __toESM(require("path"));
+    init_middleware();
+    init_zod();
+    router100 = import_express100.default.Router();
+    addVisualManual_default = router100.post(
+      "/",
+      validateFields({
+        name: external_exports.string(),
+        images: external_exports.array(external_exports.string()),
+        stylePath: external_exports.string(),
+        data: external_exports.array(
+          external_exports.object({
+            label: external_exports.string(),
+            value: external_exports.string(),
+            data: external_exports.string()
+          })
+        )
+      }),
+      async (req, res) => {
+        try {
+          const { name: name28, images, data, stylePath } = req.body;
+          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
+            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
+            return;
+          }
+          const mainPath = utils_default.getPath(["skills", "art_skills", stylePath]);
+          if (import_fs9.default.existsSync(mainPath)) {
+            return res.status(400).send(error50("\u8BF7\u52FF\u586B\u5199\u91CD\u590D\u540D\u79F0\u7684\u89C6\u89C9\u624B\u518C"));
+          }
+          const DATA_MAP3 = [
+            { value: "README" },
+            { value: "prefix" },
+            { value: "art_character", subDir: "art_prompt" },
+            { value: "art_character_derivative", subDir: "art_prompt" },
+            { value: "art_prop", subDir: "art_prompt" },
+            { value: "art_prop_derivative", subDir: "art_prompt" },
+            { value: "art_scene", subDir: "art_prompt" },
+            { value: "art_scene_derivative", subDir: "art_prompt" },
+            { value: "director_storyboard", subDir: "driector_skills" },
+            { value: "art_storyboard_video", subDir: "art_prompt" },
+            { value: "director_planning_style", subDir: "driector_skills" },
+            { value: "director_storyboard_table_style", subDir: "driector_skills" }
+          ];
+          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
+          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
+          for (const item of data) {
+            if (!VALID_KEYS.has(item.value)) continue;
+            const subDir = SUB_DIR_MAP.get(item.value);
+            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
+            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
+            const fileDir = import_path15.default.dirname(filePath);
+            if (!import_fs9.default.existsSync(fileDir)) {
+              import_fs9.default.mkdirSync(fileDir, { recursive: true });
+            }
+            import_fs9.default.writeFileSync(filePath, item.data, "utf-8");
+          }
+          const imagesDir = import_path15.default.join(mainPath, "images");
+          let existingFiles = [];
+          try {
+            const allFiles = import_fs9.default.readdirSync(imagesDir);
+            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
+          } catch {
+          }
+          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path15.default.basename(new URL(url4).pathname)));
+          for (const file3 of existingFiles) {
+            if (!retainedFileNames.has(file3)) {
+              const filePath = import_path15.default.join(imagesDir, file3);
+              if (import_fs9.default.existsSync(filePath)) import_fs9.default.unlinkSync(filePath);
+            }
+          }
+          if (!import_fs9.default.existsSync(imagesDir)) {
+            import_fs9.default.mkdirSync(imagesDir, { recursive: true });
+          }
+          for (const item of images) {
+            if (!item.startsWith("http")) {
+              const fileName = `${utils_default.uuid()}.jpg`;
+              const targetPath = import_path15.default.join(imagesDir, fileName);
+              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
+              import_fs9.default.writeFileSync(targetPath, buffer);
+            }
+          }
+          res.status(200).send(success3());
+        } catch (err) {
+          res.status(500).send({ error: String(err) });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/project/deleteDirectorManual.ts
+var import_express101, import_promises11, router101, deleteDirectorManual_default;
+var init_deleteDirectorManual = __esm({
+  "src/routes/project/deleteDirectorManual.ts"() {
+    "use strict";
+    import_express101 = __toESM(require_express2());
+    init_utils3();
+    import_promises11 = __toESM(require("node:fs/promises"));
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router101 = import_express101.default.Router();
+    deleteDirectorManual_default = router101.post(
+      "/",
+      validateFields({
+        name: external_exports.string()
+      }),
+      async (req, res) => {
+        try {
+          const { name: name28 } = req.body;
+          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
+            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
+            return;
+          }
+          const artPromptsDir = utils_default.getPath(["skills", "story_skills", name28]);
+          try {
+            const stat = await import_promises11.default.stat(artPromptsDir);
+            if (!stat.isDirectory()) {
+              throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
+            }
+            await import_promises11.default.rm(artPromptsDir, { recursive: true, force: true });
+          } catch (e) {
+            console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
+          }
+          res.status(200).send(success3({ message: "\u5220\u9664\u6210\u529F" }));
+        } catch (err) {
+          res.status(500).send(error50(utils_default.error(err).message || "\u5220\u9664\u5931\u8D25"));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/project/deleteVisualManual.ts
+var import_express102, import_promises12, router102, deleteVisualManual_default;
+var init_deleteVisualManual = __esm({
+  "src/routes/project/deleteVisualManual.ts"() {
+    "use strict";
+    import_express102 = __toESM(require_express2());
+    init_utils3();
+    import_promises12 = __toESM(require("node:fs/promises"));
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router102 = import_express102.default.Router();
+    deleteVisualManual_default = router102.post(
+      "/",
+      validateFields({
+        name: external_exports.string()
+      }),
+      async (req, res) => {
+        try {
+          const { name: name28 } = req.body;
+          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
+            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
+            return;
+          }
+          const artPromptsDir = utils_default.getPath(["skills", "art_skills", name28]);
+          try {
+            const stat = await import_promises12.default.stat(artPromptsDir);
+            if (!stat.isDirectory()) {
+              throw new Error(`${artPromptsDir} \u4E0D\u662F\u6587\u4EF6\u5939`);
+            }
+            await import_promises12.default.rm(artPromptsDir, { recursive: true, force: true });
+          } catch (e) {
+            console.error("[\u5220\u9664\u89C6\u89C9\u624B\u518C] \u5220\u9664\u5931\u8D25:", artPromptsDir, e);
+          }
+          res.status(200).send(success3({ message: "\u5220\u9664\u6210\u529F" }));
+        } catch (err) {
+          res.status(500).send(error50(utils_default.error(err).message || "\u5220\u9664\u5931\u8D25"));
+        }
+      }
+    );
+  }
+});
+
+// src/routes/project/delProject.ts
+var import_express103, router103, delProject_default;
+var init_delProject = __esm({
+  "src/routes/project/delProject.ts"() {
+    "use strict";
+    import_express103 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router103 = import_express103.default.Router();
+    delProject_default = router103.post(
+      "/",
+      validateFields({
+        id: external_exports.number()
+      }),
+      async (req, res) => {
+        const { id } = req.body;
+        await utils_default.db("o_project").where("id", id).delete();
+        await utils_default.db("o_agentWorkData").where("projectId", id).delete();
+        await utils_default.db("o_novel").where("projectId", id).delete();
+        const scriptData = await utils_default.db("o_script").where("projectId", id).select("id");
+        const scriptIds = scriptData.map((item) => item.id);
+        if (scriptIds && scriptIds.length > 0) {
+          await utils_default.db("o_scriptAssets").whereIn("scriptId", scriptIds).delete();
+        }
+        await utils_default.db("o_script").where("projectId", id).delete();
+        await utils_default.db("o_tasks").where("projectId", id).delete();
+        const utteranceRows = await utils_default.db("utterances").where("project_id", id).select("id");
+        if (utteranceRows.length > 0) {
+          await utils_default.db("subtitle_cues").whereIn("utterance_id", utteranceRows.map((item) => item.id)).delete();
+        }
+        await utils_default.db("utterances").where("project_id", id).delete();
+        await utils_default.db("voice_cast").where("project_id", id).delete();
+        await utils_default.db("subtitle_cues").where("project_id", id).delete();
+        const generationTaskRows = await utils_default.db("generation_tasks").where("project_id", id).select("id");
+        if (generationTaskRows.length > 0) {
+          const generationTaskIds = generationTaskRows.map((item) => item.id);
+          await utils_default.db("task_dependencies").whereIn("task_id", generationTaskIds).orWhereIn("depends_on_task_id", generationTaskIds).delete();
+          await utils_default.db("usage_ledger").whereIn("task_id", generationTaskIds).delete();
+          await utils_default.db("generation_tasks").whereIn("id", generationTaskIds).delete();
+        }
+        await utils_default.db("project_events").where("project_id", id).delete();
+        await utils_default.db("composition_jobs").where("project_id", id).delete();
+        await utils_default.db("project_timelines").where("project_id", id).delete();
+        await utils_default.db("project_audio_clips").where("project_id", id).delete();
+        await utils_default.db("media_qa_reports").where("project_id", id).delete();
+        await utils_default.db("project_budget_controls").where("project_id", id).delete();
+        await utils_default.db("composition_reviews").where("project_id", id).delete();
+        await utils_default.db("script_import_items").where("project_id", id).delete();
+        await utils_default.db("script_import_batches").where("project_id", id).delete();
+        await utils_default.db("publish_packages").where("project_id", id).delete();
+        const storyboardData = await utils_default.db("o_storyboard").where("projectId", id).select("id");
+        const storyboardIds = storyboardData.map((item) => item.id);
+        if (storyboardIds.length > 0) {
+          await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).delete();
+        }
+        await utils_default.db("o_storyboard").where("projectId", id).delete();
+        const assetsData = await utils_default.db("o_assets").where("projectId", id).select("id");
+        const assetsIds = assetsData.map((item) => item.id);
+        if (assetsIds && assetsIds.length > 0) {
+          await utils_default.db("o_assets").whereIn("id", assetsIds).update({ imageId: null });
+          await utils_default.db("o_image").whereIn("assetsId", assetsIds).delete();
+        }
+        await utils_default.db("o_assets").where("projectId", id).delete();
+        await utils_default.db("o_videoTrack").where("projectId", id).delete();
+        await utils_default.db("o_video").where("projectId", id).delete();
+        await utils_default.db("memories").where("isolationKey", "like", `${id}:%`).delete();
+        try {
+          await utils_default.oss.deleteDirectory(`${id}/`);
+          console.log(`\u9879\u76EE ${id} \u7684OSS\u6587\u4EF6\u5939\u5220\u9664\u6210\u529F`);
+        } catch (error73) {
+          console.log(`\u9879\u76EE ${id} \u6CA1\u6709\u5BF9\u5E94\u7684OSS\u6587\u4EF6\u5939\uFF0C\u8DF3\u8FC7\u5220\u9664`);
+        }
+        res.status(200).send(success3({ message: "\u5220\u9664\u9879\u76EE\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/project/editDirectorlManual.ts
+var import_express104, import_fs10, import_path16, router104, editDirectorlManual_default;
+var init_editDirectorlManual = __esm({
+  "src/routes/project/editDirectorlManual.ts"() {
+    "use strict";
+    import_express104 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    import_fs10 = __toESM(require("fs"));
+    import_path16 = __toESM(require("path"));
+    init_middleware();
+    init_zod();
+    router104 = import_express104.default.Router();
+    editDirectorlManual_default = router104.post(
+      "/",
+      validateFields({
+        name: external_exports.string(),
+        directorManual: external_exports.string(),
+        images: external_exports.array(external_exports.string()),
+        data: external_exports.array(
+          external_exports.object({
+            label: external_exports.string(),
+            value: external_exports.string(),
+            data: external_exports.string()
+          })
+        )
+      }),
+      async (req, res) => {
+        try {
+          const { name: name28, directorManual, images, data } = req.body;
+          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
+            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
+            return;
+          }
+          const mainPath = utils_default.getPath(["skills", "story_skills", directorManual]);
+          if (!import_fs10.default.existsSync(mainPath)) {
+            return res.status(400).send(error50("\u5BFC\u6F14\u624B\u518C\u4E0D\u5B58\u5728"));
+          }
+          const DATA_MAP3 = [
+            { value: "README" },
+            { value: "director_planning_narrative", subDir: "driector_skills" },
+            { value: "director_storyboard_table_narrative", subDir: "driector_skills" }
+          ];
+          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
+          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
+          for (const item of data) {
+            if (!VALID_KEYS.has(item.value)) continue;
+            const subDir = SUB_DIR_MAP.get(item.value);
+            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
+            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
+            const fileDir = import_path16.default.dirname(filePath);
+            if (!import_fs10.default.existsSync(fileDir)) {
+              import_fs10.default.mkdirSync(fileDir, { recursive: true });
+            }
+            const content = item.value === "README" ? `${name28}
+${item.data}` : item.data;
+            import_fs10.default.writeFileSync(filePath, content, "utf-8");
+          }
+          const imagesDir = import_path16.default.join(mainPath, "images");
+          let existingFiles = [];
+          try {
+            const allFiles = import_fs10.default.readdirSync(imagesDir);
+            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
+          } catch {
+          }
+          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path16.default.basename(new URL(url4).pathname)));
+          for (const file3 of existingFiles) {
+            if (!retainedFileNames.has(file3)) {
+              const filePath = import_path16.default.join(imagesDir, file3);
+              if (import_fs10.default.existsSync(filePath)) import_fs10.default.unlinkSync(filePath);
+            }
+          }
+          if (!import_fs10.default.existsSync(imagesDir)) {
+            import_fs10.default.mkdirSync(imagesDir, { recursive: true });
+          }
+          for (const item of images) {
+            if (!item.startsWith("http")) {
+              const fileName = `${utils_default.uuid()}.jpg`;
+              const targetPath = import_path16.default.join(imagesDir, fileName);
+              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
+              import_fs10.default.writeFileSync(targetPath, buffer);
+            }
+          }
+          res.status(200).send(success3());
+        } catch (err) {
+          res.status(500).send({ error: String(err) });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/project/editProject.ts
+var import_express105, router105, editProject_default;
+var init_editProject = __esm({
+  "src/routes/project/editProject.ts"() {
+    "use strict";
+    import_express105 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router105 = import_express105.default.Router();
+    editProject_default = router105.post(
+      "/",
+      validateFields({
+        id: external_exports.number(),
+        name: external_exports.string(),
+        intro: external_exports.string(),
+        type: external_exports.string(),
+        artStyle: external_exports.string(),
+        directorManual: external_exports.string(),
+        videoRatio: external_exports.string(),
+        imageModel: external_exports.string(),
+        videoModel: external_exports.string(),
+        projectType: external_exports.string(),
+        imageQuality: external_exports.string(),
+        mode: external_exports.string()
+      }),
+      async (req, res) => {
+        const { id, name: name28, intro, type, artStyle, videoRatio, directorManual, imageModel, videoModel, imageQuality, projectType, mode } = req.body;
+        await utils_default.db("o_project").where("id", id).update({
+          name: name28,
+          intro,
+          type,
+          artStyle,
+          videoRatio,
+          directorManual,
+          imageModel,
+          videoModel,
+          imageQuality,
+          projectType,
+          mode
+        });
+        res.status(200).send(success3({ message: "\u7F16\u8F91\u9879\u76EE\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/project/editVisualManual.ts
+var import_express106, import_fs11, import_path17, router106, editVisualManual_default;
+var init_editVisualManual = __esm({
+  "src/routes/project/editVisualManual.ts"() {
+    "use strict";
+    import_express106 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    import_fs11 = __toESM(require("fs"));
+    import_path17 = __toESM(require("path"));
+    init_middleware();
+    init_zod();
+    router106 = import_express106.default.Router();
+    editVisualManual_default = router106.post(
+      "/",
+      validateFields({
+        name: external_exports.string(),
+        stylePath: external_exports.string(),
+        images: external_exports.array(external_exports.string()),
+        data: external_exports.array(
+          external_exports.object({
+            label: external_exports.string(),
+            value: external_exports.string(),
+            data: external_exports.string()
+          })
+        )
+      }),
+      async (req, res) => {
+        try {
+          const { name: name28, stylePath, images, data } = req.body;
+          if (name28.includes("/") || name28.includes("\\") || name28 === "." || name28 === ".." || /^\d+$/.test(name28)) {
+            res.status(400).send(error50("\u540D\u79F0\u4E0D\u80FD\u5305\u542B\u8DEF\u5F84\u5206\u9694\u7B26\u6216\u4E3A\u7EAF\u6570\u5B57"));
+            return;
+          }
+          const mainPath = utils_default.getPath(["skills", "art_skills", stylePath]);
+          if (!import_fs11.default.existsSync(mainPath)) {
+            return res.status(400).send(error50("\u89C6\u89C9\u624B\u518C\u4E0D\u5B58\u5728"));
+          }
+          const DATA_MAP3 = [
+            { value: "README" },
+            { value: "prefix" },
+            { value: "art_character", subDir: "art_prompt" },
+            { value: "art_character_derivative", subDir: "art_prompt" },
+            { value: "art_prop", subDir: "art_prompt" },
+            { value: "art_prop_derivative", subDir: "art_prompt" },
+            { value: "art_scene", subDir: "art_prompt" },
+            { value: "art_scene_derivative", subDir: "art_prompt" },
+            { value: "director_storyboard", subDir: "driector_skills" },
+            { value: "art_storyboard_video", subDir: "art_prompt" },
+            { value: "director_planning_style", subDir: "driector_skills" },
+            { value: "director_storyboard_table_style", subDir: "driector_skills" }
+          ];
+          const SUB_DIR_MAP = new Map(DATA_MAP3.map(({ value, subDir }) => [value, subDir ?? ""]));
+          const VALID_KEYS = new Set(DATA_MAP3.map(({ value }) => value));
+          for (const item of data) {
+            if (!VALID_KEYS.has(item.value)) continue;
+            const subDir = SUB_DIR_MAP.get(item.value);
+            const dirArr = subDir ? [mainPath, subDir] : [mainPath];
+            const filePath = utils_default.getPath([...dirArr, `${item.value}.md`]);
+            const fileDir = import_path17.default.dirname(filePath);
+            if (!import_fs11.default.existsSync(fileDir)) {
+              import_fs11.default.mkdirSync(fileDir, { recursive: true });
+            }
+            const content = item.value === "README" ? `${name28}
+${item.data}` : item.data;
+            import_fs11.default.writeFileSync(filePath, content, "utf-8");
+          }
+          const imagesDir = import_path17.default.join(mainPath, "images");
+          let existingFiles = [];
+          try {
+            const allFiles = import_fs11.default.readdirSync(imagesDir);
+            existingFiles = allFiles.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f));
+          } catch {
+          }
+          const retainedFileNames = new Set(images.filter((item) => item.startsWith("http")).map((url4) => import_path17.default.basename(new URL(url4).pathname)));
+          for (const file3 of existingFiles) {
+            if (!retainedFileNames.has(file3)) {
+              const filePath = import_path17.default.join(imagesDir, file3);
+              if (import_fs11.default.existsSync(filePath)) import_fs11.default.unlinkSync(filePath);
+            }
+          }
+          if (!import_fs11.default.existsSync(imagesDir)) {
+            import_fs11.default.mkdirSync(imagesDir, { recursive: true });
+          }
+          for (const item of images) {
+            if (!item.startsWith("http")) {
+              const fileName = `${utils_default.uuid()}.jpg`;
+              const targetPath = import_path17.default.join(imagesDir, fileName);
+              const buffer = Buffer.from(item.replace(/^data:[^;]+;base64,/, ""), "base64");
+              import_fs11.default.writeFileSync(targetPath, buffer);
+            }
+          }
+          res.status(200).send(success3());
+        } catch (err) {
+          res.status(500).send({ error: String(err) });
+        }
+      }
+    );
+  }
+});
+
+// src/routes/project/getModelDetails.ts
+var import_express107, router107, getModelDetails_default;
+var init_getModelDetails = __esm({
+  "src/routes/project/getModelDetails.ts"() {
+    "use strict";
+    import_express107 = __toESM(require_express2());
+    init_responseFormat();
+    init_utils3();
+    init_zod();
+    init_middleware();
+    router107 = import_express107.default.Router();
+    getModelDetails_default = router107.post(
+      "/",
+      validateFields({
+        key: external_exports.enum(["scriptAgent", "productionAgent"])
+      }),
+      async (req, res) => {
+        const { key } = req.body;
+        const data = await utils_default.db("o_agentDeploy").select("o_agentDeploy.*").where("o_agentDeploy.key", key).first();
+        const [id, modelName] = data ? data.modelName.split(/:(.+)/) : [];
+        const models = await utils_default.vendor.getModelList(id);
+        const model = models.find((m) => m.modelName === modelName);
+        if (!model) return res.status(400).send(error50("\u672A\u627E\u5230\u6A21\u578B"));
+        res.status(200).send(success3(model));
+      }
+    );
+  }
+});
+
+// src/routes/project/getProject.ts
+var import_express108, router108, getProject_default;
+var init_getProject = __esm({
+  "src/routes/project/getProject.ts"() {
+    "use strict";
+    import_express108 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    router108 = import_express108.default.Router();
+    getProject_default = router108.post("/", async (req, res) => {
+      const data = await utils_default.db("o_project").select("*");
+      res.status(200).send(success3(data));
+    });
+  }
+});
+
+// src/routes/project/getVisualManual.ts
+function readMd(filePath) {
+  try {
+    return import_fs12.default.readFileSync(filePath, "utf-8");
+  } catch {
+    return "";
+  }
+}
+async function readAllImages(imagesDir) {
+  try {
+    const ossPath = utils_default.getPath(import_path18.default.join("skills", "art_skills", imagesDir, "images"));
+    const files = import_fs12.default.readdirSync(ossPath);
+    const images = files.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f)).map((f) => import_path18.default.join("art_skills", imagesDir, "images", f));
+    if (images.length) {
+      return Promise.all(images.map(async (i) => await utils_default.oss.getFileUrl(i, "skills")));
+    } else {
+      return [];
+    }
+  } catch {
+    return [];
+  }
+}
+var import_express109, import_fs12, import_path18, router109, DATA_MAP, getVisualManual_default;
+var init_getVisualManual = __esm({
+  "src/routes/project/getVisualManual.ts"() {
+    "use strict";
+    import_express109 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    import_fs12 = __toESM(require("fs"));
+    import_path18 = __toESM(require("path"));
+    router109 = import_express109.default.Router();
+    DATA_MAP = [
+      { label: "README", value: "README" },
+      { label: "\u524D\u7F00", value: "prefix" },
+      { label: "\u89D2\u8272", value: "art_character", subDir: "art_prompt" },
+      { label: "\u89D2\u8272\u884D\u751F", value: "art_character_derivative", subDir: "art_prompt" },
+      { label: "\u9053\u5177", value: "art_prop", subDir: "art_prompt" },
+      { label: "\u9053\u5177\u884D\u751F", value: "art_prop_derivative", subDir: "art_prompt" },
+      { label: "\u573A\u666F", value: "art_scene", subDir: "art_prompt" },
+      { label: "\u573A\u666F\u884D\u751F", value: "art_scene_derivative", subDir: "art_prompt" },
+      { label: "\u5206\u955C", value: "director_storyboard", subDir: "driector_skills" },
+      { label: "\u5206\u955C\u89C6\u9891", value: "art_storyboard_video", subDir: "art_prompt" },
+      { label: "\u6280\u6CD5-\u5BFC\u6F14\u89C4\u5212", value: "director_planning_style", subDir: "driector_skills" },
+      { label: "\u6280\u6CD5-\u5206\u955C\u8868\u8BBE\u8BA1", value: "director_storyboard_table_style", subDir: "driector_skills" }
+    ];
+    getVisualManual_default = router109.post("/", async (req, res) => {
+      try {
+        const artPromptsDir = utils_default.getPath(["skills", "art_skills"]);
+        const styleDirs = import_fs12.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+        const result = await Promise.all(
+          styleDirs.map(async (styleName) => {
+            const styleDir = import_path18.default.join(artPromptsDir, styleName);
+            const images = await readAllImages(styleName);
+            const readmePath = import_path18.default.join(styleDir, "README.md");
+            const readmeContent = import_fs12.default.readFileSync(readmePath, "utf-8");
+            const firstLine = readmeContent.split("\n")[0].replace(/--/g, "");
+            const data = DATA_MAP.map(({ label, value, subDir }) => {
+              let mdPath;
+              if (subDir) {
+                mdPath = import_path18.default.join(styleDir, subDir, `${value}.md`);
+              } else {
+                mdPath = import_path18.default.join(styleDir, `${value}.md`);
+              }
+              return {
+                label,
+                value,
+                data: readMd(mdPath)
+              };
+            });
+            return {
+              name: firstLine,
+              image: images,
+              stylePath: styleName,
+              data
+            };
+          })
+        );
+        res.status(200).send(success3(result));
+      } catch (err) {
+        res.status(500).send(error50(utils_default.error(err).message));
+      }
+    });
+  }
+});
+
+// src/routes/project/queryDirectorManual.ts
+function readMd2(filePath) {
+  try {
+    return import_fs13.default.readFileSync(filePath, "utf-8");
+  } catch {
+    return "";
+  }
+}
+async function readAllImages2(imagesDir) {
+  try {
+    const ossPath = utils_default.getPath(import_path19.default.join("skills", "story_skills", imagesDir, "images"));
+    const files = import_fs13.default.readdirSync(ossPath);
+    const images = files.filter((f) => /\.(png|jpe?g|gif|webp|svg)$/i.test(f)).map((f) => import_path19.default.join("story_skills", imagesDir, "images", f));
+    if (images.length) {
+      return Promise.all(images.map(async (i) => await utils_default.oss.getFileUrl(i, "skills")));
+    } else {
+      return [];
+    }
+  } catch {
+    return [];
+  }
+}
+var import_express110, import_fs13, import_path19, router110, DATA_MAP2, queryDirectorManual_default;
+var init_queryDirectorManual = __esm({
+  "src/routes/project/queryDirectorManual.ts"() {
+    "use strict";
+    import_express110 = __toESM(require_express2());
+    init_utils3();
+    init_responseFormat();
+    import_fs13 = __toESM(require("fs"));
+    import_path19 = __toESM(require("path"));
+    router110 = import_express110.default.Router();
+    DATA_MAP2 = [
+      { label: "README", value: "README" },
+      { label: "\u5BFC\u6F14\u89C4\u5212", value: "director_planning_narrative", subDir: "driector_skills" },
+      { label: "\u5206\u955C\u8868", value: "director_storyboard_table_narrative", subDir: "driector_skills" }
+    ];
+    queryDirectorManual_default = router110.post("/", async (req, res) => {
+      try {
+        const artPromptsDir = utils_default.getPath(["skills", "story_skills"]);
+        const styleDirs = import_fs13.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+        const result = await Promise.all(
+          styleDirs.map(async (directorManual) => {
+            const styleDir = import_path19.default.join(artPromptsDir, directorManual);
+            const images = await readAllImages2(directorManual);
+            const readmePath = import_path19.default.join(styleDir, "README.md");
+            const readmeContent = import_fs13.default.readFileSync(readmePath, "utf-8");
+            const firstLine = readmeContent.split("\n")[0].replace(/--/g, "");
+            const data = DATA_MAP2.map(({ label, value, subDir }) => {
+              let mdPath;
+              if (subDir) {
+                mdPath = import_path19.default.join(styleDir, subDir, `${value}.md`);
+              } else {
+                mdPath = import_path19.default.join(styleDir, `${value}.md`);
+              }
+              return {
+                label,
+                value,
+                data: readMd2(mdPath)
+              };
+            });
+            return {
+              name: firstLine,
+              image: images,
+              directorManual,
+              data
+            };
+          })
+        );
+        res.status(200).send(success3(result));
+      } catch (err) {
+        res.status(500).send({ error: String(err) });
+      }
+    });
+  }
+});
+
+// src/routes/project/visualManual.ts
+var import_express111, import_fs14, import_path20, router111, visualManual_default;
+var init_visualManual = __esm({
+  "src/routes/project/visualManual.ts"() {
+    "use strict";
+    import_express111 = __toESM(require_express2());
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_getPath();
+    import_fs14 = __toESM(require("fs"));
+    import_path20 = __toESM(require("path"));
+    router111 = import_express111.default.Router();
+    visualManual_default = router111.post(
+      "/",
+      validateFields({
+        type: external_exports.string()
+      }),
+      async (req, res) => {
+        const { type } = req.body;
+        const basePath = getPath_default(["skills", "art_skills", "chinese_sweet_romance"]);
+        const findFile = (dir, target) => {
+          const entries = import_fs14.default.readdirSync(dir, { withFileTypes: true });
+          for (const entry of entries) {
+            const fullPath = import_path20.default.join(dir, entry.name);
+            if (entry.isDirectory()) {
+              const found = findFile(fullPath, target);
+              if (found) return found;
+            } else if (entry.isFile() && entry.name === target) {
+              return fullPath;
+            }
+          }
+          return null;
+        };
+        const filePath = findFile(basePath, `${type}.md`);
+        if (!filePath) {
+          res.status(404).json({ error: `\u672A\u627E\u5230\u5BF9\u5E94\u7684\u6587\u4EF6: ${type}.md` });
+          return;
+        }
+        const content = import_fs14.default.readFileSync(filePath, "utf-8");
+        res.status(200).send(success3(content));
+      }
+    );
+  }
+});
+
+// src/routes/script/addScript.ts
+var import_express112, router112, addScript_default;
+var init_addScript = __esm({
+  "src/routes/script/addScript.ts"() {
+    "use strict";
+    import_express112 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router112 = import_express112.default.Router();
+    addScript_default = router112.post(
+      "/",
+      validateFields({
+        name: external_exports.string(),
+        content: external_exports.string(),
+        projectId: external_exports.number(),
+        assets: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { name: name28, content, projectId, assets } = req.body;
+        const [scriptId] = await utils_default.db("o_script").insert({
+          name: name28,
+          content,
+          projectId,
+          createTime: Date.now()
+        });
+        if (assets.length) {
+          const assetsData = await utils_default.db("o_assets").whereIn("id", assets).select();
+          if (assetsData.length) {
+            const assetsIds = assetsData.map((item) => item.id);
+            const insertData = assetsIds.map((i) => {
+              return {
+                scriptId,
+                assetId: i
+              };
+            });
+            await utils_default.db("o_scriptAssets").insert(insertData);
+          }
+        }
+        res.status(200).send(success3({ message: "\u6DFB\u52A0\u5267\u672C\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/script/batchAddScript.ts
+var import_express113, router113, batchAddScript_default;
+var init_batchAddScript = __esm({
+  "src/routes/script/batchAddScript.ts"() {
+    "use strict";
+    import_express113 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router113 = import_express113.default.Router();
+    batchAddScript_default = router113.post(
+      "/",
+      validateFields({
+        data: external_exports.array(
+          external_exports.object({
+            scriptName: external_exports.string(),
+            scriptData: external_exports.string()
+          })
+        ),
+        projectId: external_exports.number()
+      }),
+      async (req, res) => {
+        const { data, projectId } = req.body;
+        await utils_default.db("o_script").insert(
+          data.map((i) => {
+            return {
+              name: i.scriptName,
+              content: i.scriptData,
+              projectId,
+              createTime: Date.now()
+            };
+          })
+        );
+        res.status(200).send(success3({ message: "\u6DFB\u52A0\u5267\u672C\u6210\u529F" }));
+      }
+    );
+  }
+});
+
+// src/routes/script/delScript.ts
+var import_express114, router114, delScript_default;
+var init_delScript = __esm({
+  "src/routes/script/delScript.ts"() {
+    "use strict";
+    import_express114 = __toESM(require_express2());
+    init_utils3();
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    router114 = import_express114.default.Router();
+    delScript_default = router114.post(
+      "/",
+      validateFields({
+        ids: external_exports.array(external_exports.number())
+      }),
+      async (req, res) => {
+        const { ids } = req.body;
+        const scriptData = await utils_default.db("o_script").whereIn("id", ids);
+        if (scriptData && scriptData.length) {
+          const scriptProjectId = new Set(scriptData.map((item) => item.projectId));
+          await utils_default.db("o_agentWorkData").whereIn("projectId", Array.from(scriptProjectId)).whereIn("episodesId", ids).delete();
+        }
+        const storyboardData = await utils_default.db("o_storyboard").whereIn("scriptId", ids);
+        if (storyboardData.length) {
+          await Promise.all(
+            storyboardData.map(async (item) => {
+              try {
+                item.filePath && await utils_default.oss.deleteFile(item.filePath);
+              } catch (e) {
+              }
+            })
+          );
+          const storyboardIds = storyboardData.map((item) => item.id);
+          await utils_default.db("o_assets2Storyboard").whereIn("storyboardId", storyboardIds).delete();
+        }
+        await utils_default.db("o_scriptAssets").whereIn("scriptId", ids).delete();
+        await utils_default.db("o_script").whereIn("id", ids).delete();
+        await utils_default.db("o_storyboard").whereIn("scriptId", ids).delete();
+        await utils_default.db("o_video").whereIn("scriptId", ids).delete();
+        res.status(200).send(success3({ message: "\u5220\u9664\u5267\u672C\u6210\u529F" }));
+      }
+    );
+  }
+});
+
 // src/routes/script/exportScript.ts
-var import_express115, import_compressing, router115, exportScript_default;
+var import_express115, import_compressing2, router115, exportScript_default;
 var init_exportScript = __esm({
   "src/routes/script/exportScript.ts"() {
     "use strict";
     import_express115 = __toESM(require_express2());
     init_utils3();
     init_zod();
-    import_compressing = __toESM(require_compressing());
+    import_compressing2 = __toESM(require_compressing());
     init_middleware();
     router115 = import_express115.default.Router();
     exportScript_default = router115.post(
@@ -256528,7 +256726,7 @@ var init_exportScript = __esm({
         const { id } = req.body;
         const scripts = await utils_default.db("o_script").whereIn("id", id);
         const textList = scripts.map((s) => ({ name: s.name, text: s.content }));
-        const zipStream = new import_compressing.default.zip.Stream();
+        const zipStream = new import_compressing2.default.zip.Stream();
         textList.forEach((item) => {
           zipStream.addEntry(Buffer.from(item.text), { relativePath: `${item.name}.txt` });
         });
@@ -256846,7 +257044,7 @@ function stableValue(value) {
   return value;
 }
 function sha256(value) {
-  return import_node_crypto8.default.createHash("sha256").update(value).digest("hex");
+  return import_node_crypto9.default.createHash("sha256").update(value).digest("hex");
 }
 function parseDramaProjectExport(raw) {
   const parsed = dramaExportSchema.safeParse(raw);
@@ -257008,11 +257206,11 @@ async function fetchNovelExportJson(input) {
     clearTimeout(timeout);
   }
 }
-var import_node_crypto8, NOVEL_IMPORTER_VERSION, NOVEL_IMPORT_SOURCE_TYPE, DRAMA_IMPORTER_VERSION, DRAMA_IMPORT_SOURCE_TYPE, chapterSchema, characterSchema, exportSchema, dramaExportSchema;
+var import_node_crypto9, NOVEL_IMPORTER_VERSION, NOVEL_IMPORT_SOURCE_TYPE, DRAMA_IMPORTER_VERSION, DRAMA_IMPORT_SOURCE_TYPE, chapterSchema, characterSchema, exportSchema, dramaExportSchema;
 var init_novelExport = __esm({
   "src/services/script-import/novelExport.ts"() {
     "use strict";
-    import_node_crypto8 = __toESM(require("node:crypto"));
+    import_node_crypto9 = __toESM(require("node:crypto"));
     init_zod();
     NOVEL_IMPORTER_VERSION = "ai-novel-json-v1";
     NOVEL_IMPORT_SOURCE_TYPE = "ai-novel-writing-assistant";
@@ -257188,14 +257386,14 @@ async function resolveContent(source) {
   return source.mode === "json" ? source.content : fetchNovelExportJson(source);
 }
 async function previewNovelImport(input) {
-  const project = await sql11("o_project").where("id", input.projectId).first();
+  const project = await sql13("o_project").where("id", input.projectId).first();
   if (!project) throw new Error("\u9879\u76EE\u4E0D\u5B58\u5728");
   const preview = parseNovelExportJson(await resolveContent(input.source));
-  const history = await sql11("script_import_items").where({ project_id: input.projectId, source_type: preview.sourceType, external_project_id: preview.externalProjectId }).orderBy("created_at", "desc");
+  const history = await sql13("script_import_items").where({ project_id: input.projectId, source_type: preview.sourceType, external_project_id: preview.externalProjectId }).orderBy("created_at", "desc");
   const latestByExternalId = /* @__PURE__ */ new Map();
   for (const item of history) if (!latestByExternalId.has(item.external_chapter_id)) latestByExternalId.set(item.external_chapter_id, item);
   const scriptIds = [...new Set([...latestByExternalId.values()].map((item) => item.script_id))];
-  const scripts = scriptIds.length ? await sql11("o_script").where("projectId", input.projectId).whereIn("id", scriptIds) : [];
+  const scripts = scriptIds.length ? await sql13("o_script").where("projectId", input.projectId).whereIn("id", scriptIds) : [];
   const scriptsById = new Map(scripts.map((script) => [script.id, script]));
   return {
     ...preview,
@@ -257211,14 +257409,14 @@ async function commitNovelImport(input) {
   const preview = await previewNovelImport({ projectId: input.projectId, source: input.source });
   return commitParsedNovelImport(db, { projectId: input.projectId, preview, chapterIds: input.chapterIds });
 }
-var sql11;
+var sql13;
 var init_importNovel = __esm({
   "src/services/script-import/importNovel.ts"() {
     "use strict";
     init_db();
     init_novelExport();
     init_persistence();
-    sql11 = db;
+    sql13 = db;
   }
 });
 
@@ -257533,7 +257731,7 @@ var init_checkUpdate = __esm({
 });
 
 // src/routes/setting/about/downloadApp.ts
-var import_express126, import_fs16, import_compressing2, router126, downloadApp_default;
+var import_express126, import_fs16, import_compressing3, router126, downloadApp_default;
 var init_downloadApp = __esm({
   "src/routes/setting/about/downloadApp.ts"() {
     "use strict";
@@ -257543,7 +257741,7 @@ var init_downloadApp = __esm({
     init_utils3();
     import_fs16 = __toESM(require("fs"));
     init_axios2();
-    import_compressing2 = __toESM(require_compressing());
+    import_compressing3 = __toESM(require_compressing());
     init_responseFormat();
     router126 = import_express126.default.Router();
     downloadApp_default = router126.post(
@@ -257562,7 +257760,7 @@ var init_downloadApp = __esm({
           import_fs16.default.mkdirSync(rootDir, { recursive: true });
           const zip = await axios_default.get(url4, { responseType: "arraybuffer" }).then((res2) => res2.data);
           import_fs16.default.writeFileSync(`${rootDir}/latest.zip`, zip);
-          await import_compressing2.default.zip.uncompress(`${rootDir}/latest.zip`, rootDir);
+          await import_compressing3.default.zip.uncompress(`${rootDir}/latest.zip`, rootDir);
           const dataDir = utils_default.getPath();
           import_fs16.default.cpSync(rootDir, dataDir, { recursive: true, force: true });
           import_fs16.default.rmSync(rootDir, { recursive: true, force: true });
@@ -257994,7 +258192,7 @@ async function buildDiagnosticReport() {
     db("generation_tasks").select("lane", "status").count("* as total").groupBy("lane", "status"),
     db("o_project").count("* as total").first(),
     db.raw("select name from sqlite_master where type = 'table' and name not like 'sqlite_%' order by name"),
-    import_promises11.default.statfs(dataPath).catch(() => null),
+    import_promises13.default.statfs(dataPath).catch(() => null),
     toolVersion(process.env.FFMPEG_PATH?.trim() || "ffmpeg"),
     toolVersion(process.env.FFPROBE_PATH?.trim() || "ffprobe")
   ]);
@@ -258029,13 +258227,13 @@ async function buildDiagnosticReport() {
     }
   };
 }
-var import_node_child_process4, import_node_util4, import_promises11, execFileAsync3;
+var import_node_child_process4, import_node_util4, import_promises13, execFileAsync3;
 var init_report = __esm({
   "src/services/diagnostics/report.ts"() {
     "use strict";
     import_node_child_process4 = require("node:child_process");
     import_node_util4 = require("node:util");
-    import_promises11 = __toESM(require("node:fs/promises"));
+    import_promises13 = __toESM(require("node:fs/promises"));
     init_utils3();
     init_db();
     execFileAsync3 = (0, import_node_util4.promisify)(import_node_child_process4.execFile);
@@ -258283,13 +258481,13 @@ var init_bindingPrompt = __esm({
         fileName: external_exports.string()
       }),
       async (req, res) => {
-        const { vendorId, model, path: path35, fileName } = req.body;
+        const { vendorId, model, path: path36, fileName } = req.body;
         const data = await utils_default.db("o_modelPrompt").where("model", model).andWhere("vendorId", vendorId).select("*").first();
         if (data) {
-          await utils_default.db("o_modelPrompt").where("model", model).andWhere("vendorId", vendorId).update({ fileName, path: path35 });
+          await utils_default.db("o_modelPrompt").where("model", model).andWhere("vendorId", vendorId).update({ fileName, path: path36 });
           res.status(200).send(success3("\u7ED1\u5B9A\u6210\u529F"));
         } else {
-          await utils_default.db("o_modelPrompt").insert({ vendorId, model, path: path35, fileName });
+          await utils_default.db("o_modelPrompt").insert({ vendorId, model, path: path36, fileName });
           res.status(200).send(success3("\u7ED1\u5B9A\u6210\u529F"));
         }
       }
@@ -258298,7 +258496,7 @@ var init_bindingPrompt = __esm({
 });
 
 // src/routes/setting/modelMap/deletePrompt.ts
-var import_express149, import_promises12, import_path22, router149, deletePrompt_default;
+var import_express149, import_promises14, import_path22, router149, deletePrompt_default;
 var init_deletePrompt = __esm({
   "src/routes/setting/modelMap/deletePrompt.ts"() {
     "use strict";
@@ -258307,7 +258505,7 @@ var init_deletePrompt = __esm({
     init_utils3();
     init_zod();
     init_middleware();
-    import_promises12 = __toESM(require("fs/promises"));
+    import_promises14 = __toESM(require("fs/promises"));
     import_path22 = __toESM(require("path"));
     router149 = import_express149.default.Router();
     deletePrompt_default = router149.post(
@@ -258324,11 +258522,11 @@ var init_deletePrompt = __esm({
           return res.status(400).send(error50("\u975E\u6CD5\u8DEF\u5F84"));
         }
         try {
-          await import_promises12.default.access(resolvedFile);
+          await import_promises14.default.access(resolvedFile);
         } catch {
           return res.status(404).send(error50("\u6587\u4EF6\u4E0D\u5B58\u5728"));
         }
-        await import_promises12.default.unlink(resolvedFile);
+        await import_promises14.default.unlink(resolvedFile);
         res.status(200).send(success3("\u5220\u9664\u6210\u529F"));
       }
     );
@@ -258374,7 +258572,7 @@ var init_getImageAndVideoModel = __esm({
 });
 
 // src/routes/setting/modelMap/getPromptList.ts
-var import_express151, import_fast_glob3, import_promises13, import_path23, router151, getPromptList_default;
+var import_express151, import_fast_glob3, import_promises15, import_path23, router151, getPromptList_default;
 var init_getPromptList = __esm({
   "src/routes/setting/modelMap/getPromptList.ts"() {
     "use strict";
@@ -258382,7 +258580,7 @@ var init_getPromptList = __esm({
     init_responseFormat();
     init_utils3();
     import_fast_glob3 = __toESM(require_out4());
-    import_promises13 = __toESM(require("fs/promises"));
+    import_promises15 = __toESM(require("fs/promises"));
     import_path23 = __toESM(require("path"));
     router151 = import_express151.default.Router();
     getPromptList_default = router151.get("/", async (req, res) => {
@@ -258394,7 +258592,7 @@ var init_getPromptList = __esm({
       const result = await Promise.all(
         entries.map(async (entry) => {
           const fullPath = import_path23.default.join(modelPromptRoot, entry);
-          const content = await import_promises13.default.readFile(fullPath, "utf-8");
+          const content = await import_promises15.default.readFile(fullPath, "utf-8");
           const name28 = import_path23.default.basename(entry, ".md");
           const type = entry.includes("/") ? entry.split("/")[0] : "";
           return { path: entry, name: name28, type, data: content };
@@ -258406,7 +258604,7 @@ var init_getPromptList = __esm({
 });
 
 // src/routes/setting/modelMap/savePrompt.ts
-var import_express152, import_promises14, import_path24, router152, savePrompt_default;
+var import_express152, import_promises16, import_path24, router152, savePrompt_default;
 var init_savePrompt = __esm({
   "src/routes/setting/modelMap/savePrompt.ts"() {
     "use strict";
@@ -258415,7 +258613,7 @@ var init_savePrompt = __esm({
     init_utils3();
     init_zod();
     init_middleware();
-    import_promises14 = __toESM(require("fs/promises"));
+    import_promises16 = __toESM(require("fs/promises"));
     import_path24 = __toESM(require("path"));
     router152 = import_express152.default.Router();
     savePrompt_default = router152.post(
@@ -258429,9 +258627,9 @@ var init_savePrompt = __esm({
         const { name: name28, data, type } = req.body;
         const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
         const dir = import_path24.default.join(modelPromptRoot, type);
-        await import_promises14.default.mkdir(dir, { recursive: true });
+        await import_promises16.default.mkdir(dir, { recursive: true });
         const filePath = import_path24.default.join(dir, `${name28}.md`);
-        await import_promises14.default.writeFile(filePath, data, "utf-8");
+        await import_promises16.default.writeFile(filePath, data, "utf-8");
         res.status(200).send(success3("\u4FDD\u5B58\u6210\u529F"));
       }
     );
@@ -258439,7 +258637,7 @@ var init_savePrompt = __esm({
 });
 
 // src/routes/setting/modelMap/updatePrompt.ts
-var import_express153, import_promises15, import_path25, router153, updatePrompt_default;
+var import_express153, import_promises17, import_path25, router153, updatePrompt_default;
 var init_updatePrompt = __esm({
   "src/routes/setting/modelMap/updatePrompt.ts"() {
     "use strict";
@@ -258448,7 +258646,7 @@ var init_updatePrompt = __esm({
     init_utils3();
     init_zod();
     init_middleware();
-    import_promises15 = __toESM(require("fs/promises"));
+    import_promises17 = __toESM(require("fs/promises"));
     import_path25 = __toESM(require("path"));
     router153 = import_express153.default.Router();
     updatePrompt_default = router153.post(
@@ -258468,11 +258666,11 @@ var init_updatePrompt = __esm({
           return res.status(400).send(error50("\u975E\u6CD5\u8DEF\u5F84"));
         }
         try {
-          await import_promises15.default.access(resolvedFile);
+          await import_promises17.default.access(resolvedFile);
         } catch {
           return res.status(404).send(error50("\u6587\u4EF6\u4E0D\u5B58\u5728"));
         }
-        await import_promises15.default.writeFile(resolvedFile, data, "utf-8");
+        await import_promises17.default.writeFile(resolvedFile, data, "utf-8");
         res.status(200).send(success3("\u66F4\u65B0\u6210\u529F"));
       }
     );
@@ -258531,7 +258729,7 @@ var init_updatePrompt2 = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillContent.ts
-var import_express156, import_path26, fs34, router156, getSkillContent_default;
+var import_express156, import_path26, fs35, router156, getSkillContent_default;
 var init_getSkillContent = __esm({
   "src/routes/setting/skillManagement/getSkillContent.ts"() {
     "use strict";
@@ -258542,7 +258740,7 @@ var init_getSkillContent = __esm({
     init_is_path_inside();
     init_utils3();
     import_path26 = __toESM(require("path"));
-    fs34 = __toESM(require("fs"));
+    fs35 = __toESM(require("fs"));
     router156 = import_express156.default.Router();
     getSkillContent_default = router156.post(
       "/",
@@ -258550,13 +258748,13 @@ var init_getSkillContent = __esm({
         path: external_exports.string()
       }),
       async (req, res) => {
-        const { path: path35 } = req.body;
+        const { path: path36 } = req.body;
         const skillsRoot = utils_default.getPath(["skills"]);
-        const filePath = import_path26.default.join(skillsRoot, path35);
+        const filePath = import_path26.default.join(skillsRoot, path36);
         if (!isPathInside(filePath, skillsRoot)) {
           return res.status(400).send(error50("\u65E0\u6548\u7684\u8DEF\u5F84"));
         }
-        const raw = await fs34.promises.readFile(filePath, "utf-8");
+        const raw = await fs35.promises.readFile(filePath, "utf-8");
         res.status(200).send(success3(raw));
       }
     );
@@ -258585,7 +258783,7 @@ var init_getSkillList = __esm({
 });
 
 // src/routes/setting/skillManagement/saveSkillContent.ts
-var import_express158, import_path27, fs35, router158, saveSkillContent_default;
+var import_express158, import_path27, fs36, router158, saveSkillContent_default;
 var init_saveSkillContent = __esm({
   "src/routes/setting/skillManagement/saveSkillContent.ts"() {
     "use strict";
@@ -258596,7 +258794,7 @@ var init_saveSkillContent = __esm({
     init_is_path_inside();
     init_utils3();
     import_path27 = __toESM(require("path"));
-    fs35 = __toESM(require("fs"));
+    fs36 = __toESM(require("fs"));
     router158 = import_express158.default.Router();
     saveSkillContent_default = router158.post(
       "/",
@@ -258605,16 +258803,16 @@ var init_saveSkillContent = __esm({
         content: external_exports.string()
       }),
       async (req, res) => {
-        const { path: path35, content } = req.body;
+        const { path: path36, content } = req.body;
         const skillsRoot = utils_default.getPath(["skills"]);
-        const filePath = import_path27.default.join(skillsRoot, path35);
+        const filePath = import_path27.default.join(skillsRoot, path36);
         if (!isPathInside(filePath, skillsRoot)) {
           return res.status(400).send(error50("\u65E0\u6548\u7684\u8DEF\u5F84"));
         }
-        if (!fs35.existsSync(filePath)) {
+        if (!fs36.existsSync(filePath)) {
           return res.status(400).send(error50("\u6587\u4EF6\u4E0D\u5B58\u5728"));
         }
-        const raw = await fs35.promises.writeFile(filePath, content, "utf-8");
+        const raw = await fs36.promises.writeFile(filePath, content, "utf-8");
         res.status(200).send(success3(raw));
       }
     );
@@ -258702,7 +258900,7 @@ var init_addVendor = __esm({
         const result = vendorConfigSchema.safeParse(vendor);
         if (!result.success) {
           const issueLines = result.error.issues.map((issue3, index) => {
-            const path35 = issue3.path.length ? issue3.path.join(".") : "root";
+            const path36 = issue3.path.length ? issue3.path.join(".") : "root";
             let detail = issue3.message;
             if (issue3.code === "invalid_union") {
               const unionDetails = [
@@ -258714,7 +258912,7 @@ var init_addVendor = __esm({
                 detail = `${issue3.message}\uFF08${unionDetails.join("\uFF1B")}\uFF09`;
               }
             }
-            return `${index + 1}. ${path35}: ${detail}`;
+            return `${index + 1}. ${path36}: ${detail}`;
           });
           return res.status(400).send(error50(`vendor\u914D\u7F6E\u6821\u9A8C\u5931\u8D25\uFF0C\u5171 ${issueLines.length} \u5904:
 ${issueLines.join("\n")}`));
@@ -259663,10 +259861,10 @@ var init_cues = __esm({
 
 // src/services/task-engine/enqueueUtteranceTts.ts
 async function enqueueUtteranceTts(input) {
-  const utterance = await sql12("utterances").where({ id: input.utteranceId, project_id: input.projectId }).first();
+  const utterance = await sql14("utterances").where({ id: input.utteranceId, project_id: input.projectId }).first();
   if (!utterance) throw new Error("\u53F0\u8BCD\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
   if (!utterance.voice_cast_id) throw new Error("\u8BF7\u5148\u4E3A\u8FD9\u53E5\u53F0\u8BCD\u5206\u914D\u89D2\u8272\u97F3\u8272");
-  const voiceCast = await sql12("voice_cast").where({ id: utterance.voice_cast_id, project_id: input.projectId }).first();
+  const voiceCast = await sql14("voice_cast").where({ id: utterance.voice_cast_id, project_id: input.projectId }).first();
   if (!voiceCast) throw new Error("\u53F0\u8BCD\u7ED1\u5B9A\u7684\u89D2\u8272\u97F3\u8272\u4E0D\u5B58\u5728");
   const model = `${voiceCast.provider}:${voiceCast.model}`;
   const cacheKey = stableIdempotencyKey({
@@ -259690,7 +259888,7 @@ async function enqueueUtteranceTts(input) {
   });
   let referenceAudioPath;
   if (voiceCast.preview_asset_id) {
-    const reference = await sql12("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", voiceCast.preview_asset_id).select("o_image.filePath").first();
+    const reference = await sql14("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", voiceCast.preview_asset_id).select("o_image.filePath").first();
     referenceAudioPath = reference?.filePath ?? void 0;
   }
   const resourceKey = `audio:utterance:${input.utteranceId}`;
@@ -259709,7 +259907,7 @@ async function enqueueUtteranceTts(input) {
     savePath,
     cacheKey
   };
-  const [legacyTaskId] = await sql12("o_tasks").insert({
+  const [legacyTaskId] = await sql14("o_tasks").insert({
     projectId: input.projectId,
     taskClass: "\u9010\u53E5\u914D\u97F3",
     relatedObjects: JSON.stringify({ utteranceId: input.utteranceId }),
@@ -259731,10 +259929,10 @@ async function enqueueUtteranceTts(input) {
     costReservation
   });
   if (result.deduped) {
-    await sql12("o_tasks").where("id", legacyTaskId).delete();
+    await sql14("o_tasks").where("id", legacyTaskId).delete();
     const existingResult = result.task.result;
     if (result.task.status === "succeeded" && existingResult?.audioPath) {
-      await sql12("utterances").where("id", input.utteranceId).update({
+      await sql14("utterances").where("id", input.utteranceId).update({
         audio_path: existingResult.audioPath,
         cache_key: cacheKey,
         status: "succeeded",
@@ -259743,7 +259941,7 @@ async function enqueueUtteranceTts(input) {
       });
     }
   } else {
-    await sql12("utterances").where("id", input.utteranceId).update({
+    await sql14("utterances").where("id", input.utteranceId).update({
       status: "queued",
       cache_key: cacheKey,
       error_message: null,
@@ -259752,14 +259950,14 @@ async function enqueueUtteranceTts(input) {
   }
   return { task: result.task, payload: result.task.payload, deduped: result.deduped, cached: false };
 }
-var sql12;
+var sql14;
 var init_enqueueUtteranceTts = __esm({
   "src/services/task-engine/enqueueUtteranceTts.ts"() {
     "use strict";
     init_db();
     init_repository();
     init_budget();
-    sql12 = db;
+    sql14 = db;
   }
 });
 
@@ -260656,8 +260854,8 @@ function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills"
         content += "\u4F7F\u7528 read_skill_file \u5DE5\u5177\u8BFB\u53D6\u8D44\u6E90\u6587\u4EF6\u3002\n";
         if (skillPaths.secondarySkills.length > 0) {
           content += "\n<skill_resources>\n";
-          for (const path35 of skillPaths.secondarySkills) {
-            content += `  <file>${path35}</file>
+          for (const path36 of skillPaths.secondarySkills) {
+            content += `  <file>${path36}</file>
 `;
           }
           content += "</skill_resources>\n";
@@ -260700,8 +260898,8 @@ function createSkillTools(skills, skillPaths, rootDir = getPath_default("skills"
         content += "\u53EF\u4EE5\u4F7F\u7528 read_skill_file \u5DE5\u5177\u8BFB\u53D6\u8D44\u6E90\u6587\u4EF6\u3002\n";
         if (skillPaths.tertiarySkills.length > 0) {
           content += "\n<skill_resources>\n";
-          for (const path35 of skillPaths.tertiarySkills) {
-            content += `  <file>${path35}</file>
+          for (const path36 of skillPaths.tertiarySkills) {
+            content += `  <file>${path36}</file>
 `;
           }
           content += "</skill_resources>\n";
@@ -263246,6 +263444,153 @@ var workflowImageTaskHandler = {
   }
 };
 
+// src/services/task-engine/handlers/compositionPublish.ts
+var import_node_fs3 = __toESM(require("node:fs"));
+var import_promises7 = __toESM(require("node:fs/promises"));
+var import_node_path7 = __toESM(require("node:path"));
+var import_node_crypto7 = __toESM(require("node:crypto"));
+var import_promises8 = require("node:stream/promises");
+var import_compressing = __toESM(require_compressing());
+init_utils3();
+init_db();
+init_generationTask();
+init_repository2();
+var sql5 = db;
+function sha256Buffer(buffer) {
+  return import_node_crypto7.default.createHash("sha256").update(buffer).digest("hex");
+}
+async function sha256File2(filePath) {
+  const hash3 = import_node_crypto7.default.createHash("sha256");
+  await (0, import_promises8.pipeline)(import_node_fs3.default.createReadStream(filePath), hash3);
+  return hash3.digest("hex");
+}
+async function replaceFileAtomically(source, destination) {
+  try {
+    await import_promises7.default.rename(source, destination);
+  } catch (error73) {
+    const code = error73.code;
+    if (!code || !["EEXIST", "EPERM", "ENOTEMPTY"].includes(code)) throw error73;
+    await import_promises7.default.rm(destination, { force: true });
+    await import_promises7.default.rename(source, destination);
+  }
+}
+async function writeZipWithCancellation(zip, outputPath, context2) {
+  const output = import_node_fs3.default.createWriteStream(outputPath);
+  let checking = false;
+  const cancelTimer = setInterval(() => {
+    if (checking) return;
+    checking = true;
+    void context2.throwIfCancelled().catch((error73) => {
+      zip.destroy(error73);
+      output.destroy(error73);
+    }).finally(() => {
+      checking = false;
+    });
+  }, 1e3);
+  cancelTimer.unref?.();
+  try {
+    await (0, import_promises8.pipeline)(zip, output);
+  } finally {
+    clearInterval(cancelTimer);
+  }
+}
+var compositionPublishTaskHandler = {
+  async execute(task, context2) {
+    const payload = task.payload;
+    const [packageRow, job, timeline, qa, review, script] = await Promise.all([
+      sql5("publish_packages").where({ id: payload.packageId, project_id: payload.projectId }).first(),
+      sql5("composition_jobs").where({ id: payload.compositionJobId, project_id: payload.projectId, script_id: payload.scriptId }).first(),
+      sql5("project_timelines").where({ id: payload.timelineId, project_id: payload.projectId, script_id: payload.scriptId }).first(),
+      sql5("media_qa_reports").where({ id: payload.qaReportId, composition_job_id: payload.compositionJobId }).first(),
+      sql5("composition_reviews").where({ id: payload.reviewId, composition_job_id: payload.compositionJobId }).first(),
+      sql5("o_script").where({ id: payload.scriptId, projectId: payload.projectId }).first()
+    ]);
+    if (!packageRow || !job || !timeline || !qa || !review || !script) throw new TaskExecutionError("\u53D1\u5E03\u5305\u8F93\u5165\u8BB0\u5F55\u4E0D\u5B58\u5728", "PUBLISH_INPUT_NOT_FOUND", false, true);
+    const qaResult = typeof qa.result === "string" ? JSON.parse(qa.result) : qa.result;
+    if (job.status !== "succeeded" || job.preset !== "final-high" || job.output_checksum !== payload.outputChecksum || qa.status !== "succeeded" || qa.output_checksum !== payload.outputChecksum || !qaResult?.summary || qaResult.summary.status === "failed" || review.status !== "approved" || review.output_checksum !== payload.outputChecksum) {
+      throw new TaskExecutionError("\u6210\u7247\u3001QA \u6216\u5BA1\u6838\u5173\u5361\u5DF2\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u521B\u5EFA\u53D1\u5E03\u5305", "PUBLISH_GATE_CHANGED", false, true);
+    }
+    const videoAbsolute = await utils_default.oss.getAbsolutePath(payload.outputPath);
+    const videoStat = await import_promises7.default.stat(videoAbsolute).catch(() => null);
+    if (!videoStat?.isFile()) throw new TaskExecutionError("\u6210\u7247\u6587\u4EF6\u4E0D\u5B58\u5728", "PUBLISH_VIDEO_MISSING", false, true);
+    await context2.throwIfCancelled();
+    await context2.transitionToPolling();
+    await sql5("publish_packages").where("id", payload.packageId).update({ status: "running", error_message: null, updated_at: Date.now() });
+    const packageAbsolute = await utils_default.oss.getAbsolutePath(payload.packagePath);
+    const partialPath = `${packageAbsolute}.partial-${task.id}`;
+    await import_promises7.default.mkdir(import_node_path7.default.dirname(packageAbsolute), { recursive: true });
+    await import_promises7.default.rm(partialPath, { force: true });
+    try {
+      const [srt, vtt] = await Promise.all([
+        voiceStudioRepository.exportSubtitles({ projectId: payload.projectId, scriptId: payload.scriptId, format: "srt" }),
+        voiceStudioRepository.exportSubtitles({ projectId: payload.projectId, scriptId: payload.scriptId, format: "vtt" })
+      ]);
+      const timelineBuffer = Buffer.from(JSON.stringify(JSON.parse(timeline.payload), null, 2));
+      const qaBuffer = Buffer.from(JSON.stringify(qaResult, null, 2));
+      const reviewBuffer = Buffer.from(JSON.stringify({ status: review.status, note: review.note, reviewer: review.reviewer, createdAt: review.created_at, outputChecksum: review.output_checksum }, null, 2));
+      const srtBuffer = Buffer.from(srt);
+      const vttBuffer = Buffer.from(vtt);
+      const fileChecksums = {
+        "video/final.mp4": payload.outputChecksum,
+        "subtitles/subtitles.srt": sha256Buffer(srtBuffer),
+        "subtitles/subtitles.vtt": sha256Buffer(vttBuffer),
+        "evidence/timeline.json": sha256Buffer(timelineBuffer),
+        "evidence/qa-report.json": sha256Buffer(qaBuffer),
+        "evidence/review.json": sha256Buffer(reviewBuffer)
+      };
+      const manifest = {
+        schemaVersion: 1,
+        generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+        projectId: payload.projectId,
+        script: { id: payload.scriptId, name: script.name },
+        composition: {
+          jobId: job.id,
+          preset: job.preset,
+          timelineId: timeline.id,
+          timelineVersion: timeline.version,
+          timelineChecksum: timeline.checksum,
+          outputChecksum: payload.outputChecksum,
+          durationMs: job.duration_ms
+        },
+        quality: { reportId: qa.id, status: qaResult.summary.status, errors: qaResult.summary.errors, warnings: qaResult.summary.warnings },
+        review: { id: review.id, status: review.status, reviewer: review.reviewer, note: review.note ?? null },
+        files: fileChecksums
+      };
+      const manifestBuffer = Buffer.from(JSON.stringify(manifest, null, 2));
+      const allChecksums = { ...fileChecksums, "manifest.json": sha256Buffer(manifestBuffer) };
+      const checksumsBuffer = Buffer.from(Object.entries(allChecksums).map(([file3, checksum]) => `${checksum}  ${file3}`).join("\n") + "\n");
+      const zip = new import_compressing.default.zip.Stream();
+      zip.addEntry(videoAbsolute, { relativePath: "video/final.mp4" });
+      zip.addEntry(srtBuffer, { relativePath: "subtitles/subtitles.srt" });
+      zip.addEntry(vttBuffer, { relativePath: "subtitles/subtitles.vtt" });
+      zip.addEntry(timelineBuffer, { relativePath: "evidence/timeline.json" });
+      zip.addEntry(qaBuffer, { relativePath: "evidence/qa-report.json" });
+      zip.addEntry(reviewBuffer, { relativePath: "evidence/review.json" });
+      zip.addEntry(manifestBuffer, { relativePath: "manifest.json" });
+      zip.addEntry(checksumsBuffer, { relativePath: "checksums.sha256" });
+      await writeZipWithCancellation(zip, partialPath, context2);
+      await context2.throwIfCancelled();
+      await context2.transitionToFinalizing();
+      await replaceFileAtomically(partialPath, packageAbsolute);
+      const [packageChecksum, stat] = await Promise.all([sha256File2(packageAbsolute), import_promises7.default.stat(packageAbsolute)]);
+      await sql5("publish_packages").where("id", payload.packageId).update({
+        status: "succeeded",
+        package_path: payload.packagePath,
+        package_checksum: packageChecksum,
+        size_bytes: stat.size,
+        manifest: JSON.stringify(manifest),
+        error_message: null,
+        updated_at: Date.now()
+      });
+      return { packageId: payload.packageId, packagePath: payload.packagePath, packageChecksum, sizeBytes: stat.size, manifest };
+    } catch (error73) {
+      await import_promises7.default.rm(partialPath, { force: true }).catch(() => void 0);
+      await sql5("publish_packages").where("id", payload.packageId).update({ status: "failed", error_message: error73 instanceof Error ? error73.message : String(error73), updated_at: Date.now() }).catch(() => void 0);
+      throw error73;
+    }
+  }
+};
+
 // src/services/task-engine/index.ts
 var initialized = false;
 async function startGenerationTaskEngine() {
@@ -263259,6 +263604,7 @@ async function startGenerationTaskEngine() {
     registerTaskHandler("composition.qa", compositionQaTaskHandler);
     registerTaskHandler("asset.image.single.generate", singleAssetImageTaskHandler);
     registerTaskHandler("workflow.image.generate", workflowImageTaskHandler);
+    registerTaskHandler("composition.publish", compositionPublishTaskHandler);
     initialized = true;
   }
   await generationTaskWorker.start();
