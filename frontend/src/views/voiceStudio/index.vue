@@ -167,8 +167,30 @@
                     <span>输出校验和 {{ compositionJob.outputChecksum.slice(0, 12) }}…</span>
                   </t-tooltip>
                   <a :href="compositionJob.outputUrl" download>下载 MP4</a>
+                  <t-button size="small" variant="outline" :loading="runningQa || qaReportActive" @click="runMediaQa">运行媒体 QA</t-button>
                 </div>
               </template>
+              <div v-if="qaReport" class="qaPanel">
+                <div class="renderResultHeader">
+                  <div>
+                    <strong>媒体 QA</strong>
+                    <span v-if="qaReport.result">{{ qaReport.result.summary.errors }} 个错误 / {{ qaReport.result.summary.warnings }} 个警告</span>
+                  </div>
+                  <t-tag :theme="qaStatusTheme(qaReport)" variant="light">{{ qaStatusLabel(qaReport) }}</t-tag>
+                </div>
+                <t-alert v-if="qaReport.errorMessage" theme="error" :message="qaReport.errorMessage" />
+                <div v-if="qaReport.result" class="qaStats">
+                  <span>{{ qaReport.result.summary.width }}×{{ qaReport.result.summary.height }}</span>
+                  <span>{{ qaReport.result.summary.fps?.toFixed(2) || '-' }} fps</span>
+                  <span>{{ qaReport.result.summary.integratedLufs?.toFixed(1) ?? '-' }} LUFS</span>
+                  <span>{{ qaReport.result.summary.truePeakDb?.toFixed(1) ?? '-' }} dBTP</span>
+                </div>
+                <t-alert v-if="qaReport.result && qaReport.result.findings.length === 0" theme="success" message="未发现阻断或警告项" />
+                <t-table v-else-if="qaReport.result" row-key="code" :columns="qaFindingColumns" :data="qaReport.result.findings" size="small">
+                  <template #severity="{ row }"><t-tag :theme="qaSeverityTheme(row.severity)" variant="light">{{ qaSeverityLabel(row.severity) }}</t-tag></template>
+                  <template #time="{ row }">{{ row.startMs == null ? "-" : formatMilliseconds(row.startMs) }}</template>
+                </t-table>
+              </div>
             </div>
           </template>
         </t-tab-panel>
@@ -379,6 +401,34 @@ interface ProjectAudioClip {
   fadeOutMs: number;
 }
 
+interface QaFinding {
+  code: string;
+  category: string;
+  severity: "info" | "warning" | "error";
+  message: string;
+  startMs?: number;
+}
+
+interface QaReport {
+  id: string;
+  compositionJobId: string;
+  status: string;
+  errorMessage: string | null;
+  result: null | {
+    summary: {
+      status: "passed" | "warning" | "failed";
+      errors: number;
+      warnings: number;
+      width: number | null;
+      height: number | null;
+      fps: number | null;
+      integratedLufs: number | null;
+      truePeakDb: number | null;
+    };
+    findings: QaFinding[];
+  };
+}
+
 const { project } = storeToRefs(projectStore());
 const projectId = computed(() => (project.value?.id ? Number(project.value.id) : 0));
 const activeTab = ref("utterances");
@@ -390,6 +440,7 @@ const savingCast = ref(false);
 const buildingTimeline = ref(false);
 const renderingPreview = ref(false);
 const savingAudioClip = ref(false);
+const runningQa = ref(false);
 const selectedScriptId = ref<number>();
 const includeStoryboardDescriptions = ref(false);
 const scriptOptions = ref<Array<{ label: string; value: number }>>([]);
@@ -402,6 +453,7 @@ const cues = ref<Cue[]>([]);
 const timeline = ref<TimelineRecord | null>(null);
 const compositionJob = ref<CompositionJob | null>(null);
 const audioClips = ref<ProjectAudioClip[]>([]);
+const qaReport = ref<QaReport | null>(null);
 const selectedUtteranceIds = ref<Array<string | number>>([]);
 const castDialogVisible = ref(false);
 const utteranceDialogVisible = ref(false);
@@ -472,6 +524,12 @@ const audioClipColumns: any[] = [
   { colKey: "gainDb", title: "增益 dB", width: 90 },
   { colKey: "operation", title: "操作", width: 120, cell: "operation" },
 ];
+const qaFindingColumns: any[] = [
+  { colKey: "severity", title: "级别", width: 80, cell: "severity" },
+  { colKey: "category", title: "类别", width: 90 },
+  { colKey: "message", title: "问题" },
+  { colKey: "time", title: "时间", width: 110, cell: "time" },
+];
 const audioKindOptions = [
   { label: "音效 SFX", value: "sfx" },
   { label: "环境声", value: "ambience" },
@@ -502,6 +560,7 @@ const timelineTrackRows = computed(() => {
   ];
 });
 const compositionJobActive = computed(() => Boolean(compositionJob.value && ["queued", "rendering"].includes(compositionJob.value.status)));
+const qaReportActive = computed(() => Boolean(qaReport.value && ["queued", "running"].includes(qaReport.value.status)));
 const canRenderPreview = computed(() => {
   if (!timeline.value || compositionJobActive.value) return false;
   return timeline.value.payload.videoTracks.some((track) => track.clips.length > 0);
@@ -581,22 +640,25 @@ async function loadWorkspace(showLoading = true) {
     timeline.value = null;
     compositionJob.value = null;
     audioClips.value = [];
+    qaReport.value = null;
     return;
   }
   if (showLoading) loading.value = true;
   try {
-    const [{ data: utteranceData }, { data: cueData }, { data: timelineData }, { data: jobData }, { data: audioClipData }] = await Promise.all([
+    const [{ data: utteranceData }, { data: cueData }, { data: timelineData }, { data: jobData }, { data: audioClipData }, { data: qaData }] = await Promise.all([
       axios.post("/voiceStudio/utterances/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/voiceStudio/cues/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/composition/timeline/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/composition/timeline/jobs/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/composition/timeline/audio/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
+      axios.post("/composition/timeline/qa/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
     ]);
     utterances.value = utteranceData;
     cues.value = cueData;
     timeline.value = timelineData;
     compositionJob.value = jobData;
     audioClips.value = audioClipData;
+    qaReport.value = qaData;
   } catch (error) {
     showError(error, "获取配音工作区失败");
   } finally {
@@ -634,6 +696,7 @@ async function generatePreview(preset: CompositionJob["preset"]) {
       requestId: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`,
     });
     compositionJob.value = data.job;
+    if (qaReport.value?.compositionJobId !== data.job?.id) qaReport.value = null;
     const label = preset === "final-high" ? "高清成片" : "低清预览";
     window.$message.success(data.cached ? `已复用相同时间线的${label}` : data.deduped ? `${label}已经在队列中` : `${label}已进入本地渲染队列`);
   } catch (error) {
@@ -649,6 +712,47 @@ function compositionStatusLabel(status: string) {
 
 function compositionStatusTheme(status: string) {
   return ({ queued: "warning", rendering: "primary", succeeded: "success", failed: "danger", cancelled: "default" } as Record<string, any>)[status] || "default";
+}
+
+async function runMediaQa() {
+  if (!selectedScriptId.value || !compositionJob.value || compositionJob.value.status !== "succeeded") return;
+  runningQa.value = true;
+  try {
+    const { data } = await axios.post("/composition/timeline/qa/run", {
+      projectId: projectId.value,
+      scriptId: selectedScriptId.value,
+      compositionJobId: compositionJob.value.id,
+      requestId: crypto.randomUUID(),
+    });
+    qaReport.value = data.report;
+    window.$message.success(data.cached ? "已复用当前成片的 QA 报告" : data.deduped ? "QA 已在运行" : "媒体 QA 已进入持久队列");
+  } catch (error) {
+    showError(error, "创建媒体 QA 失败");
+  } finally {
+    runningQa.value = false;
+  }
+}
+
+function qaStatusLabel(report: QaReport) {
+  if (report.status === "succeeded" && report.result) {
+    return ({ passed: "通过", warning: "有警告", failed: "未通过" } as Record<string, string>)[report.result.summary.status];
+  }
+  return ({ queued: "排队中", running: "检查中", failed: "执行失败", cancelled: "已取消" } as Record<string, string>)[report.status] || report.status;
+}
+
+function qaStatusTheme(report: QaReport) {
+  if (report.status === "succeeded" && report.result) {
+    return ({ passed: "success", warning: "warning", failed: "danger" } as Record<string, any>)[report.result.summary.status];
+  }
+  return ({ queued: "warning", running: "primary", failed: "danger", cancelled: "default" } as Record<string, any>)[report.status] || "default";
+}
+
+function qaSeverityLabel(severity: QaFinding["severity"]) {
+  return ({ info: "提示", warning: "警告", error: "错误" } as const)[severity];
+}
+
+function qaSeverityTheme(severity: QaFinding["severity"]) {
+  return ({ info: "primary", warning: "warning", error: "danger" } as Record<string, any>)[severity];
 }
 
 function audioKindLabel(kind: ProjectAudioClip["kind"]) {
@@ -1055,6 +1159,8 @@ function showError(error: any, fallback: string) {
 .previewMeta a { color: var(--td-brand-color); }
 .audioDialogGrid { grid-template-columns: minmax(0, 1fr) 390px; }
 .audioFormActions { margin-top: 14px; }
+.qaPanel { margin-top: 18px; padding-top: 16px; border-top: 1px solid #e7e7e7; }
+.qaStats { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 12px; color: #6b7280; font-size: 13px; }
 .dialogGrid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;

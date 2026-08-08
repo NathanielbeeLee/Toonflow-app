@@ -249,6 +249,29 @@ const migrations: Migration[] = [
       }
     },
   },
+  {
+    id: "20260808_006_media_qa_reports",
+    up: async (db) => {
+      if (!(await db.schema.hasTable("media_qa_reports"))) {
+        await db.schema.createTable("media_qa_reports", (table) => {
+          table.text("id").primary();
+          table.integer("project_id").notNullable();
+          table.integer("script_id").notNullable();
+          table.text("composition_job_id").notNullable();
+          table.text("timeline_id").notNullable();
+          table.text("output_checksum").notNullable();
+          table.text("status").notNullable().defaultTo("queued");
+          table.text("result");
+          table.text("task_id");
+          table.text("error_message");
+          table.integer("created_at").notNullable();
+          table.integer("updated_at").notNullable();
+          table.index(["project_id", "script_id", "created_at"], "media_qa_reports_script_idx");
+          table.index(["composition_job_id", "output_checksum"], "media_qa_reports_output_idx");
+        });
+      }
+    },
+  },
 ];
 
 export default async function runMigrations(db: Knex): Promise<void> {

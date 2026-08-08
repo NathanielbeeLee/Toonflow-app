@@ -11,6 +11,7 @@ import {
   projectAudioKinds,
   upsertProjectAudioClip,
 } from "@/services/composition/audioClips";
+import { enqueueCompositionQa, getLatestQaReport } from "@/services/composition/qaJobs";
 
 const router = express.Router();
 const filters = {
@@ -37,6 +38,26 @@ router.post("/jobs/latest", validateFields(filters), async (req, res) => {
 router.post("/audio/list", validateFields(filters), async (req, res) => {
   res.status(200).send(success(await listProjectAudioClips(req.body)));
 });
+
+router.post("/qa/latest", validateFields(filters), async (req, res) => {
+  res.status(200).send(success(await getLatestQaReport(req.body)));
+});
+
+router.post(
+  "/qa/run",
+  validateFields({
+    ...filters,
+    compositionJobId: z.string().uuid(),
+    requestId: z.string().trim().min(1),
+  }),
+  async (req, res) => {
+    try {
+      res.status(200).send(success(await enqueueCompositionQa(req.body)));
+    } catch (cause) {
+      res.status(400).send(error(cause instanceof Error ? cause.message : String(cause)));
+    }
+  },
+);
 
 router.post(
   "/audio/upsert",
