@@ -181,10 +181,30 @@
         { "type": "reads", "target": "feature.normalized-timeline" },
         { "type": "writes", "target": "table.generation-tasks" },
         { "type": "visualized_by", "target": "feature.durable-task-center" },
+        { "type": "validated_by", "target": "feature.media-qa" },
         { "type": "documented_by", "target": "document.database-tasks" }
       ],
       "introduced_in": "toon-custom/2033240b",
       "last_verified_commit": "toon-custom/f7d35bb3"
+    },
+    {
+      "id": "feature.media-qa",
+      "type": "feature",
+      "name": "持久成片媒体 QA",
+      "summary": "对成片执行技术、黑帧、冻结帧、静音、响度、字幕安全区和流程检查，并保存可定位报告",
+      "user_entry": { "page": "配音与字幕 / 规范化时间线", "action": "成片完成后点击运行媒体 QA，查看错误、警告和时间点" },
+      "source_paths": ["src/services/media/qa.ts", "src/services/composition/qaJobs.ts", "src/services/task-engine/handlers/compositionQa.ts", "frontend/src/views/voiceStudio/index.vue"],
+      "api": ["POST /api/composition/timeline/qa/run", "POST /api/composition/timeline/qa/latest"],
+      "tables": ["media_qa_reports", "composition_jobs", "generation_tasks"],
+      "config": ["FFMPEG_PATH", "FFPROBE_PATH"],
+      "relations": [
+        { "type": "validates", "target": "feature.ffmpeg-preview-render" },
+        { "type": "writes", "target": "table.generation-tasks" },
+        { "type": "visualized_by", "target": "feature.durable-task-center" },
+        { "type": "documented_by", "target": "document.database-tasks" }
+      ],
+      "introduced_in": "toon-custom/f737aa05",
+      "last_verified_commit": "toon-custom/f737aa05"
     },
     {
       "id": "feature.durable-task-center",

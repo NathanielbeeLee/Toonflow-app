@@ -21,5 +21,7 @@
 | `POST /api/composition/timeline/render` | 把指定时间线版本的 `preview-low` 本地渲染任务加入 `compose` 队列 |
 | `POST /api/composition/timeline/jobs/latest` | 获取当前剧本最近一次合成任务、输出和错误状态 |
 | `POST /api/composition/timeline/audio/list` / `upsert` / `delete` | 维护剧本时间线的 SFX、环境声和 BGM 片段 |
+| `POST /api/composition/timeline/qa/run` | 对指定成功成片创建本地持久媒体 QA |
+| `POST /api/composition/timeline/qa/latest` | 获取当前剧本最近一次 QA 状态和问题报告 |
 
 正式版本化 OpenAPI、API Key、webhook 尚未实现。当前接口不应直接暴露到公网。时间线渲染只调用本机 FFmpeg，不调用付费生成 API；请求必须使用服务端保存的 timeline ID，不能传入任意本机输入或输出路径。
