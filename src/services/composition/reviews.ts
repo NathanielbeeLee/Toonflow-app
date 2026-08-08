@@ -1,5 +1,7 @@
 import { v4 as uuid } from "uuid";
 import { db } from "@/utils/db";
+import u from "@/utils";
+import { generationTaskRepository } from "@/services/task-engine/repository";
 
 const sql = db as any;
 export const reviewStatuses = ["approved", "rejected"] as const;
@@ -45,5 +47,20 @@ export async function recordCompositionReview(input: {
     created_at: Date.now(),
   };
   await sql("composition_reviews").insert(row);
+  const supersededPackages = await sql("publish_packages")
+    .where({ composition_job_id: input.compositionJobId, output_checksum: job.output_checksum })
+    .whereNot("review_id", row.id);
+  for (const packageRow of supersededPackages) {
+    if (packageRow.task_id && ["queued", "running"].includes(packageRow.status)) {
+      await generationTaskRepository.requestCancel(packageRow.task_id);
+    }
+    if (packageRow.package_path) await u.oss.deleteFile(packageRow.package_path).catch(() => undefined);
+    await sql("publish_packages").where("id", packageRow.id).update({
+      status: "revoked",
+      package_path: null,
+      error_message: "已有更新的审核记录，旧发布包已撤销",
+      updated_at: Date.now(),
+    });
+  }
   return mapRow(row);
 }

@@ -59,7 +59,7 @@ export async function enqueuePublishPackage(input: { projectId: number; scriptId
   const packageId = previous?.id ?? uuid();
   const createdPackage = !previous;
   const now = Date.now();
-  const packagePath = `/${input.projectId}/publish/${input.scriptId}/delivery-${job.output_checksum.slice(0, 16)}.zip`;
+  const packagePath = `/${input.projectId}/publish/${input.scriptId}/delivery-${job.output_checksum.slice(0, 16)}-${packageId}.zip`;
   const packageRow = {
     project_id: input.projectId,
     script_id: input.scriptId,
@@ -105,7 +105,7 @@ export async function enqueuePublishPackage(input: { projectId: number; scriptId
       legacyTaskId,
       lane: "publish",
       type: "composition.publish",
-      resourceKey: `publish:composition:${job.id}`,
+      resourceKey: `publish:composition:${job.id}:review:${review.id}`,
       payload,
       provider: "local",
       idempotencyKey: stableIdempotencyKey({ type: "composition.publish", outputChecksum: job.output_checksum, qaReportId: qa.id, reviewId: review.id, requestId: input.requestId }),

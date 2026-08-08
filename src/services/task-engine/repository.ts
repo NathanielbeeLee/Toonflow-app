@@ -454,11 +454,38 @@ class GenerationTaskRepository {
           failed: "failed",
           manual_review: "failed",
         };
-        await db("publish_packages").where("id", payload.packageId).update({
+        await db("publish_packages").where("id", payload.packageId).whereNot("status", "revoked").update({
           status: statusMap[task.status] ?? task.status,
           error_message: task.errorMessage,
           updated_at: Date.now(),
         });
+      }
+    }
+    if (task.type === "script.assets.extract") {
+      const payload = task.payload as { projectId?: number; scriptIds?: number[] } | null;
+      if (payload?.projectId && payload.scriptIds?.length) {
+        const stateMap: Partial<Record<GenerationTaskStatus, number>> = {
+          queued: 2,
+          claimed: 0,
+          submitting: 0,
+          submitted: 0,
+          polling: 0,
+          finalizing: 0,
+          retry_wait: 2,
+          blocked: 2,
+          cancelling: 0,
+          cancelled: -1,
+          succeeded: 1,
+          failed: -1,
+          manual_review: -1,
+        };
+        await db("o_script")
+          .where("projectId", payload.projectId)
+          .whereIn("id", payload.scriptIds)
+          .update({
+            extractState: stateMap[task.status] ?? 0,
+            errorReason: task.errorMessage,
+          });
       }
     }
     if (!task.legacyTaskId) return;

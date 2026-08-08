@@ -9,7 +9,7 @@ import { db } from "@/utils/db";
 import { TaskExecutionError } from "@/domain/generationTask";
 import type { GenerationTask } from "@/domain/generationTask";
 import type { TaskHandler, TaskHandlerContext } from "@/services/task-engine/worker";
-import { voiceStudioRepository } from "@/services/voice-studio/repository";
+import { serializeSubtitles } from "@/services/voice-studio/dialogue";
 
 const sql = db as any;
 
@@ -67,6 +67,16 @@ async function writeZipWithCancellation(zip: NodeJS.ReadableStream, outputPath: 
   }
 }
 
+async function assertLatestReview(payload: CompositionPublishTaskPayload): Promise<void> {
+  const latest = await sql("composition_reviews")
+    .where({ composition_job_id: payload.compositionJobId, output_checksum: payload.outputChecksum })
+    .orderBy("created_at", "desc")
+    .first();
+  if (!latest || latest.id !== payload.reviewId || latest.status !== "approved") {
+    throw new TaskExecutionError("当前成片审核已变化，发布包任务已失效", "PUBLISH_REVIEW_SUPERSEDED", false, true);
+  }
+}
+
 export const compositionPublishTaskHandler: TaskHandler = {
   async execute(task: GenerationTask, context: TaskHandlerContext) {
     const payload = task.payload as CompositionPublishTaskPayload;
@@ -83,6 +93,7 @@ export const compositionPublishTaskHandler: TaskHandler = {
     if (job.status !== "succeeded" || job.preset !== "final-high" || job.output_checksum !== payload.outputChecksum || qa.status !== "succeeded" || qa.output_checksum !== payload.outputChecksum || !qaResult?.summary || qaResult.summary.status === "failed" || review.status !== "approved" || review.output_checksum !== payload.outputChecksum) {
       throw new TaskExecutionError("成片、QA 或审核关卡已变化，请重新创建发布包", "PUBLISH_GATE_CHANGED", false, true);
     }
+    await assertLatestReview(payload);
     const videoAbsolute = await u.oss.getAbsolutePath(payload.outputPath);
     const videoStat = await fsp.stat(videoAbsolute).catch(() => null);
     if (!videoStat?.isFile()) throw new TaskExecutionError("成片文件不存在", "PUBLISH_VIDEO_MISSING", false, true);
@@ -92,20 +103,28 @@ export const compositionPublishTaskHandler: TaskHandler = {
 
     const packageAbsolute = await u.oss.getAbsolutePath(payload.packagePath);
     const partialPath = `${packageAbsolute}.partial-${task.id}`;
+    let finalPathWritten = false;
     await fsp.mkdir(path.dirname(packageAbsolute), { recursive: true });
     await fsp.rm(partialPath, { force: true });
     try {
-      const [srt, vtt] = await Promise.all([
-        voiceStudioRepository.exportSubtitles({ projectId: payload.projectId, scriptId: payload.scriptId, format: "srt" }),
-        voiceStudioRepository.exportSubtitles({ projectId: payload.projectId, scriptId: payload.scriptId, format: "vtt" }),
-      ]);
-      const timelineBuffer = Buffer.from(JSON.stringify(JSON.parse(timeline.payload), null, 2));
+      const actualVideoChecksum = await sha256File(videoAbsolute);
+      if (actualVideoChecksum !== payload.outputChecksum) {
+        throw new TaskExecutionError("高清成片文件校验和已变化，请重新渲染、QA 和审核", "PUBLISH_VIDEO_CHECKSUM_CHANGED", false, true);
+      }
+      await context.throwIfCancelled();
+      const timelinePayload = typeof timeline.payload === "string" ? JSON.parse(timeline.payload) : timeline.payload;
+      const timelineCues = (timelinePayload.subtitleTracks || [])
+        .flatMap((track: any) => track.cues || [])
+        .sort((a: any, b: any) => a.startMs - b.startMs);
+      const srt = serializeSubtitles(timelineCues, "srt");
+      const vtt = serializeSubtitles(timelineCues, "vtt");
+      const timelineBuffer = Buffer.from(JSON.stringify(timelinePayload, null, 2));
       const qaBuffer = Buffer.from(JSON.stringify(qaResult, null, 2));
       const reviewBuffer = Buffer.from(JSON.stringify({ status: review.status, note: review.note, reviewer: review.reviewer, createdAt: review.created_at, outputChecksum: review.output_checksum }, null, 2));
       const srtBuffer = Buffer.from(srt);
       const vttBuffer = Buffer.from(vtt);
       const fileChecksums: Record<string, string> = {
-        "video/final.mp4": payload.outputChecksum,
+        "video/final.mp4": actualVideoChecksum,
         "subtitles/subtitles.srt": sha256Buffer(srtBuffer),
         "subtitles/subtitles.vtt": sha256Buffer(vttBuffer),
         "evidence/timeline.json": sha256Buffer(timelineBuffer),
@@ -144,22 +163,39 @@ export const compositionPublishTaskHandler: TaskHandler = {
       zip.addEntry(checksumsBuffer, { relativePath: "checksums.sha256" });
       await writeZipWithCancellation(zip as any, partialPath, context);
       await context.throwIfCancelled();
+      await assertLatestReview(payload);
       await context.transitionToFinalizing();
       await replaceFileAtomically(partialPath, packageAbsolute);
+      finalPathWritten = true;
       const [packageChecksum, stat] = await Promise.all([sha256File(packageAbsolute), fsp.stat(packageAbsolute)]);
-      await sql("publish_packages").where("id", payload.packageId).update({
-        status: "succeeded",
-        package_path: payload.packagePath,
-        package_checksum: packageChecksum,
-        size_bytes: stat.size,
-        manifest: JSON.stringify(manifest),
-        error_message: null,
-        updated_at: Date.now(),
+      await db.transaction(async (trx) => {
+        const latestReview = await trx("composition_reviews")
+          .where({ composition_job_id: payload.compositionJobId, output_checksum: payload.outputChecksum })
+          .orderBy("created_at", "desc")
+          .first();
+        const currentTask = await trx("generation_tasks").where("id", task.id).first();
+        if (!latestReview || latestReview.id !== payload.reviewId || latestReview.status !== "approved") {
+          throw new TaskExecutionError("当前成片审核已变化，发布包任务已失效", "PUBLISH_REVIEW_SUPERSEDED", false, true);
+        }
+        if (!currentTask || currentTask.cancel_requested === 1 || ["cancelling", "cancelled"].includes(currentTask.status)) {
+          throw new TaskExecutionError("发布包任务已取消", "PUBLISH_CANCELLED", false, true);
+        }
+        const updated = await trx("publish_packages").where({ id: payload.packageId, review_id: payload.reviewId }).whereNot("status", "revoked").update({
+          status: "succeeded",
+          package_path: payload.packagePath,
+          package_checksum: packageChecksum,
+          size_bytes: stat.size,
+          manifest: JSON.stringify(manifest),
+          error_message: null,
+          updated_at: Date.now(),
+        });
+        if (updated !== 1) throw new TaskExecutionError("发布包记录已失效", "PUBLISH_PACKAGE_REVOKED", false, true);
       });
       return { packageId: payload.packageId, packagePath: payload.packagePath, packageChecksum, sizeBytes: stat.size, manifest };
     } catch (error) {
       await fsp.rm(partialPath, { force: true }).catch(() => undefined);
-      await sql("publish_packages").where("id", payload.packageId).update({ status: "failed", error_message: error instanceof Error ? error.message : String(error), updated_at: Date.now() }).catch(() => undefined);
+      if (finalPathWritten) await fsp.rm(packageAbsolute, { force: true }).catch(() => undefined);
+      await sql("publish_packages").where("id", payload.packageId).whereNot("status", "revoked").update({ status: "failed", error_message: error instanceof Error ? error.message : String(error), updated_at: Date.now() }).catch(() => undefined);
       throw error;
     }
   },

@@ -2599,8 +2599,8 @@ var require_utf7 = __commonJS({
       this.iconv = codec3.iconv;
     }
     Utf7Encoder.prototype.write = function(str) {
-      return Buffer3.from(str.replace(nonDirectChars, function(chunk) {
-        return "+" + (chunk === "+" ? "" : this.iconv.encode(chunk, "utf16-be").toString("base64").replace(/=+$/, "")) + "-";
+      return Buffer3.from(str.replace(nonDirectChars, function(chunk2) {
+        return "+" + (chunk2 === "+" ? "" : this.iconv.encode(chunk2, "utf16-be").toString("base64").replace(/=+$/, "")) + "-";
       }.bind(this)));
     };
     Utf7Encoder.prototype.end = function() {
@@ -3586,12 +3586,12 @@ var require_dbcs_codec = __commonJS({
       }
       return node;
     };
-    DBCSCodec.prototype._addDecodeChunk = function(chunk) {
-      var curAddr = parseInt(chunk[0], 16);
+    DBCSCodec.prototype._addDecodeChunk = function(chunk2) {
+      var curAddr = parseInt(chunk2[0], 16);
       var writeTable = this._getDecodeTrieNode(curAddr);
       curAddr = curAddr & 255;
-      for (var k = 1; k < chunk.length; k++) {
-        var part = chunk[k];
+      for (var k = 1; k < chunk2.length; k++) {
+        var part = chunk2[k];
         if (typeof part === "string") {
           for (var l = 0; l < part.length; ) {
             var code = part.charCodeAt(l++);
@@ -3600,7 +3600,7 @@ var require_dbcs_codec = __commonJS({
               if (codeTrail >= 56320 && codeTrail < 57344) {
                 writeTable[curAddr++] = 65536 + (code - 55296) * 1024 + (codeTrail - 56320);
               } else {
-                throw new Error("Incorrect surrogate pair in " + this.encodingName + " at chunk " + chunk[0]);
+                throw new Error("Incorrect surrogate pair in " + this.encodingName + " at chunk " + chunk2[0]);
               }
             } else if (code > 4080 && code <= 4095) {
               var len = 4095 - code + 2;
@@ -3620,11 +3620,11 @@ var require_dbcs_codec = __commonJS({
             writeTable[curAddr++] = charCode++;
           }
         } else {
-          throw new Error("Incorrect type '" + typeof part + "' given in " + this.encodingName + " at chunk " + chunk[0]);
+          throw new Error("Incorrect type '" + typeof part + "' given in " + this.encodingName + " at chunk " + chunk2[0]);
         }
       }
       if (curAddr > 255) {
-        throw new Error("Incorrect chunk in " + this.encodingName + " at addr " + chunk[0] + ": too long" + curAddr);
+        throw new Error("Incorrect chunk in " + this.encodingName + " at addr " + chunk2[0] + ": too long" + curAddr);
       }
     };
     DBCSCodec.prototype._getEncodeBucket = function(uCode) {
@@ -5465,12 +5465,12 @@ var require_streams = __commonJS({
       IconvLiteEncoderStream.prototype = Object.create(Transform.prototype, {
         constructor: { value: IconvLiteEncoderStream }
       });
-      IconvLiteEncoderStream.prototype._transform = function(chunk, encoding, done) {
-        if (typeof chunk !== "string") {
+      IconvLiteEncoderStream.prototype._transform = function(chunk2, encoding, done) {
+        if (typeof chunk2 !== "string") {
           return done(new Error("Iconv encoding stream needs strings as its input."));
         }
         try {
-          var res = this.conv.write(chunk);
+          var res = this.conv.write(chunk2);
           if (res && res.length) this.push(res);
           done();
         } catch (e) {
@@ -5489,8 +5489,8 @@ var require_streams = __commonJS({
       IconvLiteEncoderStream.prototype.collect = function(cb) {
         var chunks = [];
         this.on("error", cb);
-        this.on("data", function(chunk) {
-          chunks.push(chunk);
+        this.on("data", function(chunk2) {
+          chunks.push(chunk2);
         });
         this.on("end", function() {
           cb(null, Buffer3.concat(chunks));
@@ -5506,12 +5506,12 @@ var require_streams = __commonJS({
       IconvLiteDecoderStream.prototype = Object.create(Transform.prototype, {
         constructor: { value: IconvLiteDecoderStream }
       });
-      IconvLiteDecoderStream.prototype._transform = function(chunk, encoding, done) {
-        if (!Buffer3.isBuffer(chunk) && !(chunk instanceof Uint8Array)) {
+      IconvLiteDecoderStream.prototype._transform = function(chunk2, encoding, done) {
+        if (!Buffer3.isBuffer(chunk2) && !(chunk2 instanceof Uint8Array)) {
           return done(new Error("Iconv decoding stream needs buffers as its input."));
         }
         try {
-          var res = this.conv.write(chunk);
+          var res = this.conv.write(chunk2);
           if (res && res.length) this.push(res, this.encoding);
           done();
         } catch (e) {
@@ -5530,8 +5530,8 @@ var require_streams = __commonJS({
       IconvLiteDecoderStream.prototype.collect = function(cb) {
         var res = "";
         this.on("error", cb);
-        this.on("data", function(chunk) {
-          res += chunk;
+        this.on("data", function(chunk2) {
+          res += chunk2;
         });
         this.on("end", function() {
           cb(null, res);
@@ -5846,9 +5846,9 @@ var require_raw_body = __commonJS({
           type: "request.aborted"
         }));
       }
-      function onData(chunk) {
+      function onData(chunk2) {
         if (complete) return;
-        received += chunk.length;
+        received += chunk2.length;
         if (limit !== null && received > limit) {
           done(createError(413, "request entity too large", {
             limit,
@@ -5856,9 +5856,9 @@ var require_raw_body = __commonJS({
             type: "entity.too.large"
           }));
         } else if (decoder) {
-          buffer += decoder.write(chunk);
+          buffer += decoder.write(chunk2);
         } else {
-          buffer.push(chunk);
+          buffer.push(chunk2);
         }
       }
       function onEnd(err) {
@@ -23424,12 +23424,12 @@ var require_response = __commonJS({
       }).join(", "));
     };
     res.send = function send2(body) {
-      var chunk = body;
+      var chunk2 = body;
       var encoding;
       var req = this.req;
       var type;
       var app2 = this.app;
-      switch (typeof chunk) {
+      switch (typeof chunk2) {
         // string defaulting to html
         case "string":
           if (!this.get("Content-Type")) {
@@ -23439,18 +23439,18 @@ var require_response = __commonJS({
         case "boolean":
         case "number":
         case "object":
-          if (chunk === null) {
-            chunk = "";
-          } else if (ArrayBuffer.isView(chunk)) {
+          if (chunk2 === null) {
+            chunk2 = "";
+          } else if (ArrayBuffer.isView(chunk2)) {
             if (!this.get("Content-Type")) {
               this.type("bin");
             }
           } else {
-            return this.json(chunk);
+            return this.json(chunk2);
           }
           break;
       }
-      if (typeof chunk === "string") {
+      if (typeof chunk2 === "string") {
         encoding = "utf8";
         type = this.get("Content-Type");
         if (typeof type === "string") {
@@ -23460,21 +23460,21 @@ var require_response = __commonJS({
       var etagFn = app2.get("etag fn");
       var generateETag = !this.get("ETag") && typeof etagFn === "function";
       var len;
-      if (chunk !== void 0) {
-        if (Buffer3.isBuffer(chunk)) {
-          len = chunk.length;
-        } else if (!generateETag && chunk.length < 1e3) {
-          len = Buffer3.byteLength(chunk, encoding);
+      if (chunk2 !== void 0) {
+        if (Buffer3.isBuffer(chunk2)) {
+          len = chunk2.length;
+        } else if (!generateETag && chunk2.length < 1e3) {
+          len = Buffer3.byteLength(chunk2, encoding);
         } else {
-          chunk = Buffer3.from(chunk, encoding);
+          chunk2 = Buffer3.from(chunk2, encoding);
           encoding = void 0;
-          len = chunk.length;
+          len = chunk2.length;
         }
         this.set("Content-Length", len);
       }
       var etag;
       if (generateETag && len !== void 0) {
-        if (etag = etagFn(chunk, encoding)) {
+        if (etag = etagFn(chunk2, encoding)) {
           this.set("ETag", etag);
         }
       }
@@ -23483,17 +23483,17 @@ var require_response = __commonJS({
         this.removeHeader("Content-Type");
         this.removeHeader("Content-Length");
         this.removeHeader("Transfer-Encoding");
-        chunk = "";
+        chunk2 = "";
       }
       if (this.statusCode === 205) {
         this.set("Content-Length", "0");
         this.removeHeader("Transfer-Encoding");
-        chunk = "";
+        chunk2 = "";
       }
       if (req.method === "HEAD") {
         this.end();
       } else {
-        this.end(chunk, encoding);
+        this.end(chunk2, encoding);
       }
       return this;
     };
@@ -33454,7 +33454,7 @@ var require_cjs = __commonJS({
     }
     var TEXT_DECODER;
     function totalLength(chunks) {
-      return chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+      return chunks.reduce((acc, chunk2) => acc + chunk2.length, 0);
     }
     function concatChunks(chunks, size) {
       if (chunks[0].length === size) {
@@ -33483,8 +33483,8 @@ var require_cjs = __commonJS({
       let expectedLength = -1;
       let isBinary = false;
       return new TransformStream({
-        transform(chunk, controller) {
-          chunks.push(chunk);
+        transform(chunk2, controller) {
+          chunks.push(chunk2);
           while (true) {
             if (state === 0) {
               if (totalLength(chunks) < 1) {
@@ -34371,9 +34371,9 @@ var require_polling = __commonJS({
         debug("compressing");
         const buffers = [];
         let nread = 0;
-        compressionMethods[encoding](this.httpCompression).on("error", callback).on("data", function(chunk) {
-          buffers.push(chunk);
-          nread += chunk.length;
+        compressionMethods[encoding](this.httpCompression).on("error", callback).on("data", function(chunk2) {
+          buffers.push(chunk2);
+          nread += chunk2.length;
         }).on("end", function() {
           callback(null, Buffer.concat(buffers, nread));
         }).end(data);
@@ -35586,14 +35586,14 @@ var require_permessage_deflate = __commonJS({
       }
     };
     module2.exports = PerMessageDeflate;
-    function deflateOnData(chunk) {
-      this[kBuffers].push(chunk);
-      this[kTotalLength] += chunk.length;
+    function deflateOnData(chunk2) {
+      this[kBuffers].push(chunk2);
+      this[kTotalLength] += chunk2.length;
     }
-    function inflateOnData(chunk) {
-      this[kTotalLength] += chunk.length;
+    function inflateOnData(chunk2) {
+      this[kTotalLength] += chunk2.length;
       if (this[kPerMessageDeflate]._maxPayload < 1 || this[kTotalLength] <= this[kPerMessageDeflate]._maxPayload) {
-        this[kBuffers].push(chunk);
+        this[kBuffers].push(chunk2);
         return;
       }
       this[kError] = new RangeError("Max payload size exceeded");
@@ -35887,10 +35887,10 @@ var require_receiver = __commonJS({
        * @param {Function} cb Callback
        * @private
        */
-      _write(chunk, encoding, cb) {
+      _write(chunk2, encoding, cb) {
         if (this._opcode === 8 && this._state == GET_INFO) return cb();
-        this._bufferedBytes += chunk.length;
-        this._buffers.push(chunk);
+        this._bufferedBytes += chunk2.length;
+        this._buffers.push(chunk2);
         this.startLoop(cb);
       }
       /**
@@ -38123,9 +38123,9 @@ var require_websocket2 = __commonJS({
       this.removeListener("data", socketOnData);
       this.removeListener("end", socketOnEnd);
       websocket._readyState = WebSocket.CLOSING;
-      let chunk;
-      if (!this._readableState.endEmitted && !websocket._closeFrameReceived && !websocket._receiver._writableState.errorEmitted && (chunk = websocket._socket.read()) !== null) {
-        websocket._receiver.write(chunk);
+      let chunk2;
+      if (!this._readableState.endEmitted && !websocket._closeFrameReceived && !websocket._receiver._writableState.errorEmitted && (chunk2 = websocket._socket.read()) !== null) {
+        websocket._receiver.write(chunk2);
       }
       websocket._receiver.end();
       this[kWebSocket] = void 0;
@@ -38137,8 +38137,8 @@ var require_websocket2 = __commonJS({
         websocket._receiver.on("finish", receiverOnFinish);
       }
     }
-    function socketOnData(chunk) {
-      if (!this[kWebSocket]._receiver.write(chunk)) {
+    function socketOnData(chunk2) {
+      if (!this[kWebSocket]._receiver.write(chunk2)) {
         this.pause();
       }
     }
@@ -38241,14 +38241,14 @@ var require_stream = __commonJS({
       duplex._read = function() {
         if (ws.isPaused) ws.resume();
       };
-      duplex._write = function(chunk, encoding, callback) {
+      duplex._write = function(chunk2, encoding, callback) {
         if (ws.readyState === ws.CONNECTING) {
           ws.once("open", function open() {
-            duplex._write(chunk, encoding, callback);
+            duplex._write(chunk2, encoding, callback);
           });
           return;
         }
-        ws.send(chunk, callback);
+        ws.send(chunk2, callback);
       };
       duplex.on("end", duplexOnEnd);
       duplex.on("error", duplexOnError);
@@ -40226,9 +40226,9 @@ var require_polling2 = __commonJS({
         debug("compressing");
         const buffers = [];
         let nread = 0;
-        compressionMethods[encoding](this.httpCompression).on("error", callback).on("data", function(chunk) {
-          buffers.push(chunk);
-          nread += chunk.length;
+        compressionMethods[encoding](this.httpCompression).on("error", callback).on("data", function(chunk2) {
+          buffers.push(chunk2);
+          nread += chunk2.length;
         }).on("end", function() {
           callback(null, Buffer.concat(buffers, nread));
         }).end(data);
@@ -44685,8 +44685,8 @@ var require_uws = __commonJS({
         destroyReadStream();
         throw error73;
       };
-      const onDataChunk = (chunk) => {
-        const arrayBufferChunk = toArrayBuffer(chunk);
+      const onDataChunk = (chunk2) => {
+        const arrayBufferChunk = toArrayBuffer(chunk2);
         res.cork(() => {
           const lastOffset = res.getWriteOffset();
           const [ok, done] = res.tryEnd(arrayBufferChunk, size);
@@ -46050,14 +46050,14 @@ var require_permessage_deflate2 = __commonJS({
       }
     };
     module2.exports = PerMessageDeflate;
-    function deflateOnData(chunk) {
-      this[kBuffers].push(chunk);
-      this[kTotalLength] += chunk.length;
+    function deflateOnData(chunk2) {
+      this[kBuffers].push(chunk2);
+      this[kTotalLength] += chunk2.length;
     }
-    function inflateOnData(chunk) {
-      this[kTotalLength] += chunk.length;
+    function inflateOnData(chunk2) {
+      this[kTotalLength] += chunk2.length;
       if (this[kPerMessageDeflate]._maxPayload < 1 || this[kTotalLength] <= this[kPerMessageDeflate]._maxPayload) {
-        this[kBuffers].push(chunk);
+        this[kBuffers].push(chunk2);
         return;
       }
       this[kError] = new RangeError("Max payload size exceeded");
@@ -46190,10 +46190,10 @@ var require_receiver2 = __commonJS({
        * @param {Function} cb Callback
        * @private
        */
-      _write(chunk, encoding, cb) {
+      _write(chunk2, encoding, cb) {
         if (this._opcode === 8 && this._state == GET_INFO) return cb();
-        this._bufferedBytes += chunk.length;
-        this._buffers.push(chunk);
+        this._bufferedBytes += chunk2.length;
+        this._buffers.push(chunk2);
         this.startLoop(cb);
       }
       /**
@@ -48157,9 +48157,9 @@ var require_websocket4 = __commonJS({
       this.removeListener("data", socketOnData);
       this.removeListener("end", socketOnEnd);
       websocket._readyState = WebSocket.CLOSING;
-      let chunk;
-      if (!this._readableState.endEmitted && !websocket._closeFrameReceived && !websocket._receiver._writableState.errorEmitted && (chunk = websocket._socket.read()) !== null) {
-        websocket._receiver.write(chunk);
+      let chunk2;
+      if (!this._readableState.endEmitted && !websocket._closeFrameReceived && !websocket._receiver._writableState.errorEmitted && (chunk2 = websocket._socket.read()) !== null) {
+        websocket._receiver.write(chunk2);
       }
       websocket._receiver.end();
       this[kWebSocket] = void 0;
@@ -48171,8 +48171,8 @@ var require_websocket4 = __commonJS({
         websocket._receiver.on("finish", receiverOnFinish);
       }
     }
-    function socketOnData(chunk) {
-      if (!this[kWebSocket]._receiver.write(chunk)) {
+    function socketOnData(chunk2) {
+      if (!this[kWebSocket]._receiver.write(chunk2)) {
         this.pause();
       }
     }
@@ -48292,14 +48292,14 @@ var require_stream2 = __commonJS({
           if (!ws._receiver._writableState.needDrain) ws._socket.resume();
         }
       };
-      duplex._write = function(chunk, encoding, callback) {
+      duplex._write = function(chunk2, encoding, callback) {
         if (ws.readyState === ws.CONNECTING) {
           ws.once("open", function open() {
-            duplex._write(chunk, encoding, callback);
+            duplex._write(chunk2, encoding, callback);
           });
           return;
         }
-        ws.send(chunk, callback);
+        ws.send(chunk2, callback);
       };
       duplex.on("end", duplexOnEnd);
       duplex.on("error", duplexOnError);
@@ -56276,16 +56276,16 @@ var require_string2 = __commonJS({
       }
     }
     function arrayToList(array4, finalEscape, ctx) {
-      let sql15 = "";
+      let sql16 = "";
       for (let i = 0; i < array4.length; i++) {
         const val = array4[i];
         if (Array.isArray(val)) {
-          sql15 += (i === 0 ? "" : ", ") + "(" + arrayToList(val, finalEscape, ctx) + ")";
+          sql16 += (i === 0 ? "" : ", ") + "(" + arrayToList(val, finalEscape, ctx) + ")";
         } else {
-          sql15 += (i === 0 ? "" : ", ") + finalEscape(val, ctx);
+          sql16 += (i === 0 ? "" : ", ") + finalEscape(val, ctx);
         }
       }
-      return sql15;
+      return sql16;
     }
     function bufferToString(buffer) {
       return "X" + escapeString(buffer.toString("hex"));
@@ -58594,26 +58594,26 @@ var require_ensure_connection_callback = __commonJS({
     function ensureConnectionCallback(runner) {
       runner.client.emit("start", runner.builder);
       runner.builder.emit("start", runner.builder);
-      const sql15 = runner.builder.toSQL();
+      const sql16 = runner.builder.toSQL();
       if (runner.builder._debug) {
-        runner.client.logger.debug(sql15);
+        runner.client.logger.debug(sql16);
       }
-      if (Array.isArray(sql15)) {
-        return runner.queryArray(sql15);
+      if (Array.isArray(sql16)) {
+        return runner.queryArray(sql16);
       }
-      return runner.query(sql15);
+      return runner.query(sql16);
     }
     function ensureConnectionStreamCallback(runner, params) {
       try {
-        const sql15 = runner.builder.toSQL();
-        if (Array.isArray(sql15) && params.hasHandler) {
+        const sql16 = runner.builder.toSQL();
+        if (Array.isArray(sql16) && params.hasHandler) {
           throw new Error(
             "The stream may only be used with a single query statement."
           );
         }
         return runner.client.stream(
           runner.connection,
-          sql15,
+          sql16,
           params.stream,
           params.options
         );
@@ -58674,8 +58674,8 @@ var require_runner = __commonJS({
         const queryContext = this.builder.queryContext();
         const stream4 = new Transform({
           objectMode: true,
-          transform: (chunk, _, callback) => {
-            callback(null, this.client.postProcessResponse(chunk, queryContext));
+          transform: (chunk2, _, callback) => {
+            callback(null, this.client.postProcessResponse(chunk2, queryContext));
           }
         });
         stream4.on("close", () => {
@@ -58752,7 +58752,7 @@ var require_runner = __commonJS({
           if (!(error73 instanceof KnexTimeoutError)) {
             return Promise.reject(error73);
           }
-          const { timeout: timeout2, sql: sql15, bindings } = obj;
+          const { timeout: timeout2, sql: sql16, bindings } = obj;
           let cancelQuery;
           if (obj.cancelOnTimeout) {
             cancelQuery = this.client.cancelQuery(this.connection);
@@ -58764,14 +58764,14 @@ var require_runner = __commonJS({
             this.connection.__knex__disposed = error73;
             throw Object.assign(cancelError, {
               message: `After query timeout of ${timeout2}ms exceeded, cancelling of query failed.`,
-              sql: sql15,
+              sql: sql16,
               bindings,
               timeout: timeout2
             });
           }).then(() => {
             throw Object.assign(error73, {
               message: `Defined query timeout of ${timeout2}ms exceeded when running query.`,
-              sql: sql15,
+              sql: sql16,
               bindings,
               timeout: timeout2
             });
@@ -63312,7 +63312,7 @@ var require_chunk = __commonJS({
     var toInteger = require_toInteger();
     var nativeCeil = Math.ceil;
     var nativeMax = Math.max;
-    function chunk(array4, size, guard) {
+    function chunk2(array4, size, guard) {
       if (guard ? isIterateeCall(array4, size, guard) : size === void 0) {
         size = 1;
       } else {
@@ -63328,7 +63328,7 @@ var require_chunk = __commonJS({
       }
       return result;
     }
-    module2.exports = chunk;
+    module2.exports = chunk2;
   }
 });
 
@@ -63344,7 +63344,7 @@ var require_delay = __commonJS({
 var require_batch_insert = __commonJS({
   "node_modules/knex/lib/execution/batch-insert.js"(exports2, module2) {
     "use strict";
-    var chunk = require_chunk();
+    var chunk2 = require_chunk();
     var flatten = require_flatten();
     var delay2 = require_delay();
     var { isNumber: isNumber2 } = require_is();
@@ -63357,7 +63357,7 @@ var require_batch_insert = __commonJS({
       if (!Array.isArray(batch)) {
         throw new TypeError(`Invalid batch: Expected array, got ${typeof batch}`);
       }
-      const chunks = chunk(batch, chunkSize);
+      const chunks = chunk2(batch, chunkSize);
       const runInTransaction = (cb) => {
         if (transaction) {
           return cb(transaction);
@@ -63822,8 +63822,8 @@ var require_transaction = __commonJS({
           this._rejecter(error73);
         });
       }
-      query(conn, sql15, status, value) {
-        const q = this.trxClient.query(conn, sql15).catch((err) => {
+      query(conn, sql16, status, value) {
+        const q = this.trxClient.query(conn, sql16).catch((err) => {
           status = 2;
           value = err;
           this._completed = true;
@@ -63834,7 +63834,7 @@ var require_transaction = __commonJS({
           }
           if (status === 2) {
             if (value === void 0) {
-              if (this.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql15)) {
+              if (this.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql16)) {
                 this._resolver();
                 return;
               }
@@ -64020,8 +64020,8 @@ var require_transaction = __commonJS({
       return trxClient;
     }
     function completedError(trx, obj) {
-      const sql15 = typeof obj === "string" ? obj : obj && obj.sql;
-      debug("%s: Transaction completed: %s", trx.txid, sql15);
+      const sql16 = typeof obj === "string" ? obj : obj && obj.sql;
+      debug("%s: Transaction completed: %s", trx.txid, sql16);
       throw new Error(
         "Transaction query already complete, run with DEBUG=knex:tx for more info"
       );
@@ -64036,12 +64036,12 @@ var require_query_executioner = __commonJS({
     "use strict";
     var _debugQuery = require_src3()("knex:query");
     var debugBindings = require_src3()("knex:bindings");
-    var debugQuery = (sql15, txId) => _debugQuery(sql15.replace(/%/g, "%%"), txId);
+    var debugQuery = (sql16, txId) => _debugQuery(sql16.replace(/%/g, "%%"), txId);
     var { isString: isString2 } = require_is();
-    function formatQuery(sql15, bindings, timeZone, client) {
+    function formatQuery(sql16, bindings, timeZone, client) {
       bindings = bindings == null ? [] : [].concat(bindings);
       let index = 0;
-      return sql15.replace(/\\?\?/g, (match) => {
+      return sql16.replace(/\\?\?/g, (match) => {
         if (match === "\\?") {
           return "?";
         }
@@ -65355,8 +65355,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Adds a raw `where` clause to the query.
-      whereRaw(sql15, bindings) {
-        const raw = sql15.isRawInstance ? sql15 : this.client.raw(sql15, bindings);
+      whereRaw(sql16, bindings) {
+        const raw = sql16.isRawInstance ? sql16 : this.client.raw(sql16, bindings);
         this._statements.push({
           grouping: "where",
           type: "whereRaw",
@@ -65366,8 +65366,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      orWhereRaw(sql15, bindings) {
-        return this._bool("or").whereRaw(sql15, bindings);
+      orWhereRaw(sql16, bindings) {
+        return this._bool("or").whereRaw(sql16, bindings);
       }
       // Helper for compiling any advanced `where` queries.
       whereWrapped(callback) {
@@ -65525,8 +65525,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Adds a raw `group by` clause to the query.
-      groupByRaw(sql15, bindings) {
-        const raw = sql15.isRawInstance ? sql15 : this.client.raw(sql15, bindings);
+      groupByRaw(sql16, bindings) {
+        const raw = sql16.isRawInstance ? sql16 : this.client.raw(sql16, bindings);
         this._statements.push({
           grouping: "group",
           type: "groupByRaw",
@@ -65571,8 +65571,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Add a raw `order by` clause to the query.
-      orderByRaw(sql15, bindings) {
-        const raw = sql15.isRawInstance ? sql15 : this.client.raw(sql15, bindings);
+      orderByRaw(sql16, bindings) {
+        const raw = sql16.isRawInstance ? sql16 : this.client.raw(sql16, bindings);
         this._statements.push({
           grouping: "order",
           type: "orderByRaw",
@@ -65754,8 +65754,8 @@ var require_querybuilder = __commonJS({
         return this._bool("or")._not(true).havingIn(column, values);
       }
       // Adds a raw `having` clause to the query.
-      havingRaw(sql15, bindings) {
-        const raw = sql15.isRawInstance ? sql15 : this.client.raw(sql15, bindings);
+      havingRaw(sql16, bindings) {
+        const raw = sql16.isRawInstance ? sql16 : this.client.raw(sql16, bindings);
         this._statements.push({
           grouping: "having",
           type: "havingRaw",
@@ -65765,8 +65765,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      orHavingRaw(sql15, bindings) {
-        return this._bool("or").havingRaw(sql15, bindings);
+      orHavingRaw(sql16, bindings) {
+        return this._bool("or").havingRaw(sql16, bindings);
       }
       // set the skip binding parameter (= insert the raw value in the query) for an attribute.
       _setSkipBinding(attribute, options) {
@@ -66086,8 +66086,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      fromRaw(sql15, bindings) {
-        const raw = sql15.isRawInstance ? sql15 : this.client.raw(sql15, bindings);
+      fromRaw(sql16, bindings) {
+        const raw = sql16.isRawInstance ? sql16 : this.client.raw(sql16, bindings);
         return this.from(raw);
       }
       // Passes query to provided callback function, useful for e.g. composing
@@ -66734,15 +66734,15 @@ var require_wrappingFormatter = __commonJS({
       return ret.join(", ");
     }
     function outputQuery(compiled, isParameter, builder, client) {
-      let sql15 = compiled.sql || "";
-      if (sql15) {
+      let sql16 = compiled.sql || "";
+      if (sql16) {
         if ((compiled.method === "select" || compiled.method === "first") && (isParameter || compiled.as)) {
-          sql15 = `(${sql15})`;
+          sql16 = `(${sql16})`;
           if (compiled.as)
-            return client.alias(sql15, wrapString(compiled.as, builder, client));
+            return client.alias(sql16, wrapString(compiled.as, builder, client));
         }
       }
-      return sql15;
+      return sql16;
     }
     function rawOrFn(value, method, builder, client, bindingHolder) {
       if (typeof value === "function") {
@@ -66786,7 +66786,7 @@ var require_rawFormatter = __commonJS({
       const expectedBindings = raw.bindings.length;
       const values = raw.bindings;
       let index = 0;
-      const sql15 = raw.sql.replace(/\\?\?\??/g, function(match) {
+      const sql16 = raw.sql.replace(/\\?\?\??/g, function(match) {
         if (match === "\\?") {
           return match;
         }
@@ -66801,7 +66801,7 @@ var require_rawFormatter = __commonJS({
       }
       return {
         method: "raw",
-        sql: sql15,
+        sql: sql16,
         bindings: bindingsHolder.bindings
       };
     }
@@ -66812,7 +66812,7 @@ var require_rawFormatter = __commonJS({
       const builder = raw;
       const values = raw.bindings;
       const regex = /\\?(:(\w+):(?=::)|:(\w+):(?!:)|:(\w+))/g;
-      const sql15 = raw.sql.replace(regex, function(match, p1, p22, p3, p4) {
+      const sql16 = raw.sql.replace(regex, function(match, p1, p22, p3, p4) {
         if (match !== p1) {
           return p1;
         }
@@ -66836,7 +66836,7 @@ var require_rawFormatter = __commonJS({
       });
       return {
         method: "raw",
-        sql: sql15,
+        sql: sql16,
         bindings: bindingsHolder.bindings
       };
     }
@@ -66907,8 +66907,8 @@ var require_raw2 = __commonJS({
           saveAsyncStack(this, 4);
         }
       }
-      set(sql15, bindings) {
-        this.sql = sql15;
+      set(sql16, bindings) {
+        this.sql = sql16;
         this.bindings = isObject5(bindings) && !bindings.toSQL || bindings === void 0 ? bindings : [bindings];
         return this;
       }
@@ -67351,7 +67351,7 @@ var require_querycompiler = __commonJS({
       // the component compilers, trimming out the empties, and returning a
       // generated query string.
       select() {
-        let sql15 = this.with();
+        let sql16 = this.with();
         let unionStatement = "";
         const firstStatements = [];
         const endStatements = [];
@@ -67377,13 +67377,13 @@ var require_querycompiler = __commonJS({
           const statements = compact(firstStatements.concat(endStatements)).join(
             " "
           );
-          sql15 += unionStatement + (statements ? " " + statements : "");
+          sql16 += unionStatement + (statements ? " " + statements : "");
         } else {
           const allStatements = (wrapMainQuery ? "(" : "") + compact(firstStatements).join(" ") + (wrapMainQuery ? ")" : "");
           const endStat = compact(endStatements).join(" ");
-          sql15 += allStatements + (unionStatement ? " " + unionStatement : "") + (endStat ? " " + endStat : endStat);
+          sql16 += allStatements + (unionStatement ? " " + unionStatement : "") + (endStat ? " " + endStat : endStat);
         }
-        return sql15;
+        return sql16;
       }
       pluck() {
         let toPluck = this.single.pluck;
@@ -67399,55 +67399,55 @@ var require_querycompiler = __commonJS({
       // inserts using a single query statement.
       insert() {
         const insertValues = this.single.insert || [];
-        const sql15 = this.with() + `insert into ${this.tableName} `;
+        const sql16 = this.with() + `insert into ${this.tableName} `;
         const body = this._insertBody(insertValues);
-        return body === "" ? "" : sql15 + body;
+        return body === "" ? "" : sql16 + body;
       }
       _onConflictClause(columns) {
         return columns instanceof Raw ? this.formatter.wrap(columns) : `(${this.formatter.columnize(columns)})`;
       }
       _buildInsertValues(insertData) {
-        let sql15 = "";
+        let sql16 = "";
         let i = -1;
         while (++i < insertData.values.length) {
-          if (i !== 0) sql15 += "), (";
-          sql15 += this.client.parameterize(
+          if (i !== 0) sql16 += "), (";
+          sql16 += this.client.parameterize(
             insertData.values[i],
             this.client.valueForUndefined,
             this.builder,
             this.bindingsHolder
           );
         }
-        return sql15;
+        return sql16;
       }
       _insertBody(insertValues) {
-        let sql15 = "";
+        let sql16 = "";
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
             return "";
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
-          return sql15 + this._emptyInsertValue;
+          return sql16 + this._emptyInsertValue;
         }
         const insertData = this._prepInsert(insertValues);
         if (typeof insertData === "string") {
-          sql15 += insertData;
+          sql16 += insertData;
         } else {
           if (insertData.columns.length) {
-            sql15 += `(${columnize_(
+            sql16 += `(${columnize_(
               insertData.columns,
               this.builder,
               this.client,
               this.bindingsHolder
             )}`;
-            sql15 += ") values (" + this._buildInsertValues(insertData) + ")";
+            sql16 += ") values (" + this._buildInsertValues(insertData) + ")";
           } else if (insertValues.length === 1 && insertValues[0]) {
-            sql15 += this._emptyInsertValue;
+            sql16 += this._emptyInsertValue;
           } else {
-            sql15 = "";
+            sql16 = "";
           }
         }
-        return sql15;
+        return sql16;
       }
       // Compiles the "update" query.
       update() {
@@ -67469,7 +67469,7 @@ var require_querycompiler = __commonJS({
         if (this.onlyUnions()) return "";
         const hints = this._hintComments();
         const columns = this.grouped.columns || [];
-        let i = -1, sql15 = [];
+        let i = -1, sql16 = [];
         if (columns) {
           while (++i < columns.length) {
             const stmt = columns[i];
@@ -67479,15 +67479,15 @@ var require_querycompiler = __commonJS({
               continue;
             }
             if (stmt.type === "aggregate") {
-              sql15.push(...this.aggregate(stmt));
+              sql16.push(...this.aggregate(stmt));
             } else if (stmt.type === "aggregateRaw") {
-              sql15.push(this.aggregateRaw(stmt));
+              sql16.push(this.aggregateRaw(stmt));
             } else if (stmt.type === "analytic") {
-              sql15.push(this.analytic(stmt));
+              sql16.push(this.analytic(stmt));
             } else if (stmt.type === "json") {
-              sql15.push(this.json(stmt));
+              sql16.push(this.json(stmt));
             } else if (stmt.value && stmt.value.length > 0) {
-              sql15.push(
+              sql16.push(
                 columnize_(
                   stmt.value,
                   this.builder,
@@ -67498,9 +67498,9 @@ var require_querycompiler = __commonJS({
             }
           }
         }
-        if (sql15.length === 0) sql15 = ["*"];
+        if (sql16.length === 0) sql16 = ["*"];
         const select = this.onlyJson() ? "" : "select ";
-        return `${select}${hints}${distinctClause}` + sql15.join(", ") + (this.tableName ? ` from ${this.single.only ? "only " : ""}${this.tableName}` : "");
+        return `${select}${hints}${distinctClause}` + sql16.join(", ") + (this.tableName ? ` from ${this.single.only ? "only " : ""}${this.tableName}` : "");
       }
       // Add comments to the query
       comments() {
@@ -67583,16 +67583,16 @@ var require_querycompiler = __commonJS({
       // Compiles all each of the `join` clauses on the query,
       // including any nested join queries.
       join() {
-        let sql15 = "";
+        let sql16 = "";
         let i = -1;
         const joins = this.grouped.join;
         if (!joins) return "";
         while (++i < joins.length) {
           const join2 = joins[i];
           const table = this._joinTable(join2);
-          if (i > 0) sql15 += " ";
+          if (i > 0) sql16 += " ";
           if (join2.joinType === "raw") {
-            sql15 += unwrapRaw_(
+            sql16 += unwrapRaw_(
               join2.table,
               void 0,
               this.builder,
@@ -67600,7 +67600,7 @@ var require_querycompiler = __commonJS({
               this.bindingsHolder
             );
           } else {
-            sql15 += join2.joinType + " join " + wrap_(
+            sql16 += join2.joinType + " join " + wrap_(
               table,
               void 0,
               this.builder,
@@ -67611,18 +67611,18 @@ var require_querycompiler = __commonJS({
             while (++ii < join2.clauses.length) {
               const clause = join2.clauses[ii];
               if (ii > 0) {
-                sql15 += ` ${clause.bool} `;
+                sql16 += ` ${clause.bool} `;
               } else {
-                sql15 += ` ${clause.type === "onUsing" ? "using" : "on"} `;
+                sql16 += ` ${clause.type === "onUsing" ? "using" : "on"} `;
               }
               const val = this[clause.type](clause);
               if (val) {
-                sql15 += val;
+                sql16 += val;
               }
             }
           }
         }
-        return sql15;
+        return sql16;
       }
       onBetween(statement) {
         return wrap_(
@@ -67679,29 +67679,29 @@ var require_querycompiler = __commonJS({
         ) + " " + this._not(statement, "in ") + this.wrap(values);
       }
       multiOnIn(statement) {
-        let i = -1, sql15 = `(${columnize_(
+        let i = -1, sql16 = `(${columnize_(
           statement.column,
           this.builder,
           this.client,
           this.bindingsHolder
         )}) `;
-        sql15 += this._not(statement, "in ") + "((";
+        sql16 += this._not(statement, "in ") + "((";
         while (++i < statement.value.length) {
-          if (i !== 0) sql15 += "),(";
-          sql15 += this.client.parameterize(
+          if (i !== 0) sql16 += "),(";
+          sql16 += this.client.parameterize(
             statement.value[i],
             void 0,
             this.builder,
             this.bindingsHolder
           );
         }
-        return sql15 + "))";
+        return sql16 + "))";
       }
       // Compiles all `where` statements on the query.
       where() {
         const wheres = this.grouped.where;
         if (!wheres) return;
-        const sql15 = [];
+        const sql16 = [];
         let i = -1;
         while (++i < wheres.length) {
           const stmt = wheres[i];
@@ -67711,15 +67711,15 @@ var require_querycompiler = __commonJS({
           }
           const val = this[stmt.type](stmt);
           if (val) {
-            if (sql15.length === 0) {
-              sql15[0] = "where";
+            if (sql16.length === 0) {
+              sql16[0] = "where";
             } else {
-              sql15.push(stmt.bool);
+              sql16.push(stmt.bool);
             }
-            sql15.push(val);
+            sql16.push(val);
           }
         }
-        return sql15.length > 1 ? sql15.join(" ") : "";
+        return sql16.length > 1 ? sql16.join(" ") : "";
       }
       group() {
         return this._groupsOrders("group");
@@ -67731,21 +67731,21 @@ var require_querycompiler = __commonJS({
       having() {
         const havings = this.grouped.having;
         if (!havings) return "";
-        const sql15 = ["having"];
+        const sql16 = ["having"];
         for (let i = 0, l = havings.length; i < l; i++) {
           const s = havings[i];
           const val = this[s.type](s);
           if (val) {
-            if (sql15.length === 0) {
-              sql15[0] = "where";
+            if (sql16.length === 0) {
+              sql16[0] = "where";
             }
-            if (sql15.length > 1 || sql15.length === 1 && sql15[0] !== "having") {
-              sql15.push(s.bool);
+            if (sql16.length > 1 || sql16.length === 1 && sql16[0] !== "having") {
+              sql16.push(s.bool);
             }
-            sql15.push(val);
+            sql16.push(val);
           }
         }
-        return sql15.length > 1 ? sql15.join(" ") : "";
+        return sql16.length > 1 ? sql16.join(" ") : "";
       }
       havingRaw(statement) {
         return this._not(statement, "") + unwrapRaw_(
@@ -67834,11 +67834,11 @@ var require_querycompiler = __commonJS({
         const onlyUnions = this.onlyUnions();
         const unions = this.grouped.union;
         if (!unions) return "";
-        let sql15 = "";
+        let sql16 = "";
         for (let i = 0, l = unions.length; i < l; i++) {
           const union3 = unions[i];
-          if (i > 0) sql15 += " ";
-          if (i > 0 || !onlyUnions) sql15 += union3.clause + " ";
+          if (i > 0) sql16 += " ";
+          if (i > 0 || !onlyUnions) sql16 += union3.clause + " ";
           const statement = rawOrFn_(
             union3.value,
             void 0,
@@ -67848,12 +67848,12 @@ var require_querycompiler = __commonJS({
           );
           if (statement) {
             const wrap = union3.wrap;
-            if (wrap) sql15 += "(";
-            sql15 += statement;
-            if (wrap) sql15 += ")";
+            if (wrap) sql16 += "(";
+            sql16 += statement;
+            if (wrap) sql16 += ")";
           }
         }
-        return sql15;
+        return sql16;
       }
       // If we haven't specified any columns or a `tableName`, we're assuming this
       // is only being used for unions.
@@ -67928,19 +67928,19 @@ var require_querycompiler = __commonJS({
         const self2 = this;
         const wrapJoin = new JoinClause();
         clause.value.call(wrapJoin, wrapJoin);
-        let sql15 = "";
+        let sql16 = "";
         for (let ii = 0; ii < wrapJoin.clauses.length; ii++) {
           const wrapClause = wrapJoin.clauses[ii];
           if (ii > 0) {
-            sql15 += ` ${wrapClause.bool} `;
+            sql16 += ` ${wrapClause.bool} `;
           }
           const val = self2[wrapClause.type](wrapClause);
           if (val) {
-            sql15 += val;
+            sql16 += val;
           }
         }
-        if (sql15.length) {
-          return `(${sql15})`;
+        if (sql16.length) {
+          return `(${sql16})`;
         }
         return "";
       }
@@ -68141,32 +68141,32 @@ var require_querycompiler = __commonJS({
         return this[stmt.method](stmt.params);
       }
       analytic(stmt) {
-        let sql15 = "";
+        let sql16 = "";
         const self2 = this;
-        sql15 += stmt.method + "() over (";
+        sql16 += stmt.method + "() over (";
         if (stmt.raw) {
-          sql15 += stmt.raw;
+          sql16 += stmt.raw;
         } else {
           if (stmt.partitions.length) {
-            sql15 += "partition by ";
-            sql15 += map3(stmt.partitions, function(partition) {
+            sql16 += "partition by ";
+            sql16 += map3(stmt.partitions, function(partition) {
               if (isString2(partition)) {
                 return self2.formatter.columnize(partition);
               } else return self2.formatter.columnize(partition.column) + (partition.order ? " " + partition.order : "");
             }).join(", ") + " ";
           }
-          sql15 += "order by ";
-          sql15 += map3(stmt.order, function(order) {
+          sql16 += "order by ";
+          sql16 += map3(stmt.order, function(order) {
             if (isString2(order)) {
               return self2.formatter.columnize(order);
             } else return self2.formatter.columnize(order.column) + (order.order ? " " + order.order : "");
           }).join(", ");
         }
-        sql15 += ")";
+        sql16 += ")";
         if (stmt.alias) {
-          sql15 += " as " + stmt.alias;
+          sql16 += " as " + stmt.alias;
         }
-        return sql15;
+        return sql16;
       }
       // Compiles all `with` statements on the query.
       with() {
@@ -68175,7 +68175,7 @@ var require_querycompiler = __commonJS({
         }
         const withs = this.grouped.with;
         if (!withs) return;
-        const sql15 = [];
+        const sql16 = [];
         let i = -1;
         let isRecursive = false;
         while (++i < withs.length) {
@@ -68184,9 +68184,9 @@ var require_querycompiler = __commonJS({
             isRecursive = true;
           }
           const val = this[stmt.type](stmt);
-          sql15.push(val);
+          sql16.push(val);
         }
-        return `with ${isRecursive ? "recursive " : ""}${sql15.join(", ")} `;
+        return `with ${isRecursive ? "recursive " : ""}${sql16.join(", ")} `;
       }
       withWrapped(statement) {
         const val = rawOrFn_(
@@ -68358,10 +68358,10 @@ var require_querycompiler = __commonJS({
       _groupsOrders(type) {
         const items = this.grouped[type];
         if (!items) return "";
-        const sql15 = items.map((item) => {
+        const sql16 = items.map((item) => {
           return this._groupOrder(item, type);
         });
-        return sql15.length ? type + " by " + sql15.join(", ") : "";
+        return sql16.length ? type + " by " + sql16.join(", ") : "";
       }
       // Get the table name, wrapping it if necessary.
       // Implemented as a property to prevent ordering issues as described in #704.
@@ -68699,8 +68699,8 @@ var require_compiler = __commonJS({
           (materialized ? this.dropMaterializedViewPrefix : this.dropViewPrefix) + (ifExists ? "if exists " : "") + this.formatter.wrap(prefixedTableName(this.schema, viewName))
         );
       }
-      raw(sql15, bindings) {
-        this.sequence.push(this.client.raw(sql15, bindings).toSQL());
+      raw(sql16, bindings) {
+        this.sequence.push(this.client.raw(sql16, bindings).toSQL());
       }
       toSQL() {
         const sequence = this.builder._sequence;
@@ -68743,9 +68743,9 @@ var require_compiler = __commonJS({
         builder.queryContext(queryContext);
       }
       builder.setSchema(this.schema);
-      const sql15 = builder.toSQL();
-      for (let i = 0, l = sql15.length; i < l; i++) {
-        this.sequence.push(sql15[i]);
+      const sql16 = builder.toSQL();
+      for (let i = 0, l = sql16.length; i < l; i++) {
+        this.sequence.push(sql16[i]);
       }
     }
     function buildTable(type) {
@@ -69404,8 +69404,8 @@ var require_tablecompiler = __commonJS({
               const nullableType2 = nullable3 ? "null" : "not null";
               const columnType = columnInfo.type + (columnInfo.maxLength ? `(${columnInfo.maxLength})` : "");
               const defaultValue = columnInfo.defaultValue !== null && columnInfo.defaultValue !== void 0 ? `default '${columnInfo.defaultValue}'` : "";
-              const sql15 = `alter table ${tableName} ${alterColumnPrefix} ${columnName} ${columnType} ${nullableType2} ${defaultValue}`;
-              return this.client.raw(sql15);
+              const sql16 = `alter table ${tableName} ${alterColumnPrefix} ${columnName} ${columnType} ${nullableType2} ${defaultValue}`;
+              return this.client.raw(sql16);
             });
           }
         });
@@ -69420,8 +69420,8 @@ var require_tablecompiler = __commonJS({
         if (checkConstraintNames === void 0) return "";
         checkConstraintNames = normalizeArr(checkConstraintNames);
         const tableName = this.tableName();
-        const sql15 = `alter table ${tableName} ${checkConstraintNames.map((constraint) => `drop constraint ${constraint}`).join(", ")}`;
-        this.pushQuery(sql15);
+        const sql16 = `alter table ${tableName} ${checkConstraintNames.map((constraint) => `drop constraint ${constraint}`).join(", ")}`;
+        this.pushQuery(sql16);
       }
       check(checkPredicate, bindings, constraintName) {
         const tableName = this.tableName();
@@ -69430,8 +69430,8 @@ var require_tablecompiler = __commonJS({
           this.checksCount++;
           checkConstraint = tableName + "_" + this.checksCount;
         }
-        const sql15 = `alter table ${tableName} add constraint ${checkConstraint} check(${checkPredicate})`;
-        this.pushQuery(sql15);
+        const sql16 = `alter table ${tableName} add constraint ${checkConstraint} check(${checkPredicate})`;
+        this.pushQuery(sql16);
       }
       _addChecks() {
         if (this.grouped.checks) {
@@ -69875,8 +69875,8 @@ var require_ref2 = __commonJS({
         const string5 = this._schema ? `${this._schema}.${this.ref}` : this.ref;
         const formatter = this.client.formatter(this);
         const ref = formatter.columnize(string5);
-        const sql15 = this._alias ? `${ref} as ${formatter.wrap(this._alias)}` : ref;
-        this.set(sql15, []);
+        const sql16 = this._alias ? `${ref} as ${formatter.wrap(this._alias)}` : ref;
+        this.set(sql16, []);
         return super.toSQL(...arguments);
       }
     };
@@ -70047,24 +70047,24 @@ var require_viewcompiler = __commonJS({
           this.client,
           this.bindingsHolder
         ) + ")" : "";
-        let sql15 = createStatement + this.viewName() + columnList;
-        sql15 += " as ";
-        sql15 += selectQuery.toString();
+        let sql16 = createStatement + this.viewName() + columnList;
+        sql16 += " as ";
+        sql16 += selectQuery.toString();
         switch (this.single.checkOption) {
           case "default_option":
-            sql15 += " with check option";
+            sql16 += " with check option";
             break;
           case "local":
-            sql15 += " with local check option";
+            sql16 += " with local check option";
             break;
           case "cascaded":
-            sql15 += " with cascaded check option";
+            sql16 += " with cascaded check option";
             break;
           default:
             break;
         }
         this.pushQuery({
-          sql: sql15
+          sql: sql16
         });
       }
       renameView(from, to) {
@@ -70250,8 +70250,8 @@ var require_client2 = __commonJS({
       prepBindings(bindings) {
         return bindings;
       }
-      positionBindings(sql15) {
-        return sql15;
+      positionBindings(sql16) {
+        return sql16;
       }
       postProcessResponse(resp, queryContext) {
         if (this.config.postProcessResponse) {
@@ -70935,24 +70935,24 @@ var require_sqlite_querycompiler = __commonJS({
       // then join them all together with select unions to complete the queries.
       insert() {
         const insertValues = this.single.insert || [];
-        let sql15 = this.with() + `insert into ${this.tableName} `;
+        let sql16 = this.with() + `insert into ${this.tableName} `;
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
             return "";
           } else if (insertValues.length === 1 && insertValues[0] && isEmpty(insertValues[0])) {
             return {
-              sql: sql15 + this._emptyInsertValue
+              sql: sql16 + this._emptyInsertValue
             };
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql15 + this._emptyInsertValue
+            sql: sql16 + this._emptyInsertValue
           };
         }
         const insertData = this._prepInsert(insertValues);
         if (isString2(insertData)) {
           return {
-            sql: sql15 + insertData
+            sql: sql16 + insertData
           };
         }
         if (insertData.columns.length === 0) {
@@ -70960,7 +70960,7 @@ var require_sqlite_querycompiler = __commonJS({
             sql: ""
           };
         }
-        sql15 += `(${this.formatter.columnize(insertData.columns)})`;
+        sql16 += `(${this.formatter.columnize(insertData.columns)})`;
         if (this.client.valueForUndefined !== null) {
           insertData.values.forEach((bindings) => {
             each(bindings, (binding) => {
@@ -70978,20 +70978,20 @@ var require_sqlite_querycompiler = __commonJS({
             this.builder,
             this.bindingsHolder
           );
-          sql15 += ` values (${parameters})`;
+          sql16 += ` values (${parameters})`;
           const { onConflict: onConflict2, ignore: ignore2, merge: merge5 } = this.single;
-          if (onConflict2 && ignore2) sql15 += this._ignore(onConflict2);
+          if (onConflict2 && ignore2) sql16 += this._ignore(onConflict2);
           else if (onConflict2 && merge5) {
-            sql15 += this._merge(merge5.updates, onConflict2, insertValues);
+            sql16 += this._merge(merge5.updates, onConflict2, insertValues);
             const wheres = this.where();
-            if (wheres) sql15 += ` ${wheres}`;
+            if (wheres) sql16 += ` ${wheres}`;
           }
           const { returning: returning2 } = this.single;
           if (returning2) {
-            sql15 += this._returning(returning2);
+            sql16 += this._returning(returning2);
           }
           return {
-            sql: sql15,
+            sql: sql16,
             returning: returning2
           };
         }
@@ -71016,16 +71016,16 @@ var require_sqlite_querycompiler = __commonJS({
           }
           blocks[i] = block.join(", ");
         }
-        sql15 += " select " + blocks.join(" union all select ");
+        sql16 += " select " + blocks.join(" union all select ");
         const { onConflict, ignore, merge: merge4 } = this.single;
-        if (onConflict && ignore) sql15 += " where true" + this._ignore(onConflict);
+        if (onConflict && ignore) sql16 += " where true" + this._ignore(onConflict);
         else if (onConflict && merge4) {
-          sql15 += " where true" + this._merge(merge4.updates, onConflict, insertValues);
+          sql16 += " where true" + this._merge(merge4.updates, onConflict, insertValues);
         }
         const { returning } = this.single;
-        if (returning) sql15 += this._returning(returning);
+        if (returning) sql16 += this._returning(returning);
         return {
-          sql: sql15,
+          sql: sql16,
           returning
         };
       }
@@ -71047,9 +71047,9 @@ var require_sqlite_querycompiler = __commonJS({
         return ` on conflict ${this._onConflictClause(columns)} do nothing`;
       }
       _merge(updates, columns, insert) {
-        let sql15 = ` on conflict ${this._onConflictClause(columns)} do update set `;
+        let sql16 = ` on conflict ${this._onConflictClause(columns)} do update set `;
         if (updates && Array.isArray(updates)) {
-          sql15 += updates.map(
+          sql16 += updates.map(
             (column) => wrapString(
               column.split(".").pop(),
               this.formatter.builder,
@@ -71057,15 +71057,15 @@ var require_sqlite_querycompiler = __commonJS({
               this.formatter
             )
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql15;
+          return sql16;
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
           if (typeof updateData === "string") {
-            sql15 += updateData;
+            sql16 += updateData;
           } else {
-            sql15 += updateData.join(",");
+            sql16 += updateData.join(",");
           }
-          return sql15;
+          return sql16;
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -71073,10 +71073,10 @@ var require_sqlite_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          sql15 += insertData.columns.map(
+          sql16 += insertData.columns.map(
             (column) => wrapString(column.split(".").pop(), this.builder, this.client)
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql15;
+          return sql16;
         }
       }
       _returning(value) {
@@ -71230,12 +71230,12 @@ var require_sqlite_compiler = __commonJS({
       }
       // Compile the query to determine if a table exists.
       hasTable(tableName) {
-        const sql15 = `select * from sqlite_master where type = 'table' and name = ${this.client.parameter(
+        const sql16 = `select * from sqlite_master where type = 'table' and name = ${this.client.parameter(
           this.formatter.wrap(tableName).replace(/`/g, ""),
           this.builder,
           this.bindingsHolder
         )}`;
-        this.pushQuery({ sql: sql15, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql16, output: (resp) => resp.length > 0 });
       }
       // Compile the query to determine if a column exists.
       hasColumn(tableName, column) {
@@ -71357,17 +71357,17 @@ var require_sqlite_tablecompiler = __commonJS({
       // Create a new table.
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
-        let sql15 = createStatement + this.tableName();
+        let sql16 = createStatement + this.tableName();
         if (like && this.tableNameLike()) {
-          sql15 += " as select * from " + this.tableNameLike() + " where 0=1";
+          sql16 += " as select * from " + this.tableNameLike() + " where 0=1";
         } else {
-          sql15 += " (" + columns.sql.join(", ");
-          sql15 += this.foreignKeys() || "";
-          sql15 += this.primaryKeys() || "";
-          sql15 += this._addChecks();
-          sql15 += ")";
+          sql16 += " (" + columns.sql.join(", ");
+          sql16 += this.foreignKeys() || "";
+          sql16 += this.primaryKeys() || "";
+          sql16 += this._addChecks();
+          sql16 += ")";
         }
-        this.pushQuery(sql15);
+        this.pushQuery(sql16);
         if (like) {
           this.addColumns(columns, this.addColumnsPrefix);
         }
@@ -71563,7 +71563,7 @@ var require_sqlite_tablecompiler = __commonJS({
         }
       }
       foreignKeys() {
-        let sql15 = "";
+        let sql16 = "";
         const foreignKeys = filter6(this.grouped.alterTable || [], {
           method: "foreign"
         });
@@ -71576,11 +71576,11 @@ var require_sqlite_tablecompiler = __commonJS({
           if (constraintName) {
             constraintName = " constraint " + this.formatter.wrap(constraintName);
           }
-          sql15 += `,${constraintName} foreign key(${column}) references ${foreignTable}(${references})`;
-          if (foreign.onDelete) sql15 += ` on delete ${foreign.onDelete}`;
-          if (foreign.onUpdate) sql15 += ` on update ${foreign.onUpdate}`;
+          sql16 += `,${constraintName} foreign key(${column}) references ${foreignTable}(${references})`;
+          if (foreign.onDelete) sql16 += ` on delete ${foreign.onDelete}`;
+          if (foreign.onUpdate) sql16 += ` on update ${foreign.onUpdate}`;
         }
-        return sql15;
+        return sql16;
       }
       createTableBlock() {
         return this.getColumns().concat().join(",");
@@ -71836,20 +71836,20 @@ var require_parser = __commonJS({
       operator: /-|\(|\)|;|\+|\*|\/|%|==|=|<=|<>|<<|<|>=|>>|>|!=|,|&|~|\|\||\||\./,
       _ws: /\s+/
     };
-    function parseCreateTable(sql15) {
-      const result = createTable({ input: tokenize(sql15, TOKENS) });
+    function parseCreateTable(sql16) {
+      const result = createTable({ input: tokenize(sql16, TOKENS) });
       if (!result.success) {
         throw new Error(
-          `Parsing CREATE TABLE failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql15}"`
+          `Parsing CREATE TABLE failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql16}"`
         );
       }
       return result.ast;
     }
-    function parseCreateIndex(sql15) {
-      const result = createIndex({ input: tokenize(sql15, TOKENS) });
+    function parseCreateIndex(sql16) {
+      const result = createIndex({ input: tokenize(sql16, TOKENS) });
       if (!result.success) {
         throw new Error(
-          `Parsing CREATE INDEX failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql15}"`
+          `Parsing CREATE INDEX failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql16}"`
         );
       }
       return result.ast;
@@ -72912,16 +72912,16 @@ var require_ddl = __commonJS({
         );
       }
       async generateAlterCommands(newSql, createIndices, columns) {
-        const sql15 = [];
+        const sql16 = [];
         const pre = [];
         const post = [];
         let check3 = null;
-        sql15.push(newSql);
-        sql15.push(copyData(this.tableName(), this.alteredName, columns));
-        sql15.push(dropOriginal(this.tableName()));
-        sql15.push(renameTable(this.alteredName, this.tableName()));
+        sql16.push(newSql);
+        sql16.push(copyData(this.tableName(), this.alteredName, columns));
+        sql16.push(dropOriginal(this.tableName()));
+        sql16.push(renameTable(this.alteredName, this.tableName()));
         for (const createIndex of createIndices) {
-          sql15.push(createIndex);
+          sql16.push(createIndex);
         }
         const isForeignCheckEnabled2 = await this.isForeignCheckEnabled();
         if (isForeignCheckEnabled2) {
@@ -72929,7 +72929,7 @@ var require_ddl = __commonJS({
           post.push(setForeignCheck(true));
           check3 = executeForeignCheck();
         }
-        return { pre, sql: sql15, check: check3, post };
+        return { pre, sql: sql16, check: check3, post };
       }
     };
     module2.exports = SQLite3_DDL;
@@ -73316,18 +73316,18 @@ var require_pg_querycompiler = __commonJS({
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        let sql15 = super.insert();
-        if (sql15 === "") return sql15;
+        let sql16 = super.insert();
+        if (sql16 === "") return sql16;
         const { returning, onConflict, ignore, merge: merge4, insert } = this.single;
-        if (onConflict && ignore) sql15 += this._ignore(onConflict);
+        if (onConflict && ignore) sql16 += this._ignore(onConflict);
         if (onConflict && merge4) {
-          sql15 += this._merge(merge4.updates, onConflict, insert);
+          sql16 += this._merge(merge4.updates, onConflict, insert);
           const wheres = this.where();
-          if (wheres) sql15 += ` ${wheres}`;
+          if (wheres) sql16 += ` ${wheres}`;
         }
-        if (returning) sql15 += this._returning(returning);
+        if (returning) sql16 += this._returning(returning);
         return {
-          sql: sql15,
+          sql: sql16,
           returning
         };
       }
@@ -73345,15 +73345,15 @@ var require_pg_querycompiler = __commonJS({
       using() {
         const usingTables = this.single.using;
         if (!usingTables) return;
-        let sql15 = "using ";
+        let sql16 = "using ";
         if (Array.isArray(usingTables)) {
-          sql15 += usingTables.map((table) => {
+          sql16 += usingTables.map((table) => {
             return this.formatter.wrap(table);
           }).join(",");
         } else {
-          sql15 += this.formatter.wrap(usingTables);
+          sql16 += this.formatter.wrap(usingTables);
         }
-        return sql15;
+        return sql16;
       }
       // Compiles an `delete` query, allowing for a return value.
       del() {
@@ -73393,10 +73393,10 @@ var require_pg_querycompiler = __commonJS({
             using += (using ? "," : "using ") + tableJoins.join(",");
           }
         }
-        const sql15 = withSQL + `delete from ${this.single.only ? "only " : ""}${tableName}` + (using ? ` ${using}` : "") + (wheres ? ` ${wheres}` : "");
+        const sql16 = withSQL + `delete from ${this.single.only ? "only " : ""}${tableName}` + (using ? ` ${using}` : "") + (wheres ? ` ${wheres}` : "");
         const { returning } = this.single;
         return {
-          sql: sql15 + this._returning(returning),
+          sql: sql16 + this._returning(returning),
           returning
         };
       }
@@ -73416,9 +73416,9 @@ var require_pg_querycompiler = __commonJS({
         return ` on conflict ${this._onConflictClause(columns)} do nothing`;
       }
       _merge(updates, columns, insert) {
-        let sql15 = ` on conflict ${this._onConflictClause(columns)} do update set `;
+        let sql16 = ` on conflict ${this._onConflictClause(columns)} do update set `;
         if (updates && Array.isArray(updates)) {
-          sql15 += updates.map(
+          sql16 += updates.map(
             (column) => wrapString(
               column.split(".").pop(),
               this.formatter.builder,
@@ -73426,15 +73426,15 @@ var require_pg_querycompiler = __commonJS({
               this.formatter
             )
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql15;
+          return sql16;
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
           if (typeof updateData === "string") {
-            sql15 += updateData;
+            sql16 += updateData;
           } else {
-            sql15 += updateData.join(",");
+            sql16 += updateData.join(",");
           }
-          return sql15;
+          return sql16;
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -73442,26 +73442,26 @@ var require_pg_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          sql15 += insertData.columns.map(
+          sql16 += insertData.columns.map(
             (column) => wrapString(column.split(".").pop(), this.builder, this.client)
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql15;
+          return sql16;
         }
       }
       // Join array of table names and apply default schema.
       _tableNames(tables) {
         const schemaName = this.single.schema;
-        const sql15 = [];
+        const sql16 = [];
         for (let i = 0; i < tables.length; i++) {
           let tableName = tables[i];
           if (tableName) {
             if (schemaName) {
               tableName = `${schemaName}.${tableName}`;
             }
-            sql15.push(this.formatter.wrap(tableName));
+            sql16.push(this.formatter.wrap(tableName));
           }
         }
-        return sql15.join(", ");
+        return sql16.join(", ");
       }
       _lockingClause(lockMode) {
         const tables = this.single.lockTables || [];
@@ -73496,19 +73496,19 @@ var require_pg_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        const sql15 = "select * from information_schema.columns where table_name = ? and table_catalog = current_database()";
+        const sql16 = "select * from information_schema.columns where table_name = ? and table_catalog = current_database()";
         const bindings = [table];
-        return this._buildColumnInfoQuery(schema, sql15, bindings, column);
+        return this._buildColumnInfoQuery(schema, sql16, bindings, column);
       }
-      _buildColumnInfoQuery(schema, sql15, bindings, column) {
+      _buildColumnInfoQuery(schema, sql16, bindings, column) {
         if (schema) {
-          sql15 += " and table_schema = ?";
+          sql16 += " and table_schema = ?";
           bindings.push(schema);
         } else {
-          sql15 += " and table_schema = current_schema()";
+          sql16 += " and table_schema = current_schema()";
         }
         return {
-          sql: sql15,
+          sql: sql16,
           bindings,
           output(resp) {
             const out = reduce(
@@ -73798,11 +73798,11 @@ var require_pg_tablecompiler = __commonJS({
       }
       _setNullableState(column, isNullable) {
         const constraintAction = isNullable ? "drop not null" : "set not null";
-        const sql15 = `alter table ${this.tableName()} alter column ${this.formatter.wrap(
+        const sql16 = `alter table ${this.tableName()} alter column ${this.formatter.wrap(
           column
         )} ${constraintAction}`;
         return this.pushQuery({
-          sql: sql15
+          sql: sql16
         });
       }
       compileAdd(builder) {
@@ -73816,11 +73816,11 @@ var require_pg_tablecompiler = __commonJS({
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
         const columnsSql = ` (${columns.sql.join(", ")}${this.primaryKeys() || ""}${this._addChecks()})`;
-        let sql15 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + " including all" + (columns.sql.length ? ", " + columns.sql.join(", ") : "") + ")" : columnsSql);
+        let sql16 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + " including all" + (columns.sql.length ? ", " + columns.sql.join(", ") : "") + ")" : columnsSql);
         if (this.single.inherits)
-          sql15 += ` inherits (${this.formatter.wrap(this.single.inherits)})`;
+          sql16 += ` inherits (${this.formatter.wrap(this.single.inherits)})`;
         this.pushQuery({
-          sql: sql15,
+          sql: sql16,
           bindings: columns.bindings
         });
         const hasComment = has(this.single, "comment");
@@ -74080,16 +74080,16 @@ var require_pg_compiler = __commonJS({
       }
       // Check whether the current table
       hasTable(tableName) {
-        let sql15 = "select * from information_schema.tables where table_name = ?";
+        let sql16 = "select * from information_schema.tables where table_name = ?";
         const bindings = [tableName];
         if (this.schema) {
-          sql15 += " and table_schema = ?";
+          sql16 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql15 += " and table_schema = current_schema()";
+          sql16 += " and table_schema = current_schema()";
         }
         this.pushQuery({
-          sql: sql15,
+          sql: sql16,
           bindings,
           output(resp) {
             return resp.rows.length > 0;
@@ -74098,16 +74098,16 @@ var require_pg_compiler = __commonJS({
       }
       // Compile the query to determine if a column exists in a table.
       hasColumn(tableName, columnName) {
-        let sql15 = "select * from information_schema.columns where table_name = ? and column_name = ?";
+        let sql16 = "select * from information_schema.columns where table_name = ? and column_name = ?";
         const bindings = [tableName, columnName];
         if (this.schema) {
-          sql15 += " and table_schema = ?";
+          sql16 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql15 += " and table_schema = current_schema()";
+          sql16 += " and table_schema = current_schema()";
         }
         this.pushQuery({
-          sql: sql15,
+          sql: sql16,
           bindings,
           output(resp) {
             return resp.rows.length > 0;
@@ -74294,9 +74294,9 @@ var require_postgres = __commonJS({
       }
       // Position the bindings for the query. The escape sequence for question mark
       // is \? (e.g. knex.raw("\\?") since javascript requires '\' to be escaped too...)
-      positionBindings(sql15) {
+      positionBindings(sql16) {
         let questionCount = 0;
-        return sql15.replace(/(\\*)(\?)/g, function(match, escapes) {
+        return sql16.replace(/(\\*)(\?)/g, function(match, escapes) {
           if (escapes.length % 2) {
             return "?";
           } else {
@@ -74348,10 +74348,10 @@ var require_postgres = __commonJS({
             throw e;
           }
         }
-        const sql15 = obj.sql;
+        const sql16 = obj.sql;
         return new Promise(function(resolver, rejecter) {
           const queryStream = connection.query(
-            new PGQueryStream(sql15, obj.bindings, options)
+            new PGQueryStream(sql16, obj.bindings, options)
           );
           queryStream.on("error", function(error73) {
             rejecter(error73);
@@ -74509,20 +74509,20 @@ var require_crdb_querycompiler = __commonJS({
         return `truncate ${this.tableName}`;
       }
       upsert() {
-        let sql15 = this._upsert();
-        if (sql15 === "") return sql15;
+        let sql16 = this._upsert();
+        if (sql16 === "") return sql16;
         const { returning } = this.single;
-        if (returning) sql15 += this._returning(returning);
+        if (returning) sql16 += this._returning(returning);
         return {
-          sql: sql15,
+          sql: sql16,
           returning
         };
       }
       _upsert() {
         const upsertValues = this.single.upsert || [];
-        const sql15 = this.with() + `upsert into ${this.tableName} `;
+        const sql16 = this.with() + `upsert into ${this.tableName} `;
         const body = this._insertBody(upsertValues);
-        return body === "" ? "" : sql15 + body;
+        return body === "" ? "" : sql16 + body;
       }
       _groupOrder(item, type) {
         return this._basicGroupOrder(item, type);
@@ -75013,9 +75013,9 @@ var require_mssql_querycompiler = __commonJS({
         return result;
       }
       select() {
-        const sql15 = this.with();
+        const sql16 = this.with();
         const statements = components.map((component) => this[component](this));
-        return sql15 + compact(statements).join(" ");
+        return sql16 + compact(statements).join(" ");
       }
       //#region Insert
       // Compiles an "insert" query, allowing for multiple
@@ -75030,7 +75030,7 @@ var require_mssql_querycompiler = __commonJS({
       insertWithTriggers() {
         const insertValues = this.single.insert || [];
         const { returning } = this.single;
-        let sql15 = this.with() + `${this._buildTempTable(returning)}insert into ${this.tableName} `;
+        let sql16 = this.with() + `${this._buildTempTable(returning)}insert into ${this.tableName} `;
         const returningSql = returning ? this._returning("insert", returning, true) + " " : "";
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
@@ -75038,39 +75038,39 @@ var require_mssql_querycompiler = __commonJS({
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql15 + returningSql + this._emptyInsertValue + this._buildReturningSelect(returning),
+            sql: sql16 + returningSql + this._emptyInsertValue + this._buildReturningSelect(returning),
             returning
           };
         }
-        sql15 += this._buildInsertData(insertValues, returningSql);
+        sql16 += this._buildInsertData(insertValues, returningSql);
         if (returning) {
-          sql15 += this._buildReturningSelect(returning);
+          sql16 += this._buildReturningSelect(returning);
         }
         return {
-          sql: sql15,
+          sql: sql16,
           returning
         };
       }
       _buildInsertData(insertValues, returningSql) {
-        let sql15 = "";
+        let sql16 = "";
         const insertData = this._prepInsert(insertValues);
         if (typeof insertData === "string") {
-          sql15 += insertData;
+          sql16 += insertData;
         } else {
           if (insertData.columns.length) {
-            sql15 += `(${this.formatter.columnize(insertData.columns)}`;
-            sql15 += `) ${returningSql}values (` + this._buildInsertValues(insertData) + ")";
+            sql16 += `(${this.formatter.columnize(insertData.columns)}`;
+            sql16 += `) ${returningSql}values (` + this._buildInsertValues(insertData) + ")";
           } else if (insertValues.length === 1 && insertValues[0]) {
-            sql15 += returningSql + this._emptyInsertValue;
+            sql16 += returningSql + this._emptyInsertValue;
           } else {
             return "";
           }
         }
-        return sql15;
+        return sql16;
       }
       standardInsert() {
         const insertValues = this.single.insert || [];
-        let sql15 = this.with() + `insert into ${this.tableName} `;
+        let sql16 = this.with() + `insert into ${this.tableName} `;
         const { returning } = this.single;
         const returningSql = returning ? this._returning("insert", returning) + " " : "";
         if (Array.isArray(insertValues)) {
@@ -75079,13 +75079,13 @@ var require_mssql_querycompiler = __commonJS({
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql15 + returningSql + this._emptyInsertValue,
+            sql: sql16 + returningSql + this._emptyInsertValue,
             returning
           };
         }
-        sql15 += this._buildInsertData(insertValues, returningSql);
+        sql16 += this._buildInsertData(insertValues, returningSql);
         return {
-          sql: sql15,
+          sql: sql16,
           returning
         };
       }
@@ -75184,7 +75184,7 @@ var require_mssql_querycompiler = __commonJS({
         const top = this.top();
         const hints = this._hintComments();
         const columns = this.grouped.columns || [];
-        let i = -1, sql15 = [];
+        let i = -1, sql16 = [];
         if (columns) {
           while (++i < columns.length) {
             const stmt = columns[i];
@@ -75194,21 +75194,21 @@ var require_mssql_querycompiler = __commonJS({
               continue;
             }
             if (stmt.type === "aggregate") {
-              sql15.push(...this.aggregate(stmt));
+              sql16.push(...this.aggregate(stmt));
             } else if (stmt.type === "aggregateRaw") {
-              sql15.push(this.aggregateRaw(stmt));
+              sql16.push(this.aggregateRaw(stmt));
             } else if (stmt.type === "analytic") {
-              sql15.push(this.analytic(stmt));
+              sql16.push(this.analytic(stmt));
             } else if (stmt.type === "json") {
-              sql15.push(this.json(stmt));
+              sql16.push(this.json(stmt));
             } else if (stmt.value && stmt.value.length > 0) {
-              sql15.push(this.formatter.columnize(stmt.value));
+              sql16.push(this.formatter.columnize(stmt.value));
             }
           }
         }
-        if (sql15.length === 0) sql15 = ["*"];
+        if (sql16.length === 0) sql16 = ["*"];
         const select = this.onlyJson() ? "" : "select ";
-        return `${select}${hints}${distinctClause}` + (top ? top + " " : "") + sql15.join(", ") + (this.tableName ? ` from ${this.tableName}` : "");
+        return `${select}${hints}${distinctClause}` + (top ? top + " " : "") + sql16.join(", ") + (this.tableName ? ` from ${this.tableName}` : "");
       }
       _returning(method, value, withTrigger) {
         switch (method) {
@@ -75229,10 +75229,10 @@ var require_mssql_querycompiler = __commonJS({
           } else {
             selections = `[t].${this.formatter.columnize(values)}`;
           }
-          let sql15 = `select top(0) ${selections} into #out `;
-          sql15 += `from ${this.tableName} as t `;
-          sql15 += `left join ${this.tableName} on 0=1;`;
-          return sql15;
+          let sql16 = `select top(0) ${selections} into #out `;
+          sql16 += `from ${this.tableName} as t `;
+          sql16 += `left join ${this.tableName} on 0=1;`;
+          return sql16;
         }
         return "";
       }
@@ -75244,9 +75244,9 @@ var require_mssql_querycompiler = __commonJS({
           } else {
             selections = this.formatter.columnize(values);
           }
-          let sql15 = `; select ${selections} from #out; `;
-          sql15 += `drop table #out;`;
-          return sql15;
+          let sql16 = `; select ${selections} from #out; `;
+          sql16 += `drop table #out;`;
+          return sql16;
         }
         return "";
       }
@@ -75268,16 +75268,16 @@ var require_mssql_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        let sql15 = `select [COLUMN_NAME], [COLUMN_DEFAULT], [DATA_TYPE], [CHARACTER_MAXIMUM_LENGTH], [IS_NULLABLE] from INFORMATION_SCHEMA.COLUMNS where table_name = ? and table_catalog = ?`;
+        let sql16 = `select [COLUMN_NAME], [COLUMN_DEFAULT], [DATA_TYPE], [CHARACTER_MAXIMUM_LENGTH], [IS_NULLABLE] from INFORMATION_SCHEMA.COLUMNS where table_name = ? and table_catalog = ?`;
         const bindings = [table, this.client.database()];
         if (schema) {
-          sql15 += " and table_schema = ?";
+          sql16 += " and table_schema = ?";
           bindings.push(schema);
         } else {
-          sql15 += ` and table_schema = 'dbo'`;
+          sql16 += ` and table_schema = 'dbo'`;
         }
         return {
-          sql: sql15,
+          sql: sql16,
           bindings,
           output(resp) {
             const out = resp.reduce((columns, val) => {
@@ -75433,12 +75433,12 @@ var require_mssql_compiler = __commonJS({
           this.bindingsHolder
         );
         const bindings = [tableName];
-        let sql15 = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ${formattedTable}`;
+        let sql16 = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ${formattedTable}`;
         if (this.schema) {
-          sql15 += " AND TABLE_SCHEMA = ?";
+          sql16 += " AND TABLE_SCHEMA = ?";
           bindings.push(this.schema);
         }
-        this.pushQuery({ sql: sql15, bindings, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql16, bindings, output: (resp) => resp.length > 0 });
       }
       // Check whether a column exists on the schema.
       hasColumn(tableName, column) {
@@ -75452,8 +75452,8 @@ var require_mssql_compiler = __commonJS({
           this.builder,
           this.bindingsHolder
         );
-        const sql15 = `select object_id from sys.columns where name = ${formattedColumn} and object_id = object_id(${formattedTable})`;
-        this.pushQuery({ sql: sql15, output: (resp) => resp.length > 0 });
+        const sql16 = `select object_id from sys.columns where name = ${formattedColumn} and object_id = object_id(${formattedTable})`;
+        this.pushQuery({ sql: sql16, output: (resp) => resp.length > 0 });
       }
     };
     SchemaCompiler_MSSQL.prototype.dropTablePrefix = "DROP TABLE ";
@@ -75547,9 +75547,9 @@ ELSE
             this.pushQuery(baseQuery);
           }
         }
-        columns.sql.forEach((sql15) => {
+        columns.sql.forEach((sql16) => {
           this.pushQuery({
-            sql: (this.lowerCase ? "alter table " : "ALTER TABLE ") + this.tableName() + " " + (this.lowerCase ? this.alterColumnPrefix.toLowerCase() : this.alterColumnPrefix) + sql15,
+            sql: (this.lowerCase ? "alter table " : "ALTER TABLE ") + this.tableName() + " " + (this.lowerCase ? this.alterColumnPrefix.toLowerCase() : this.alterColumnPrefix) + sql16,
             bindings: columns.bindings
           });
         });
@@ -75769,18 +75769,18 @@ var require_mssql_viewcompiler = __commonJS({
       }
       createQuery(columns, selectQuery, materialized, replace) {
         const createStatement = "CREATE " + (replace ? "OR ALTER " : "") + "VIEW ";
-        let sql15 = createStatement + this.viewName();
+        let sql16 = createStatement + this.viewName();
         const columnList = columns ? " (" + columnize_(
           columns,
           this.viewBuilder,
           this.client,
           this.bindingsHolder
         ) + ")" : "";
-        sql15 += columnList;
-        sql15 += " AS ";
-        sql15 += selectQuery.toString();
+        sql16 += columnList;
+        sql16 += " AS ";
+        sql16 += selectQuery.toString();
         this.pushQuery({
-          sql: sql15
+          sql: sql16
         });
       }
       renameColumn(from, to) {
@@ -76103,9 +76103,9 @@ var require_mssql = __commonJS({
         });
       }
       // Position the bindings for the query.
-      positionBindings(sql15) {
+      positionBindings(sql16) {
         let questionCount = -1;
-        return sql15.replace(/\\?\?/g, (match) => {
+        return sql16.replace(/\\?\?/g, (match) => {
           if (match === "\\?") {
             return "?";
           }
@@ -76131,11 +76131,11 @@ var require_mssql = __commonJS({
       }
       _makeRequest(query, callback) {
         const Driver = this._driver();
-        const sql15 = typeof query === "string" ? query : query.sql;
+        const sql16 = typeof query === "string" ? query : query.sql;
         let rowCount = 0;
-        if (!sql15) throw new Error("The query is empty");
-        debug("request::request sql=%s", sql15);
-        const request = new Driver.Request(sql15, (err, remoteRowCount) => {
+        if (!sql16) throw new Error("The query is empty");
+        debug("request::request sql=%s", sql16);
+        const request = new Driver.Request(sql16, (err, remoteRowCount) => {
           if (err) {
             debug("request::error message=%s", err.message);
             return callback(err);
@@ -76392,9 +76392,9 @@ var require_transaction3 = __commonJS({
     var Debug = require_src3();
     var debug = Debug("knex:tx");
     var Transaction_MySQL = class extends Transaction {
-      query(conn, sql15, status, value) {
+      query(conn, sql16, status, value) {
         const t = this;
-        const q = this.trxClient.query(conn, sql15).catch((err) => {
+        const q = this.trxClient.query(conn, sql16).catch((err) => {
           if (err.errno === 1305) {
             this.trxClient.logger.warn(
               "Transaction was implicitly committed, do not mix transactions and DDL with MySQL (#805)"
@@ -76409,7 +76409,7 @@ var require_transaction3 = __commonJS({
           if (status === 1) t._resolver(value);
           if (status === 2) {
             if (value === void 0) {
-              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql15)) {
+              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql16)) {
                 t._resolver();
                 return;
               }
@@ -76476,22 +76476,22 @@ var require_mysql_querycompiler = __commonJS({
       }
       // Compiles an `delete` allowing comments
       del() {
-        const sql15 = super.del();
-        if (sql15 === "") return sql15;
+        const sql16 = super.del();
+        if (sql16 === "") return sql16;
         const comments = this.comments();
-        return (comments === "" ? "" : comments + " ") + sql15;
+        return (comments === "" ? "" : comments + " ") + sql16;
       }
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        let sql15 = super.insert();
-        if (sql15 === "") return sql15;
+        let sql16 = super.insert();
+        if (sql16 === "") return sql16;
         const comments = this.comments();
-        sql15 = (comments === "" ? "" : comments + " ") + sql15;
+        sql16 = (comments === "" ? "" : comments + " ") + sql16;
         const { ignore, merge: merge4, insert } = this.single;
-        if (ignore) sql15 = sql15.replace("insert into", "insert ignore into");
+        if (ignore) sql16 = sql16.replace("insert into", "insert ignore into");
         if (merge4) {
-          sql15 += this._merge(merge4.updates, insert);
+          sql16 += this._merge(merge4.updates, insert);
           const wheres = this.where();
           if (wheres) {
             throw new Error(
@@ -76499,24 +76499,24 @@ var require_mysql_querycompiler = __commonJS({
             );
           }
         }
-        return sql15;
+        return sql16;
       }
       upsert() {
         const upsertValues = this.single.upsert || [];
-        const sql15 = this.with() + `replace into ${this.tableName} `;
+        const sql16 = this.with() + `replace into ${this.tableName} `;
         const body = this._insertBody(upsertValues);
-        return body === "" ? "" : sql15 + body;
+        return body === "" ? "" : sql16 + body;
       }
       // Compiles merge for onConflict, allowing for different merge strategies
       _merge(updates, insert) {
-        const sql15 = " on duplicate key update ";
+        const sql16 = " on duplicate key update ";
         if (updates && Array.isArray(updates)) {
-          return sql15 + updates.map(
+          return sql16 + updates.map(
             (column) => wrapAsIdentifier(column, this.formatter.builder, this.client)
           ).map((column) => `${column} = values(${column})`).join(", ");
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
-          return sql15 + updateData.join(",");
+          return sql16 + updateData.join(",");
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -76524,7 +76524,7 @@ var require_mysql_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          return sql15 + insertData.columns.map((column) => wrapAsIdentifier(column, this.builder, this.client)).map((column) => `${column} = values(${column})`).join(", ");
+          return sql16 + insertData.columns.map((column) => wrapAsIdentifier(column, this.builder, this.client)).map((column) => `${column} = values(${column})`).join(", ");
         }
       }
       // Update method, including joins, wheres, order & limits.
@@ -76693,16 +76693,16 @@ var require_mysql_compiler = __commonJS({
       }
       // Check whether a table exists on the query.
       hasTable(tableName) {
-        let sql15 = "select * from information_schema.tables where table_name = ?";
+        let sql16 = "select * from information_schema.tables where table_name = ?";
         const bindings = [tableName];
         if (this.schema) {
-          sql15 += " and table_schema = ?";
+          sql16 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql15 += " and table_schema = database()";
+          sql16 += " and table_schema = database()";
         }
         this.pushQuery({
-          sql: sql15,
+          sql: sql16,
           bindings,
           output: function output(resp) {
             return resp.length > 0;
@@ -76743,16 +76743,16 @@ var require_mysql_tablecompiler = __commonJS({
         columnsSql += this.primaryKeys() || "";
         columnsSql += this._addChecks();
         columnsSql += ")";
-        let sql15 = createStatement + this.tableName() + (like && this.tableNameLike() ? " like " + this.tableNameLike() : columnsSql);
+        let sql16 = createStatement + this.tableName() + (like && this.tableNameLike() ? " like " + this.tableNameLike() : columnsSql);
         if (client.connectionSettings) {
           conn = client.connectionSettings;
         }
         const charset = this.single.charset || conn.charset || "";
         const collation = this.single.collate || conn.collate || "";
         const engine = this.single.engine || "";
-        if (charset && !like) sql15 += ` default character set ${charset}`;
-        if (collation) sql15 += ` collate ${collation}`;
-        if (engine) sql15 += ` engine = ${engine}`;
+        if (charset && !like) sql16 += ` default character set ${charset}`;
+        if (collation) sql16 += ` collate ${collation}`;
+        if (engine) sql16 += ` engine = ${engine}`;
         if (this.single.comment) {
           const comment = this.single.comment || "";
           const MAX_COMMENT_LENGTH = 1024;
@@ -76760,9 +76760,9 @@ var require_mysql_tablecompiler = __commonJS({
             this.client.logger.warn(
               `The max length for a table comment is ${MAX_COMMENT_LENGTH} characters`
             );
-          sql15 += ` comment = '${comment}'`;
+          sql16 += ` comment = '${comment}'`;
         }
-        this.pushQuery(sql15);
+        this.pushQuery(sql16);
         if (like) {
           this.addColumns(columns, this.addColumnsPrefix);
         }
@@ -76794,23 +76794,23 @@ var require_mysql_tablecompiler = __commonJS({
                   reject(e);
                 }
               }).then(function() {
-                let sql15 = `alter table ${table} change ${wrapped} ${column.Type}`;
+                let sql16 = `alter table ${table} change ${wrapped} ${column.Type}`;
                 if (String(column.Null).toUpperCase() !== "YES") {
-                  sql15 += ` NOT NULL`;
+                  sql16 += ` NOT NULL`;
                 } else {
-                  sql15 += ` NULL`;
+                  sql16 += ` NULL`;
                 }
                 if (column.Default !== void 0 && column.Default !== null) {
-                  sql15 += ` DEFAULT '${column.Default}'`;
+                  sql16 += ` DEFAULT '${column.Default}'`;
                 }
                 if (column.Collation !== void 0 && column.Collation !== null) {
-                  sql15 += ` COLLATE '${column.Collation}'`;
+                  sql16 += ` COLLATE '${column.Collation}'`;
                 }
                 if (column.Extra == "auto_increment") {
-                  sql15 += ` AUTO_INCREMENT`;
+                  sql16 += ` AUTO_INCREMENT`;
                 }
                 return runner.query({
-                  sql: sql15
+                  sql: sql16
                 });
               }).then(function() {
                 if (!refs.length) {
@@ -76872,7 +76872,7 @@ var require_mysql_tablecompiler = __commonJS({
         const bindingsHolder = {
           bindings: []
         };
-        const sql15 = "SELECT KCU.CONSTRAINT_NAME, KCU.TABLE_NAME, KCU.COLUMN_NAME,        KCU.REFERENCED_TABLE_NAME, KCU.REFERENCED_COLUMN_NAME,        RC.UPDATE_RULE, RC.DELETE_RULE FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC        USING(CONSTRAINT_NAME) WHERE KCU.REFERENCED_TABLE_NAME = " + this.client.parameter(
+        const sql16 = "SELECT KCU.CONSTRAINT_NAME, KCU.TABLE_NAME, KCU.COLUMN_NAME,        KCU.REFERENCED_TABLE_NAME, KCU.REFERENCED_COLUMN_NAME,        RC.UPDATE_RULE, RC.DELETE_RULE FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC        USING(CONSTRAINT_NAME) WHERE KCU.REFERENCED_TABLE_NAME = " + this.client.parameter(
           this.tableNameRaw,
           this.tableBuilder,
           bindingsHolder
@@ -76886,7 +76886,7 @@ var require_mysql_tablecompiler = __commonJS({
           bindingsHolder
         );
         return runner.query({
-          sql: sql15,
+          sql: sql16,
           bindings: bindingsHolder.bindings
         });
       }
@@ -77510,9 +77510,9 @@ var require_transaction4 = __commonJS({
     var Transaction = require_transaction();
     var debug = require_src3()("knex:tx");
     var Transaction_MySQL2 = class extends Transaction {
-      query(conn, sql15, status, value) {
+      query(conn, sql16, status, value) {
         const t = this;
-        const q = this.trxClient.query(conn, sql15).catch((err) => {
+        const q = this.trxClient.query(conn, sql16).catch((err) => {
           if (err.code === "ER_SP_DOES_NOT_EXIST") {
             this.trxClient.logger.warn(
               "Transaction was implicitly committed, do not mix transactions and DDL with MySQL (#805)"
@@ -77527,7 +77527,7 @@ var require_transaction4 = __commonJS({
           if (status === 1) t._resolver(value);
           if (status === 2) {
             if (value === void 0) {
-              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql15)) {
+              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql16)) {
                 t._resolver();
                 return;
               }
@@ -77622,8 +77622,8 @@ var require_utils10 = __commonJS({
         return result;
       }
     };
-    function wrapSqlWithCatch(sql15, errorNumberToCatch) {
-      return `begin execute immediate '${sql15.replace(/'/g, "''")}'; exception when others then if sqlcode != ${errorNumberToCatch} then raise; end if; end;`;
+    function wrapSqlWithCatch(sql16, errorNumberToCatch) {
+      return `begin execute immediate '${sql16.replace(/'/g, "''")}'; exception when others then if sqlcode != ${errorNumberToCatch} then raise; end if; end;`;
     }
     function ReturningHelper(columnName) {
       this.columnName = columnName;
@@ -77807,7 +77807,7 @@ var require_oracle_compiler = __commonJS({
       }
       // Check whether a column exists on the schema.
       hasColumn(tableName, column) {
-        const sql15 = `select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = ${this.client.parameter(
+        const sql16 = `select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = ${this.client.parameter(
           tableName,
           this.builder,
           this.bindingsHolder
@@ -77816,7 +77816,7 @@ var require_oracle_compiler = __commonJS({
           this.builder,
           this.bindingsHolder
         )}`;
-        this.pushQuery({ sql: sql15, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql16, output: (resp) => resp.length > 0 });
       }
       dropSequenceIfExists(sequenceName) {
         const prefix = this.schema ? `"${this.schema}".` : "";
@@ -78127,14 +78127,14 @@ var require_oracle_tablecompiler = __commonJS({
           prefix = prefix || this.addColumnsPrefix;
           const columnSql = columns.sql;
           const alter = this.lowerCase ? "alter table " : "ALTER TABLE ";
-          let sql15 = `${alter}${this.tableName()} ${prefix}`;
+          let sql16 = `${alter}${this.tableName()} ${prefix}`;
           if (columns.sql.length > 1) {
-            sql15 += `(${columnSql.join(", ")})`;
+            sql16 += `(${columnSql.join(", ")})`;
           } else {
-            sql15 += columnSql.join(", ");
+            sql16 += columnSql.join(", ");
           }
           this.pushQuery({
-            sql: sql15,
+            sql: sql16,
             bindings: columns.bindings
           });
         }
@@ -78157,10 +78157,10 @@ var require_oracle_tablecompiler = __commonJS({
       // Adds the "create" query to the query sequence.
       createQuery(columns, ifNot, like) {
         const columnsSql = like && this.tableNameLike() ? " as (select * from " + this.tableNameLike() + " where 0=1)" : " (" + columns.sql.join(", ") + this._addChecks() + ")";
-        const sql15 = `create table ${this.tableName()}${columnsSql}`;
+        const sql16 = `create table ${this.tableName()}${columnsSql}`;
         this.pushQuery({
           // catch "name is already used by an existing object" for workaround for "if not exists"
-          sql: ifNot ? utils.wrapSqlWithCatch(sql15, -955) : sql15,
+          sql: ifNot ? utils.wrapSqlWithCatch(sql16, -955) : sql16,
           bindings: columns.bindings
         });
         if (this.single.comment) this.comment(this.single.comment);
@@ -78300,9 +78300,9 @@ var require_oracle = __commonJS({
         return this.connectionSettings.database;
       }
       // Position the bindings for the query.
-      positionBindings(sql15) {
+      positionBindings(sql16) {
         let questionCount = 0;
-        return sql15.replace(/\?/g, function() {
+        return sql16.replace(/\?/g, function() {
           questionCount += 1;
           return `:${questionCount}`;
         });
@@ -78406,7 +78406,7 @@ var require_oracle_querycompiler = __commonJS({
           return "";
         }
         const insertData = this._prepInsert(insertValues);
-        const sql15 = {};
+        const sql16 = {};
         if (isString2(insertData)) {
           return this._addReturningToSqlAndConvert(
             `insert into ${this.tableName} ${insertData}`,
@@ -78428,7 +78428,7 @@ var require_oracle_querycompiler = __commonJS({
           );
         }
         const insertDefaultsOnly = insertData.columns.length === 0;
-        sql15.sql = "begin " + insertData.values.map((value) => {
+        sql16.sql = "begin " + insertData.values.map((value) => {
           let returningHelper;
           const parameterizedValues = !insertDefaultsOnly ? this.client.parameterize(
             value,
@@ -78440,7 +78440,7 @@ var require_oracle_querycompiler = __commonJS({
           let subSql = `insert into ${this.tableName} `;
           if (returning) {
             returningHelper = new ReturningHelper(returningValues.join(":"));
-            sql15.outParams = (sql15.outParams || []).concat(returningHelper);
+            sql16.outParams = (sql16.outParams || []).concat(returningHelper);
           }
           if (insertDefaultsOnly) {
             subSql += `(${this.formatter.wrap(
@@ -78461,24 +78461,24 @@ var require_oracle_querycompiler = __commonJS({
           return `execute immediate '${subSql.replace(/'/g, "''")}` + (parameterizedValuesWithoutDefault || returning ? "' using " : "") + parameterizedValuesWithoutDefault + (parameterizedValuesWithoutDefault && returning ? ", " : "") + (returning ? "out ?" : "") + ";";
         }).join(" ") + "end;";
         if (returning) {
-          sql15.returning = returning;
-          sql15.returningSql = `select ${this.formatter.columnize(returning)} from ` + this.tableName + " where ROWID in (" + sql15.outParams.map((v, i) => `:${i + 1}`).join(", ") + ") order by case ROWID " + sql15.outParams.map((v, i) => `when CHARTOROWID(:${i + 1}) then ${i}`).join(" ") + " end";
+          sql16.returning = returning;
+          sql16.returningSql = `select ${this.formatter.columnize(returning)} from ` + this.tableName + " where ROWID in (" + sql16.outParams.map((v, i) => `:${i + 1}`).join(", ") + ") order by case ROWID " + sql16.outParams.map((v, i) => `when CHARTOROWID(:${i + 1}) then ${i}`).join(" ") + " end";
         }
-        return sql15;
+        return sql16;
       }
       // Update method, including joins, wheres, order & limits.
       update() {
         const updates = this._prepUpdate(this.single.update);
         const where = this.where();
         let { returning } = this.single;
-        const sql15 = `update ${this.tableName} set ` + updates.join(", ") + (where ? ` ${where}` : "");
+        const sql16 = `update ${this.tableName} set ` + updates.join(", ") + (where ? ` ${where}` : "");
         if (!returning) {
-          return sql15;
+          return sql16;
         }
         if (!Array.isArray(returning)) {
           returning = [returning];
         }
-        return this._addReturningToSqlAndConvert(sql15, returning, this.tableName);
+        return this._addReturningToSqlAndConvert(sql16, returning, this.tableName);
       }
       // Compiles a `truncate` query.
       truncate() {
@@ -78497,7 +78497,7 @@ var require_oracle_querycompiler = __commonJS({
       columnInfo() {
         const column = this.single.columnInfo;
         const table = this.client.customWrapIdentifier(this.single.table, identity2);
-        const sql15 = `select * from xmltable( '/ROWSET/ROW'
+        const sql16 = `select * from xmltable( '/ROWSET/ROW'
       passing dbms_xmlgen.getXMLType('
       select char_col_decl_length, column_name, data_type, data_default, nullable
       from all_tab_columns where table_name = ''${table}'' ')
@@ -78505,7 +78505,7 @@ var require_oracle_querycompiler = __commonJS({
       CHAR_COL_DECL_LENGTH number, COLUMN_NAME varchar2(200), DATA_TYPE varchar2(106),
       DATA_DEFAULT clob, NULLABLE varchar2(1))`;
         return {
-          sql: sql15,
+          sql: sql16,
           output(resp) {
             const out = reduce(
               resp,
@@ -78536,16 +78536,16 @@ var require_oracle_querycompiler = __commonJS({
         return this._aggregate(stmt, { aliasSeparator: " " });
       }
       // for single commands only
-      _addReturningToSqlAndConvert(sql15, returning, tableName) {
+      _addReturningToSqlAndConvert(sql16, returning, tableName) {
         const res = {
-          sql: sql15
+          sql: sql16
         };
         if (!returning) {
           return res;
         }
         const returningValues = Array.isArray(returning) ? returning : [returning];
         const returningHelper = new ReturningHelper(returningValues.join(":"));
-        res.sql = sql15 + " returning ROWID into " + this.client.parameter(returningHelper, this.builder, this.bindingsHolder);
+        res.sql = sql16 + " returning ROWID into " + this.client.parameter(returningHelper, this.builder, this.bindingsHolder);
         res.returningSql = `select ${this.formatter.columnize(
           returning
         )} from ${tableName} where ROWID = :1`;
@@ -78595,11 +78595,11 @@ var require_utils11 = __commonJS({
         stream5.on("error", function(err) {
           reject(err);
         });
-        stream5.on("data", function(chunk) {
+        stream5.on("data", function(chunk2) {
           if (type === "string") {
-            data += chunk;
+            data += chunk2;
           } else {
-            data = Buffer.concat([data, chunk]);
+            data = Buffer.concat([data, chunk2]);
           }
         });
         stream5.on("end", function() {
@@ -78654,7 +78654,7 @@ var require_utils11 = __commonJS({
           });
         });
       };
-      const fetchAsync = promisify5(function(sql15, bindParams, options, cb) {
+      const fetchAsync = promisify5(function(sql16, bindParams, options, cb) {
         options = options || {};
         options.outFormat = client.driver.OUT_FORMAT_OBJECT || client.driver.OBJECT;
         if (!options.outFormat) {
@@ -78662,7 +78662,7 @@ var require_utils11 = __commonJS({
         }
         if (options.resultSet) {
           connection.execute(
-            sql15,
+            sql16,
             bindParams || [],
             options,
             function(err, result) {
@@ -78705,7 +78705,7 @@ var require_utils11 = __commonJS({
           );
         } else {
           connection.execute(
-            sql15,
+            sql16,
             bindParams || [],
             options,
             function(err, result) {
@@ -78722,8 +78722,8 @@ var require_utils11 = __commonJS({
           );
         }
       });
-      connection.executeAsync = function(sql15, bindParams, options) {
-        return fetchAsync(sql15, bindParams, options).then(async (results) => {
+      connection.executeAsync = function(sql16, bindParams, options) {
+        return fetchAsync(sql16, bindParams, options).then(async (results) => {
           const closeResultSet = () => {
             return results.resultSet ? promisify5(results.resultSet.close).call(results.resultSet) : Promise.resolve();
           };
@@ -78800,7 +78800,7 @@ var require_oracledb_querycompiler = __commonJS({
           return "";
         }
         const insertData = this._prepInsert(insertValues);
-        const sql15 = {};
+        const sql16 = {};
         if (isString2(insertData)) {
           return this._addReturningToSqlAndConvert(
             "insert into " + this.tableName + " " + insertData,
@@ -78823,8 +78823,8 @@ var require_oracledb_querycompiler = __commonJS({
           );
         }
         const insertDefaultsOnly = insertData.columns.length === 0;
-        sql15.returning = returning;
-        sql15.sql = "begin " + insertData.values.map(function(value, index) {
+        sql16.returning = returning;
+        sql16.sql = "begin " + insertData.values.map(function(value, index) {
           const parameterizedValues = !insertDefaultsOnly ? self2.client.parameterize(
             value,
             self2.client.valueForUndefined,
@@ -78867,9 +78867,9 @@ var require_oracledb_querycompiler = __commonJS({
           const parameterizedValuesWithoutDefaultAndBlob = parameterizedValues.replace(/DEFAULT, /g, "").replace(/, DEFAULT/g, "").replace("EMPTY_BLOB(), ", "").replace(", EMPTY_BLOB()", "");
           return "execute immediate '" + subSql.replace(/'/g, "''") + (parameterizedValuesWithoutDefaultAndBlob || value ? "' using " : "") + parameterizedValuesWithoutDefaultAndBlob + (parameterizedValuesWithoutDefaultAndBlob && outClause ? "," : "") + outClause + ";";
         }).join(" ") + "end;";
-        sql15.outBinding = outBinding;
+        sql16.outBinding = outBinding;
         if (returning[0] === "*") {
-          sql15.returningSql = function() {
+          sql16.returningSql = function() {
             return "select * from " + self2.tableName + " where ROWID in (" + this.outBinding.map(function(v, i) {
               return ":" + (i + 1);
             }).join(", ") + ") order by case ROWID " + this.outBinding.map(function(v, i) {
@@ -78877,7 +78877,7 @@ var require_oracledb_querycompiler = __commonJS({
             }).join(" ") + " end";
           };
         }
-        return sql15;
+        return sql16;
       }
       with() {
         const undoList = [];
@@ -78895,10 +78895,10 @@ var require_oracledb_querycompiler = __commonJS({
         }
         return result;
       }
-      _addReturningToSqlAndConvert(sql15, outBinding, tableName, returning) {
+      _addReturningToSqlAndConvert(sql16, outBinding, tableName, returning) {
         const self2 = this;
         const res = {
-          sql: sql15
+          sql: sql16
         };
         if (!outBinding) {
           return res;
@@ -78915,7 +78915,7 @@ var require_oracledb_querycompiler = __commonJS({
           }
           self2.formatter.bindings.push(new ReturningHelper(columnName));
         });
-        res.sql = sql15;
+        res.sql = sql16;
         returningClause = returningClause.slice(0, -1);
         intoClause = intoClause.slice(0, -1);
         if (returningClause && intoClause) {
@@ -78972,7 +78972,7 @@ var require_oracledb_querycompiler = __commonJS({
       }
       update() {
         const self2 = this;
-        const sql15 = {};
+        const sql16 = {};
         const outBindPrep = this._prepOutbindings(
           this.single.update || this.single.counter,
           this.single.returning
@@ -78999,15 +78999,15 @@ var require_oracledb_querycompiler = __commonJS({
         });
         returningClause = returningClause.slice(0, -1);
         intoClause = intoClause.slice(0, -1);
-        sql15.outBinding = outBinding;
-        sql15.returning = returning;
-        sql15.sql = "update " + this.tableName + " set " + updates.join(", ") + (where ? " " + where : "");
+        sql16.outBinding = outBinding;
+        sql16.returning = returning;
+        sql16.sql = "update " + this.tableName + " set " + updates.join(", ") + (where ? " " + where : "");
         if (outBinding.length && !isEmpty(outBinding[0])) {
-          sql15.sql += " returning " + returningClause + " into" + intoClause;
+          sql16.sql += " returning " + returningClause + " into" + intoClause;
         }
         if (returning[0] === "*") {
-          sql15.returningSql = function() {
-            let sql16 = "select * from " + self2.tableName;
+          sql16.returningSql = function() {
+            let sql17 = "select * from " + self2.tableName;
             const modifiedRowsCount = this.rowsAffected.length || this.rowsAffected;
             let returningSqlIn = " where ROWID in (";
             let returningSqlOrderBy = ") order by case ROWID ";
@@ -79022,10 +79022,10 @@ var require_oracledb_querycompiler = __commonJS({
               returningSqlIn = returningSqlIn.slice(0, -2);
               returningSqlOrderBy = returningSqlOrderBy.slice(0, -1);
             }
-            return sql16 += returningSqlIn + returningSqlOrderBy + " end";
+            return sql17 += returningSqlIn + returningSqlOrderBy + " end";
           };
         }
-        return sql15;
+        return sql16;
       }
       _jsonPathWrap(extraction) {
         return `'${extraction.path || extraction[1]}'`;
@@ -79114,11 +79114,11 @@ var require_oracledb_tablecompiler = __commonJS({
       }
       _setNullableState(column, isNullable) {
         const nullability = isNullable ? "NULL" : "NOT NULL";
-        const sql15 = `alter table ${this.tableName()} modify (${this.formatter.wrap(
+        const sql16 = `alter table ${this.tableName()} modify (${this.formatter.wrap(
           column
         )} ${nullability})`;
         return this.pushQuery({
-          sql: sql15
+          sql: sql16
         });
       }
     };
@@ -79715,27 +79715,27 @@ var require_redshift_querycompiler = __commonJS({
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        const sql15 = QueryCompiler.prototype.insert.apply(this, arguments);
-        if (sql15 === "") return sql15;
+        const sql16 = QueryCompiler.prototype.insert.apply(this, arguments);
+        if (sql16 === "") return sql16;
         this._slightReturn();
         return {
-          sql: sql15
+          sql: sql16
         };
       }
       // Compiles an `update` query, warning on unsupported returning
       update() {
-        const sql15 = QueryCompiler.prototype.update.apply(this, arguments);
+        const sql16 = QueryCompiler.prototype.update.apply(this, arguments);
         this._slightReturn();
         return {
-          sql: sql15
+          sql: sql16
         };
       }
       // Compiles an `delete` query, warning on unsupported returning
       del() {
-        const sql15 = QueryCompiler.prototype.del.apply(this, arguments);
+        const sql16 = QueryCompiler.prototype.del.apply(this, arguments);
         this._slightReturn();
         return {
-          sql: sql15
+          sql: sql16
         };
       }
       // simple: if trying to return, warn
@@ -79774,12 +79774,12 @@ var require_redshift_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        const sql15 = "select * from information_schema.columns where table_name = ? and table_catalog = ?";
+        const sql16 = "select * from information_schema.columns where table_name = ? and table_catalog = ?";
         const bindings = [
           table.toLowerCase(),
           this.client.database().toLowerCase()
         ];
-        return this._buildColumnInfoQuery(schema, sql15, bindings, column);
+        return this._buildColumnInfoQuery(schema, sql16, bindings, column);
       }
       jsonExtract(params) {
         let extractions;
@@ -79951,11 +79951,11 @@ var require_redshift_tablecompiler = __commonJS({
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
         const columnsSql = " (" + columns.sql.join(", ") + this._addChecks() + ")";
-        let sql15 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + ")" : columnsSql);
+        let sql16 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + ")" : columnsSql);
         if (this.single.inherits)
-          sql15 += ` like (${this.formatter.wrap(this.single.inherits)})`;
+          sql16 += ` like (${this.formatter.wrap(this.single.inherits)})`;
         this.pushQuery({
-          sql: sql15,
+          sql: sql16,
           bindings: columns.bindings
         });
         const hasComment = has(this.single, "comment");
@@ -107307,7 +107307,7 @@ async function getAllEnums(db2, config3) {
   return await getTableEnums(db2, config3);
 }
 async function getAllTables(db2, schemas) {
-  const sql15 = `
+  const sql16 = `
     SELECT
       TABLE_NAME AS name,
       TABLE_SCHEMA AS 'schema',
@@ -107315,10 +107315,10 @@ async function getAllTables(db2, schemas) {
     FROM INFORMATION_SCHEMA.TABLES
     WHERE TABLE_SCHEMA NOT IN('mysql', 'information_schema', 'performance_schema', 'sys')
     ${schemas.length > 0 ? " AND TABLE_SCHEMA IN (:schemas)" : ""}`;
-  return (await db2.raw(sql15, { schemas }))[0];
+  return (await db2.raw(sql16, { schemas }))[0];
 }
 async function getAllColumns(db2, config3, table, schema) {
-  const sql15 = `
+  const sql16 = `
     SELECT
       column_name as name,
       is_nullable as isNullable,
@@ -107339,7 +107339,7 @@ async function getAllColumns(db2, config3, table, schema) {
       AND c.TABLE_SCHEMA = :schema
       ORDER BY ORDINAL_POSITION
     `;
-  return (await db2.raw(sql15, { table, schema }))[0].map((c) => ({
+  return (await db2.raw(sql16, { table, schema }))[0].map((c) => ({
     name: c.name,
     type: c.fullType == "tinyint(1)" ? c.fullType : c.type,
     // tinyint(1) typically aliased as a boolean
@@ -107383,7 +107383,7 @@ var init_mssql = __esm({
         return await getTableEnums(db2, config3);
       },
       async getAllTables(db2, schemas) {
-        const sql15 = `
+        const sql16 = `
       SELECT
         TABLE_NAME name,
         TABLE_SCHEMA [schema],
@@ -107395,10 +107395,10 @@ var init_mssql = __esm({
           SELECT TOP 1 value FROM fn_listextendedproperty (NULL, 'schema', TABLE_SCHEMA, 'view', TABLE_NAME, null, null) EP WHERE EP.name = 'MS_Description'
         ) EP 
       ${schemas.length > 0 ? `WHERE TABLE_SCHEMA IN (${schemas.map((_) => "?").join(",")})` : ""}`;
-        return await db2.raw(sql15, schemas);
+        return await db2.raw(sql16, schemas);
       },
       async getAllColumns(db2, config3, table, schema) {
-        const sql15 = `
+        const sql16 = `
       SELECT
 				COLUMN_NAME as name,
 				IS_NULLABLE AS isNullable,
@@ -107422,7 +107422,7 @@ var init_mssql = __esm({
         WHERE c.TABLE_NAME = :table
         AND c.TABLE_SCHEMA = :schema
       `;
-        return (await db2.raw(sql15, { table, schema })).map((c) => ({
+        return (await db2.raw(sql16, { table, schema })).map((c) => ({
           name: c.name,
           type: c.type,
           nullable: c.isNullable === "YES",
@@ -109842,7 +109842,7 @@ var init_postgres = __esm({
     init_SharedAdapterTasks();
     postgres_default = {
       async getAllEnums(db2, config3) {
-        const sql15 = `
+        const sql16 = `
     SELECT 
       pg_namespace.nspname AS schema, 
       pg_enum.enumsortorder AS order, 
@@ -109853,7 +109853,7 @@ var init_postgres = __esm({
     JOIN pg_namespace ON pg_namespace.oid = pg_type.typnamespace
     ${config3.schemas.length > 0 ? ` WHERE pg_namespace.nspname = ANY(:schemas)` : ""}
     `;
-        const ungroupedEnums = (await db2.raw(sql15, { schemas: config3.schemas })).rows;
+        const ungroupedEnums = (await db2.raw(sql16, { schemas: config3.schemas })).rows;
         const groupedEnums = uniqBy_default(ungroupedEnums, (e) => `${e.name}.${e.schema}`).map((row) => ({
           name: row.name,
           schema: row.schema,
@@ -109863,7 +109863,7 @@ var init_postgres = __esm({
         return groupedEnums.concat(tableEnums);
       },
       async getAllTables(db2, schemas) {
-        const sql15 = `
+        const sql16 = `
       WITH schemas AS (
         SELECT nspname AS name, oid AS oid
         FROM pg_namespace
@@ -109878,11 +109878,11 @@ var init_postgres = __esm({
         WHERE pg_class.relkind IN ('r', 'p', 'v', 'm')
         AND NOT pg_class.relispartition
     `;
-        const results = await db2.raw(sql15, { schemas });
+        const results = await db2.raw(sql16, { schemas });
         return results.rows;
       },
       async getAllColumns(db2, config3, table, schema) {
-        const sql15 = `
+        const sql16 = `
       SELECT
         typns.nspname typeschema,
         pg_type.typname,
@@ -109913,7 +109913,7 @@ var init_postgres = __esm({
       AND pg_class.relname = :table
       AND pg_namespace.nspname = :schema
     `;
-        return (await db2.raw(sql15, { table, schema })).rows.map((c) => ({
+        return (await db2.raw(sql16, { table, schema })).rows.map((c) => ({
           name: c.name,
           type: c.typname,
           nullable: !c.notnullable,
@@ -109940,12 +109940,12 @@ var init_sqlite = __esm({
         return await getTableEnums(db2, config3);
       },
       async getAllTables(db2, schemas) {
-        const sql15 = `
+        const sql16 = `
       SELECT tbl_name from sqlite_master
       WHERE tbl_name <> 'sqlite_sequence'
       AND type IN ('table', 'view')
     `;
-        return (await db2.raw(sql15)).map((t) => ({ name: t.tbl_name, schema: "main", comment: "" }));
+        return (await db2.raw(sql16)).map((t) => ({ name: t.tbl_name, schema: "main", comment: "" }));
       },
       async getAllColumns(db2, config3, table, schema) {
         return (await db2.raw(`pragma table_info(${table})`)).map((c) => ({
@@ -114986,8 +114986,8 @@ var require_source_node = __commonJS({
     };
     SourceNode.prototype.add = function SourceNode_add(aChunk) {
       if (Array.isArray(aChunk)) {
-        aChunk.forEach(function(chunk) {
-          this.add(chunk);
+        aChunk.forEach(function(chunk2) {
+          this.add(chunk2);
         }, this);
       } else if (aChunk[isSourceNode] || typeof aChunk === "string") {
         if (aChunk) {
@@ -115015,14 +115015,14 @@ var require_source_node = __commonJS({
       return this;
     };
     SourceNode.prototype.walk = function SourceNode_walk(aFn) {
-      var chunk;
+      var chunk2;
       for (var i = 0, len = this.children.length; i < len; i++) {
-        chunk = this.children[i];
-        if (chunk[isSourceNode]) {
-          chunk.walk(aFn);
+        chunk2 = this.children[i];
+        if (chunk2[isSourceNode]) {
+          chunk2.walk(aFn);
         } else {
-          if (chunk !== "") {
-            aFn(chunk, {
+          if (chunk2 !== "") {
+            aFn(chunk2, {
               source: this.source,
               line: this.line,
               column: this.column,
@@ -115074,8 +115074,8 @@ var require_source_node = __commonJS({
     };
     SourceNode.prototype.toString = function SourceNode_toString() {
       var str = "";
-      this.walk(function(chunk) {
-        str += chunk;
+      this.walk(function(chunk2) {
+        str += chunk2;
       });
       return str;
     };
@@ -115091,8 +115091,8 @@ var require_source_node = __commonJS({
       var lastOriginalLine = null;
       var lastOriginalColumn = null;
       var lastOriginalName = null;
-      this.walk(function(chunk, original) {
-        generated.code += chunk;
+      this.walk(function(chunk2, original) {
+        generated.code += chunk2;
         if (original.source !== null && original.line !== null && original.column !== null) {
           if (lastOriginalSource !== original.source || lastOriginalLine !== original.line || lastOriginalColumn !== original.column || lastOriginalName !== original.name) {
             map3.addMapping({
@@ -115123,8 +115123,8 @@ var require_source_node = __commonJS({
           lastOriginalSource = null;
           sourceMappingActive = false;
         }
-        for (var idx = 0, length = chunk.length; idx < length; idx++) {
-          if (chunk.charCodeAt(idx) === NEWLINE_CODE) {
+        for (var idx = 0, length = chunk2.length; idx < length; idx++) {
+          if (chunk2.charCodeAt(idx) === NEWLINE_CODE) {
             generated.line++;
             generated.column = 0;
             if (idx + 1 === length) {
@@ -115211,17 +115211,17 @@ var require_code_gen = __commonJS({
         }
       };
     }
-    function castChunk(chunk, codeGen, loc) {
-      if (_utils.isArray(chunk)) {
+    function castChunk(chunk2, codeGen, loc) {
+      if (_utils.isArray(chunk2)) {
         var ret = [];
-        for (var i = 0, len = chunk.length; i < len; i++) {
-          ret.push(codeGen.wrap(chunk[i], loc));
+        for (var i = 0, len = chunk2.length; i < len; i++) {
+          ret.push(codeGen.wrap(chunk2[i], loc));
         }
         return ret;
-      } else if (typeof chunk === "boolean" || typeof chunk === "number") {
-        return chunk + "";
+      } else if (typeof chunk2 === "boolean" || typeof chunk2 === "number") {
+        return chunk2 + "";
       }
-      return chunk;
+      return chunk2;
     }
     function CodeGen(srcFile) {
       this.srcFile = srcFile;
@@ -115253,13 +115253,13 @@ var require_code_gen = __commonJS({
         var loc = this.currentLocation || { start: {} };
         return new SourceNode(loc.start.line, loc.start.column, this.srcFile);
       },
-      wrap: function wrap(chunk) {
+      wrap: function wrap(chunk2) {
         var loc = arguments.length <= 1 || arguments[1] === void 0 ? this.currentLocation || { start: {} } : arguments[1];
-        if (chunk instanceof SourceNode) {
-          return chunk;
+        if (chunk2 instanceof SourceNode) {
+          return chunk2;
         }
-        chunk = castChunk(chunk, this, loc);
-        return new SourceNode(loc.start.line, loc.start.column, this.srcFile, chunk);
+        chunk2 = castChunk(chunk2, this, loc);
+        return new SourceNode(loc.start.line, loc.start.column, this.srcFile, chunk2);
       },
       functionCall: function functionCall(fn, type, params) {
         params = this.generateList(params);
@@ -128625,7 +128625,7 @@ var init_AxiosTransformStream = __esm({
         }
         return super._read(size);
       }
-      _transform(chunk, encoding, callback) {
+      _transform(chunk2, encoding, callback) {
         const internals = this[kInternals];
         const maxRate = internals.maxRate;
         const readableHighWaterMark = this.readableHighWaterMark;
@@ -128684,7 +128684,7 @@ var init_AxiosTransformStream = __esm({
             } : _callback
           );
         };
-        transformChunk(chunk, function transformNextChunk(err, _chunk) {
+        transformChunk(chunk2, function transformNextChunk(err, _chunk) {
           if (err) {
             return callback(err);
           }
@@ -128823,21 +128823,21 @@ var init_ZlibHeaderTransformStream = __esm({
     "use strict";
     import_stream3 = __toESM(require("stream"), 1);
     ZlibHeaderTransformStream = class extends import_stream3.default.Transform {
-      __transform(chunk, encoding, callback) {
-        this.push(chunk);
+      __transform(chunk2, encoding, callback) {
+        this.push(chunk2);
         callback();
       }
-      _transform(chunk, encoding, callback) {
-        if (chunk.length !== 0) {
+      _transform(chunk2, encoding, callback) {
+        if (chunk2.length !== 0) {
           this._transform = this.__transform;
-          if (chunk[0] !== 120) {
+          if (chunk2[0] !== 120) {
             const header = Buffer.alloc(2);
             header[0] = 120;
             header[1] = 156;
             this.push(header, encoding);
           }
         }
-        this.__transform(chunk, encoding, callback);
+        this.__transform(chunk2, encoding, callback);
       }
     };
     ZlibHeaderTransformStream_default = ZlibHeaderTransformStream;
@@ -129635,9 +129635,9 @@ var init_http = __esm({
           } else {
             const responseBuffer = [];
             let totalResponseBytes = 0;
-            responseStream.on("data", function handleStreamData(chunk) {
-              responseBuffer.push(chunk);
-              totalResponseBytes += chunk.length;
+            responseStream.on("data", function handleStreamData(chunk2) {
+              responseBuffer.push(chunk2);
+              totalResponseBytes += chunk2.length;
               if (config3.maxContentLength > -1 && totalResponseBytes > config3.maxContentLength) {
                 rejected = true;
                 responseStream.destroy();
@@ -130187,23 +130187,23 @@ var streamChunk, readBytes, readStream, trackStream;
 var init_trackStream = __esm({
   "node_modules/axios/lib/helpers/trackStream.js"() {
     "use strict";
-    streamChunk = function* (chunk, chunkSize) {
-      let len = chunk.byteLength;
+    streamChunk = function* (chunk2, chunkSize) {
+      let len = chunk2.byteLength;
       if (!chunkSize || len < chunkSize) {
-        yield chunk;
+        yield chunk2;
         return;
       }
       let pos = 0;
       let end;
       while (pos < len) {
         end = pos + chunkSize;
-        yield chunk.slice(pos, end);
+        yield chunk2.slice(pos, end);
         pos = end;
       }
     };
     readBytes = async function* (iterable, chunkSize) {
-      for await (const chunk of readStream(iterable)) {
-        yield* streamChunk(chunk, chunkSize);
+      for await (const chunk2 of readStream(iterable)) {
+        yield* streamChunk(chunk2, chunkSize);
       }
     };
     readStream = async function* (stream4) {
@@ -150026,7 +150026,7 @@ function createParser(callbacks) {
   const { onEvent = noop3, onError = noop3, onRetry = noop3, onComment } = callbacks;
   let incompleteLine = "", isFirstChunk = true, id, data = "", eventType = "";
   function feed(newChunk) {
-    const chunk = isFirstChunk ? newChunk.replace(/^\xEF\xBB\xBF/, "") : newChunk, [complete, incomplete] = splitLines(`${incompleteLine}${chunk}`);
+    const chunk2 = isFirstChunk ? newChunk.replace(/^\xEF\xBB\xBF/, "") : newChunk, [complete, incomplete] = splitLines(`${incompleteLine}${chunk2}`);
     for (const line of complete)
       parseLine(line);
     incompleteLine = incomplete, isFirstChunk = false;
@@ -150094,19 +150094,19 @@ function createParser(callbacks) {
   }
   return { feed, reset };
 }
-function splitLines(chunk) {
+function splitLines(chunk2) {
   const lines = [];
   let incompleteLine = "", searchIndex = 0;
-  for (; searchIndex < chunk.length; ) {
-    const crIndex = chunk.indexOf("\r", searchIndex), lfIndex = chunk.indexOf(`
+  for (; searchIndex < chunk2.length; ) {
+    const crIndex = chunk2.indexOf("\r", searchIndex), lfIndex = chunk2.indexOf(`
 `, searchIndex);
     let lineEnd = -1;
-    if (crIndex !== -1 && lfIndex !== -1 ? lineEnd = Math.min(crIndex, lfIndex) : crIndex !== -1 ? crIndex === chunk.length - 1 ? lineEnd = -1 : lineEnd = crIndex : lfIndex !== -1 && (lineEnd = lfIndex), lineEnd === -1) {
-      incompleteLine = chunk.slice(searchIndex);
+    if (crIndex !== -1 && lfIndex !== -1 ? lineEnd = Math.min(crIndex, lfIndex) : crIndex !== -1 ? crIndex === chunk2.length - 1 ? lineEnd = -1 : lineEnd = crIndex : lfIndex !== -1 && (lineEnd = lfIndex), lineEnd === -1) {
+      incompleteLine = chunk2.slice(searchIndex);
       break;
     } else {
-      const line = chunk.slice(searchIndex, lineEnd);
-      lines.push(line), searchIndex = lineEnd + 1, chunk[searchIndex - 1] === "\r" && chunk[searchIndex] === `
+      const line = chunk2.slice(searchIndex, lineEnd);
+      lines.push(line), searchIndex = lineEnd + 1, chunk2[searchIndex - 1] === "\r" && chunk2[searchIndex] === `
 ` && searchIndex++;
     }
   }
@@ -150146,8 +150146,8 @@ var init_stream = __esm({
               onComment
             });
           },
-          transform(chunk) {
-            parser.feed(chunk);
+          transform(chunk2) {
+            parser.feed(chunk2);
           }
         });
       }
@@ -150312,9 +150312,9 @@ async function readResponseWithSizeLimit({
   }
   const result = new Uint8Array(totalBytes);
   let offset = 0;
-  for (const chunk of chunks) {
-    result.set(chunk, offset);
-    offset += chunk.length;
+  for (const chunk2 of chunks) {
+    result.set(chunk2, offset);
+    offset += chunk2.length;
   }
   return result;
 }
@@ -153967,50 +153967,50 @@ function extractApprovalRequestIdToToolCallIdMapping(prompt) {
   }
   return mapping;
 }
-function isTextDeltaChunk(chunk) {
-  return chunk.type === "response.output_text.delta";
+function isTextDeltaChunk(chunk2) {
+  return chunk2.type === "response.output_text.delta";
 }
-function isResponseOutputItemDoneChunk(chunk) {
-  return chunk.type === "response.output_item.done";
+function isResponseOutputItemDoneChunk(chunk2) {
+  return chunk2.type === "response.output_item.done";
 }
-function isResponseFinishedChunk(chunk) {
-  return chunk.type === "response.completed" || chunk.type === "response.incomplete";
+function isResponseFinishedChunk(chunk2) {
+  return chunk2.type === "response.completed" || chunk2.type === "response.incomplete";
 }
-function isResponseFailedChunk(chunk) {
-  return chunk.type === "response.failed";
+function isResponseFailedChunk(chunk2) {
+  return chunk2.type === "response.failed";
 }
-function isResponseCreatedChunk(chunk) {
-  return chunk.type === "response.created";
+function isResponseCreatedChunk(chunk2) {
+  return chunk2.type === "response.created";
 }
-function isResponseFunctionCallArgumentsDeltaChunk(chunk) {
-  return chunk.type === "response.function_call_arguments.delta";
+function isResponseFunctionCallArgumentsDeltaChunk(chunk2) {
+  return chunk2.type === "response.function_call_arguments.delta";
 }
-function isResponseCustomToolCallInputDeltaChunk(chunk) {
-  return chunk.type === "response.custom_tool_call_input.delta";
+function isResponseCustomToolCallInputDeltaChunk(chunk2) {
+  return chunk2.type === "response.custom_tool_call_input.delta";
 }
-function isResponseImageGenerationCallPartialImageChunk(chunk) {
-  return chunk.type === "response.image_generation_call.partial_image";
+function isResponseImageGenerationCallPartialImageChunk(chunk2) {
+  return chunk2.type === "response.image_generation_call.partial_image";
 }
-function isResponseCodeInterpreterCallCodeDeltaChunk(chunk) {
-  return chunk.type === "response.code_interpreter_call_code.delta";
+function isResponseCodeInterpreterCallCodeDeltaChunk(chunk2) {
+  return chunk2.type === "response.code_interpreter_call_code.delta";
 }
-function isResponseCodeInterpreterCallCodeDoneChunk(chunk) {
-  return chunk.type === "response.code_interpreter_call_code.done";
+function isResponseCodeInterpreterCallCodeDoneChunk(chunk2) {
+  return chunk2.type === "response.code_interpreter_call_code.done";
 }
-function isResponseApplyPatchCallOperationDiffDeltaChunk(chunk) {
-  return chunk.type === "response.apply_patch_call_operation_diff.delta";
+function isResponseApplyPatchCallOperationDiffDeltaChunk(chunk2) {
+  return chunk2.type === "response.apply_patch_call_operation_diff.delta";
 }
-function isResponseApplyPatchCallOperationDiffDoneChunk(chunk) {
-  return chunk.type === "response.apply_patch_call_operation_diff.done";
+function isResponseApplyPatchCallOperationDiffDoneChunk(chunk2) {
+  return chunk2.type === "response.apply_patch_call_operation_diff.done";
 }
-function isResponseOutputItemAddedChunk(chunk) {
-  return chunk.type === "response.output_item.added";
+function isResponseOutputItemAddedChunk(chunk2) {
+  return chunk2.type === "response.output_item.added";
 }
-function isResponseAnnotationAddedChunk(chunk) {
-  return chunk.type === "response.output_text.annotation.added";
+function isResponseAnnotationAddedChunk(chunk2) {
+  return chunk2.type === "response.output_text.annotation.added";
 }
-function isErrorChunk(chunk) {
-  return chunk.type === "error";
+function isErrorChunk(chunk2) {
+  return chunk2.type === "error";
 }
 function mapWebSearchOutput(action) {
   var _a31;
@@ -154779,17 +154779,17 @@ var init_dist6 = __esm({
               start(controller) {
                 controller.enqueue({ type: "stream-start", warnings });
               },
-              transform(chunk, controller) {
+              transform(chunk2, controller) {
                 var _a31, _b27, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q;
                 if (options.includeRawChunks) {
-                  controller.enqueue({ type: "raw", rawValue: chunk.rawValue });
+                  controller.enqueue({ type: "raw", rawValue: chunk2.rawValue });
                 }
-                if (!chunk.success) {
+                if (!chunk2.success) {
                   finishReason = { unified: "error", raw: void 0 };
-                  controller.enqueue({ type: "error", error: chunk.error });
+                  controller.enqueue({ type: "error", error: chunk2.error });
                   return;
                 }
-                const value = chunk.value;
+                const value = chunk2.value;
                 if ("error" in value) {
                   finishReason = { unified: "error", raw: void 0 };
                   controller.enqueue({ type: "error", error: value.error });
@@ -155220,16 +155220,16 @@ var init_dist6 = __esm({
               start(controller) {
                 controller.enqueue({ type: "stream-start", warnings });
               },
-              transform(chunk, controller) {
+              transform(chunk2, controller) {
                 if (options.includeRawChunks) {
-                  controller.enqueue({ type: "raw", rawValue: chunk.rawValue });
+                  controller.enqueue({ type: "raw", rawValue: chunk2.rawValue });
                 }
-                if (!chunk.success) {
+                if (!chunk2.success) {
                   finishReason = { unified: "error", raw: void 0 };
-                  controller.enqueue({ type: "error", error: chunk.error });
+                  controller.enqueue({ type: "error", error: chunk2.error });
                   return;
                 }
-                const value = chunk.value;
+                const value = chunk2.value;
                 if ("error" in value) {
                   finishReason = { unified: "error", raw: void 0 };
                   controller.enqueue({ type: "error", error: value.error });
@@ -158010,17 +158010,17 @@ var init_dist6 = __esm({
               start(controller) {
                 controller.enqueue({ type: "stream-start", warnings });
               },
-              transform(chunk, controller) {
+              transform(chunk2, controller) {
                 var _a31, _b27, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _A, _B, _C, _D, _E, _F, _G, _H, _I, _J, _K, _L;
                 if (options.includeRawChunks) {
-                  controller.enqueue({ type: "raw", rawValue: chunk.rawValue });
+                  controller.enqueue({ type: "raw", rawValue: chunk2.rawValue });
                 }
-                if (!chunk.success) {
+                if (!chunk2.success) {
                   finishReason = { unified: "error", raw: void 0 };
-                  controller.enqueue({ type: "error", error: chunk.error });
+                  controller.enqueue({ type: "error", error: chunk2.error });
                   return;
                 }
-                const value = chunk.value;
+                const value = chunk2.value;
                 if (isResponseOutputItemAddedChunk(value)) {
                   if (value.item.type === "function_call") {
                     ongoingToolCalls[value.output_index] = {
@@ -159741,17 +159741,17 @@ var init_dist7 = __esm({
               start(controller) {
                 controller.enqueue({ type: "stream-start", warnings });
               },
-              transform(chunk, controller) {
+              transform(chunk2, controller) {
                 var _a31, _b27, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
                 if (options.includeRawChunks) {
-                  controller.enqueue({ type: "raw", rawValue: chunk.rawValue });
+                  controller.enqueue({ type: "raw", rawValue: chunk2.rawValue });
                 }
-                if (!chunk.success) {
+                if (!chunk2.success) {
                   finishReason = { unified: "error", raw: void 0 };
-                  controller.enqueue({ type: "error", error: chunk.error });
+                  controller.enqueue({ type: "error", error: chunk2.error });
                   return;
                 }
-                const value = chunk.value;
+                const value = chunk2.value;
                 if ("error" in value) {
                   finishReason = { unified: "error", raw: void 0 };
                   controller.enqueue({ type: "error", error: value.error.message });
@@ -175134,17 +175134,17 @@ var init_dist11 = __esm({
         return {
           stream: response.pipeThrough(
             new TransformStream({
-              transform(chunk, controller) {
+              transform(chunk2, controller) {
                 var _a37, _b27, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o;
                 if (options.includeRawChunks) {
-                  controller.enqueue({ type: "raw", rawValue: chunk.rawValue });
+                  controller.enqueue({ type: "raw", rawValue: chunk2.rawValue });
                 }
-                if (chunk.success == false) {
+                if (chunk2.success == false) {
                   finishReason = "error";
-                  controller.enqueue({ type: "error", error: chunk.error });
+                  controller.enqueue({ type: "error", error: chunk2.error });
                   return;
                 }
-                const value = chunk.value;
+                const value = chunk2.value;
                 if ("error" in value) {
                   finishReason = "error";
                   controller.enqueue({ type: "error", error: value.error });
@@ -196208,7 +196208,7 @@ var require_dist7 = __commonJS({
       const { onEvent = noop4, onError = noop4, onRetry = noop4, onComment } = callbacks;
       let incompleteLine = "", isFirstChunk = true, id, data = "", eventType = "";
       function feed(newChunk) {
-        const chunk = isFirstChunk ? newChunk.replace(/^\xEF\xBB\xBF/, "") : newChunk, [complete, incomplete] = splitLines2(`${incompleteLine}${chunk}`);
+        const chunk2 = isFirstChunk ? newChunk.replace(/^\xEF\xBB\xBF/, "") : newChunk, [complete, incomplete] = splitLines2(`${incompleteLine}${chunk2}`);
         for (const line of complete)
           parseLine(line);
         incompleteLine = incomplete, isFirstChunk = false;
@@ -196276,19 +196276,19 @@ var require_dist7 = __commonJS({
       }
       return { feed, reset };
     }
-    function splitLines2(chunk) {
+    function splitLines2(chunk2) {
       const lines = [];
       let incompleteLine = "", searchIndex = 0;
-      for (; searchIndex < chunk.length; ) {
-        const crIndex = chunk.indexOf("\r", searchIndex), lfIndex = chunk.indexOf(`
+      for (; searchIndex < chunk2.length; ) {
+        const crIndex = chunk2.indexOf("\r", searchIndex), lfIndex = chunk2.indexOf(`
 `, searchIndex);
         let lineEnd = -1;
-        if (crIndex !== -1 && lfIndex !== -1 ? lineEnd = Math.min(crIndex, lfIndex) : crIndex !== -1 ? crIndex === chunk.length - 1 ? lineEnd = -1 : lineEnd = crIndex : lfIndex !== -1 && (lineEnd = lfIndex), lineEnd === -1) {
-          incompleteLine = chunk.slice(searchIndex);
+        if (crIndex !== -1 && lfIndex !== -1 ? lineEnd = Math.min(crIndex, lfIndex) : crIndex !== -1 ? crIndex === chunk2.length - 1 ? lineEnd = -1 : lineEnd = crIndex : lfIndex !== -1 && (lineEnd = lfIndex), lineEnd === -1) {
+          incompleteLine = chunk2.slice(searchIndex);
           break;
         } else {
-          const line = chunk.slice(searchIndex, lineEnd);
-          lines.push(line), searchIndex = lineEnd + 1, chunk[searchIndex - 1] === "\r" && chunk[searchIndex] === `
+          const line = chunk2.slice(searchIndex, lineEnd);
+          lines.push(line), searchIndex = lineEnd + 1, chunk2[searchIndex - 1] === "\r" && chunk2[searchIndex] === `
 ` && searchIndex++;
         }
       }
@@ -196321,8 +196321,8 @@ var require_stream7 = __commonJS({
               onComment
             });
           },
-          transform(chunk) {
-            parser.feed(chunk);
+          transform(chunk2) {
+            parser.feed(chunk2);
           }
         });
       }
@@ -196691,9 +196691,9 @@ var require_dist8 = __commonJS({
       }
       const result = new Uint8Array(totalBytes);
       let offset = 0;
-      for (const chunk of chunks) {
-        result.set(chunk, offset);
-        offset += chunk.length;
+      for (const chunk2 of chunks) {
+        result.set(chunk2, offset);
+        offset += chunk2.length;
       }
       return result;
     }
@@ -199212,13 +199212,13 @@ var require_dist9 = __commonJS({
       };
     }
     var import_provider_utils210 = require_dist8();
-    var import_zod162 = require_zod();
-    var qwenErrorDataSchema = import_zod162.z.object({
-      object: import_zod162.z.literal("error"),
-      message: import_zod162.z.string(),
-      type: import_zod162.z.string(),
-      param: import_zod162.z.string().nullable(),
-      code: import_zod162.z.string().nullable()
+    var import_zod163 = require_zod();
+    var qwenErrorDataSchema = import_zod163.z.object({
+      object: import_zod163.z.literal("error"),
+      message: import_zod163.z.string(),
+      type: import_zod163.z.string(),
+      param: import_zod163.z.string().nullable(),
+      code: import_zod163.z.string().nullable()
     });
     var qwenFailedResponseHandler = (0, import_provider_utils210.createJsonErrorResponseHandler)({
       errorSchema: qwenErrorDataSchema,
@@ -199596,14 +199596,14 @@ var require_dist9 = __commonJS({
         return {
           stream: response.pipeThrough(
             new TransformStream({
-              transform(chunk, controller) {
+              transform(chunk2, controller) {
                 var _a211, _b27, _c, _d, _e, _f;
-                if (!chunk.success) {
-                  controller.enqueue({ type: "error", error: chunk.error });
+                if (!chunk2.success) {
+                  controller.enqueue({ type: "error", error: chunk2.error });
                   return;
                 }
-                const value = chunk.value;
-                metadataExtractor == null ? void 0 : metadataExtractor.processChunk(chunk.rawValue);
+                const value = chunk2.value;
+                metadataExtractor == null ? void 0 : metadataExtractor.processChunk(chunk2.rawValue);
                 if ((value == null ? void 0 : value.object) === "error") {
                   const message = value == null ? void 0 : value.message;
                   const isQwenListIndexOutOfRange = typeof message === "string" && message.includes("list index out of range") && (message.includes("InternalServerError") || message.toLowerCase().includes("internal server error") || message.includes("500"));
@@ -200203,12 +200203,12 @@ ${user}:`]
         return {
           stream: response.pipeThrough(
             new TransformStream({
-              transform(chunk, controller) {
-                if (!chunk.success) {
-                  controller.enqueue({ type: "error", error: chunk.error });
+              transform(chunk2, controller) {
+                if (!chunk2.success) {
+                  controller.enqueue({ type: "error", error: chunk2.error });
                   return;
                 }
-                const value = chunk.value;
+                const value = chunk2.value;
                 if ((value == null ? void 0 : value.object) === "error") {
                   controller.enqueue({ type: "error", error: value.message });
                   return;
@@ -201292,38 +201292,38 @@ function extractSources({
     return void 0;
   }
   const sources = [];
-  for (const chunk of groundingMetadata.groundingChunks) {
-    if (chunk.web != null) {
+  for (const chunk2 of groundingMetadata.groundingChunks) {
+    if (chunk2.web != null) {
       sources.push({
         type: "source",
         sourceType: "url",
         id: generateId32(),
-        url: chunk.web.uri,
-        title: (_a31 = chunk.web.title) != null ? _a31 : void 0
+        url: chunk2.web.uri,
+        title: (_a31 = chunk2.web.title) != null ? _a31 : void 0
       });
-    } else if (chunk.image != null) {
+    } else if (chunk2.image != null) {
       sources.push({
         type: "source",
         sourceType: "url",
         id: generateId32(),
         // Google requires attribution to the source URI, not the actual image URI.
         // TODO: add another type in v7 to allow both the image and source URL to be included separately
-        url: chunk.image.sourceUri,
-        title: (_b27 = chunk.image.title) != null ? _b27 : void 0
+        url: chunk2.image.sourceUri,
+        title: (_b27 = chunk2.image.title) != null ? _b27 : void 0
       });
-    } else if (chunk.retrievedContext != null) {
-      const uri = chunk.retrievedContext.uri;
-      const fileSearchStore = chunk.retrievedContext.fileSearchStore;
+    } else if (chunk2.retrievedContext != null) {
+      const uri = chunk2.retrievedContext.uri;
+      const fileSearchStore = chunk2.retrievedContext.fileSearchStore;
       if (uri && (uri.startsWith("http://") || uri.startsWith("https://"))) {
         sources.push({
           type: "source",
           sourceType: "url",
           id: generateId32(),
           url: uri,
-          title: (_c = chunk.retrievedContext.title) != null ? _c : void 0
+          title: (_c = chunk2.retrievedContext.title) != null ? _c : void 0
         });
       } else if (uri) {
-        const title = (_d = chunk.retrievedContext.title) != null ? _d : "Unknown Document";
+        const title = (_d = chunk2.retrievedContext.title) != null ? _d : "Unknown Document";
         let mediaType = "application/octet-stream";
         let filename = void 0;
         if (uri.endsWith(".pdf")) {
@@ -201353,7 +201353,7 @@ function extractSources({
           filename
         });
       } else if (fileSearchStore) {
-        const title = (_e = chunk.retrievedContext.title) != null ? _e : "Unknown Document";
+        const title = (_e = chunk2.retrievedContext.title) != null ? _e : "Unknown Document";
         sources.push({
           type: "source",
           sourceType: "document",
@@ -201363,14 +201363,14 @@ function extractSources({
           filename: fileSearchStore.split("/").pop()
         });
       }
-    } else if (chunk.maps != null) {
-      if (chunk.maps.uri) {
+    } else if (chunk2.maps != null) {
+      if (chunk2.maps.uri) {
         sources.push({
           type: "source",
           sourceType: "url",
           id: generateId32(),
-          url: chunk.maps.uri,
-          title: (_f = chunk.maps.title) != null ? _f : void 0
+          url: chunk2.maps.uri,
+          title: (_f = chunk2.maps.title) != null ? _f : void 0
         });
       }
     }
@@ -202113,16 +202113,16 @@ var init_dist12 = __esm({
               start(controller) {
                 controller.enqueue({ type: "stream-start", warnings });
               },
-              transform(chunk, controller) {
+              transform(chunk2, controller) {
                 var _a31, _b27, _c, _d, _e, _f, _g;
                 if (options.includeRawChunks) {
-                  controller.enqueue({ type: "raw", rawValue: chunk.rawValue });
+                  controller.enqueue({ type: "raw", rawValue: chunk2.rawValue });
                 }
-                if (!chunk.success) {
-                  controller.enqueue({ type: "error", error: chunk.error });
+                if (!chunk2.success) {
+                  controller.enqueue({ type: "error", error: chunk2.error });
                   return;
                 }
-                const value = chunk.value;
+                const value = chunk2.value;
                 const usageMetadata = value.usageMetadata;
                 if (usageMetadata != null) {
                   usage = usageMetadata;
@@ -207017,16 +207017,16 @@ var init_dist13 = __esm({
             start(controller) {
               controller.enqueue({ type: "stream-start", warnings });
             },
-            transform(chunk, controller) {
+            transform(chunk2, controller) {
               var _a211, _b28, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
               if (options.includeRawChunks) {
-                controller.enqueue({ type: "raw", rawValue: chunk.rawValue });
+                controller.enqueue({ type: "raw", rawValue: chunk2.rawValue });
               }
-              if (!chunk.success) {
-                controller.enqueue({ type: "error", error: chunk.error });
+              if (!chunk2.success) {
+                controller.enqueue({ type: "error", error: chunk2.error });
                 return;
               }
-              const value = chunk.value;
+              const value = chunk2.value;
               switch (value.type) {
                 case "ping": {
                   return;
@@ -209004,26 +209004,26 @@ var init_dist14 = __esm({
               start(controller) {
                 controller.enqueue({ type: "stream-start", warnings });
               },
-              transform(chunk, controller) {
+              transform(chunk2, controller) {
                 var _a211, _b27, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r;
                 if (options.includeRawChunks) {
-                  controller.enqueue({ type: "raw", rawValue: chunk.rawValue });
+                  controller.enqueue({ type: "raw", rawValue: chunk2.rawValue });
                 }
-                if (!chunk.success) {
+                if (!chunk2.success) {
                   finishReason = { unified: "error", raw: void 0 };
-                  controller.enqueue({ type: "error", error: chunk.error });
+                  controller.enqueue({ type: "error", error: chunk2.error });
                   return;
                 }
-                metadataExtractor == null ? void 0 : metadataExtractor.processChunk(chunk.rawValue);
-                if ("error" in chunk.value) {
+                metadataExtractor == null ? void 0 : metadataExtractor.processChunk(chunk2.rawValue);
+                if ("error" in chunk2.value) {
                   finishReason = { unified: "error", raw: void 0 };
                   controller.enqueue({
                     type: "error",
-                    error: chunk.value.error.message
+                    error: chunk2.value.error.message
                   });
                   return;
                 }
-                const value = chunk.value;
+                const value = chunk2.value;
                 if (isFirstChunk) {
                   isFirstChunk = false;
                   controller.enqueue({
@@ -209503,17 +209503,17 @@ var init_dist14 = __esm({
               start(controller) {
                 controller.enqueue({ type: "stream-start", warnings });
               },
-              transform(chunk, controller) {
+              transform(chunk2, controller) {
                 var _a31;
                 if (options.includeRawChunks) {
-                  controller.enqueue({ type: "raw", rawValue: chunk.rawValue });
+                  controller.enqueue({ type: "raw", rawValue: chunk2.rawValue });
                 }
-                if (!chunk.success) {
+                if (!chunk2.success) {
                   finishReason = { unified: "error", raw: void 0 };
-                  controller.enqueue({ type: "error", error: chunk.error });
+                  controller.enqueue({ type: "error", error: chunk2.error });
                   return;
                 }
-                const value = chunk.value;
+                const value = chunk2.value;
                 if ("error" in value) {
                   finishReason = { unified: "error", raw: void 0 };
                   controller.enqueue({ type: "error", error: value.error });
@@ -210866,15 +210866,15 @@ var init_dist15 = __esm({
               start(controller) {
                 controller.enqueue({ type: "stream-start", warnings });
               },
-              transform(chunk, controller) {
+              transform(chunk2, controller) {
                 if (options.includeRawChunks) {
-                  controller.enqueue({ type: "raw", rawValue: chunk.rawValue });
+                  controller.enqueue({ type: "raw", rawValue: chunk2.rawValue });
                 }
-                if (!chunk.success) {
-                  controller.enqueue({ type: "error", error: chunk.error });
+                if (!chunk2.success) {
+                  controller.enqueue({ type: "error", error: chunk2.error });
                   return;
                 }
-                const value = chunk.value;
+                const value = chunk2.value;
                 if (isFirstChunk) {
                   controller.enqueue({
                     type: "response-metadata",
@@ -212126,16 +212126,16 @@ var init_dist15 = __esm({
               start(controller) {
                 controller.enqueue({ type: "stream-start", warnings });
               },
-              transform(chunk, controller) {
+              transform(chunk2, controller) {
                 var _a211, _b27, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
                 if (options.includeRawChunks) {
-                  controller.enqueue({ type: "raw", rawValue: chunk.rawValue });
+                  controller.enqueue({ type: "raw", rawValue: chunk2.rawValue });
                 }
-                if (!chunk.success) {
-                  controller.enqueue({ type: "error", error: chunk.error });
+                if (!chunk2.success) {
+                  controller.enqueue({ type: "error", error: chunk2.error });
                   return;
                 }
-                const event = chunk.value;
+                const event = chunk2.value;
                 if (event.type === "response.created" || event.type === "response.in_progress") {
                   if (isFirstChunk) {
                     controller.enqueue({
@@ -218020,16 +218020,16 @@ var init_internal = __esm({
             start(controller) {
               controller.enqueue({ type: "stream-start", warnings });
             },
-            transform(chunk, controller) {
+            transform(chunk2, controller) {
               var _a211, _b28, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
               if (options.includeRawChunks) {
-                controller.enqueue({ type: "raw", rawValue: chunk.rawValue });
+                controller.enqueue({ type: "raw", rawValue: chunk2.rawValue });
               }
-              if (!chunk.success) {
-                controller.enqueue({ type: "error", error: chunk.error });
+              if (!chunk2.success) {
+                controller.enqueue({ type: "error", error: chunk2.error });
                 return;
               }
-              const value = chunk.value;
+              const value = chunk2.value;
               switch (value.type) {
                 case "ping": {
                   return;
@@ -221534,25 +221534,25 @@ var init_dist20 = __esm({
               start(controller) {
                 controller.enqueue({ type: "stream-start", warnings });
               },
-              transform(chunk, controller) {
+              transform(chunk2, controller) {
                 if (options.includeRawChunks) {
-                  controller.enqueue({ type: "raw", rawValue: chunk.rawValue });
+                  controller.enqueue({ type: "raw", rawValue: chunk2.rawValue });
                 }
-                if (!chunk.success) {
+                if (!chunk2.success) {
                   finishReason = { unified: "error", raw: void 0 };
-                  controller.enqueue({ type: "error", error: chunk.error });
+                  controller.enqueue({ type: "error", error: chunk2.error });
                   return;
                 }
-                metadataExtractor?.processChunk(chunk.rawValue);
-                if ("error" in chunk.value) {
+                metadataExtractor?.processChunk(chunk2.rawValue);
+                if ("error" in chunk2.value) {
                   finishReason = { unified: "error", raw: void 0 };
                   controller.enqueue({
                     type: "error",
-                    error: chunk.value.error.message
+                    error: chunk2.value.error.message
                   });
                   return;
                 }
-                const value = chunk.value;
+                const value = chunk2.value;
                 if (isFirstChunk) {
                   isFirstChunk = false;
                   controller.enqueue({
@@ -227510,9 +227510,9 @@ Run 'npx vercel link' to link your project, then 'vc env pull' to fetch the toke
                     controller.enqueue({ type: "stream-start", warnings });
                   }
                 },
-                transform(chunk, controller) {
-                  if (chunk.success) {
-                    const streamPart = chunk.value;
+                transform(chunk2, controller) {
+                  if (chunk2.success) {
+                    const streamPart = chunk2.value;
                     if (streamPart.type === "raw" && !options.includeRawChunks) {
                       return;
                     }
@@ -227522,7 +227522,7 @@ Run 'npx vercel link' to link your project, then 'vc env pull' to fetch the toke
                     controller.enqueue(streamPart);
                   } else {
                     controller.error(
-                      chunk.error
+                      chunk2.error
                     );
                   }
                 }
@@ -229167,17 +229167,17 @@ function asLanguageModelV3(model) {
 function convertV2StreamToV3(stream4) {
   return stream4.pipeThrough(
     new TransformStream({
-      transform(chunk, controller) {
-        switch (chunk.type) {
+      transform(chunk2, controller) {
+        switch (chunk2.type) {
           case "finish":
             controller.enqueue({
-              ...chunk,
-              finishReason: convertV2FinishReasonToV3(chunk.finishReason),
-              usage: convertV2UsageToV3(chunk.usage)
+              ...chunk2,
+              finishReason: convertV2FinishReasonToV3(chunk2.finishReason),
+              usage: convertV2UsageToV3(chunk2.usage)
             });
             break;
           default:
-            controller.enqueue(chunk);
+            controller.enqueue(chunk2);
             break;
         }
       }
@@ -232122,8 +232122,8 @@ function getResponseUIMessageId({
   const lastMessage = originalMessages[originalMessages.length - 1];
   return (lastMessage == null ? void 0 : lastMessage.role) === "assistant" ? lastMessage.id : typeof responseMessageId === "function" ? responseMessageId() : responseMessageId;
 }
-function isDataUIMessageChunk(chunk) {
-  return chunk.type.startsWith("data-");
+function isDataUIMessageChunk(chunk2) {
+  return chunk2.type.startsWith("data-");
 }
 function isStaticToolUIPart(part) {
   return part.type.startsWith("tool-");
@@ -232164,7 +232164,7 @@ function processUIMessageStream({
 }) {
   return stream4.pipeThrough(
     new TransformStream({
-      async transform(chunk, controller) {
+      async transform(chunk2, controller) {
         await runUpdateMessageJob(async ({ state, write }) => {
           var _a212, _b27, _c, _d;
           function getToolInvocation(toolCallId) {
@@ -232286,45 +232286,45 @@ function processUIMessageStream({
               state.message.metadata = mergedMetadata;
             }
           }
-          switch (chunk.type) {
+          switch (chunk2.type) {
             case "text-start": {
               const textPart = {
                 type: "text",
                 text: "",
-                providerMetadata: chunk.providerMetadata,
+                providerMetadata: chunk2.providerMetadata,
                 state: "streaming"
               };
-              state.activeTextParts[chunk.id] = textPart;
+              state.activeTextParts[chunk2.id] = textPart;
               state.message.parts.push(textPart);
               write();
               break;
             }
             case "text-delta": {
-              const textPart = state.activeTextParts[chunk.id];
+              const textPart = state.activeTextParts[chunk2.id];
               if (textPart == null) {
                 throw new UIMessageStreamError({
                   chunkType: "text-delta",
-                  chunkId: chunk.id,
-                  message: `Received text-delta for missing text part with ID "${chunk.id}". Ensure a "text-start" chunk is sent before any "text-delta" chunks.`
+                  chunkId: chunk2.id,
+                  message: `Received text-delta for missing text part with ID "${chunk2.id}". Ensure a "text-start" chunk is sent before any "text-delta" chunks.`
                 });
               }
-              textPart.text += chunk.delta;
-              textPart.providerMetadata = (_a212 = chunk.providerMetadata) != null ? _a212 : textPart.providerMetadata;
+              textPart.text += chunk2.delta;
+              textPart.providerMetadata = (_a212 = chunk2.providerMetadata) != null ? _a212 : textPart.providerMetadata;
               write();
               break;
             }
             case "text-end": {
-              const textPart = state.activeTextParts[chunk.id];
+              const textPart = state.activeTextParts[chunk2.id];
               if (textPart == null) {
                 throw new UIMessageStreamError({
                   chunkType: "text-end",
-                  chunkId: chunk.id,
-                  message: `Received text-end for missing text part with ID "${chunk.id}". Ensure a "text-start" chunk is sent before any "text-end" chunks.`
+                  chunkId: chunk2.id,
+                  message: `Received text-end for missing text part with ID "${chunk2.id}". Ensure a "text-start" chunk is sent before any "text-end" chunks.`
                 });
               }
               textPart.state = "done";
-              textPart.providerMetadata = (_b27 = chunk.providerMetadata) != null ? _b27 : textPart.providerMetadata;
-              delete state.activeTextParts[chunk.id];
+              textPart.providerMetadata = (_b27 = chunk2.providerMetadata) != null ? _b27 : textPart.providerMetadata;
+              delete state.activeTextParts[chunk2.id];
               write();
               break;
             }
@@ -232332,49 +232332,49 @@ function processUIMessageStream({
               const reasoningPart = {
                 type: "reasoning",
                 text: "",
-                providerMetadata: chunk.providerMetadata,
+                providerMetadata: chunk2.providerMetadata,
                 state: "streaming"
               };
-              state.activeReasoningParts[chunk.id] = reasoningPart;
+              state.activeReasoningParts[chunk2.id] = reasoningPart;
               state.message.parts.push(reasoningPart);
               write();
               break;
             }
             case "reasoning-delta": {
-              const reasoningPart = state.activeReasoningParts[chunk.id];
+              const reasoningPart = state.activeReasoningParts[chunk2.id];
               if (reasoningPart == null) {
                 throw new UIMessageStreamError({
                   chunkType: "reasoning-delta",
-                  chunkId: chunk.id,
-                  message: `Received reasoning-delta for missing reasoning part with ID "${chunk.id}". Ensure a "reasoning-start" chunk is sent before any "reasoning-delta" chunks.`
+                  chunkId: chunk2.id,
+                  message: `Received reasoning-delta for missing reasoning part with ID "${chunk2.id}". Ensure a "reasoning-start" chunk is sent before any "reasoning-delta" chunks.`
                 });
               }
-              reasoningPart.text += chunk.delta;
-              reasoningPart.providerMetadata = (_c = chunk.providerMetadata) != null ? _c : reasoningPart.providerMetadata;
+              reasoningPart.text += chunk2.delta;
+              reasoningPart.providerMetadata = (_c = chunk2.providerMetadata) != null ? _c : reasoningPart.providerMetadata;
               write();
               break;
             }
             case "reasoning-end": {
-              const reasoningPart = state.activeReasoningParts[chunk.id];
+              const reasoningPart = state.activeReasoningParts[chunk2.id];
               if (reasoningPart == null) {
                 throw new UIMessageStreamError({
                   chunkType: "reasoning-end",
-                  chunkId: chunk.id,
-                  message: `Received reasoning-end for missing reasoning part with ID "${chunk.id}". Ensure a "reasoning-start" chunk is sent before any "reasoning-end" chunks.`
+                  chunkId: chunk2.id,
+                  message: `Received reasoning-end for missing reasoning part with ID "${chunk2.id}". Ensure a "reasoning-start" chunk is sent before any "reasoning-end" chunks.`
                 });
               }
-              reasoningPart.providerMetadata = (_d = chunk.providerMetadata) != null ? _d : reasoningPart.providerMetadata;
+              reasoningPart.providerMetadata = (_d = chunk2.providerMetadata) != null ? _d : reasoningPart.providerMetadata;
               reasoningPart.state = "done";
-              delete state.activeReasoningParts[chunk.id];
+              delete state.activeReasoningParts[chunk2.id];
               write();
               break;
             }
             case "file": {
               state.message.parts.push({
                 type: "file",
-                mediaType: chunk.mediaType,
-                url: chunk.url,
-                ...chunk.providerMetadata != null ? { providerMetadata: chunk.providerMetadata } : {}
+                mediaType: chunk2.mediaType,
+                url: chunk2.url,
+                ...chunk2.providerMetadata != null ? { providerMetadata: chunk2.providerMetadata } : {}
               });
               write();
               break;
@@ -232382,10 +232382,10 @@ function processUIMessageStream({
             case "source-url": {
               state.message.parts.push({
                 type: "source-url",
-                sourceId: chunk.sourceId,
-                url: chunk.url,
-                title: chunk.title,
-                providerMetadata: chunk.providerMetadata
+                sourceId: chunk2.sourceId,
+                url: chunk2.url,
+                title: chunk2.title,
+                providerMetadata: chunk2.providerMetadata
               });
               write();
               break;
@@ -232393,64 +232393,64 @@ function processUIMessageStream({
             case "source-document": {
               state.message.parts.push({
                 type: "source-document",
-                sourceId: chunk.sourceId,
-                mediaType: chunk.mediaType,
-                title: chunk.title,
-                filename: chunk.filename,
-                providerMetadata: chunk.providerMetadata
+                sourceId: chunk2.sourceId,
+                mediaType: chunk2.mediaType,
+                title: chunk2.title,
+                filename: chunk2.filename,
+                providerMetadata: chunk2.providerMetadata
               });
               write();
               break;
             }
             case "tool-input-start": {
               const toolInvocations = state.message.parts.filter(isStaticToolUIPart);
-              state.partialToolCalls[chunk.toolCallId] = {
+              state.partialToolCalls[chunk2.toolCallId] = {
                 text: "",
-                toolName: chunk.toolName,
+                toolName: chunk2.toolName,
                 index: toolInvocations.length,
-                dynamic: chunk.dynamic,
-                title: chunk.title
+                dynamic: chunk2.dynamic,
+                title: chunk2.title
               };
-              if (chunk.dynamic) {
+              if (chunk2.dynamic) {
                 updateDynamicToolPart({
-                  toolCallId: chunk.toolCallId,
-                  toolName: chunk.toolName,
+                  toolCallId: chunk2.toolCallId,
+                  toolName: chunk2.toolName,
                   state: "input-streaming",
                   input: void 0,
-                  providerExecuted: chunk.providerExecuted,
-                  title: chunk.title,
-                  providerMetadata: chunk.providerMetadata
+                  providerExecuted: chunk2.providerExecuted,
+                  title: chunk2.title,
+                  providerMetadata: chunk2.providerMetadata
                 });
               } else {
                 updateToolPart({
-                  toolCallId: chunk.toolCallId,
-                  toolName: chunk.toolName,
+                  toolCallId: chunk2.toolCallId,
+                  toolName: chunk2.toolName,
                   state: "input-streaming",
                   input: void 0,
-                  providerExecuted: chunk.providerExecuted,
-                  title: chunk.title,
-                  providerMetadata: chunk.providerMetadata
+                  providerExecuted: chunk2.providerExecuted,
+                  title: chunk2.title,
+                  providerMetadata: chunk2.providerMetadata
                 });
               }
               write();
               break;
             }
             case "tool-input-delta": {
-              const partialToolCall = state.partialToolCalls[chunk.toolCallId];
+              const partialToolCall = state.partialToolCalls[chunk2.toolCallId];
               if (partialToolCall == null) {
                 throw new UIMessageStreamError({
                   chunkType: "tool-input-delta",
-                  chunkId: chunk.toolCallId,
-                  message: `Received tool-input-delta for missing tool call with ID "${chunk.toolCallId}". Ensure a "tool-input-start" chunk is sent before any "tool-input-delta" chunks.`
+                  chunkId: chunk2.toolCallId,
+                  message: `Received tool-input-delta for missing tool call with ID "${chunk2.toolCallId}". Ensure a "tool-input-start" chunk is sent before any "tool-input-delta" chunks.`
                 });
               }
-              partialToolCall.text += chunk.inputTextDelta;
+              partialToolCall.text += chunk2.inputTextDelta;
               const { value: partialArgs } = await parsePartialJson(
                 partialToolCall.text
               );
               if (partialToolCall.dynamic) {
                 updateDynamicToolPart({
-                  toolCallId: chunk.toolCallId,
+                  toolCallId: chunk2.toolCallId,
                   toolName: partialToolCall.toolName,
                   state: "input-streaming",
                   input: partialArgs,
@@ -232458,7 +232458,7 @@ function processUIMessageStream({
                 });
               } else {
                 updateToolPart({
-                  toolCallId: chunk.toolCallId,
+                  toolCallId: chunk2.toolCallId,
                   toolName: partialToolCall.toolName,
                   state: "input-streaming",
                   input: partialArgs,
@@ -232469,100 +232469,100 @@ function processUIMessageStream({
               break;
             }
             case "tool-input-available": {
-              if (chunk.dynamic) {
+              if (chunk2.dynamic) {
                 updateDynamicToolPart({
-                  toolCallId: chunk.toolCallId,
-                  toolName: chunk.toolName,
+                  toolCallId: chunk2.toolCallId,
+                  toolName: chunk2.toolName,
                   state: "input-available",
-                  input: chunk.input,
-                  providerExecuted: chunk.providerExecuted,
-                  providerMetadata: chunk.providerMetadata,
-                  title: chunk.title
+                  input: chunk2.input,
+                  providerExecuted: chunk2.providerExecuted,
+                  providerMetadata: chunk2.providerMetadata,
+                  title: chunk2.title
                 });
               } else {
                 updateToolPart({
-                  toolCallId: chunk.toolCallId,
-                  toolName: chunk.toolName,
+                  toolCallId: chunk2.toolCallId,
+                  toolName: chunk2.toolName,
                   state: "input-available",
-                  input: chunk.input,
-                  providerExecuted: chunk.providerExecuted,
-                  providerMetadata: chunk.providerMetadata,
-                  title: chunk.title
+                  input: chunk2.input,
+                  providerExecuted: chunk2.providerExecuted,
+                  providerMetadata: chunk2.providerMetadata,
+                  title: chunk2.title
                 });
               }
               write();
-              if (onToolCall && !chunk.providerExecuted) {
+              if (onToolCall && !chunk2.providerExecuted) {
                 await onToolCall({
-                  toolCall: chunk
+                  toolCall: chunk2
                 });
               }
               break;
             }
             case "tool-input-error": {
-              const existingPart = state.message.parts.filter(isToolUIPart).find((p3) => p3.toolCallId === chunk.toolCallId);
-              const isDynamic = existingPart != null ? existingPart.type === "dynamic-tool" : !!chunk.dynamic;
+              const existingPart = state.message.parts.filter(isToolUIPart).find((p3) => p3.toolCallId === chunk2.toolCallId);
+              const isDynamic = existingPart != null ? existingPart.type === "dynamic-tool" : !!chunk2.dynamic;
               if (isDynamic) {
                 updateDynamicToolPart({
-                  toolCallId: chunk.toolCallId,
-                  toolName: chunk.toolName,
+                  toolCallId: chunk2.toolCallId,
+                  toolName: chunk2.toolName,
                   state: "output-error",
-                  input: chunk.input,
-                  errorText: chunk.errorText,
-                  providerExecuted: chunk.providerExecuted,
-                  providerMetadata: chunk.providerMetadata
+                  input: chunk2.input,
+                  errorText: chunk2.errorText,
+                  providerExecuted: chunk2.providerExecuted,
+                  providerMetadata: chunk2.providerMetadata
                 });
               } else {
                 updateToolPart({
-                  toolCallId: chunk.toolCallId,
-                  toolName: chunk.toolName,
+                  toolCallId: chunk2.toolCallId,
+                  toolName: chunk2.toolName,
                   state: "output-error",
                   input: void 0,
-                  rawInput: chunk.input,
-                  errorText: chunk.errorText,
-                  providerExecuted: chunk.providerExecuted,
-                  providerMetadata: chunk.providerMetadata
+                  rawInput: chunk2.input,
+                  errorText: chunk2.errorText,
+                  providerExecuted: chunk2.providerExecuted,
+                  providerMetadata: chunk2.providerMetadata
                 });
               }
               write();
               break;
             }
             case "tool-approval-request": {
-              const toolInvocation = getToolInvocation(chunk.toolCallId);
+              const toolInvocation = getToolInvocation(chunk2.toolCallId);
               toolInvocation.state = "approval-requested";
-              toolInvocation.approval = { id: chunk.approvalId };
+              toolInvocation.approval = { id: chunk2.approvalId };
               write();
               break;
             }
             case "tool-output-denied": {
-              const toolInvocation = getToolInvocation(chunk.toolCallId);
+              const toolInvocation = getToolInvocation(chunk2.toolCallId);
               toolInvocation.state = "output-denied";
               write();
               break;
             }
             case "tool-output-available": {
-              const toolInvocation = getToolInvocation(chunk.toolCallId);
+              const toolInvocation = getToolInvocation(chunk2.toolCallId);
               if (toolInvocation.type === "dynamic-tool") {
                 updateDynamicToolPart({
-                  toolCallId: chunk.toolCallId,
+                  toolCallId: chunk2.toolCallId,
                   toolName: toolInvocation.toolName,
                   state: "output-available",
                   input: toolInvocation.input,
-                  output: chunk.output,
-                  preliminary: chunk.preliminary,
-                  providerExecuted: chunk.providerExecuted,
-                  providerMetadata: chunk.providerMetadata,
+                  output: chunk2.output,
+                  preliminary: chunk2.preliminary,
+                  providerExecuted: chunk2.providerExecuted,
+                  providerMetadata: chunk2.providerMetadata,
                   title: toolInvocation.title
                 });
               } else {
                 updateToolPart({
-                  toolCallId: chunk.toolCallId,
+                  toolCallId: chunk2.toolCallId,
                   toolName: getStaticToolName(toolInvocation),
                   state: "output-available",
                   input: toolInvocation.input,
-                  output: chunk.output,
-                  providerExecuted: chunk.providerExecuted,
-                  preliminary: chunk.preliminary,
-                  providerMetadata: chunk.providerMetadata,
+                  output: chunk2.output,
+                  providerExecuted: chunk2.providerExecuted,
+                  preliminary: chunk2.preliminary,
+                  providerMetadata: chunk2.providerMetadata,
                   title: toolInvocation.title
                 });
               }
@@ -232570,28 +232570,28 @@ function processUIMessageStream({
               break;
             }
             case "tool-output-error": {
-              const toolInvocation = getToolInvocation(chunk.toolCallId);
+              const toolInvocation = getToolInvocation(chunk2.toolCallId);
               if (toolInvocation.type === "dynamic-tool") {
                 updateDynamicToolPart({
-                  toolCallId: chunk.toolCallId,
+                  toolCallId: chunk2.toolCallId,
                   toolName: toolInvocation.toolName,
                   state: "output-error",
                   input: toolInvocation.input,
-                  errorText: chunk.errorText,
-                  providerExecuted: chunk.providerExecuted,
-                  providerMetadata: chunk.providerMetadata,
+                  errorText: chunk2.errorText,
+                  providerExecuted: chunk2.providerExecuted,
+                  providerMetadata: chunk2.providerMetadata,
                   title: toolInvocation.title
                 });
               } else {
                 updateToolPart({
-                  toolCallId: chunk.toolCallId,
+                  toolCallId: chunk2.toolCallId,
                   toolName: getStaticToolName(toolInvocation),
                   state: "output-error",
                   input: toolInvocation.input,
                   rawInput: toolInvocation.rawInput,
-                  errorText: chunk.errorText,
-                  providerExecuted: chunk.providerExecuted,
-                  providerMetadata: chunk.providerMetadata,
+                  errorText: chunk2.errorText,
+                  providerExecuted: chunk2.providerExecuted,
+                  providerMetadata: chunk2.providerMetadata,
                   title: toolInvocation.title
                 });
               }
@@ -232608,54 +232608,54 @@ function processUIMessageStream({
               break;
             }
             case "start": {
-              if (chunk.messageId != null) {
-                state.message.id = chunk.messageId;
+              if (chunk2.messageId != null) {
+                state.message.id = chunk2.messageId;
               }
-              await updateMessageMetadata(chunk.messageMetadata);
-              if (chunk.messageId != null || chunk.messageMetadata != null) {
+              await updateMessageMetadata(chunk2.messageMetadata);
+              if (chunk2.messageId != null || chunk2.messageMetadata != null) {
                 write();
               }
               break;
             }
             case "finish": {
-              if (chunk.finishReason != null) {
-                state.finishReason = chunk.finishReason;
+              if (chunk2.finishReason != null) {
+                state.finishReason = chunk2.finishReason;
               }
-              await updateMessageMetadata(chunk.messageMetadata);
-              if (chunk.messageMetadata != null) {
+              await updateMessageMetadata(chunk2.messageMetadata);
+              if (chunk2.messageMetadata != null) {
                 write();
               }
               break;
             }
             case "message-metadata": {
-              await updateMessageMetadata(chunk.messageMetadata);
-              if (chunk.messageMetadata != null) {
+              await updateMessageMetadata(chunk2.messageMetadata);
+              if (chunk2.messageMetadata != null) {
                 write();
               }
               break;
             }
             case "error": {
-              onError == null ? void 0 : onError(new Error(chunk.errorText));
+              onError == null ? void 0 : onError(new Error(chunk2.errorText));
               break;
             }
             default: {
-              if (isDataUIMessageChunk(chunk)) {
-                if ((dataPartSchemas == null ? void 0 : dataPartSchemas[chunk.type]) != null) {
+              if (isDataUIMessageChunk(chunk2)) {
+                if ((dataPartSchemas == null ? void 0 : dataPartSchemas[chunk2.type]) != null) {
                   const partIdx = state.message.parts.findIndex(
-                    (p3) => "id" in p3 && "data" in p3 && p3.id === chunk.id && p3.type === chunk.type
+                    (p3) => "id" in p3 && "data" in p3 && p3.id === chunk2.id && p3.type === chunk2.type
                   );
                   const actualPartIdx = partIdx >= 0 ? partIdx : state.message.parts.length;
                   await validateTypes({
-                    value: chunk.data,
-                    schema: dataPartSchemas[chunk.type],
+                    value: chunk2.data,
+                    schema: dataPartSchemas[chunk2.type],
                     context: {
                       field: `message.parts[${actualPartIdx}].data`,
-                      entityName: chunk.type,
-                      entityId: chunk.id
+                      entityName: chunk2.type,
+                      entityId: chunk2.id
                     }
                   });
                 }
-                const dataChunk = chunk;
+                const dataChunk = chunk2;
                 if (dataChunk.transient) {
                   onData == null ? void 0 : onData(dataChunk);
                   break;
@@ -232673,7 +232673,7 @@ function processUIMessageStream({
               }
             }
           }
-          controller.enqueue(chunk);
+          controller.enqueue(chunk2);
         });
       }
     })
@@ -232696,17 +232696,17 @@ function handleUIMessageStreamFinish({
   let isAborted2 = false;
   const idInjectedStream = stream4.pipeThrough(
     new TransformStream({
-      transform(chunk, controller) {
-        if (chunk.type === "start") {
-          const startChunk = chunk;
+      transform(chunk2, controller) {
+        if (chunk2.type === "start") {
+          const startChunk = chunk2;
           if (startChunk.messageId == null && messageId != null) {
             startChunk.messageId = messageId;
           }
         }
-        if (chunk.type === "abort") {
+        if (chunk2.type === "abort") {
           isAborted2 = true;
         }
-        controller.enqueue(chunk);
+        controller.enqueue(chunk2);
       }
     })
   );
@@ -232764,11 +232764,11 @@ function handleUIMessageStreamFinish({
     onError
   }).pipeThrough(
     new TransformStream({
-      async transform(chunk, controller) {
-        if (chunk.type === "finish-step") {
+      async transform(chunk2, controller) {
+        if (chunk2.type === "finish-step") {
           await callOnStepFinish();
         }
-        controller.enqueue(chunk);
+        controller.enqueue(chunk2);
       },
       // @ts-expect-error cancel is still new and missing from types https://developer.mozilla.org/en-US/docs/Web/API/TransformStream#browser_compatibility
       async cancel() {
@@ -233009,8 +233009,8 @@ function runToolsTransformation({
     }
   }
   const forwardStream = new TransformStream({
-    async transform(chunk, controller) {
-      const chunkType = chunk.type;
+    async transform(chunk2, controller) {
+      const chunkType = chunk2.type;
       switch (chunkType) {
         case "stream-start":
         case "text-start":
@@ -233026,45 +233026,45 @@ function runToolsTransformation({
         case "response-metadata":
         case "error":
         case "raw": {
-          controller.enqueue(chunk);
+          controller.enqueue(chunk2);
           break;
         }
         case "file": {
           controller.enqueue({
             type: "file",
             file: new DefaultGeneratedFileWithType({
-              data: chunk.data,
-              mediaType: chunk.mediaType
+              data: chunk2.data,
+              mediaType: chunk2.mediaType
             }),
-            ...chunk.providerMetadata != null ? { providerMetadata: chunk.providerMetadata } : {}
+            ...chunk2.providerMetadata != null ? { providerMetadata: chunk2.providerMetadata } : {}
           });
           break;
         }
         case "finish": {
           finishChunk = {
             type: "finish",
-            finishReason: chunk.finishReason.unified,
-            rawFinishReason: chunk.finishReason.raw,
-            usage: asLanguageModelUsage(chunk.usage),
-            providerMetadata: chunk.providerMetadata
+            finishReason: chunk2.finishReason.unified,
+            rawFinishReason: chunk2.finishReason.raw,
+            usage: asLanguageModelUsage(chunk2.usage),
+            providerMetadata: chunk2.providerMetadata
           };
           break;
         }
         case "tool-approval-request": {
-          const toolCall = toolCallsByToolCallId.get(chunk.toolCallId);
+          const toolCall = toolCallsByToolCallId.get(chunk2.toolCallId);
           if (toolCall == null) {
             toolResultsStreamController.enqueue({
               type: "error",
               error: new ToolCallNotFoundForApprovalError({
-                toolCallId: chunk.toolCallId,
-                approvalId: chunk.approvalId
+                toolCallId: chunk2.toolCallId,
+                approvalId: chunk2.approvalId
               })
             });
             break;
           }
           controller.enqueue({
             type: "tool-approval-request",
-            approvalId: chunk.approvalId,
+            approvalId: chunk2.approvalId,
             toolCall
           });
           break;
@@ -233072,7 +233072,7 @@ function runToolsTransformation({
         case "tool-call": {
           try {
             const toolCall = await parseToolCall({
-              toolCall: chunk,
+              toolCall: chunk2,
               tools,
               repairToolCall,
               system,
@@ -233155,28 +233155,28 @@ function runToolsTransformation({
           break;
         }
         case "tool-result": {
-          const toolName = chunk.toolName;
-          if (chunk.isError) {
+          const toolName = chunk2.toolName;
+          if (chunk2.isError) {
             toolResultsStreamController.enqueue({
               type: "tool-error",
-              toolCallId: chunk.toolCallId,
+              toolCallId: chunk2.toolCallId,
               toolName,
-              input: toolInputs.get(chunk.toolCallId),
+              input: toolInputs.get(chunk2.toolCallId),
               providerExecuted: true,
-              error: chunk.result,
-              dynamic: chunk.dynamic,
-              ...chunk.providerMetadata != null ? { providerMetadata: chunk.providerMetadata } : {}
+              error: chunk2.result,
+              dynamic: chunk2.dynamic,
+              ...chunk2.providerMetadata != null ? { providerMetadata: chunk2.providerMetadata } : {}
             });
           } else {
             controller.enqueue({
               type: "tool-result",
-              toolCallId: chunk.toolCallId,
+              toolCallId: chunk2.toolCallId,
               toolName,
-              input: toolInputs.get(chunk.toolCallId),
-              output: chunk.result,
+              input: toolInputs.get(chunk2.toolCallId),
+              output: chunk2.result,
               providerExecuted: true,
-              dynamic: chunk.dynamic,
-              ...chunk.providerMetadata != null ? { providerMetadata: chunk.providerMetadata } : {}
+              dynamic: chunk2.dynamic,
+              ...chunk2.providerMetadata != null ? { providerMetadata: chunk2.providerMetadata } : {}
             });
           }
           break;
@@ -233197,8 +233197,8 @@ function runToolsTransformation({
       return Promise.all([
         generatorStream.pipeThrough(forwardStream).pipeTo(
           new WritableStream({
-            write(chunk) {
-              controller.enqueue(chunk);
+            write(chunk2) {
+              controller.enqueue(chunk2);
             },
             close() {
             }
@@ -233206,8 +233206,8 @@ function runToolsTransformation({
         ),
         toolResultsStream.pipeTo(
           new WritableStream({
-            write(chunk) {
-              controller.enqueue(chunk);
+            write(chunk2) {
+              controller.enqueue(chunk2);
             },
             close() {
               controller.close();
@@ -233332,35 +233332,35 @@ function createOutputTransformStream(output) {
     textChunk = "";
   }
   return new TransformStream({
-    async transform(chunk, controller) {
+    async transform(chunk2, controller) {
       var _a212;
-      if (chunk.type === "finish-step" && textChunk.length > 0) {
+      if (chunk2.type === "finish-step" && textChunk.length > 0) {
         publishTextChunk({ controller });
       }
-      if (chunk.type !== "text-delta" && chunk.type !== "text-start" && chunk.type !== "text-end") {
-        controller.enqueue({ part: chunk, partialOutput: void 0 });
+      if (chunk2.type !== "text-delta" && chunk2.type !== "text-start" && chunk2.type !== "text-end") {
+        controller.enqueue({ part: chunk2, partialOutput: void 0 });
         return;
       }
       if (firstTextChunkId == null) {
-        firstTextChunkId = chunk.id;
-      } else if (chunk.id !== firstTextChunkId) {
-        controller.enqueue({ part: chunk, partialOutput: void 0 });
+        firstTextChunkId = chunk2.id;
+      } else if (chunk2.id !== firstTextChunkId) {
+        controller.enqueue({ part: chunk2, partialOutput: void 0 });
         return;
       }
-      if (chunk.type === "text-start") {
-        controller.enqueue({ part: chunk, partialOutput: void 0 });
+      if (chunk2.type === "text-start") {
+        controller.enqueue({ part: chunk2, partialOutput: void 0 });
         return;
       }
-      if (chunk.type === "text-end") {
+      if (chunk2.type === "text-end") {
         if (textChunk.length > 0) {
           publishTextChunk({ controller });
         }
-        controller.enqueue({ part: chunk, partialOutput: void 0 });
+        controller.enqueue({ part: chunk2, partialOutput: void 0 });
         return;
       }
-      text2 += chunk.text;
-      textChunk += chunk.text;
-      textProviderMetadata = (_a212 = chunk.providerMetadata) != null ? _a212 : textProviderMetadata;
+      text2 += chunk2.text;
+      textChunk += chunk2.text;
+      textProviderMetadata = (_a212 = chunk2.providerMetadata) != null ? _a212 : textProviderMetadata;
       const result = await output.parsePartialOutput({ text: text2 });
       if (result !== void 0) {
         const currentJson = JSON.stringify(result.partial);
@@ -233443,32 +233443,32 @@ function extractReasoningMiddleware({
       return {
         stream: stream4.pipeThrough(
           new TransformStream({
-            transform: (chunk, controller) => {
-              if (chunk.type === "text-start") {
-                delayedTextStart = chunk;
+            transform: (chunk2, controller) => {
+              if (chunk2.type === "text-start") {
+                delayedTextStart = chunk2;
                 return;
               }
-              if (chunk.type === "text-end" && delayedTextStart) {
+              if (chunk2.type === "text-end" && delayedTextStart) {
                 controller.enqueue(delayedTextStart);
                 delayedTextStart = void 0;
               }
-              if (chunk.type !== "text-delta") {
-                controller.enqueue(chunk);
+              if (chunk2.type !== "text-delta") {
+                controller.enqueue(chunk2);
                 return;
               }
-              if (reasoningExtractions[chunk.id] == null) {
-                reasoningExtractions[chunk.id] = {
+              if (reasoningExtractions[chunk2.id] == null) {
+                reasoningExtractions[chunk2.id] = {
                   isFirstReasoning: true,
                   isFirstText: true,
                   afterSwitch: false,
                   isReasoning: startWithReasoning,
                   buffer: "",
                   idCounter: 0,
-                  textId: chunk.id
+                  textId: chunk2.id
                 };
               }
-              const activeExtraction = reasoningExtractions[chunk.id];
-              activeExtraction.buffer += chunk.delta;
+              const activeExtraction = reasoningExtractions[chunk2.id];
+              activeExtraction.buffer += chunk2.delta;
               function publish(text2) {
                 if (text2.length > 0) {
                   const prefix = activeExtraction.afterSwitch && (activeExtraction.isReasoning ? !activeExtraction.isFirstReasoning : !activeExtraction.isFirstText) ? separator : "";
@@ -235074,10 +235074,10 @@ var init_dist22 = __esm({
         let activeTextContent = {};
         let activeReasoningContent = {};
         const eventProcessor = new TransformStream({
-          async transform(chunk, controller) {
+          async transform(chunk2, controller) {
             var _a212, _b27, _c, _d;
-            controller.enqueue(chunk);
-            const { part } = chunk;
+            controller.enqueue(chunk2);
+            const { part } = chunk2;
             if (part.type === "text-delta" || part.type === "reasoning-delta" || part.type === "source" || part.type === "tool-call" || part.type === "tool-result" || part.type === "tool-input-start" || part.type === "tool-input-delta" || part.type === "raw") {
               await (onChunk == null ? void 0 : onChunk({ chunk: part }));
             }
@@ -235762,11 +235762,11 @@ var init_dist22 = __esm({
                 self2.addStream(
                   streamWithToolResults.pipeThrough(
                     new TransformStream({
-                      async transform(chunk, controller) {
+                      async transform(chunk2, controller) {
                         var _a222, _b28, _c2, _d2, _e2;
                         resetChunkTimeout();
-                        if (chunk.type === "stream-start") {
-                          warnings = chunk.warnings;
+                        if (chunk2.type === "stream-start") {
+                          warnings = chunk2.warnings;
                           return;
                         }
                         if (stepFirstChunk) {
@@ -235784,70 +235784,70 @@ var init_dist22 = __esm({
                             warnings: warnings != null ? warnings : []
                           });
                         }
-                        const chunkType = chunk.type;
+                        const chunkType = chunk2.type;
                         switch (chunkType) {
                           case "tool-approval-request":
                           case "text-start":
                           case "text-end": {
-                            controller.enqueue(chunk);
+                            controller.enqueue(chunk2);
                             break;
                           }
                           case "text-delta": {
-                            if (chunk.delta.length > 0) {
+                            if (chunk2.delta.length > 0) {
                               controller.enqueue({
                                 type: "text-delta",
-                                id: chunk.id,
-                                text: chunk.delta,
-                                providerMetadata: chunk.providerMetadata
+                                id: chunk2.id,
+                                text: chunk2.delta,
+                                providerMetadata: chunk2.providerMetadata
                               });
-                              activeText += chunk.delta;
+                              activeText += chunk2.delta;
                             }
                             break;
                           }
                           case "reasoning-start":
                           case "reasoning-end": {
-                            controller.enqueue(chunk);
+                            controller.enqueue(chunk2);
                             break;
                           }
                           case "reasoning-delta": {
                             controller.enqueue({
                               type: "reasoning-delta",
-                              id: chunk.id,
-                              text: chunk.delta,
-                              providerMetadata: chunk.providerMetadata
+                              id: chunk2.id,
+                              text: chunk2.delta,
+                              providerMetadata: chunk2.providerMetadata
                             });
                             break;
                           }
                           case "tool-call": {
-                            controller.enqueue(chunk);
-                            stepToolCalls.push(chunk);
+                            controller.enqueue(chunk2);
+                            stepToolCalls.push(chunk2);
                             break;
                           }
                           case "tool-result": {
-                            controller.enqueue(chunk);
-                            if (!chunk.preliminary) {
-                              stepToolOutputs.push(chunk);
+                            controller.enqueue(chunk2);
+                            if (!chunk2.preliminary) {
+                              stepToolOutputs.push(chunk2);
                             }
                             break;
                           }
                           case "tool-error": {
-                            controller.enqueue(chunk);
-                            stepToolOutputs.push(chunk);
+                            controller.enqueue(chunk2);
+                            stepToolOutputs.push(chunk2);
                             break;
                           }
                           case "response-metadata": {
                             stepResponse = {
-                              id: (_a222 = chunk.id) != null ? _a222 : stepResponse.id,
-                              timestamp: (_b28 = chunk.timestamp) != null ? _b28 : stepResponse.timestamp,
-                              modelId: (_c2 = chunk.modelId) != null ? _c2 : stepResponse.modelId
+                              id: (_a222 = chunk2.id) != null ? _a222 : stepResponse.id,
+                              timestamp: (_b28 = chunk2.timestamp) != null ? _b28 : stepResponse.timestamp,
+                              modelId: (_c2 = chunk2.modelId) != null ? _c2 : stepResponse.modelId
                             };
                             break;
                           }
                           case "finish": {
-                            stepUsage = chunk.usage;
-                            stepFinishReason = chunk.finishReason;
-                            stepRawFinishReason = chunk.rawFinishReason;
-                            stepProviderMetadata = chunk.providerMetadata;
+                            stepUsage = chunk2.usage;
+                            stepFinishReason = chunk2.finishReason;
+                            stepRawFinishReason = chunk2.rawFinishReason;
+                            stepProviderMetadata = chunk2.providerMetadata;
                             const msToFinish = now2() - startTimestampMs;
                             doStreamSpan.addEvent("ai.stream.finish");
                             doStreamSpan.setAttributes({
@@ -235857,59 +235857,59 @@ var init_dist22 = __esm({
                             break;
                           }
                           case "file": {
-                            controller.enqueue(chunk);
+                            controller.enqueue(chunk2);
                             break;
                           }
                           case "source": {
-                            controller.enqueue(chunk);
+                            controller.enqueue(chunk2);
                             break;
                           }
                           case "tool-input-start": {
-                            activeToolCallToolNames[chunk.id] = chunk.toolName;
-                            const tool22 = tools == null ? void 0 : tools[chunk.toolName];
+                            activeToolCallToolNames[chunk2.id] = chunk2.toolName;
+                            const tool22 = tools == null ? void 0 : tools[chunk2.toolName];
                             if ((tool22 == null ? void 0 : tool22.onInputStart) != null) {
                               await tool22.onInputStart({
-                                toolCallId: chunk.id,
+                                toolCallId: chunk2.id,
                                 messages: stepInputMessages,
                                 abortSignal,
                                 experimental_context
                               });
                             }
                             controller.enqueue({
-                              ...chunk,
-                              dynamic: (_e2 = chunk.dynamic) != null ? _e2 : (tool22 == null ? void 0 : tool22.type) === "dynamic",
+                              ...chunk2,
+                              dynamic: (_e2 = chunk2.dynamic) != null ? _e2 : (tool22 == null ? void 0 : tool22.type) === "dynamic",
                               title: tool22 == null ? void 0 : tool22.title
                             });
                             break;
                           }
                           case "tool-input-end": {
-                            delete activeToolCallToolNames[chunk.id];
-                            controller.enqueue(chunk);
+                            delete activeToolCallToolNames[chunk2.id];
+                            controller.enqueue(chunk2);
                             break;
                           }
                           case "tool-input-delta": {
-                            const toolName = activeToolCallToolNames[chunk.id];
+                            const toolName = activeToolCallToolNames[chunk2.id];
                             const tool22 = tools == null ? void 0 : tools[toolName];
                             if ((tool22 == null ? void 0 : tool22.onInputDelta) != null) {
                               await tool22.onInputDelta({
-                                inputTextDelta: chunk.delta,
-                                toolCallId: chunk.id,
+                                inputTextDelta: chunk2.delta,
+                                toolCallId: chunk2.id,
                                 messages: stepInputMessages,
                                 abortSignal,
                                 experimental_context
                               });
                             }
-                            controller.enqueue(chunk);
+                            controller.enqueue(chunk2);
                             break;
                           }
                           case "error": {
-                            controller.enqueue(chunk);
+                            controller.enqueue(chunk2);
                             stepFinishReason = "error";
                             break;
                           }
                           case "raw": {
                             if (includeRawChunks2) {
-                              controller.enqueue(chunk);
+                              controller.enqueue(chunk2);
                             }
                             break;
                           }
@@ -237204,55 +237204,55 @@ var init_dist23 = __esm({
               rawChunks
             });
             const transformStream = new TransformStream({
-              transform(chunk, controller) {
-                if (chunk.type === "raw") {
-                  rawChunks.push(chunk.rawValue);
+              transform(chunk2, controller) {
+                if (chunk2.type === "raw") {
+                  rawChunks.push(chunk2.rawValue);
                   if (userRequestedRawChunks) {
-                    controller.enqueue(chunk);
+                    controller.enqueue(chunk2);
                   }
                   return;
                 }
-                fullStreamChunks.push(chunk);
-                switch (chunk.type) {
+                fullStreamChunks.push(chunk2);
+                switch (chunk2.type) {
                   case "text-start":
-                    currentText.set(chunk.id, "");
+                    currentText.set(chunk2.id, "");
                     break;
                   case "text-delta":
                     currentText.set(
-                      chunk.id,
-                      (currentText.get(chunk.id) ?? "") + chunk.delta
+                      chunk2.id,
+                      (currentText.get(chunk2.id) ?? "") + chunk2.delta
                     );
                     break;
                   case "text-end":
                     collectedOutput.textParts.push({
-                      id: chunk.id,
-                      text: currentText.get(chunk.id) ?? ""
+                      id: chunk2.id,
+                      text: currentText.get(chunk2.id) ?? ""
                     });
                     break;
                   case "reasoning-start":
-                    currentReasoning.set(chunk.id, "");
+                    currentReasoning.set(chunk2.id, "");
                     break;
                   case "reasoning-delta":
                     currentReasoning.set(
-                      chunk.id,
-                      (currentReasoning.get(chunk.id) ?? "") + chunk.delta
+                      chunk2.id,
+                      (currentReasoning.get(chunk2.id) ?? "") + chunk2.delta
                     );
                     break;
                   case "reasoning-end":
                     collectedOutput.reasoningParts.push({
-                      id: chunk.id,
-                      text: currentReasoning.get(chunk.id) ?? ""
+                      id: chunk2.id,
+                      text: currentReasoning.get(chunk2.id) ?? ""
                     });
                     break;
                   case "tool-call":
-                    collectedOutput.toolCalls.push(chunk);
+                    collectedOutput.toolCalls.push(chunk2);
                     break;
                   case "finish":
-                    collectedOutput.finishReason = chunk.finishReason;
-                    collectedOutput.usage = chunk.usage;
+                    collectedOutput.finishReason = chunk2.finishReason;
+                    collectedOutput.usage = chunk2.usage;
                     break;
                 }
-                controller.enqueue(chunk);
+                controller.enqueue(chunk2);
               },
               async flush() {
                 activeSteps.delete(stepId);
@@ -238302,10 +238302,34 @@ var init_repository = __esm({
               failed: "failed",
               manual_review: "failed"
             };
-            await db("publish_packages").where("id", payload.packageId).update({
+            await db("publish_packages").where("id", payload.packageId).whereNot("status", "revoked").update({
               status: statusMap[task.status] ?? task.status,
               error_message: task.errorMessage,
               updated_at: Date.now()
+            });
+          }
+        }
+        if (task.type === "script.assets.extract") {
+          const payload = task.payload;
+          if (payload?.projectId && payload.scriptIds?.length) {
+            const stateMap2 = {
+              queued: 2,
+              claimed: 0,
+              submitting: 0,
+              submitted: 0,
+              polling: 0,
+              finalizing: 0,
+              retry_wait: 2,
+              blocked: 2,
+              cancelling: 0,
+              cancelled: -1,
+              succeeded: 1,
+              failed: -1,
+              manual_review: -1
+            };
+            await db("o_script").where("projectId", payload.projectId).whereIn("id", payload.scriptIds).update({
+              extractState: stateMap2[task.status] ?? 0,
+              errorReason: task.errorMessage
             });
           }
         }
@@ -238787,7 +238811,7 @@ async function sha256File(filePath) {
   const hash3 = import_node_crypto6.default.createHash("sha256");
   await new Promise((resolve3, reject) => {
     const stream4 = (0, import_node_fs2.createReadStream)(filePath);
-    stream4.on("data", (chunk) => hash3.update(chunk));
+    stream4.on("data", (chunk2) => hash3.update(chunk2));
     stream4.on("error", reject);
     stream4.on("end", resolve3);
   });
@@ -238802,7 +238826,7 @@ async function runFfmpeg(executable, args, shouldCancel) {
     const appendTail = (value) => {
       stderrTail = `${stderrTail}${value}`.slice(-32e3);
     };
-    child.stderr.on("data", (chunk) => appendTail(String(chunk)));
+    child.stderr.on("data", (chunk2) => appendTail(String(chunk2)));
     const cancelTimer = setInterval(() => {
       if (cancelCheckRunning || child.exitCode != null) return;
       cancelCheckRunning = true;
@@ -239336,8 +239360,8 @@ var require_utils13 = __commonJS({
       return new Promise((resolve3, reject) => {
         const chunks = [];
         stream4.on("readable", () => {
-          let chunk;
-          while (chunk = stream4.read()) chunks.push(chunk);
+          let chunk2;
+          while (chunk2 = stream4.read()) chunks.push(chunk2);
         }).on("end", () => resolve3(Buffer.concat(chunks))).on("error", (err) => reject(err));
       });
     };
@@ -240182,18 +240206,18 @@ var require_yazl = __commonJS({
       Transform.call(this, options);
       this.byteCount = 0;
     }
-    ByteCounter.prototype._transform = function(chunk, encoding, cb) {
-      this.byteCount += chunk.length;
-      cb(null, chunk);
+    ByteCounter.prototype._transform = function(chunk2, encoding, cb) {
+      this.byteCount += chunk2.length;
+      cb(null, chunk2);
     };
     util4.inherits(Crc32Watcher, Transform);
     function Crc32Watcher(options) {
       Transform.call(this, options);
       this.crc32 = 0;
     }
-    Crc32Watcher.prototype._transform = function(chunk, encoding, cb) {
-      this.crc32 = crc32.unsigned(chunk, this.crc32);
-      cb(null, chunk);
+    Crc32Watcher.prototype._transform = function(chunk2, encoding, cb) {
+      this.crc32 = crc32.unsigned(chunk2, this.crc32);
+      cb(null, chunk2);
     };
     var cp437 = "\0\u263A\u263B\u2665\u2666\u2663\u2660\u2022\u25D8\u25CB\u25D9\u2642\u2640\u266A\u266B\u263C\u25BA\u25C4\u2195\u203C\xB6\xA7\u25AC\u21A8\u2191\u2193\u2192\u2190\u221F\u2194\u25B2\u25BC !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u2302\xC7\xFC\xE9\xE2\xE4\xE0\xE5\xE7\xEA\xEB\xE8\xEF\xEE\xEC\xC4\xC5\xC9\xE6\xC6\xF4\xF6\xF2\xFB\xF9\xFF\xD6\xDC\xA2\xA3\xA5\u20A7\u0192\xE1\xED\xF3\xFA\xF1\xD1\xAA\xBA\xBF\u2310\xAC\xBD\xBC\xA1\xAB\xBB\u2591\u2592\u2593\u2502\u2524\u2561\u2562\u2556\u2555\u2563\u2551\u2557\u255D\u255C\u255B\u2510\u2514\u2534\u252C\u251C\u2500\u253C\u255E\u255F\u255A\u2554\u2569\u2566\u2560\u2550\u256C\u2567\u2568\u2564\u2565\u2559\u2558\u2552\u2553\u256B\u256A\u2518\u250C\u2588\u2584\u258C\u2590\u2580\u03B1\xDF\u0393\u03C0\u03A3\u03C3\xB5\u03C4\u03A6\u0398\u03A9\u03B4\u221E\u03C6\u03B5\u2229\u2261\xB1\u2265\u2264\u2320\u2321\xF7\u2248\xB0\u2219\xB7\u221A\u207F\xB2\u25A0\xA0";
     if (cp437.length !== 256) throw new Error("assertion failure");
@@ -240644,8 +240668,8 @@ var require_stream_writable = __commonJS({
     var Buffer3 = require_safe_buffer3().Buffer;
     var OurUint8Array = (typeof global !== "undefined" ? global : typeof window !== "undefined" ? window : typeof self !== "undefined" ? self : {}).Uint8Array || function() {
     };
-    function _uint8ArrayToBuffer(chunk) {
-      return Buffer3.from(chunk);
+    function _uint8ArrayToBuffer(chunk2) {
+      return Buffer3.from(chunk2);
     }
     function _isUint8Array(obj) {
       return Buffer3.isBuffer(obj) || obj instanceof OurUint8Array;
@@ -240751,12 +240775,12 @@ var require_stream_writable = __commonJS({
       stream4.emit("error", er);
       pna.nextTick(cb, er);
     }
-    function validChunk(stream4, state, chunk, cb) {
+    function validChunk(stream4, state, chunk2, cb) {
       var valid = true;
       var er = false;
-      if (chunk === null) {
+      if (chunk2 === null) {
         er = new TypeError("May not write null values to stream");
-      } else if (typeof chunk !== "string" && chunk !== void 0 && !state.objectMode) {
+      } else if (typeof chunk2 !== "string" && chunk2 !== void 0 && !state.objectMode) {
         er = new TypeError("Invalid non-string/buffer chunk");
       }
       if (er) {
@@ -240766,12 +240790,12 @@ var require_stream_writable = __commonJS({
       }
       return valid;
     }
-    Writable.prototype.write = function(chunk, encoding, cb) {
+    Writable.prototype.write = function(chunk2, encoding, cb) {
       var state = this._writableState;
       var ret = false;
-      var isBuf = !state.objectMode && _isUint8Array(chunk);
-      if (isBuf && !Buffer3.isBuffer(chunk)) {
-        chunk = _uint8ArrayToBuffer(chunk);
+      var isBuf = !state.objectMode && _isUint8Array(chunk2);
+      if (isBuf && !Buffer3.isBuffer(chunk2)) {
+        chunk2 = _uint8ArrayToBuffer(chunk2);
       }
       if (typeof encoding === "function") {
         cb = encoding;
@@ -240781,9 +240805,9 @@ var require_stream_writable = __commonJS({
       else if (!encoding) encoding = state.defaultEncoding;
       if (typeof cb !== "function") cb = nop;
       if (state.ended) writeAfterEnd(this, cb);
-      else if (isBuf || validChunk(this, state, chunk, cb)) {
+      else if (isBuf || validChunk(this, state, chunk2, cb)) {
         state.pendingcb++;
-        ret = writeOrBuffer(this, state, isBuf, chunk, encoding, cb);
+        ret = writeOrBuffer(this, state, isBuf, chunk2, encoding, cb);
       }
       return ret;
     };
@@ -240804,11 +240828,11 @@ var require_stream_writable = __commonJS({
       this._writableState.defaultEncoding = encoding;
       return this;
     };
-    function decodeChunk(state, chunk, encoding) {
-      if (!state.objectMode && state.decodeStrings !== false && typeof chunk === "string") {
-        chunk = Buffer3.from(chunk, encoding);
+    function decodeChunk(state, chunk2, encoding) {
+      if (!state.objectMode && state.decodeStrings !== false && typeof chunk2 === "string") {
+        chunk2 = Buffer3.from(chunk2, encoding);
       }
-      return chunk;
+      return chunk2;
     }
     Object.defineProperty(Writable.prototype, "writableHighWaterMark", {
       // making it explicit this property is not enumerable
@@ -240819,23 +240843,23 @@ var require_stream_writable = __commonJS({
         return this._writableState.highWaterMark;
       }
     });
-    function writeOrBuffer(stream4, state, isBuf, chunk, encoding, cb) {
+    function writeOrBuffer(stream4, state, isBuf, chunk2, encoding, cb) {
       if (!isBuf) {
-        var newChunk = decodeChunk(state, chunk, encoding);
-        if (chunk !== newChunk) {
+        var newChunk = decodeChunk(state, chunk2, encoding);
+        if (chunk2 !== newChunk) {
           isBuf = true;
           encoding = "buffer";
-          chunk = newChunk;
+          chunk2 = newChunk;
         }
       }
-      var len = state.objectMode ? 1 : chunk.length;
+      var len = state.objectMode ? 1 : chunk2.length;
       state.length += len;
       var ret = state.length < state.highWaterMark;
       if (!ret) state.needDrain = true;
       if (state.writing || state.corked) {
         var last = state.lastBufferedRequest;
         state.lastBufferedRequest = {
-          chunk,
+          chunk: chunk2,
           encoding,
           isBuf,
           callback: cb,
@@ -240848,17 +240872,17 @@ var require_stream_writable = __commonJS({
         }
         state.bufferedRequestCount += 1;
       } else {
-        doWrite(stream4, state, false, len, chunk, encoding, cb);
+        doWrite(stream4, state, false, len, chunk2, encoding, cb);
       }
       return ret;
     }
-    function doWrite(stream4, state, writev, len, chunk, encoding, cb) {
+    function doWrite(stream4, state, writev, len, chunk2, encoding, cb) {
       state.writelen = len;
       state.writecb = cb;
       state.writing = true;
       state.sync = true;
-      if (writev) stream4._writev(chunk, state.onwrite);
-      else stream4._write(chunk, encoding, state.onwrite);
+      if (writev) stream4._writev(chunk2, state.onwrite);
+      else stream4._write(chunk2, encoding, state.onwrite);
       state.sync = false;
     }
     function onwriteError(stream4, state, sync, er, cb) {
@@ -240940,11 +240964,11 @@ var require_stream_writable = __commonJS({
         state.bufferedRequestCount = 0;
       } else {
         while (entry) {
-          var chunk = entry.chunk;
+          var chunk2 = entry.chunk;
           var encoding = entry.encoding;
           var cb = entry.callback;
-          var len = state.objectMode ? 1 : chunk.length;
-          doWrite(stream4, state, false, len, chunk, encoding, cb);
+          var len = state.objectMode ? 1 : chunk2.length;
+          doWrite(stream4, state, false, len, chunk2, encoding, cb);
           entry = entry.next;
           state.bufferedRequestCount--;
           if (state.writing) {
@@ -240956,21 +240980,21 @@ var require_stream_writable = __commonJS({
       state.bufferedRequest = entry;
       state.bufferProcessing = false;
     }
-    Writable.prototype._write = function(chunk, encoding, cb) {
+    Writable.prototype._write = function(chunk2, encoding, cb) {
       cb(new Error("_write() is not implemented"));
     };
     Writable.prototype._writev = null;
-    Writable.prototype.end = function(chunk, encoding, cb) {
+    Writable.prototype.end = function(chunk2, encoding, cb) {
       var state = this._writableState;
-      if (typeof chunk === "function") {
-        cb = chunk;
-        chunk = null;
+      if (typeof chunk2 === "function") {
+        cb = chunk2;
+        chunk2 = null;
         encoding = null;
       } else if (typeof encoding === "function") {
         cb = encoding;
         encoding = null;
       }
-      if (chunk !== null && chunk !== void 0) this.write(chunk, encoding);
+      if (chunk2 !== null && chunk2 !== void 0) this.write(chunk2, encoding);
       if (state.corked) {
         state.corked = 1;
         this.uncork();
@@ -241448,8 +241472,8 @@ var require_stream_readable = __commonJS({
     var Buffer3 = require_safe_buffer3().Buffer;
     var OurUint8Array = (typeof global !== "undefined" ? global : typeof window !== "undefined" ? window : typeof self !== "undefined" ? self : {}).Uint8Array || function() {
     };
-    function _uint8ArrayToBuffer(chunk) {
-      return Buffer3.from(chunk);
+    function _uint8ArrayToBuffer(chunk2) {
+      return Buffer3.from(chunk2);
     }
     function _isUint8Array(obj) {
       return Buffer3.isBuffer(obj) || obj instanceof OurUint8Array;
@@ -241544,14 +241568,14 @@ var require_stream_readable = __commonJS({
       this.push(null);
       cb(err);
     };
-    Readable2.prototype.push = function(chunk, encoding) {
+    Readable2.prototype.push = function(chunk2, encoding) {
       var state = this._readableState;
       var skipChunkCheck;
       if (!state.objectMode) {
-        if (typeof chunk === "string") {
+        if (typeof chunk2 === "string") {
           encoding = encoding || state.defaultEncoding;
           if (encoding !== state.encoding) {
-            chunk = Buffer3.from(chunk, encoding);
+            chunk2 = Buffer3.from(chunk2, encoding);
             encoding = "";
           }
           skipChunkCheck = true;
@@ -241559,38 +241583,38 @@ var require_stream_readable = __commonJS({
       } else {
         skipChunkCheck = true;
       }
-      return readableAddChunk(this, chunk, encoding, false, skipChunkCheck);
+      return readableAddChunk(this, chunk2, encoding, false, skipChunkCheck);
     };
-    Readable2.prototype.unshift = function(chunk) {
-      return readableAddChunk(this, chunk, null, true, false);
+    Readable2.prototype.unshift = function(chunk2) {
+      return readableAddChunk(this, chunk2, null, true, false);
     };
-    function readableAddChunk(stream4, chunk, encoding, addToFront, skipChunkCheck) {
+    function readableAddChunk(stream4, chunk2, encoding, addToFront, skipChunkCheck) {
       var state = stream4._readableState;
-      if (chunk === null) {
+      if (chunk2 === null) {
         state.reading = false;
         onEofChunk(stream4, state);
       } else {
         var er;
-        if (!skipChunkCheck) er = chunkInvalid(state, chunk);
+        if (!skipChunkCheck) er = chunkInvalid(state, chunk2);
         if (er) {
           stream4.emit("error", er);
-        } else if (state.objectMode || chunk && chunk.length > 0) {
-          if (typeof chunk !== "string" && !state.objectMode && Object.getPrototypeOf(chunk) !== Buffer3.prototype) {
-            chunk = _uint8ArrayToBuffer(chunk);
+        } else if (state.objectMode || chunk2 && chunk2.length > 0) {
+          if (typeof chunk2 !== "string" && !state.objectMode && Object.getPrototypeOf(chunk2) !== Buffer3.prototype) {
+            chunk2 = _uint8ArrayToBuffer(chunk2);
           }
           if (addToFront) {
             if (state.endEmitted) stream4.emit("error", new Error("stream.unshift() after end event"));
-            else addChunk(stream4, state, chunk, true);
+            else addChunk(stream4, state, chunk2, true);
           } else if (state.ended) {
             stream4.emit("error", new Error("stream.push() after EOF"));
           } else {
             state.reading = false;
             if (state.decoder && !encoding) {
-              chunk = state.decoder.write(chunk);
-              if (state.objectMode || chunk.length !== 0) addChunk(stream4, state, chunk, false);
+              chunk2 = state.decoder.write(chunk2);
+              if (state.objectMode || chunk2.length !== 0) addChunk(stream4, state, chunk2, false);
               else maybeReadMore(stream4, state);
             } else {
-              addChunk(stream4, state, chunk, false);
+              addChunk(stream4, state, chunk2, false);
             }
           }
         } else if (!addToFront) {
@@ -241599,21 +241623,21 @@ var require_stream_readable = __commonJS({
       }
       return needMoreData(state);
     }
-    function addChunk(stream4, state, chunk, addToFront) {
+    function addChunk(stream4, state, chunk2, addToFront) {
       if (state.flowing && state.length === 0 && !state.sync) {
-        stream4.emit("data", chunk);
+        stream4.emit("data", chunk2);
         stream4.read(0);
       } else {
-        state.length += state.objectMode ? 1 : chunk.length;
-        if (addToFront) state.buffer.unshift(chunk);
-        else state.buffer.push(chunk);
+        state.length += state.objectMode ? 1 : chunk2.length;
+        if (addToFront) state.buffer.unshift(chunk2);
+        else state.buffer.push(chunk2);
         if (state.needReadable) emitReadable(stream4);
       }
       maybeReadMore(stream4, state);
     }
-    function chunkInvalid(state, chunk) {
+    function chunkInvalid(state, chunk2) {
       var er;
-      if (!_isUint8Array(chunk) && typeof chunk !== "string" && chunk !== void 0 && !state.objectMode) {
+      if (!_isUint8Array(chunk2) && typeof chunk2 !== "string" && chunk2 !== void 0 && !state.objectMode) {
         er = new TypeError("Invalid non-string/buffer chunk");
       }
       return er;
@@ -241714,10 +241738,10 @@ var require_stream_readable = __commonJS({
     function onEofChunk(stream4, state) {
       if (state.ended) return;
       if (state.decoder) {
-        var chunk = state.decoder.end();
-        if (chunk && chunk.length) {
-          state.buffer.push(chunk);
-          state.length += state.objectMode ? 1 : chunk.length;
+        var chunk2 = state.decoder.end();
+        if (chunk2 && chunk2.length) {
+          state.buffer.push(chunk2);
+          state.length += state.objectMode ? 1 : chunk2.length;
         }
       }
       state.ended = true;
@@ -241810,10 +241834,10 @@ var require_stream_readable = __commonJS({
       }
       var increasedAwaitDrain = false;
       src.on("data", ondata);
-      function ondata(chunk) {
+      function ondata(chunk2) {
         debug("ondata");
         increasedAwaitDrain = false;
-        var ret = dest.write(chunk);
+        var ret = dest.write(chunk2);
         if (false === ret && !increasedAwaitDrain) {
           if ((state.pipesCount === 1 && state.pipes === dest || state.pipesCount > 1 && indexOf(state.pipes, dest) !== -1) && !cleanedUp) {
             debug("false write response, pause", state.awaitDrain);
@@ -241966,17 +241990,17 @@ var require_stream_readable = __commonJS({
       stream4.on("end", function() {
         debug("wrapped end");
         if (state.decoder && !state.ended) {
-          var chunk = state.decoder.end();
-          if (chunk && chunk.length) _this.push(chunk);
+          var chunk2 = state.decoder.end();
+          if (chunk2 && chunk2.length) _this.push(chunk2);
         }
         _this.push(null);
       });
-      stream4.on("data", function(chunk) {
+      stream4.on("data", function(chunk2) {
         debug("wrapped data");
-        if (state.decoder) chunk = state.decoder.write(chunk);
-        if (state.objectMode && (chunk === null || chunk === void 0)) return;
-        else if (!state.objectMode && (!chunk || !chunk.length)) return;
-        var ret = _this.push(chunk);
+        if (state.decoder) chunk2 = state.decoder.write(chunk2);
+        if (state.objectMode && (chunk2 === null || chunk2 === void 0)) return;
+        else if (!state.objectMode && (!chunk2 || !chunk2.length)) return;
+        var ret = _this.push(chunk2);
         if (!ret) {
           paused = true;
           stream4.pause();
@@ -242173,17 +242197,17 @@ var require_stream_transform = __commonJS({
         done(this, null, null);
       }
     }
-    Transform.prototype.push = function(chunk, encoding) {
+    Transform.prototype.push = function(chunk2, encoding) {
       this._transformState.needTransform = false;
-      return Duplex.prototype.push.call(this, chunk, encoding);
+      return Duplex.prototype.push.call(this, chunk2, encoding);
     };
-    Transform.prototype._transform = function(chunk, encoding, cb) {
+    Transform.prototype._transform = function(chunk2, encoding, cb) {
       throw new Error("_transform() is not implemented");
     };
-    Transform.prototype._write = function(chunk, encoding, cb) {
+    Transform.prototype._write = function(chunk2, encoding, cb) {
       var ts = this._transformState;
       ts.writecb = cb;
-      ts.writechunk = chunk;
+      ts.writechunk = chunk2;
       ts.writeencoding = encoding;
       if (!ts.transforming) {
         var rs = this._readableState;
@@ -242230,8 +242254,8 @@ var require_stream_passthrough = __commonJS({
       if (!(this instanceof PassThrough)) return new PassThrough(options);
       Transform.call(this, options);
     }
-    PassThrough.prototype._transform = function(chunk, encoding, cb) {
-      cb(null, chunk);
+    PassThrough.prototype._transform = function(chunk2, encoding, cb) {
+      cb(null, chunk2);
     };
   }
 });
@@ -242345,8 +242369,8 @@ var require_bl = __commonJS({
       this.push(this.slice(0, size));
       this.consume(size);
     };
-    BufferList.prototype.end = function end(chunk) {
-      DuplexStream.prototype.end.call(this, chunk);
+    BufferList.prototype.end = function end(chunk2) {
+      DuplexStream.prototype.end.call(this, chunk2);
       if (this._callback) {
         this._callback(null, this.slice());
         this._callback = null;
@@ -244059,7 +244083,7 @@ var require_stream9 = __commonJS({
       _init() {
         const pack = this._pack = tar.pack();
         pack.on("end", () => this.push(null));
-        pack.on("data", (chunk) => this.push(chunk));
+        pack.on("data", (chunk2) => this.push(chunk2));
         pack.on("error", (err) => this.emit("error", err));
       }
       addEntry(entry, opts) {
@@ -244130,8 +244154,8 @@ var require_stream9 = __commonJS({
           }
           const buf = [];
           const collectStream = new stream4.Writable({
-            write(chunk, _, callback) {
-              buf.push(chunk);
+            write(chunk2, _, callback) {
+              buf.push(chunk2);
               callback();
             }
           });
@@ -244174,7 +244198,7 @@ var require_stream10 = __commonJS({
         const zipfile = this._zipfile = new yazl.ZipFile();
         const stream4 = zipfile.outputStream;
         stream4.on("end", () => this.push(null));
-        stream4.on("data", (chunk) => this.push(chunk));
+        stream4.on("data", (chunk2) => this.push(chunk2));
         stream4.on("error", (err) => this.emit("error", err));
       }
       _addFileEntry(entry, opts) {
@@ -244271,9 +244295,9 @@ var require_file_stream = __commonJS({
         }
         zipfile.end(opts.yazl);
       }
-      _transform(chunk, encoding, callback) {
+      _transform(chunk2, encoding, callback) {
         if (this._passThrough) {
-          this._passThrough.write(chunk, encoding, callback);
+          this._passThrough.write(chunk2, encoding, callback);
         }
       }
       _flush(callback) {
@@ -245082,13 +245106,13 @@ var require_yauzl = __commonJS({
       this.actualByteCount = 0;
       this.expectedByteCount = byteCount;
     }
-    AssertByteCountStream.prototype._transform = function(chunk, encoding, cb) {
-      this.actualByteCount += chunk.length;
+    AssertByteCountStream.prototype._transform = function(chunk2, encoding, cb) {
+      this.actualByteCount += chunk2.length;
       if (this.actualByteCount > this.expectedByteCount) {
         var msg = "too many bytes in the stream. expected " + this.expectedByteCount + ". got at least " + this.actualByteCount;
         return cb(new Error(msg));
       }
-      cb(null, chunk);
+      cb(null, chunk2);
     };
     AssertByteCountStream.prototype._flush = function(cb) {
       if (this.actualByteCount < this.expectedByteCount) {
@@ -245159,9 +245183,9 @@ var require_yauzl = __commonJS({
       var readStream2 = this.createReadStream({ start: position, end: position + length });
       var writeStream = new Writable();
       var written = 0;
-      writeStream._write = function(chunk, encoding, cb) {
-        chunk.copy(buffer, offset + written, 0, chunk.length);
-        written += chunk.length;
+      writeStream._write = function(chunk2, encoding, cb) {
+        chunk2.copy(buffer, offset + written, 0, chunk2.length);
+        written += chunk2.length;
         cb();
       };
       writeStream.on("finish", callback);
@@ -245751,8 +245775,8 @@ var require_utf72 = __commonJS({
       this.iconv = codec3.iconv;
     }
     Utf7Encoder.prototype.write = function(str) {
-      return Buffer3.from(str.replace(nonDirectChars, function(chunk) {
-        return "+" + (chunk === "+" ? "" : this.iconv.encode(chunk, "utf16-be").toString("base64").replace(/=+$/, "")) + "-";
+      return Buffer3.from(str.replace(nonDirectChars, function(chunk2) {
+        return "+" + (chunk2 === "+" ? "" : this.iconv.encode(chunk2, "utf16-be").toString("base64").replace(/=+$/, "")) + "-";
       }.bind(this)));
     };
     Utf7Encoder.prototype.end = function() {
@@ -246686,12 +246710,12 @@ var require_dbcs_codec2 = __commonJS({
       }
       return node;
     };
-    DBCSCodec.prototype._addDecodeChunk = function(chunk) {
-      var curAddr = parseInt(chunk[0], 16);
+    DBCSCodec.prototype._addDecodeChunk = function(chunk2) {
+      var curAddr = parseInt(chunk2[0], 16);
       var writeTable = this._getDecodeTrieNode(curAddr);
       curAddr = curAddr & 255;
-      for (var k = 1; k < chunk.length; k++) {
-        var part = chunk[k];
+      for (var k = 1; k < chunk2.length; k++) {
+        var part = chunk2[k];
         if (typeof part === "string") {
           for (var l = 0; l < part.length; ) {
             var code = part.charCodeAt(l++);
@@ -246700,7 +246724,7 @@ var require_dbcs_codec2 = __commonJS({
               if (56320 <= codeTrail && codeTrail < 57344)
                 writeTable[curAddr++] = 65536 + (code - 55296) * 1024 + (codeTrail - 56320);
               else
-                throw new Error("Incorrect surrogate pair in " + this.encodingName + " at chunk " + chunk[0]);
+                throw new Error("Incorrect surrogate pair in " + this.encodingName + " at chunk " + chunk2[0]);
             } else if (4080 < code && code <= 4095) {
               var len = 4095 - code + 2;
               var seq = [];
@@ -246716,10 +246740,10 @@ var require_dbcs_codec2 = __commonJS({
           for (var l = 0; l < part; l++)
             writeTable[curAddr++] = charCode++;
         } else
-          throw new Error("Incorrect type '" + typeof part + "' given in " + this.encodingName + " at chunk " + chunk[0]);
+          throw new Error("Incorrect type '" + typeof part + "' given in " + this.encodingName + " at chunk " + chunk2[0]);
       }
       if (curAddr > 255)
-        throw new Error("Incorrect chunk in " + this.encodingName + " at addr " + chunk[0] + ": too long" + curAddr);
+        throw new Error("Incorrect chunk in " + this.encodingName + " at addr " + chunk2[0] + ": too long" + curAddr);
     };
     DBCSCodec.prototype._getEncodeBucket = function(uCode) {
       var high = uCode >> 8;
@@ -248455,11 +248479,11 @@ var require_streams2 = __commonJS({
     IconvLiteEncoderStream.prototype = Object.create(Transform.prototype, {
       constructor: { value: IconvLiteEncoderStream }
     });
-    IconvLiteEncoderStream.prototype._transform = function(chunk, encoding, done) {
-      if (typeof chunk != "string")
+    IconvLiteEncoderStream.prototype._transform = function(chunk2, encoding, done) {
+      if (typeof chunk2 != "string")
         return done(new Error("Iconv encoding stream needs strings as its input."));
       try {
-        var res = this.conv.write(chunk);
+        var res = this.conv.write(chunk2);
         if (res && res.length) this.push(res);
         done();
       } catch (e) {
@@ -248478,8 +248502,8 @@ var require_streams2 = __commonJS({
     IconvLiteEncoderStream.prototype.collect = function(cb) {
       var chunks = [];
       this.on("error", cb);
-      this.on("data", function(chunk) {
-        chunks.push(chunk);
+      this.on("data", function(chunk2) {
+        chunks.push(chunk2);
       });
       this.on("end", function() {
         cb(null, Buffer3.concat(chunks));
@@ -248495,11 +248519,11 @@ var require_streams2 = __commonJS({
     IconvLiteDecoderStream.prototype = Object.create(Transform.prototype, {
       constructor: { value: IconvLiteDecoderStream }
     });
-    IconvLiteDecoderStream.prototype._transform = function(chunk, encoding, done) {
-      if (!Buffer3.isBuffer(chunk))
+    IconvLiteDecoderStream.prototype._transform = function(chunk2, encoding, done) {
+      if (!Buffer3.isBuffer(chunk2))
         return done(new Error("Iconv decoding stream needs buffers as its input."));
       try {
-        var res = this.conv.write(chunk);
+        var res = this.conv.write(chunk2);
         if (res && res.length) this.push(res, this.encoding);
         done();
       } catch (e) {
@@ -248518,8 +248542,8 @@ var require_streams2 = __commonJS({
     IconvLiteDecoderStream.prototype.collect = function(cb) {
       var res = "";
       this.on("error", cb);
-      this.on("data", function(chunk) {
-        res += chunk;
+      this.on("data", function(chunk2) {
+        res += chunk2;
       });
       this.on("end", function() {
         cb(null, res);
@@ -248854,9 +248878,9 @@ var require_uncompress_stream = __commonJS({
           return;
         }
       }
-      _write(chunk, _encoding, callback) {
-        this._chunks.push(chunk);
-        debug("write size: %d, chunks: %d", chunk.length, this._chunks.length);
+      _write(chunk2, _encoding, callback) {
+        this._chunks.push(chunk2);
+        debug("write size: %d, chunks: %d", chunk2.length, this._chunks.length);
         callback();
       }
       _final(callback) {
@@ -249061,7 +249085,7 @@ var require_file_stream3 = __commonJS({
       constructor(opts) {
         super(opts);
         const pack = tar.pack();
-        pack.on("data", (chunk) => this.push(chunk));
+        pack.on("data", (chunk2) => this.push(chunk2));
         pack.on("end", () => this.ready(true));
         const sourceType = utils.sourceType(opts.source);
         if (sourceType === "file") {
@@ -249093,8 +249117,8 @@ var require_file_stream3 = __commonJS({
             }
             const buf = [];
             this.entry = new stream4.Writable({
-              write(chunk, _, callback) {
-                buf.push(chunk);
+              write(chunk2, _, callback) {
+                buf.push(chunk2);
                 callback();
               }
             });
@@ -249109,9 +249133,9 @@ var require_file_stream3 = __commonJS({
           }
         }
       }
-      _transform(chunk, encoding, callback) {
+      _transform(chunk2, encoding, callback) {
         if (this.entry) {
-          this.entry.write(chunk, encoding, callback);
+          this.entry.write(chunk2, encoding, callback);
         }
       }
       _flush(callback) {
@@ -249193,7 +249217,7 @@ var require_stream11 = __commonJS({
         tarStream.on("error", (err) => this.emit("error", err));
         const gzipStream = new gzip.FileStream();
         gzipStream.on("end", () => this.push(null));
-        gzipStream.on("data", (chunk) => this.push(chunk));
+        gzipStream.on("data", (chunk2) => this.push(chunk2));
         gzipStream.on("error", (err) => this.emit("error", err));
         tarStream.pipe(gzipStream);
       }
@@ -249224,8 +249248,8 @@ var require_file_stream4 = __commonJS({
         opts = utils.clone(opts);
         delete opts.source;
         const gzipStream = new gzip.FileStream(opts);
-        gzipStream.on("data", (chunk) => {
-          this.push(chunk);
+        gzipStream.on("data", (chunk2) => {
+          this.push(chunk2);
         });
         gzipStream.on("end", () => this.ready(true));
         pump(tarStream, gzipStream, (err) => {
@@ -249235,8 +249259,8 @@ var require_file_stream4 = __commonJS({
           this.end();
         }
       }
-      _transform(chunk, encoding, callback) {
-        this._tarStream.write(chunk, encoding, callback);
+      _transform(chunk2, encoding, callback) {
+        this._tarStream.write(chunk2, encoding, callback);
       }
       _flush(callback) {
         if (this._sourceType === "stream" || this._sourceType === void 0) {
@@ -249316,8 +249340,8 @@ var require_uncompress_stream4 = __commonJS({
           opts.source.pipe(this);
         }
       }
-      _write(chunk, encoding, callback) {
-        this._gzipStream.write(chunk, encoding, callback);
+      _write(chunk2, encoding, callback) {
+        this._gzipStream.write(chunk2, encoding, callback);
       }
       _flush(callback) {
         this._gzipStream.end();
@@ -249355,6 +249379,225 @@ var require_compressing = __commonJS({
     exports2.gzip = require_gzip();
     exports2.tar = require_tar();
     exports2.tgz = require_tgz();
+  }
+});
+
+// src/services/script-assets/extraction.ts
+function normalizedAssetName(name28, type) {
+  const compact = name28.normalize("NFKC").replace(/[\s\u3000]+/g, "").toLowerCase();
+  if (type === "scene") return compact;
+  const withoutQualifier = compact.replace(/[（(][^（）()]*[）)]/g, "").replace(/[（(].*$/, "");
+  return withoutQualifier || compact;
+}
+function findExistingAsset(assets, name28, type) {
+  const candidates = assets.filter((asset) => asset.type === type);
+  const exact = candidates.filter((asset) => asset.name === name28);
+  if (exact.length === 1) return exact[0];
+  const normalized = normalizedAssetName(name28, type);
+  const matches = candidates.filter((asset) => asset.name && normalizedAssetName(asset.name, asset.type) === normalized);
+  return matches.length === 1 ? matches[0] : void 0;
+}
+function chunk(values, size) {
+  const result = [];
+  for (let index = 0; index < values.length; index += size) result.push(values.slice(index, index + size));
+  return result;
+}
+async function persistBatch(input) {
+  const allowedScriptIds = new Set(input.batchScriptIds);
+  return db.transaction(async (trx) => {
+    const table = trx;
+    const existingAssets = await table("o_assets").where("projectId", input.projectId).select("id", "name", "type");
+    const identities = [...existingAssets];
+    const toInsert = input.newAssets.filter((asset) => {
+      if (findExistingAsset(identities, asset.name, asset.type)) return false;
+      identities.push({ name: asset.name, type: asset.type });
+      return true;
+    });
+    if (toInsert.length) {
+      await table("o_assets").insert(toInsert.map((asset) => ({
+        name: asset.name,
+        type: asset.type,
+        describe: asset.desc,
+        projectId: input.projectId,
+        startTime: Date.now()
+      })));
+    }
+    const allAssets = await table("o_assets").where("projectId", input.projectId).select("id", "name", "type");
+    const rows = [];
+    for (const asset of input.newAssets) {
+      const assetId = findExistingAsset(allAssets, asset.name, asset.type)?.id;
+      if (!assetId) continue;
+      for (const scriptId of asset.scriptIds) {
+        if (allowedScriptIds.has(scriptId)) rows.push({ scriptId, assetId });
+      }
+    }
+    for (const ref of input.existingRefs) {
+      const assetId = findExistingAsset(allAssets, ref.name, ref.type)?.id;
+      if (!assetId) continue;
+      for (const scriptId of ref.scriptIds) {
+        if (allowedScriptIds.has(scriptId)) rows.push({ scriptId, assetId });
+      }
+    }
+    const uniqueRows = [...new Map(rows.map((row) => [`${row.scriptId}_${row.assetId}`, row])).values()];
+    if (!uniqueRows.length) throw new TaskExecutionError("AI \u8FD4\u56DE\u7684\u8D44\u4EA7\u5173\u8054\u4E0D\u5C5E\u4E8E\u672C\u6279\u5267\u672C", "ASSET_EXTRACTION_INVALID_SCRIPT_IDS", false, true);
+    await table("o_scriptAssets").whereIn("scriptId", input.batchScriptIds).delete();
+    await table("o_scriptAssets").insert(uniqueRows);
+    await table("o_script").where("projectId", input.projectId).whereIn("id", input.batchScriptIds).update({
+      extractState: 1,
+      errorReason: null
+    });
+    return { assetsCreated: toInsert.length, linksWritten: uniqueRows.length };
+  });
+}
+async function extractBatch(projectId, scripts) {
+  const existingAssets = await sql6("o_assets").where("projectId", projectId).select("name", "type");
+  const existingAssetsList = existingAssets.map((asset) => `${asset.name}(${asset.type})`).join("\u3001");
+  const scriptsContent = scripts.map((script) => `===== \u3010\u5267\u672CID: ${script.id}\u3011${script.name || ""} =====
+${script.content}`).join("\n\n");
+  let collectedNew = [];
+  let collectedExisting = [];
+  const resultTool = tool({
+    description: "\u8FD4\u56DE\u5B8C\u6574\u8D44\u4EA7\u63D0\u53D6\u7ED3\u679C",
+    inputSchema: jsonSchema(external_exports.object({
+      newAssets: external_exports.array(NewAssetSchema).describe("\u4E0D\u5728\u5DF2\u6709\u5217\u8868\u4E2D\u7684\u65B0\u8D44\u4EA7"),
+      existingAssetRefs: external_exports.array(ExistingAssetRefSchema).describe("\u672C\u6279\u5267\u672C\u5F15\u7528\u7684\u5DF2\u6709\u8D44\u4EA7")
+    }).toJSONSchema()),
+    execute: async ({ newAssets, existingAssetRefs }) => {
+      collectedNew = newAssets || [];
+      collectedExisting = existingAssetRefs || [];
+      return "\u8D44\u4EA7\u7ED3\u679C\u5DF2\u63A5\u6536";
+    }
+  });
+  const promptData = await sql6("o_prompt").where("type", "scriptAssetExtraction").first();
+  const extractionPrompt = promptData?.useData || promptData?.data || "";
+  const existingHint = existingAssetsList ? `
+
+\u3010\u5DF2\u6709\u8D44\u4EA7\u5217\u8868\u3011\uFF1A${existingAssetsList}
+\u5DF2\u6709\u8D44\u4EA7\u5FC5\u987B\u5728 existingAssetRefs \u4E2D\u7ED9\u51FA\u5B8C\u5168\u4E00\u81F4\u7684\u540D\u79F0\u3001type \u548C\u672C\u6279 scriptIds\u3002\u89D2\u8272\u6216\u9053\u5177\u540D\u79F0\u4EC5\u591A\u51FA\u62EC\u53F7\u5B9A\u4F4D\u8BCD\u65F6\u590D\u7528\u5DF2\u6709\u8D44\u4EA7\uFF1B\u573A\u666F\u62EC\u53F7\u901A\u5E38\u8868\u793A\u4E0D\u540C\u5B50\u5730\u70B9\uFF0C\u4E0D\u8981\u5408\u5E76\u3002` : "";
+  await utils_default.Ai.Text("universalAi").invoke({
+    messages: [
+      {
+        role: "system",
+        content: `${extractionPrompt}
+
+\u63D0\u53D6\u5267\u672C\u4E2D\u7684\u89D2\u8272\u3001\u573A\u666F\u548C\u5173\u952E\u9053\u5177\uFF0C\u7ED3\u679C\u5FC5\u987B\u4E00\u6B21\u6027\u901A\u8FC7 resultTool \u8FD4\u56DE\u3002scriptIds \u53EA\u80FD\u4F7F\u7528\u672C\u6B21\u8F93\u5165\u6807\u9898\u4E2D\u660E\u786E\u7ED9\u51FA\u7684\u5267\u672C ID\u3002`
+      },
+      {
+        role: "user",
+        content: `\u5F53\u524D\u5DF2\u6709\u8D44\u4EA7\u5217\u8868\uFF1A${existingHint}
+
+\u8BF7\u5206\u6790\u4EE5\u4E0B${scripts.length}\u96C6\u5267\u672C\uFF1A
+
+${scriptsContent}`
+      }
+    ],
+    tools: { resultTool }
+  });
+  if (!collectedNew.length && !collectedExisting.length) {
+    throw new TaskExecutionError("AI \u672A\u8FD4\u56DE\u4EFB\u4F55\u8D44\u4EA7", "ASSET_EXTRACTION_EMPTY", false, true);
+  }
+  return { newAssets: collectedNew, existingRefs: collectedExisting };
+}
+async function executeScriptAssetExtraction(payload, context2) {
+  const scripts = await sql6("o_script").where("projectId", payload.projectId).whereIn("id", payload.scriptIds).orderBy("id", "asc");
+  if (scripts.length !== payload.scriptIds.length) {
+    throw new TaskExecutionError("\u90E8\u5206\u5267\u672C\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE", "ASSET_EXTRACTION_SCOPE_CHANGED", false, true);
+  }
+  await sql6("o_script").where("projectId", payload.projectId).whereIn("id", payload.scriptIds).update({ extractState: 0, errorReason: null });
+  await context2.throwIfCancelled();
+  await context2.transitionToSubmitting();
+  const batchSize = Math.max(1, Math.min(100, payload.groupSize * 5));
+  const totals = { batches: 0, assetsCreated: 0, linksWritten: 0 };
+  for (const batch of chunk(scripts, batchSize)) {
+    await context2.throwIfCancelled();
+    const extracted = await extractBatch(payload.projectId, batch);
+    await context2.throwIfCancelled();
+    const saved = await persistBatch({
+      projectId: payload.projectId,
+      batchScriptIds: batch.map((script) => script.id),
+      ...extracted
+    });
+    totals.batches++;
+    totals.assetsCreated += saved.assetsCreated;
+    totals.linksWritten += saved.linksWritten;
+  }
+  await context2.transitionToFinalizing();
+  return totals;
+}
+async function enqueueScriptAssetExtraction(input) {
+  const scriptIds = [...new Set(input.scriptIds)].sort((a, b) => a - b);
+  if (!scriptIds.length) throw new Error("\u8BF7\u5148\u9009\u62E9\u5267\u672C");
+  const [project, scripts] = await Promise.all([
+    sql6("o_project").where("id", input.projectId).first(),
+    sql6("o_script").where("projectId", input.projectId).whereIn("id", scriptIds).select("id")
+  ]);
+  if (!project) throw new Error("\u9879\u76EE\u4E0D\u5B58\u5728");
+  if (scripts.length !== scriptIds.length) throw new Error("\u90E8\u5206\u5267\u672C\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
+  const now2 = Date.now();
+  const [legacyTaskId] = await sql6("o_tasks").insert({
+    projectId: input.projectId,
+    taskClass: "\u5267\u672C\u8D44\u4EA7\u63D0\u53D6",
+    relatedObjects: JSON.stringify({ scriptIds }),
+    model: "universalAi",
+    describe: `\u6301\u4E45\u63D0\u53D6 ${scriptIds.length} \u96C6\u5267\u672C\u8D44\u4EA7`,
+    state: "\u6392\u961F\u4E2D",
+    startTime: now2
+  });
+  const payload = {
+    projectId: input.projectId,
+    scriptIds,
+    groupSize: Math.max(1, Math.min(20, Math.round(input.groupSize || 5))),
+    model: "configured:universalAi"
+  };
+  try {
+    const queued = await generationTaskRepository.enqueue({
+      projectId: input.projectId,
+      legacyTaskId,
+      lane: "text",
+      type: "script.assets.extract",
+      resourceKey: `script-assets:project:${input.projectId}`,
+      payload,
+      provider: "configured-text",
+      idempotencyKey: stableIdempotencyKey({ type: "script.assets.extract", projectId: input.projectId, scriptIds, requestId: input.requestId }),
+      maxAttempts: 1
+    });
+    if (queued.deduped) {
+      await sql6("o_tasks").where("id", legacyTaskId).delete();
+      const activePayload = queued.task.payload;
+      if (!activePayload || activePayload.projectId !== input.projectId || activePayload.scriptIds.join(",") !== scriptIds.join(",")) {
+        throw new Error("\u5F53\u524D\u9879\u76EE\u5DF2\u6709\u5176\u4ED6\u5267\u672C\u7684\u8D44\u4EA7\u63D0\u53D6\u4EFB\u52A1\uFF0C\u8BF7\u7B49\u5F85\u5B8C\u6210\u540E\u518D\u63D0\u4EA4\u672C\u6279\u5267\u672C");
+      }
+      return { task: queued.task, deduped: true };
+    }
+    await sql6("o_script").where("projectId", input.projectId).whereIn("id", scriptIds).update({ extractState: 2, errorReason: null });
+    return { task: queued.task, deduped: false };
+  } catch (error73) {
+    await sql6("o_tasks").where("id", legacyTaskId).delete();
+    throw error73;
+  }
+}
+var sql6, NewAssetSchema, ExistingAssetRefSchema;
+var init_extraction = __esm({
+  "src/services/script-assets/extraction.ts"() {
+    "use strict";
+    init_dist22();
+    init_zod();
+    init_utils3();
+    init_db();
+    init_generationTask();
+    init_repository();
+    sql6 = db;
+    NewAssetSchema = external_exports.object({
+      name: external_exports.string().trim().min(1).describe("\u8D44\u4EA7\u540D\u79F0\uFF0C\u4EC5\u4E3A\u540D\u79F0"),
+      desc: external_exports.string().trim().min(1).describe("\u8D44\u4EA7\u63CF\u8FF0"),
+      type: external_exports.enum(["role", "tool", "scene"]).describe("\u8D44\u4EA7\u7C7B\u578B"),
+      scriptIds: external_exports.array(external_exports.number().int().positive()).describe("\u4F7F\u7528\u8BE5\u8D44\u4EA7\u7684\u672C\u6279\u5267\u672C ID")
+    });
+    ExistingAssetRefSchema = external_exports.object({
+      name: external_exports.string().trim().min(1).describe("\u5DF2\u6709\u8D44\u4EA7\u540D\u79F0"),
+      type: external_exports.enum(["role", "tool", "scene"]).describe("\u5DF2\u6709\u8D44\u4EA7\u7C7B\u578B"),
+      scriptIds: external_exports.array(external_exports.number().int().positive()).describe("\u4F7F\u7528\u8BE5\u8D44\u4EA7\u7684\u672C\u6279\u5267\u672C ID")
+    });
   }
 });
 
@@ -250790,8 +251033,8 @@ var init_cancelGenerate = __esm({
 
 // src/services/task-engine/budget.ts
 async function getProjectBudget(projectId) {
-  const control = await sql6("project_budget_controls").where("project_id", projectId).first();
-  const usage = await sql6("usage_ledger").leftJoin("generation_tasks", "generation_tasks.id", "usage_ledger.task_id").where("generation_tasks.project_id", projectId).sum({ reserved: sql6.raw("coalesce(actual_cost, estimated_cost, 0)") }).first();
+  const control = await sql7("project_budget_controls").where("project_id", projectId).first();
+  const usage = await sql7("usage_ledger").leftJoin("generation_tasks", "generation_tasks.id", "usage_ledger.task_id").where("generation_tasks.project_id", projectId).sum({ reserved: sql7.raw("coalesce(actual_cost, estimated_cost, 0)") }).first();
   return {
     projectId,
     budgetLimit: control?.budget_limit ?? null,
@@ -250802,7 +251045,7 @@ async function getProjectBudget(projectId) {
   };
 }
 async function upsertProjectBudget(input) {
-  const project = await sql6("o_project").where("id", input.projectId).first();
+  const project = await sql7("o_project").where("id", input.projectId).first();
   if (!project) throw new Error("\u9879\u76EE\u4E0D\u5B58\u5728");
   const row = {
     project_id: input.projectId,
@@ -250811,11 +251054,11 @@ async function upsertProjectBudget(input) {
     block_unknown_price: input.blockUnknownPrice ? 1 : 0,
     updated_at: Date.now()
   };
-  await sql6("project_budget_controls").insert(row).onConflict("project_id").merge(row);
+  await sql7("project_budget_controls").insert(row).onConflict("project_id").merge(row);
   return getProjectBudget(input.projectId);
 }
 async function listPricingRules() {
-  return (await sql6("pricing_rules").orderBy(["provider", "model", "lane"])).map((row) => ({
+  return (await sql7("pricing_rules").orderBy(["provider", "model", "lane"])).map((row) => ({
     id: row.id,
     provider: row.provider,
     model: row.model,
@@ -250827,7 +251070,7 @@ async function listPricingRules() {
   }));
 }
 async function upsertPricingRule(input) {
-  const existing = input.id ? null : await sql6("pricing_rules").where({ provider: input.provider, model: input.model, lane: input.lane }).first();
+  const existing = input.id ? null : await sql7("pricing_rules").where({ provider: input.provider, model: input.model, lane: input.lane }).first();
   const id = input.id ?? existing?.id ?? v4_default();
   const row = {
     id,
@@ -250840,21 +251083,21 @@ async function upsertPricingRule(input) {
     updated_at: Date.now()
   };
   if (input.id || existing) {
-    const updated = await sql6("pricing_rules").where("id", id).update(row);
+    const updated = await sql7("pricing_rules").where("id", id).update(row);
     if (updated !== 1) throw new Error("\u4EF7\u683C\u89C4\u5219\u4E0D\u5B58\u5728");
   } else {
-    await sql6("pricing_rules").insert(row);
+    await sql7("pricing_rules").insert(row);
   }
   return row;
 }
 async function deletePricingRule(id) {
-  await sql6("pricing_rules").where("id", id).delete();
+  await sql7("pricing_rules").where("id", id).delete();
   return { id };
 }
 async function prepareCostReservation(input) {
   const [provider, model] = input.model.split(/:(.+)/);
-  const exact = await sql6("pricing_rules").where({ provider, model, lane: input.lane }).first();
-  const rule = exact || await sql6("pricing_rules").where({ provider, model: "*", lane: input.lane }).first();
+  const exact = await sql7("pricing_rules").where({ provider, model, lane: input.lane }).first();
+  const rule = exact || await sql7("pricing_rules").where({ provider, model: "*", lane: input.lane }).first();
   const budget = await getProjectBudget(input.projectId);
   if (!rule) {
     if (budget.blockUnknownPrice) throw new Error(`\u6A21\u578B ${provider}:${model} \u6CA1\u6709\u4EF7\u683C\u89C4\u5219\uFF0C\u9879\u76EE\u5DF2\u8BBE\u7F6E\u963B\u6B62\u672A\u77E5\u4EF7\u683C\u4EFB\u52A1`);
@@ -250876,13 +251119,13 @@ async function prepareCostReservation(input) {
     pricingSnapshot: { ruleId: rule.id, unitType: rule.unit_type, unitPrice: rule.unit_price, capturedAt: Date.now() }
   };
 }
-var sql6, pricingUnitTypes;
+var sql7, pricingUnitTypes;
 var init_budget = __esm({
   "src/services/task-engine/budget.ts"() {
     "use strict";
     init_dist_node();
     init_db();
-    sql6 = db;
+    sql7 = db;
     pricingUnitTypes = ["request", "second", "character"];
   }
 });
@@ -251200,16 +251443,16 @@ function safeStyle(value) {
 }
 async function buildNormalizedTimeline(input) {
   const [project, script] = await Promise.all([
-    sql7("o_project").where("id", input.projectId).first(),
-    sql7("o_script").where({ id: input.scriptId, projectId: input.projectId }).first()
+    sql8("o_project").where("id", input.projectId).first(),
+    sql8("o_script").where({ id: input.scriptId, projectId: input.projectId }).first()
   ]);
   if (!project || !script) throw new Error("\u9879\u76EE\u6216\u5267\u672C\u4E0D\u5B58\u5728");
   const [tracks, storyboards, utterances, cueRows, projectAudioRows] = await Promise.all([
-    sql7("o_videoTrack").where({ projectId: input.projectId, scriptId: input.scriptId }),
-    sql7("o_storyboard").where({ projectId: input.projectId, scriptId: input.scriptId }).orderBy("index", "asc"),
-    sql7("utterances").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("ordinal", "asc"),
-    sql7("subtitle_cues").leftJoin("utterances", "utterances.id", "subtitle_cues.utterance_id").where("subtitle_cues.project_id", input.projectId).where("utterances.script_id", input.scriptId).select("subtitle_cues.*").orderBy("subtitle_cues.start_ms", "asc"),
-    sql7("project_audio_clips").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("start_ms", "asc")
+    sql8("o_videoTrack").where({ projectId: input.projectId, scriptId: input.scriptId }),
+    sql8("o_storyboard").where({ projectId: input.projectId, scriptId: input.scriptId }).orderBy("index", "asc"),
+    sql8("utterances").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("ordinal", "asc"),
+    sql8("subtitle_cues").leftJoin("utterances", "utterances.id", "subtitle_cues.utterance_id").where("subtitle_cues.project_id", input.projectId).where("utterances.script_id", input.scriptId).select("subtitle_cues.*").orderBy("subtitle_cues.start_ms", "asc"),
+    sql8("project_audio_clips").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("start_ms", "asc")
   ]);
   const firstStoryboardIndex = /* @__PURE__ */ new Map();
   for (const storyboard of storyboards) {
@@ -251221,7 +251464,7 @@ async function buildNormalizedTimeline(input) {
     (a, b) => (firstStoryboardIndex.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (firstStoryboardIndex.get(b.id) ?? Number.MAX_SAFE_INTEGER)
   );
   const selectedIds = tracks.map((track) => track.videoId).filter((id2) => typeof id2 === "number");
-  const videos = selectedIds.length ? await sql7("o_video").whereIn("id", selectedIds) : [];
+  const videos = selectedIds.length ? await sql8("o_video").whereIn("id", selectedIds) : [];
   const videoById = new Map(videos.map((video) => [video.id, video]));
   const warnings = [];
   const videoClips = [];
@@ -251343,11 +251586,11 @@ async function buildNormalizedTimeline(input) {
   };
   const serialized = JSON.stringify(payload);
   const checksum = import_node_crypto8.default.createHash("sha256").update(serialized).digest("hex");
-  const latest = await sql7("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
+  const latest = await sql8("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
   if (latest?.checksum === checksum) return { timeline: mapTimelineRow(latest), deduped: true };
   const now2 = Date.now();
   const id = v4_default();
-  await sql7("project_timelines").insert({
+  await sql8("project_timelines").insert({
     id,
     project_id: input.projectId,
     script_id: input.scriptId,
@@ -251358,24 +251601,24 @@ async function buildNormalizedTimeline(input) {
     created_at: now2,
     updated_at: now2
   });
-  return { timeline: mapTimelineRow(await sql7("project_timelines").where("id", id).first()), deduped: false };
+  return { timeline: mapTimelineRow(await sql8("project_timelines").where("id", id).first()), deduped: false };
 }
 async function getLatestTimeline(input) {
-  const row = await sql7("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
+  const row = await sql8("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
   return row ? mapTimelineRow(row) : null;
 }
 async function listTimelines(input) {
-  const rows = await sql7("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc");
+  const rows = await sql8("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc");
   return rows.map(mapTimelineRow);
 }
-var import_node_crypto8, sql7;
+var import_node_crypto8, sql8;
 var init_timeline = __esm({
   "src/services/composition/timeline.ts"() {
     "use strict";
     import_node_crypto8 = __toESM(require("node:crypto"));
     init_dist_node();
     init_db();
-    sql7 = db;
+    sql8 = db;
   }
 });
 
@@ -251403,11 +251646,11 @@ async function mapJob(row) {
   };
 }
 async function getLatestCompositionJob(input) {
-  const row = await sql8("composition_jobs").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first();
+  const row = await sql9("composition_jobs").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first();
   return mapJob(row);
 }
 async function enqueueCompositionRender(input) {
-  const timeline = await sql8("project_timelines").where({ id: input.timelineId, project_id: input.projectId, script_id: input.scriptId }).first();
+  const timeline = await sql9("project_timelines").where({ id: input.timelineId, project_id: input.projectId, script_id: input.scriptId }).first();
   if (!timeline) throw new Error("\u65F6\u95F4\u7EBF\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u5267\u672C");
   const payload = JSON.parse(timeline.payload);
   const clipCount = (payload.videoTracks || []).reduce((total, track) => total + (track.clips?.length || 0), 0);
@@ -251418,7 +251661,7 @@ async function enqueueCompositionRender(input) {
     preset: input.preset,
     timelineChecksum: timeline.checksum
   });
-  const previous = await sql8("composition_jobs").where({ timeline_id: timeline.id, preset: input.preset, input_checksum: inputChecksum }).orderBy("created_at", "desc").first();
+  const previous = await sql9("composition_jobs").where({ timeline_id: timeline.id, preset: input.preset, input_checksum: inputChecksum }).orderBy("created_at", "desc").first();
   if (previous?.status === "succeeded" && previous.output_path && await utils_default.oss.fileExists(previous.output_path)) {
     return { job: await mapJob(previous), task: previous.task_id ? await generationTaskRepository.get(previous.task_id) : null, cached: true, deduped: true };
   }
@@ -251431,7 +251674,7 @@ async function enqueueCompositionRender(input) {
   const jobId = v4_default();
   const outputPath = `/${input.projectId}/composition/${input.scriptId}/timeline-v${timeline.version}-${timeline.checksum.slice(0, 12)}-${input.preset}.mp4`;
   const now2 = Date.now();
-  await sql8("composition_jobs").insert({
+  await sql9("composition_jobs").insert({
     id: jobId,
     project_id: input.projectId,
     script_id: input.scriptId,
@@ -251447,7 +251690,7 @@ async function enqueueCompositionRender(input) {
     created_at: now2,
     updated_at: now2
   });
-  const [legacyTaskId] = await sql8("o_tasks").insert({
+  const [legacyTaskId] = await sql9("o_tasks").insert({
     projectId: input.projectId,
     taskClass: "\u89C6\u9891\u5408\u6210",
     relatedObjects: JSON.stringify({ compositionJobId: jobId, timelineId: timeline.id }),
@@ -251481,23 +251724,23 @@ async function enqueueCompositionRender(input) {
     });
     if (result.deduped) {
       await Promise.all([
-        sql8("composition_jobs").where("id", jobId).delete(),
-        sql8("o_tasks").where("id", legacyTaskId).delete()
+        sql9("composition_jobs").where("id", jobId).delete(),
+        sql9("o_tasks").where("id", legacyTaskId).delete()
       ]);
-      const existingJob = await sql8("composition_jobs").where("task_id", result.task.id).first();
+      const existingJob = await sql9("composition_jobs").where("task_id", result.task.id).first();
       return { job: await mapJob(existingJob), task: result.task, cached: false, deduped: true };
     }
-    await sql8("composition_jobs").where("id", jobId).update({ task_id: result.task.id, updated_at: Date.now() });
-    return { job: await mapJob(await sql8("composition_jobs").where("id", jobId).first()), task: result.task, cached: false, deduped: false };
+    await sql9("composition_jobs").where("id", jobId).update({ task_id: result.task.id, updated_at: Date.now() });
+    return { job: await mapJob(await sql9("composition_jobs").where("id", jobId).first()), task: result.task, cached: false, deduped: false };
   } catch (error73) {
     await Promise.all([
-      sql8("composition_jobs").where("id", jobId).delete(),
-      sql8("o_tasks").where("id", legacyTaskId).delete()
+      sql9("composition_jobs").where("id", jobId).delete(),
+      sql9("o_tasks").where("id", legacyTaskId).delete()
     ]);
     throw error73;
   }
 }
-var sql8;
+var sql9;
 var init_jobs = __esm({
   "src/services/composition/jobs.ts"() {
     "use strict";
@@ -251505,7 +251748,7 @@ var init_jobs = __esm({
     init_utils3();
     init_db();
     init_repository();
-    sql8 = db;
+    sql9 = db;
   }
 });
 
@@ -251530,13 +251773,13 @@ function mapRow2(row) {
   };
 }
 async function listProjectAudioClips(input) {
-  const rows = await sql9("project_audio_clips").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("start_ms", "asc");
+  const rows = await sql10("project_audio_clips").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("start_ms", "asc");
   return rows.map(mapRow2);
 }
 async function upsertProjectAudioClip(input) {
   const [script, asset] = await Promise.all([
-    sql9("o_script").where({ id: input.scriptId, projectId: input.projectId }).first(),
-    sql9("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where({ "o_assets.id": input.assetId, "o_assets.projectId": input.projectId, "o_assets.type": "audio" }).select("o_assets.id", "o_assets.name", "o_image.filePath").first()
+    sql10("o_script").where({ id: input.scriptId, projectId: input.projectId }).first(),
+    sql10("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where({ "o_assets.id": input.assetId, "o_assets.projectId": input.projectId, "o_assets.type": "audio" }).select("o_assets.id", "o_assets.name", "o_image.filePath").first()
   ]);
   if (!script) throw new Error("\u5267\u672C\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
   if (!asset?.filePath) throw new Error("\u58F0\u97F3\u7D20\u6750\u4E0D\u5B58\u5728\u3001\u672A\u5B8C\u6210\u6216\u6CA1\u6709\u672C\u5730\u6587\u4EF6");
@@ -251564,26 +251807,26 @@ async function upsertProjectAudioClip(input) {
     updated_at: now2
   };
   if (input.id) {
-    const updated = await sql9("project_audio_clips").where({ id: input.id, project_id: input.projectId, script_id: input.scriptId }).update(values);
+    const updated = await sql10("project_audio_clips").where({ id: input.id, project_id: input.projectId, script_id: input.scriptId }).update(values);
     if (updated !== 1) throw new Error("\u58F0\u97F3\u7247\u6BB5\u4E0D\u5B58\u5728");
   } else {
-    await sql9("project_audio_clips").insert({ id, ...values, created_at: now2 });
+    await sql10("project_audio_clips").insert({ id, ...values, created_at: now2 });
   }
-  return mapRow2(await sql9("project_audio_clips").where("id", id).first());
+  return mapRow2(await sql10("project_audio_clips").where("id", id).first());
 }
 async function deleteProjectAudioClip(input) {
-  const deleted = await sql9("project_audio_clips").where({ id: input.id, project_id: input.projectId, script_id: input.scriptId }).delete();
+  const deleted = await sql10("project_audio_clips").where({ id: input.id, project_id: input.projectId, script_id: input.scriptId }).delete();
   if (deleted !== 1) throw new Error("\u58F0\u97F3\u7247\u6BB5\u4E0D\u5B58\u5728");
   return { id: input.id };
 }
-var sql9, projectAudioKinds;
+var sql10, projectAudioKinds;
 var init_audioClips = __esm({
   "src/services/composition/audioClips.ts"() {
     "use strict";
     init_dist_node();
     init_db();
     init_probe();
-    sql9 = db;
+    sql10 = db;
     projectAudioKinds = ["sfx", "ambience", "bgm"];
   }
 });
@@ -251615,23 +251858,23 @@ function mapReport(row) {
   };
 }
 async function getLatestQaReport(input) {
-  return mapReport(await sql10("media_qa_reports").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first());
+  return mapReport(await sql11("media_qa_reports").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first());
 }
 async function enqueueCompositionQa(input) {
-  const job = await sql10("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
+  const job = await sql11("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
   if (!job || job.status !== "succeeded" || !job.output_path || !job.output_checksum) throw new Error("\u8BF7\u5148\u5B8C\u6210\u53EF\u7528\u7684\u6210\u7247\u6E32\u67D3");
   if (!await utils_default.oss.fileExists(job.output_path)) throw new Error("\u6210\u7247\u6587\u4EF6\u4E0D\u5B58\u5728\uFF0C\u8BF7\u91CD\u65B0\u6E32\u67D3");
-  const previous = await sql10("media_qa_reports").where({ composition_job_id: job.id, output_checksum: job.output_checksum }).orderBy("created_at", "desc").first();
+  const previous = await sql11("media_qa_reports").where({ composition_job_id: job.id, output_checksum: job.output_checksum }).orderBy("created_at", "desc").first();
   if (previous?.status === "succeeded") return { report: mapReport(previous), task: previous.task_id ? await generationTaskRepository.get(previous.task_id) : null, cached: true, deduped: true };
   if (previous && ["queued", "running"].includes(previous.status) && previous.task_id) {
     const task = await generationTaskRepository.get(previous.task_id);
     if (task && !["cancelled", "failed", "succeeded"].includes(task.status)) return { report: mapReport(previous), task, cached: false, deduped: true };
   }
-  const timeline = await sql10("project_timelines").where({ id: job.timeline_id, project_id: input.projectId, script_id: input.scriptId }).first();
+  const timeline = await sql11("project_timelines").where({ id: job.timeline_id, project_id: input.projectId, script_id: input.scriptId }).first();
   if (!timeline) throw new Error("\u6210\u7247\u5BF9\u5E94\u7684\u65F6\u95F4\u7EBF\u4E0D\u5B58\u5728");
   const reportId = v4_default();
   const now2 = Date.now();
-  await sql10("media_qa_reports").insert({
+  await sql11("media_qa_reports").insert({
     id: reportId,
     project_id: input.projectId,
     script_id: input.scriptId,
@@ -251645,7 +251888,7 @@ async function enqueueCompositionQa(input) {
     created_at: now2,
     updated_at: now2
   });
-  const [legacyTaskId] = await sql10("o_tasks").insert({
+  const [legacyTaskId] = await sql11("o_tasks").insert({
     projectId: input.projectId,
     taskClass: "\u5A92\u4F53 QA",
     relatedObjects: JSON.stringify({ reportId, compositionJobId: job.id }),
@@ -251679,18 +251922,18 @@ async function enqueueCompositionQa(input) {
       maxAttempts: 2
     });
     if (queued.deduped) {
-      await Promise.all([sql10("media_qa_reports").where("id", reportId).delete(), sql10("o_tasks").where("id", legacyTaskId).delete()]);
-      const existingReport = await sql10("media_qa_reports").where("task_id", queued.task.id).first();
+      await Promise.all([sql11("media_qa_reports").where("id", reportId).delete(), sql11("o_tasks").where("id", legacyTaskId).delete()]);
+      const existingReport = await sql11("media_qa_reports").where("task_id", queued.task.id).first();
       return { report: mapReport(existingReport), task: queued.task, cached: false, deduped: true };
     }
-    await sql10("media_qa_reports").where("id", reportId).update({ task_id: queued.task.id, updated_at: Date.now() });
-    return { report: mapReport(await sql10("media_qa_reports").where("id", reportId).first()), task: queued.task, cached: false, deduped: queued.deduped };
+    await sql11("media_qa_reports").where("id", reportId).update({ task_id: queued.task.id, updated_at: Date.now() });
+    return { report: mapReport(await sql11("media_qa_reports").where("id", reportId).first()), task: queued.task, cached: false, deduped: queued.deduped };
   } catch (error73) {
-    await Promise.all([sql10("media_qa_reports").where("id", reportId).delete(), sql10("o_tasks").where("id", legacyTaskId).delete()]);
+    await Promise.all([sql11("media_qa_reports").where("id", reportId).delete(), sql11("o_tasks").where("id", legacyTaskId).delete()]);
     throw error73;
   }
 }
-var sql10;
+var sql11;
 var init_qaJobs = __esm({
   "src/services/composition/qaJobs.ts"() {
     "use strict";
@@ -251698,7 +251941,7 @@ var init_qaJobs = __esm({
     init_db();
     init_utils3();
     init_repository();
-    sql10 = db;
+    sql11 = db;
   }
 });
 
@@ -251716,12 +251959,12 @@ function mapRow3(row) {
   } : null;
 }
 async function getLatestCompositionReview(input) {
-  let query = sql11("composition_reviews").where({ project_id: input.projectId, script_id: input.scriptId });
+  let query = sql12("composition_reviews").where({ project_id: input.projectId, script_id: input.scriptId });
   if (input.compositionJobId) query = query.where("composition_job_id", input.compositionJobId);
   return mapRow3(await query.orderBy("created_at", "desc").first());
 }
 async function recordCompositionReview(input) {
-  const job = await sql11("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
+  const job = await sql12("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
   if (!job || job.status !== "succeeded") throw new Error("\u53EA\u80FD\u5BA1\u6838\u5DF2\u5B8C\u6210\u7684\u6210\u7247");
   const row = {
     id: v4_default(),
@@ -251734,16 +251977,31 @@ async function recordCompositionReview(input) {
     reviewer: input.reviewer,
     created_at: Date.now()
   };
-  await sql11("composition_reviews").insert(row);
+  await sql12("composition_reviews").insert(row);
+  const supersededPackages = await sql12("publish_packages").where({ composition_job_id: input.compositionJobId, output_checksum: job.output_checksum }).whereNot("review_id", row.id);
+  for (const packageRow of supersededPackages) {
+    if (packageRow.task_id && ["queued", "running"].includes(packageRow.status)) {
+      await generationTaskRepository.requestCancel(packageRow.task_id);
+    }
+    if (packageRow.package_path) await utils_default.oss.deleteFile(packageRow.package_path).catch(() => void 0);
+    await sql12("publish_packages").where("id", packageRow.id).update({
+      status: "revoked",
+      package_path: null,
+      error_message: "\u5DF2\u6709\u66F4\u65B0\u7684\u5BA1\u6838\u8BB0\u5F55\uFF0C\u65E7\u53D1\u5E03\u5305\u5DF2\u64A4\u9500",
+      updated_at: Date.now()
+    });
+  }
   return mapRow3(row);
 }
-var sql11, reviewStatuses;
+var sql12, reviewStatuses;
 var init_reviews = __esm({
   "src/services/composition/reviews.ts"() {
     "use strict";
     init_dist_node();
     init_db();
-    sql11 = db;
+    init_utils3();
+    init_repository();
+    sql12 = db;
     reviewStatuses = ["approved", "rejected"];
   }
 });
@@ -251780,19 +252038,19 @@ async function mapPackage(row) {
   };
 }
 async function getLatestPublishPackage(input) {
-  return mapPackage(await sql12("publish_packages").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first());
+  return mapPackage(await sql13("publish_packages").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first());
 }
 async function enqueuePublishPackage(input) {
-  const job = await sql12("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
+  const job = await sql13("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
   if (!job || job.status !== "succeeded" || job.preset !== "final-high" || !job.output_path || !job.output_checksum) throw new Error("\u8BF7\u5148\u5B8C\u6210\u9AD8\u6E05\u6210\u7247\u6E32\u67D3");
   if (!await utils_default.oss.fileExists(job.output_path)) throw new Error("\u9AD8\u6E05\u6210\u7247\u6587\u4EF6\u4E0D\u5B58\u5728\uFF0C\u8BF7\u91CD\u65B0\u6E32\u67D3");
-  const qa = await sql12("media_qa_reports").where({ composition_job_id: job.id, output_checksum: job.output_checksum }).orderBy("created_at", "desc").first();
+  const qa = await sql13("media_qa_reports").where({ composition_job_id: job.id, output_checksum: job.output_checksum }).orderBy("created_at", "desc").first();
   const qaResult = parseJson3(qa?.result);
   if (!qa || qa.status !== "succeeded" || !qaResult?.summary) throw new Error("\u8BF7\u5148\u5B8C\u6210\u5F53\u524D\u9AD8\u6E05\u6210\u7247\u7684\u5A92\u4F53 QA");
   if (qaResult.summary.status === "failed") throw new Error("\u5A92\u4F53 QA \u4ECD\u6709\u963B\u65AD\u9519\u8BEF\uFF0C\u4E0D\u80FD\u521B\u5EFA\u53D1\u5E03\u5305");
-  const review = await sql12("composition_reviews").where({ composition_job_id: job.id, output_checksum: job.output_checksum }).orderBy("created_at", "desc").first();
+  const review = await sql13("composition_reviews").where({ composition_job_id: job.id, output_checksum: job.output_checksum }).orderBy("created_at", "desc").first();
   if (!review || review.status !== "approved") throw new Error("\u8BF7\u5148\u5BA1\u6838\u901A\u8FC7\u5F53\u524D\u9AD8\u6E05\u6210\u7247");
-  const previous = await sql12("publish_packages").where({ composition_job_id: job.id, output_checksum: job.output_checksum, qa_report_id: qa.id, review_id: review.id }).first();
+  const previous = await sql13("publish_packages").where({ composition_job_id: job.id, output_checksum: job.output_checksum, qa_report_id: qa.id, review_id: review.id }).first();
   if (previous?.status === "succeeded" && previous.package_path && await utils_default.oss.fileExists(previous.package_path)) {
     return { package: await mapPackage(previous), task: previous.task_id ? await generationTaskRepository.get(previous.task_id) : null, cached: true, deduped: true };
   }
@@ -251803,7 +252061,7 @@ async function enqueuePublishPackage(input) {
   const packageId = previous?.id ?? v4_default();
   const createdPackage = !previous;
   const now2 = Date.now();
-  const packagePath = `/${input.projectId}/publish/${input.scriptId}/delivery-${job.output_checksum.slice(0, 16)}.zip`;
+  const packagePath = `/${input.projectId}/publish/${input.scriptId}/delivery-${job.output_checksum.slice(0, 16)}-${packageId}.zip`;
   const packageRow = {
     project_id: input.projectId,
     script_id: input.scriptId,
@@ -251820,8 +252078,8 @@ async function enqueuePublishPackage(input) {
     error_message: null,
     updated_at: now2
   };
-  if (createdPackage) await sql12("publish_packages").insert({ id: packageId, ...packageRow, created_at: now2 });
-  const [legacyTaskId] = await sql12("o_tasks").insert({
+  if (createdPackage) await sql13("publish_packages").insert({ id: packageId, ...packageRow, created_at: now2 });
+  const [legacyTaskId] = await sql13("o_tasks").insert({
     projectId: input.projectId,
     taskClass: "\u53D1\u5E03\u4EA4\u4ED8\u5305",
     relatedObjects: JSON.stringify({ packageId, compositionJobId: job.id }),
@@ -251849,27 +252107,27 @@ async function enqueuePublishPackage(input) {
       legacyTaskId,
       lane: "publish",
       type: "composition.publish",
-      resourceKey: `publish:composition:${job.id}`,
+      resourceKey: `publish:composition:${job.id}:review:${review.id}`,
       payload,
       provider: "local",
       idempotencyKey: stableIdempotencyKey({ type: "composition.publish", outputChecksum: job.output_checksum, qaReportId: qa.id, reviewId: review.id, requestId: input.requestId }),
       maxAttempts: 2
     });
     if (queued.deduped) {
-      await sql12("o_tasks").where("id", legacyTaskId).delete();
-      if (createdPackage) await sql12("publish_packages").where("id", packageId).delete();
-      const existingPackage = await sql12("publish_packages").where("task_id", queued.task.id).first();
+      await sql13("o_tasks").where("id", legacyTaskId).delete();
+      if (createdPackage) await sql13("publish_packages").where("id", packageId).delete();
+      const existingPackage = await sql13("publish_packages").where("task_id", queued.task.id).first();
       return { package: await mapPackage(existingPackage || previous), task: queued.task, cached: false, deduped: true };
     }
-    await sql12("publish_packages").where("id", packageId).update({ ...packageRow, task_id: queued.task.id, updated_at: Date.now() });
-    return { package: await mapPackage(await sql12("publish_packages").where("id", packageId).first()), task: queued.task, cached: false, deduped: false };
+    await sql13("publish_packages").where("id", packageId).update({ ...packageRow, task_id: queued.task.id, updated_at: Date.now() });
+    return { package: await mapPackage(await sql13("publish_packages").where("id", packageId).first()), task: queued.task, cached: false, deduped: false };
   } catch (error73) {
-    await sql12("o_tasks").where("id", legacyTaskId).delete();
-    if (createdPackage) await sql12("publish_packages").where("id", packageId).delete();
+    await sql13("o_tasks").where("id", legacyTaskId).delete();
+    if (createdPackage) await sql13("publish_packages").where("id", packageId).delete();
     throw error73;
   }
 }
-var sql12;
+var sql13;
 var init_publish = __esm({
   "src/services/composition/publish.ts"() {
     "use strict";
@@ -251877,7 +252135,7 @@ var init_publish = __esm({
     init_utils3();
     init_db();
     init_repository();
-    sql12 = db;
+    sql13 = db;
   }
 });
 
@@ -256746,222 +257004,30 @@ var init_exportScript = __esm({
 });
 
 // src/routes/script/extractAssets.ts
-function normalizedAssetName(name28, type) {
-  const compact = name28.normalize("NFKC").replace(/[\s\u3000]+/g, "").toLowerCase();
-  if (type === "scene") return compact;
-  const withoutQualifier = compact.replace(/[（(][^（）()]*[）)]/g, "").replace(/[（(].*$/, "");
-  return withoutQualifier || compact;
-}
-function findExistingAsset(assets, name28, type) {
-  const candidates = type ? assets.filter((asset) => asset.type === type) : assets;
-  const exact = candidates.filter((asset) => asset.name === name28);
-  if (exact.length === 1) return exact[0];
-  const normalized = normalizedAssetName(name28, type);
-  const matches = candidates.filter((asset) => asset.name && normalizedAssetName(asset.name, asset.type) === normalized);
-  return matches.length === 1 ? matches[0] : void 0;
-}
-function chunkArray(arr, groupSize) {
-  const chunks = [];
-  for (let i = 0; i < arr.length; i += 5) {
-    chunks.push(arr.slice(i, i + 5));
-  }
-  const groupChunks = [];
-  for (let i = 0; i < chunks.length; i += groupSize) {
-    groupChunks.push(chunks.slice(i, i + groupSize));
-  }
-  return groupChunks;
-}
-var import_express116, router116, NewAssetSchema, ExistingAssetRefSchema, AssetSchema, extractAssets_default;
+var import_express116, router116, extractAssets_default;
 var init_extractAssets = __esm({
   "src/routes/script/extractAssets.ts"() {
     "use strict";
     import_express116 = __toESM(require_express2());
-    init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    init_dist22();
+    init_extraction();
     router116 = import_express116.default.Router();
-    NewAssetSchema = external_exports.object({
-      name: external_exports.string().describe("\u8D44\u4EA7\u540D\u79F0,\u4EC5\u4E3A\u540D\u79F0\u4E0D\u505A\u5176\u4ED6\u4EFB\u4F55\u8868\u8FF0"),
-      desc: external_exports.string().describe("\u8D44\u4EA7\u63CF\u8FF0"),
-      type: external_exports.enum(["role", "tool", "scene"]).describe("\u8D44\u4EA7\u7C7B\u578B"),
-      scriptIds: external_exports.array(external_exports.number()).describe("\u4F7F\u7528\u8BE5\u8D44\u4EA7\u7684\u5267\u672Cid\u6570\u7EC4")
-    });
-    ExistingAssetRefSchema = external_exports.object({
-      name: external_exports.string().describe("\u5DF2\u6709\u8D44\u4EA7\u7684\u540D\u79F0,\u5FC5\u987B\u4E0E\u5DF2\u6709\u8D44\u4EA7\u5217\u8868\u4E2D\u7684\u540D\u79F0\u5B8C\u5168\u4E00\u81F4"),
-      type: external_exports.enum(["role", "tool", "scene"]).optional().describe("\u5DF2\u6709\u8D44\u4EA7\u7C7B\u578B\uFF1B\u540C\u540D\u8D44\u4EA7\u8DE8\u7C7B\u578B\u65F6\u7528\u4E8E\u51C6\u786E\u5173\u8054"),
-      scriptIds: external_exports.array(external_exports.number()).describe("\u4F7F\u7528\u8BE5\u8D44\u4EA7\u7684\u5267\u672Cid\u6570\u7EC4")
-    });
-    AssetSchema = external_exports.object({
-      name: external_exports.string().describe("\u8D44\u4EA7\u540D\u79F0,\u4EC5\u4E3A\u540D\u79F0\u4E0D\u505A\u5176\u4ED6\u4EFB\u4F55\u8868\u8FF0"),
-      desc: external_exports.string().describe("\u8D44\u4EA7\u63CF\u8FF0"),
-      type: external_exports.enum(["role", "tool", "scene"]).describe("\u8D44\u4EA7\u7C7B\u578B")
-    });
     extractAssets_default = router116.post(
       "/",
       validateFields({
-        scriptIds: external_exports.array(external_exports.number()),
-        projectId: external_exports.number(),
-        groupSize: external_exports.number().min(1).optional()
+        scriptIds: external_exports.array(external_exports.number().int().positive()).min(1).max(5e3),
+        projectId: external_exports.number().int().positive(),
+        groupSize: external_exports.number().int().min(1).max(20).optional(),
+        requestId: external_exports.string().trim().min(1)
       }),
       async (req, res) => {
-        const { scriptIds, projectId, groupSize = 5 } = req.body;
-        if (!scriptIds.length) return res.status(400).send(error50("\u8BF7\u5148\u9009\u62E9\u5267\u672C"));
-        const scripts = await utils_default.db("o_script").whereIn("id", scriptIds);
-        const scriptMap = new Map(scripts.map((s) => [s.id, s]));
-        await utils_default.db("o_script").whereIn("id", scriptIds).update({
-          extractState: 2
-        });
-        const errors = [];
-        let successCount = 0;
-        const scriptGroups = chunkArray(scriptIds, groupSize);
-        async function persistGroupResult(result) {
-          if (!result) return;
-          const { batchScriptIds, newAssets, existingRefs } = result;
-          if (!newAssets.length && !existingRefs.length) return;
-          const existingAssets = await utils_default.db("o_assets").where("projectId", projectId).select("id", "name", "type");
-          const identities = [...existingAssets];
-          const toInsert = newAssets.filter((asset) => {
-            if (findExistingAsset(identities, asset.name, asset.type)) return false;
-            identities.push({ name: asset.name, type: asset.type });
-            return true;
-          });
-          if (toInsert.length) {
-            await utils_default.db("o_assets").insert(
-              toInsert.map((asset) => ({
-                name: asset.name,
-                type: asset.type,
-                describe: asset.desc,
-                projectId,
-                startTime: Date.now()
-              }))
-            );
-          }
-          const allAssets = await utils_default.db("o_assets").where("projectId", projectId).select("id", "name", "type");
-          const scriptAssetRows = [];
-          for (const asset of newAssets) {
-            const assetId = findExistingAsset(allAssets, asset.name, asset.type)?.id;
-            if (assetId) {
-              for (const sid of asset.scriptIds) {
-                scriptAssetRows.push({ scriptId: sid, assetId });
-              }
-            }
-          }
-          for (const ref of existingRefs) {
-            const assetId = findExistingAsset(allAssets, ref.name, ref.type)?.id;
-            if (assetId) {
-              for (const sid of ref.scriptIds) {
-                scriptAssetRows.push({ scriptId: sid, assetId });
-              }
-            }
-          }
-          const uniqueRows = [...new Map(scriptAssetRows.map((r) => [`${r.scriptId}_${r.assetId}`, r])).values()];
-          await utils_default.db("o_scriptAssets").whereIn("scriptId", batchScriptIds).delete();
-          if (uniqueRows.length) {
-            await utils_default.db("o_scriptAssets").insert(uniqueRows);
-          }
-          await utils_default.db("o_script").whereIn("id", batchScriptIds).where("projectId", projectId).update({
-            extractState: 1,
-            errorReason: null
-          });
+        try {
+          res.status(200).send(success3(await enqueueScriptAssetExtraction({ ...req.body, groupSize: req.body.groupSize ?? 5 })));
+        } catch (cause) {
+          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
         }
-        res.send(success3("\u5F00\u59CB\u63D0\u53D6\u8D44\u4EA7"));
-        function processGroup(group) {
-          group.map(async (itemIds) => {
-            const validScripts = [];
-            for (const scriptIds2 of itemIds) {
-              for (const scriptId of scriptIds2) {
-                const script = scriptMap.get(scriptId);
-                if (!script) {
-                  errors.push({ scriptId, error: "\u672A\u627E\u5230\u5BF9\u5E94\u5267\u672C" });
-                  await utils_default.db("o_script").where("id", scriptId).where("projectId", projectId).update({ extractState: -1, errorReason: "\u672A\u627E\u5230\u5BF9\u5E94\u5267\u672C" });
-                } else {
-                  const item = await utils_default.db("o_script").where("projectId", projectId).where("id", scriptId).select("extractState").first();
-                  if (item?.extractState == 2) {
-                    validScripts.push({ id: scriptId, script });
-                  }
-                }
-              }
-            }
-            if (!validScripts.length) return;
-            const validScriptIds = validScripts.map((v) => v.id);
-            await utils_default.db("o_script").where("projectId", projectId).whereIn("id", validScriptIds).update({
-              extractState: 0
-              // 正在提取
-            });
-            const existingAssets = await utils_default.db("o_assets").where("projectId", projectId).select("name", "type");
-            const existingAssetsList = existingAssets.map((a) => `${a.name}(${a.type})`).join("\u3001");
-            const scriptsContent = validScripts.map(({ id, script }) => `===== \u3010\u5267\u672CID: ${id}\u3011${script.name || ""} =====
-${script.content}`).join("\n\n");
-            let collectedNew = [];
-            let collectedExisting = [];
-            try {
-              const resultTool = tool({
-                description: "\u8FD4\u56DE\u7ED3\u679C\u65F6\u5FC5\u987B\u8C03\u7528\u8FD9\u4E2A\u5DE5\u5177",
-                inputSchema: jsonSchema(
-                  external_exports.object({
-                    newAssets: external_exports.array(NewAssetSchema).describe("\u65B0\u53D1\u73B0\u7684\u8D44\u4EA7\u5217\u8868\uFF08\u4E0D\u5728\u5DF2\u6709\u8D44\u4EA7\u5217\u8868\u4E2D\u7684\uFF09\uFF0C\u9700\u8981\u5B8C\u6574\u7684 prompt\u3001name\u3001desc\u3001type \u548C\u4F7F\u7528\u8BE5\u8D44\u4EA7\u7684 scriptIds"),
-                    existingAssetRefs: external_exports.array(ExistingAssetRefSchema).describe("\u5DF2\u6709\u8D44\u4EA7\u7684\u5F15\u7528\u5217\u8868\uFF08\u5728\u5DF2\u6709\u8D44\u4EA7\u5217\u8868\u4E2D\u5DF2\u5B58\u5728\u7684\uFF09\uFF0C\u7ED9\u51FA\u8D44\u4EA7\u540D\u79F0\u3001\u7C7B\u578B\u548C\u4F7F\u7528\u8BE5\u8D44\u4EA7\u7684 scriptIds")
-                  }).toJSONSchema()
-                ),
-                execute: async ({ newAssets, existingAssetRefs }) => {
-                  if (newAssets?.length) collectedNew = newAssets;
-                  if (existingAssetRefs?.length) collectedExisting = existingAssetRefs;
-                  return "\u65E0\u9700\u56DE\u590D\u7528\u6237\u4EFB\u4F55\u5185\u5BB9";
-                }
-              });
-              const promptData = await utils_default.db("o_prompt").where("type", "scriptAssetExtraction").first();
-              let scriptAssetExtraction = "";
-              if (promptData && promptData.useData) {
-                scriptAssetExtraction = promptData.useData;
-              } else {
-                scriptAssetExtraction = promptData?.data ?? void 0;
-              }
-              const existingHint = existingAssetsList ? `
-
-\u3010\u5DF2\u6709\u8D44\u4EA7\u5217\u8868\u3011\uFF1A${existingAssetsList}
-\u5BF9\u4E8E\u5DF2\u6709\u8D44\u4EA7\uFF0C\u5982\u679C\u5728\u5267\u672C\u4E2D\u51FA\u73B0\uFF0C\u53EA\u9700\u5728 existingAssetRefs \u4E2D\u7ED9\u51FA\u8D44\u4EA7\u540D\u79F0\u3001type \u548C\u5BF9\u5E94\u7684 scriptIds \u6570\u7EC4\u5373\u53EF\uFF0C\u65E0\u9700\u91CD\u590D\u751F\u6210\u63CF\u8FF0\u3002\u89D2\u8272\u6216\u9053\u5177\u540D\u79F0\u4EC5\u591A\u51FA\u62EC\u53F7\u5B9A\u4F4D\u8BCD\uFF08\u5982\u201C\u6797\u5C0F\u96E8\uFF08\u4E3B\u89D2\uFF09\u201D\u4E0E\u201C\u6797\u5C0F\u96E8\u201D\uFF09\u65F6\u5FC5\u987B\u590D\u7528\u5DF2\u6709\u8D44\u4EA7\uFF1B\u573A\u666F\u62EC\u53F7\u901A\u5E38\u8868\u793A\u4E0D\u540C\u5B50\u5730\u70B9\uFF0C\u4E0D\u8981\u56E0\u6B64\u5408\u5E76\u3002\u5BF9\u4E8E\u65B0\u53D1\u73B0\u7684\u8D44\u4EA7\uFF08\u4E0D\u5728\u5DF2\u6709\u5217\u8868\u4E2D\uFF09\uFF0C\u8BF7\u5728 newAssets \u4E2D\u7ED9\u51FA\u5B8C\u6574\u4FE1\u606F\u3002` : "";
-              const output = await utils_default.Ai.Text("universalAi").invoke({
-                messages: [
-                  {
-                    role: "system",
-                    content: scriptAssetExtraction + "\n\n\u63D0\u53D6\u5267\u672C\u4E2D\u6D89\u53CA\u7684\u8D44\u4EA7\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\uFF09\uFF0C\u53C2\u8003\u6280\u80FD script_assets_extract \u89C4\u8303\uFF0C\u7ED3\u679C\u5FC5\u987B\u901A\u8FC7 resultTool \u5DE5\u5177\u8FD4\u56DE\u3002\n\n\u6CE8\u610F\uFF1A\u672C\u6B21\u4F1A\u540C\u65F6\u63D0\u4F9B\u591A\u96C6\u5267\u672C\uFF0C\u6BCF\u96C6\u5267\u672C\u4EE5 ===== \u3010\u5267\u672CID: xxx\u3011 ===== \u5206\u9694\u3002\u4F60\u9700\u8981\u5206\u6790\u6BCF\u96C6\u5267\u672C\u4F7F\u7528\u4E86\u54EA\u4E9B\u8D44\u4EA7\uFF0C\u5E76\u5728\u8F93\u51FA\u4E2D\u7528 scriptIds \u6570\u7EC4\u6807\u660E\u6BCF\u4E2A\u8D44\u4EA7\u5728\u54EA\u4E9B\u5267\u672C\u4E2D\u51FA\u73B0\u3002"
-                  },
-                  {
-                    role: "user",
-                    content: `\u5F53\u524D\u5DF2\u6709\u8D44\u4EA7\u5217\u8868\uFF1A${existingHint}
-
-\u8BF7\u6839\u636E\u4EE5\u4E0B${validScripts.length}\u96C6\u5267\u672C\u63D0\u53D6\u5BF9\u5E94\u7684\u5267\u672C\u8D44\u4EA7\uFF08\u89D2\u8272\u3001\u573A\u666F\u3001\u9053\u5177\uFF09:
-
-${scriptsContent}`
-                  }
-                ],
-                tools: { resultTool }
-              });
-              await persistGroupResult({
-                batchScriptIds: validScriptIds,
-                newAssets: collectedNew,
-                existingRefs: collectedExisting
-              });
-            } catch (e) {
-              console.error(`[extractAssets] group=[${validScriptIds.join(",")}] \u63D0\u53D6\u5931\u8D25:`, e);
-              for (const { id, script } of validScripts) {
-                errors.push({ scriptId: id, error: (script.name || "") + ":" + utils_default.error(e).message });
-                await utils_default.db("o_script").where("id", id).where("projectId", projectId).update({ extractState: -1, errorReason: utils_default.error(e).message });
-              }
-              return;
-            }
-            if (!collectedNew.length && !collectedExisting.length) {
-              for (const { id } of validScripts) {
-                errors.push({ scriptId: id, error: "AI \u672A\u8FD4\u56DE\u4EFB\u4F55\u8D44\u4EA7" });
-                await utils_default.db("o_script").where("id", id).where("projectId", projectId).update({ extractState: -1, errorReason: "AI \u672A\u8FD4\u56DE\u4EFB\u4F55\u8D44\u4EA7" });
-              }
-              return;
-            }
-          });
-        }
-        processGroup(scriptGroups);
       }
     );
   }
@@ -257411,14 +257477,14 @@ async function resolveContent(source) {
   return source.mode === "json" ? source.content : fetchNovelExportJson(source);
 }
 async function previewNovelImport(input) {
-  const project = await sql13("o_project").where("id", input.projectId).first();
+  const project = await sql14("o_project").where("id", input.projectId).first();
   if (!project) throw new Error("\u9879\u76EE\u4E0D\u5B58\u5728");
   const preview = parseNovelExportJson(await resolveContent(input.source));
-  const history = await sql13("script_import_items").where({ project_id: input.projectId, source_type: preview.sourceType, external_project_id: preview.externalProjectId }).orderBy("created_at", "desc");
+  const history = await sql14("script_import_items").where({ project_id: input.projectId, source_type: preview.sourceType, external_project_id: preview.externalProjectId }).orderBy("created_at", "desc");
   const latestByExternalId = /* @__PURE__ */ new Map();
   for (const item of history) if (!latestByExternalId.has(item.external_chapter_id)) latestByExternalId.set(item.external_chapter_id, item);
   const scriptIds = [...new Set([...latestByExternalId.values()].map((item) => item.script_id))];
-  const scripts = scriptIds.length ? await sql13("o_script").where("projectId", input.projectId).whereIn("id", scriptIds) : [];
+  const scripts = scriptIds.length ? await sql14("o_script").where("projectId", input.projectId).whereIn("id", scriptIds) : [];
   const scriptsById = new Map(scripts.map((script) => [script.id, script]));
   return {
     ...preview,
@@ -257434,14 +257500,14 @@ async function commitNovelImport(input) {
   const preview = await previewNovelImport({ projectId: input.projectId, source: input.source });
   return commitParsedNovelImport(db, { projectId: input.projectId, preview, chapterIds: input.chapterIds });
 }
-var sql13;
+var sql14;
 var init_importNovel = __esm({
   "src/services/script-import/importNovel.ts"() {
     "use strict";
     init_db();
     init_novelExport();
     init_persistence();
-    sql13 = db;
+    sql14 = db;
   }
 });
 
@@ -259254,8 +259320,8 @@ var init_modelTest = __esm({
               tools: { getWeatherTool }
             });
             let fullResponse = "";
-            for await (const chunk of textStream) {
-              fullResponse += chunk;
+            for await (const chunk2 of textStream) {
+              fullResponse += chunk2;
             }
             if (!fullResponse) return res.status(500).send(error50("\u6A21\u578B\u672A\u8FD4\u56DE\u7ED3\u679C"));
             res.status(200).send(success3(fullResponse));
@@ -259886,10 +259952,10 @@ var init_cues = __esm({
 
 // src/services/task-engine/enqueueUtteranceTts.ts
 async function enqueueUtteranceTts(input) {
-  const utterance = await sql14("utterances").where({ id: input.utteranceId, project_id: input.projectId }).first();
+  const utterance = await sql15("utterances").where({ id: input.utteranceId, project_id: input.projectId }).first();
   if (!utterance) throw new Error("\u53F0\u8BCD\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
   if (!utterance.voice_cast_id) throw new Error("\u8BF7\u5148\u4E3A\u8FD9\u53E5\u53F0\u8BCD\u5206\u914D\u89D2\u8272\u97F3\u8272");
-  const voiceCast = await sql14("voice_cast").where({ id: utterance.voice_cast_id, project_id: input.projectId }).first();
+  const voiceCast = await sql15("voice_cast").where({ id: utterance.voice_cast_id, project_id: input.projectId }).first();
   if (!voiceCast) throw new Error("\u53F0\u8BCD\u7ED1\u5B9A\u7684\u89D2\u8272\u97F3\u8272\u4E0D\u5B58\u5728");
   const model = `${voiceCast.provider}:${voiceCast.model}`;
   const cacheKey = stableIdempotencyKey({
@@ -259913,7 +259979,7 @@ async function enqueueUtteranceTts(input) {
   });
   let referenceAudioPath;
   if (voiceCast.preview_asset_id) {
-    const reference = await sql14("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", voiceCast.preview_asset_id).select("o_image.filePath").first();
+    const reference = await sql15("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", voiceCast.preview_asset_id).select("o_image.filePath").first();
     referenceAudioPath = reference?.filePath ?? void 0;
   }
   const resourceKey = `audio:utterance:${input.utteranceId}`;
@@ -259932,7 +259998,7 @@ async function enqueueUtteranceTts(input) {
     savePath,
     cacheKey
   };
-  const [legacyTaskId] = await sql14("o_tasks").insert({
+  const [legacyTaskId] = await sql15("o_tasks").insert({
     projectId: input.projectId,
     taskClass: "\u9010\u53E5\u914D\u97F3",
     relatedObjects: JSON.stringify({ utteranceId: input.utteranceId }),
@@ -259954,10 +260020,10 @@ async function enqueueUtteranceTts(input) {
     costReservation
   });
   if (result.deduped) {
-    await sql14("o_tasks").where("id", legacyTaskId).delete();
+    await sql15("o_tasks").where("id", legacyTaskId).delete();
     const existingResult = result.task.result;
     if (result.task.status === "succeeded" && existingResult?.audioPath) {
-      await sql14("utterances").where("id", input.utteranceId).update({
+      await sql15("utterances").where("id", input.utteranceId).update({
         audio_path: existingResult.audioPath,
         cache_key: cacheKey,
         status: "succeeded",
@@ -259966,7 +260032,7 @@ async function enqueueUtteranceTts(input) {
       });
     }
   } else {
-    await sql14("utterances").where("id", input.utteranceId).update({
+    await sql15("utterances").where("id", input.utteranceId).update({
       status: "queued",
       cache_key: cacheKey,
       error_message: null,
@@ -259975,14 +260041,14 @@ async function enqueueUtteranceTts(input) {
   }
   return { task: result.task, payload: result.task.payload, deduped: result.deduped, cached: false };
 }
-var sql14;
+var sql15;
 var init_enqueueUtteranceTts = __esm({
   "src/services/task-engine/enqueueUtteranceTts.ts"() {
     "use strict";
     init_db();
     init_repository();
     init_budget();
-    sql14 = db;
+    sql15 = db;
   }
 });
 
@@ -261501,7 +261567,7 @@ async function consumeFullStream(fullStream, initialMsg, syncMsg) {
   let thinkTime = 0;
   let fullResponse = "";
   try {
-    for await (const chunk of fullStream) {
+    for await (const chunk2 of fullStream) {
       if (syncMsg) {
         const newMsg = syncMsg();
         if (newMsg !== msg) {
@@ -261509,22 +261575,22 @@ async function consumeFullStream(fullStream, initialMsg, syncMsg) {
           text2 = msg.text();
         }
       }
-      if (chunk.type === "reasoning-start") {
+      if (chunk2.type === "reasoning-start") {
         thinkTime = Date.now();
         thinking = msg.thinking("\u601D\u8003\u4E2D...");
-      } else if (chunk.type === "reasoning-delta") {
-        thinking?.append(chunk.text);
-      } else if (chunk.type === "reasoning-end") {
+      } else if (chunk2.type === "reasoning-delta") {
+        thinking?.append(chunk2.text);
+      } else if (chunk2.type === "reasoning-end") {
         thinkTime = Date.now() - thinkTime;
         thinking?.updateTitle(`\u601D\u8003\u5B8C\u6BD5\uFF08${(thinkTime / 1e3).toFixed(1)} \u79D2\uFF09`);
         thinking?.complete();
         thinking = null;
-      } else if (chunk.type === "text-delta") {
-        text2.append(chunk.text);
-        fullResponse += chunk.text;
-      } else if (chunk.type === "error") {
-        throw chunk.error;
-      } else if (chunk.type == "finish") {
+      } else if (chunk2.type === "text-delta") {
+        text2.append(chunk2.text);
+        fullResponse += chunk2.text;
+      } else if (chunk2.type === "error") {
+        throw chunk2.error;
+      } else if (chunk2.type == "finish") {
         break;
       }
     }
@@ -261835,12 +261901,12 @@ var ContentStream = class {
     return this.contentId;
   }
   // 流式追加数据
-  append(chunk) {
+  append(chunk2) {
     this.socket.emit("content:update", {
       messageId: this.messageId,
       contentId: this.contentId,
       type: this.contentType,
-      data: chunk,
+      data: chunk2,
       strategy: "append",
       status: "streaming"
     });
@@ -261884,12 +261950,12 @@ var ThinkingStream = class extends ContentStream {
     super(socket, messageId, contentId, "thinking");
   }
   // 追加思考文本
-  appendText(chunk) {
+  appendText(chunk2) {
     this.socket.emit("content:update", {
       messageId: this.messageId,
       contentId: this.contentId,
       type: "thinking",
-      data: { text: chunk },
+      data: { text: chunk2 },
       strategy: "append",
       status: "streaming"
     });
@@ -261934,9 +262000,9 @@ var AutoThinkingTextStream = class _AutoThinkingTextStream extends ContentStream
     }
     return 0;
   }
-  append(chunk) {
-    if (!chunk) return this;
-    let rest = this.pending + chunk;
+  append(chunk2) {
+    if (!chunk2) return this;
+    let rest = this.pending + chunk2;
     this.pending = "";
     while (rest.length > 0) {
       if (!this.inThinking) {
@@ -262081,24 +262147,24 @@ var ToolCallStream = class extends ContentStream {
     this.toolCallId = toolCallId;
   }
   // 追加参数块
-  appendArgs(chunk) {
+  appendArgs(chunk2) {
     this.socket.emit("content:update", {
       messageId: this.messageId,
       contentId: this.contentId,
       type: "toolcall",
-      data: { toolCallId: this.toolCallId, args: chunk },
+      data: { toolCallId: this.toolCallId, args: chunk2 },
       strategy: "append",
       status: "streaming"
     });
     return this;
   }
   // 追加结果块
-  appendResult(chunk) {
+  appendResult(chunk2) {
     this.socket.emit("content:update", {
       messageId: this.messageId,
       contentId: this.contentId,
       type: "toolcall",
-      data: { toolCallId: this.toolCallId, chunk },
+      data: { toolCallId: this.toolCallId, chunk: chunk2 },
       strategy: "append",
       status: "streaming"
     });
@@ -262550,7 +262616,7 @@ async function consumeFullStream2(fullStream, initialMsg, syncMsg) {
   let thinkTime = 0;
   let fullResponse = "";
   try {
-    for await (const chunk of fullStream) {
+    for await (const chunk2 of fullStream) {
       if (syncMsg) {
         const newMsg = syncMsg();
         if (newMsg !== msg) {
@@ -262558,21 +262624,21 @@ async function consumeFullStream2(fullStream, initialMsg, syncMsg) {
           text2 = msg.text();
         }
       }
-      if (chunk.type === "reasoning-start") {
+      if (chunk2.type === "reasoning-start") {
         thinkTime = Date.now();
         thinking = msg.thinking("\u601D\u8003\u4E2D...");
-      } else if (chunk.type === "reasoning-delta") {
-        thinking?.append(chunk.text);
-      } else if (chunk.type === "reasoning-end") {
+      } else if (chunk2.type === "reasoning-delta") {
+        thinking?.append(chunk2.text);
+      } else if (chunk2.type === "reasoning-end") {
         thinkTime = Date.now() - thinkTime;
         thinking?.updateTitle(`\u601D\u8003\u5B8C\u6BD5\uFF08${(thinkTime / 1e3).toFixed(1)} \u79D2\uFF09`);
         thinking?.complete();
         thinking = null;
-      } else if (chunk.type === "text-delta") {
-        text2.append(chunk.text);
-        fullResponse += chunk.text;
-      } else if (chunk.type === "error") {
-        throw chunk.error;
+      } else if (chunk2.type === "text-delta") {
+        text2.append(chunk2.text);
+        fullResponse += chunk2.text;
+      } else if (chunk2.type === "error") {
+        throw chunk2.error;
       }
     }
     text2.complete();
@@ -263479,7 +263545,7 @@ var import_compressing = __toESM(require_compressing());
 init_utils3();
 init_db();
 init_generationTask();
-init_repository2();
+init_dialogue();
 var sql5 = db;
 function sha256Buffer(buffer) {
   return import_node_crypto7.default.createHash("sha256").update(buffer).digest("hex");
@@ -263519,6 +263585,12 @@ async function writeZipWithCancellation(zip, outputPath, context2) {
     clearInterval(cancelTimer);
   }
 }
+async function assertLatestReview(payload) {
+  const latest = await sql5("composition_reviews").where({ composition_job_id: payload.compositionJobId, output_checksum: payload.outputChecksum }).orderBy("created_at", "desc").first();
+  if (!latest || latest.id !== payload.reviewId || latest.status !== "approved") {
+    throw new TaskExecutionError("\u5F53\u524D\u6210\u7247\u5BA1\u6838\u5DF2\u53D8\u5316\uFF0C\u53D1\u5E03\u5305\u4EFB\u52A1\u5DF2\u5931\u6548", "PUBLISH_REVIEW_SUPERSEDED", false, true);
+  }
+}
 var compositionPublishTaskHandler = {
   async execute(task, context2) {
     const payload = task.payload;
@@ -263535,6 +263607,7 @@ var compositionPublishTaskHandler = {
     if (job.status !== "succeeded" || job.preset !== "final-high" || job.output_checksum !== payload.outputChecksum || qa.status !== "succeeded" || qa.output_checksum !== payload.outputChecksum || !qaResult?.summary || qaResult.summary.status === "failed" || review.status !== "approved" || review.output_checksum !== payload.outputChecksum) {
       throw new TaskExecutionError("\u6210\u7247\u3001QA \u6216\u5BA1\u6838\u5173\u5361\u5DF2\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u521B\u5EFA\u53D1\u5E03\u5305", "PUBLISH_GATE_CHANGED", false, true);
     }
+    await assertLatestReview(payload);
     const videoAbsolute = await utils_default.oss.getAbsolutePath(payload.outputPath);
     const videoStat = await import_promises7.default.stat(videoAbsolute).catch(() => null);
     if (!videoStat?.isFile()) throw new TaskExecutionError("\u6210\u7247\u6587\u4EF6\u4E0D\u5B58\u5728", "PUBLISH_VIDEO_MISSING", false, true);
@@ -263543,20 +263616,26 @@ var compositionPublishTaskHandler = {
     await sql5("publish_packages").where("id", payload.packageId).update({ status: "running", error_message: null, updated_at: Date.now() });
     const packageAbsolute = await utils_default.oss.getAbsolutePath(payload.packagePath);
     const partialPath = `${packageAbsolute}.partial-${task.id}`;
+    let finalPathWritten = false;
     await import_promises7.default.mkdir(import_node_path7.default.dirname(packageAbsolute), { recursive: true });
     await import_promises7.default.rm(partialPath, { force: true });
     try {
-      const [srt, vtt] = await Promise.all([
-        voiceStudioRepository.exportSubtitles({ projectId: payload.projectId, scriptId: payload.scriptId, format: "srt" }),
-        voiceStudioRepository.exportSubtitles({ projectId: payload.projectId, scriptId: payload.scriptId, format: "vtt" })
-      ]);
-      const timelineBuffer = Buffer.from(JSON.stringify(JSON.parse(timeline.payload), null, 2));
+      const actualVideoChecksum = await sha256File2(videoAbsolute);
+      if (actualVideoChecksum !== payload.outputChecksum) {
+        throw new TaskExecutionError("\u9AD8\u6E05\u6210\u7247\u6587\u4EF6\u6821\u9A8C\u548C\u5DF2\u53D8\u5316\uFF0C\u8BF7\u91CD\u65B0\u6E32\u67D3\u3001QA \u548C\u5BA1\u6838", "PUBLISH_VIDEO_CHECKSUM_CHANGED", false, true);
+      }
+      await context2.throwIfCancelled();
+      const timelinePayload = typeof timeline.payload === "string" ? JSON.parse(timeline.payload) : timeline.payload;
+      const timelineCues = (timelinePayload.subtitleTracks || []).flatMap((track) => track.cues || []).sort((a, b) => a.startMs - b.startMs);
+      const srt = serializeSubtitles(timelineCues, "srt");
+      const vtt = serializeSubtitles(timelineCues, "vtt");
+      const timelineBuffer = Buffer.from(JSON.stringify(timelinePayload, null, 2));
       const qaBuffer = Buffer.from(JSON.stringify(qaResult, null, 2));
       const reviewBuffer = Buffer.from(JSON.stringify({ status: review.status, note: review.note, reviewer: review.reviewer, createdAt: review.created_at, outputChecksum: review.output_checksum }, null, 2));
       const srtBuffer = Buffer.from(srt);
       const vttBuffer = Buffer.from(vtt);
       const fileChecksums = {
-        "video/final.mp4": payload.outputChecksum,
+        "video/final.mp4": actualVideoChecksum,
         "subtitles/subtitles.srt": sha256Buffer(srtBuffer),
         "subtitles/subtitles.vtt": sha256Buffer(vttBuffer),
         "evidence/timeline.json": sha256Buffer(timelineBuffer),
@@ -263595,24 +263674,46 @@ var compositionPublishTaskHandler = {
       zip.addEntry(checksumsBuffer, { relativePath: "checksums.sha256" });
       await writeZipWithCancellation(zip, partialPath, context2);
       await context2.throwIfCancelled();
+      await assertLatestReview(payload);
       await context2.transitionToFinalizing();
       await replaceFileAtomically(partialPath, packageAbsolute);
+      finalPathWritten = true;
       const [packageChecksum, stat] = await Promise.all([sha256File2(packageAbsolute), import_promises7.default.stat(packageAbsolute)]);
-      await sql5("publish_packages").where("id", payload.packageId).update({
-        status: "succeeded",
-        package_path: payload.packagePath,
-        package_checksum: packageChecksum,
-        size_bytes: stat.size,
-        manifest: JSON.stringify(manifest),
-        error_message: null,
-        updated_at: Date.now()
+      await db.transaction(async (trx) => {
+        const latestReview = await trx("composition_reviews").where({ composition_job_id: payload.compositionJobId, output_checksum: payload.outputChecksum }).orderBy("created_at", "desc").first();
+        const currentTask = await trx("generation_tasks").where("id", task.id).first();
+        if (!latestReview || latestReview.id !== payload.reviewId || latestReview.status !== "approved") {
+          throw new TaskExecutionError("\u5F53\u524D\u6210\u7247\u5BA1\u6838\u5DF2\u53D8\u5316\uFF0C\u53D1\u5E03\u5305\u4EFB\u52A1\u5DF2\u5931\u6548", "PUBLISH_REVIEW_SUPERSEDED", false, true);
+        }
+        if (!currentTask || currentTask.cancel_requested === 1 || ["cancelling", "cancelled"].includes(currentTask.status)) {
+          throw new TaskExecutionError("\u53D1\u5E03\u5305\u4EFB\u52A1\u5DF2\u53D6\u6D88", "PUBLISH_CANCELLED", false, true);
+        }
+        const updated = await trx("publish_packages").where({ id: payload.packageId, review_id: payload.reviewId }).whereNot("status", "revoked").update({
+          status: "succeeded",
+          package_path: payload.packagePath,
+          package_checksum: packageChecksum,
+          size_bytes: stat.size,
+          manifest: JSON.stringify(manifest),
+          error_message: null,
+          updated_at: Date.now()
+        });
+        if (updated !== 1) throw new TaskExecutionError("\u53D1\u5E03\u5305\u8BB0\u5F55\u5DF2\u5931\u6548", "PUBLISH_PACKAGE_REVOKED", false, true);
       });
       return { packageId: payload.packageId, packagePath: payload.packagePath, packageChecksum, sizeBytes: stat.size, manifest };
     } catch (error73) {
       await import_promises7.default.rm(partialPath, { force: true }).catch(() => void 0);
-      await sql5("publish_packages").where("id", payload.packageId).update({ status: "failed", error_message: error73 instanceof Error ? error73.message : String(error73), updated_at: Date.now() }).catch(() => void 0);
+      if (finalPathWritten) await import_promises7.default.rm(packageAbsolute, { force: true }).catch(() => void 0);
+      await sql5("publish_packages").where("id", payload.packageId).whereNot("status", "revoked").update({ status: "failed", error_message: error73 instanceof Error ? error73.message : String(error73), updated_at: Date.now() }).catch(() => void 0);
       throw error73;
     }
+  }
+};
+
+// src/services/task-engine/handlers/scriptAssetExtraction.ts
+init_extraction();
+var scriptAssetExtractionTaskHandler = {
+  execute(task, context2) {
+    return executeScriptAssetExtraction(task.payload, context2);
   }
 };
 
@@ -263630,6 +263731,7 @@ async function startGenerationTaskEngine() {
     registerTaskHandler("asset.image.single.generate", singleAssetImageTaskHandler);
     registerTaskHandler("workflow.image.generate", workflowImageTaskHandler);
     registerTaskHandler("composition.publish", compositionPublishTaskHandler);
+    registerTaskHandler("script.assets.extract", scriptAssetExtractionTaskHandler);
     initialized = true;
   }
   await generationTaskWorker.start();

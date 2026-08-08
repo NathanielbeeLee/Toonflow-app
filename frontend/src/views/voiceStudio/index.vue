@@ -210,7 +210,7 @@
                   <t-alert v-if="publishPackage?.errorMessage" theme="error" :message="publishPackage.errorMessage" />
                 </div>
                 <t-space>
-                  <a v-if="publishPackage?.status === 'succeeded' && publishPackage.packageUrl" :href="publishPackage.packageUrl" download>下载 ZIP</a>
+                  <a v-if="publishPackage?.status === 'succeeded' && publishPackage.packageUrl && compositionReview?.status === 'approved' && publishPackage.reviewId === compositionReview.id" :href="publishPackage.packageUrl" download>下载 ZIP</a>
                   <t-button size="small" theme="primary" :loading="creatingPublishPackage || publishPackageActive" :disabled="!canCreatePublishPackage" @click="createPublishPackage">创建发布包</t-button>
                 </t-space>
               </div>
@@ -469,6 +469,7 @@ interface CompositionReview {
 interface PublishPackage {
   id: string;
   compositionJobId: string;
+  reviewId: string;
   status: string;
   packageUrl: string | null;
   packageChecksum: string | null;
@@ -840,6 +841,7 @@ async function saveCompositionReview() {
       ...reviewForm.value,
     });
     compositionReview.value = data;
+    publishPackage.value = null;
     reviewDialogVisible.value = false;
     window.$message.success(reviewForm.value.status === "approved" ? "已记录审核通过" : "已记录退回意见");
     return true;
@@ -869,7 +871,7 @@ async function createPublishPackage() {
 }
 
 function publishStatusLabel(status: string) {
-  return ({ queued: "排队中", running: "打包中", succeeded: "已完成", failed: "失败", cancelled: "已取消" } as Record<string, string>)[status] || status;
+  return ({ queued: "排队中", running: "打包中", succeeded: "已完成", failed: "失败", cancelled: "已取消", revoked: "已撤销" } as Record<string, string>)[status] || status;
 }
 
 function formatFileSize(bytes: number) {

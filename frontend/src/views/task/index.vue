@@ -661,6 +661,7 @@ function taskTypeLabel(type: string) {
     "composition.render": "本地视频合成",
     "composition.qa": "媒体 QA",
     "composition.publish": "发布交付包",
+    "script.assets.extract": "剧本资产提取",
   };
   return labels[type] || type;
 }

@@ -8,6 +8,7 @@ import { compositionQaTaskHandler } from "@/services/task-engine/handlers/compos
 import { singleAssetImageTaskHandler } from "@/services/task-engine/handlers/singleAssetImage";
 import { workflowImageTaskHandler } from "@/services/task-engine/handlers/workflowImage";
 import { compositionPublishTaskHandler } from "@/services/task-engine/handlers/compositionPublish";
+import { scriptAssetExtractionTaskHandler } from "@/services/task-engine/handlers/scriptAssetExtraction";
 
 let initialized = false;
 
@@ -23,6 +24,7 @@ export async function startGenerationTaskEngine(): Promise<void> {
     registerTaskHandler("asset.image.single.generate", singleAssetImageTaskHandler);
     registerTaskHandler("workflow.image.generate", workflowImageTaskHandler);
     registerTaskHandler("composition.publish", compositionPublishTaskHandler);
+    registerTaskHandler("script.assets.extract", scriptAssetExtractionTaskHandler);
     initialized = true;
   }
   await generationTaskWorker.start();

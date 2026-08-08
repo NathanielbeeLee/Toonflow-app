@@ -223,11 +223,13 @@ async function handleExtractAssets() {
   //判断是否有资产正在提取中
   scriptLoad.value = true;
   try {
-    await axios.post("/script/extractAssets", {
+    const { data } = await axios.post("/script/extractAssets", {
       scriptIds: selectedIds.value,
       projectId: project.value!.id,
       groupSize: otherSetting.value.assetsBatchGenereateSize,
+      requestId: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`,
     });
+    window.$message.success(data.deduped ? "当前项目已有资产提取任务" : "资产提取已进入持久任务队列");
     searchScripts();
     selectedIds.value = [];
   } catch (e) {
