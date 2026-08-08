@@ -23,5 +23,8 @@
 | `POST /api/composition/timeline/audio/list` / `upsert` / `delete` | 维护剧本时间线的 SFX、环境声和 BGM 片段 |
 | `POST /api/composition/timeline/qa/run` | 对指定成功成片创建本地持久媒体 QA |
 | `POST /api/composition/timeline/qa/latest` | 获取当前剧本最近一次 QA 状态和问题报告 |
+| `POST /api/generationTasks/limits/budget/get` / `upsert` | 查询或维护项目预算与未知价格策略 |
+| `POST /api/generationTasks/limits/pricing/list` / `upsert` / `delete` | 维护用户提供的模型价格规则 |
+| `POST /api/composition/timeline/review/latest` / `record` | 查询或追加绑定成片 checksum 的审核记录 |
 
 正式版本化 OpenAPI、API Key、webhook 尚未实现。当前接口不应直接暴露到公网。时间线渲染只调用本机 FFmpeg，不调用付费生成 API；请求必须使用服务端保存的 timeline ID，不能传入任意本机输入或输出路径。

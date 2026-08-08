@@ -207,6 +207,24 @@
       "last_verified_commit": "toon-custom/f737aa05"
     },
     {
+      "id": "feature.budget-review-gates",
+      "type": "feature",
+      "name": "项目预算与成片审核",
+      "summary": "按用户价格规则在生成前预留预算、阻止超额，并把人工审核绑定成片输出校验和",
+      "user_entry": { "page": "任务中心 / 预算与价格；配音与字幕 / 成片卡", "action": "配置价格和预算，QA 后记录审核通过或退回" },
+      "source_paths": ["src/services/task-engine/budget.ts", "src/services/composition/reviews.ts", "frontend/src/views/task/index.vue", "frontend/src/views/voiceStudio/index.vue"],
+      "api": ["POST /api/generationTasks/limits/budget/get", "POST /api/generationTasks/limits/pricing/upsert", "POST /api/composition/timeline/review/record"],
+      "tables": ["project_budget_controls", "pricing_rules", "usage_ledger", "composition_reviews"],
+      "relations": [
+        { "type": "protects", "target": "feature.durable-video-tasks" },
+        { "type": "reviews", "target": "feature.ffmpeg-preview-render" },
+        { "type": "uses", "target": "feature.media-qa" },
+        { "type": "documented_by", "target": "document.database-tasks" }
+      ],
+      "introduced_in": "toon-custom/999df643",
+      "last_verified_commit": "toon-custom/999df643"
+    },
+    {
       "id": "feature.durable-task-center",
       "type": "feature",
       "name": "持久任务中心",

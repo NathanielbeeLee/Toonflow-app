@@ -36,3 +36,12 @@ timeline schema v1 包含画幅、fps、BT.709、48kHz、响度/true peak 目标
 `preview-low` 和 `final-high` 支持视频裁剪/串联、横竖屏统一、H.264/AAC 和 faststart。六类声音按 `startMs` 对齐并统一为 48kHz 立体声；dialogue sidechain 压低背景总线，24-bit PCM 中间母带再执行 loudnorm 两遍标准化。字幕由 Sharp 生成透明图层后使用 FFmpeg overlay 按 cue 烧录，不要求 FFmpeg 编译 drawtext/libass。探测不到音轨或文件缺失时记录到结构化日志并跳过。媒体工具只通过参数数组启动，不拼接任意 shell 命令；可用 `FFPROBE_PATH`、`FFMPEG_PATH` 指定可执行文件。
 
 `composition.qa` 使用 `qa` 通道，固定绑定已成功 composition job 的输出 checksum；输出变化后旧报告不会被复用。任务执行成功只表示检查完成，业务结果仍可能是 `passed`、`warning` 或 `failed`。报告错误/取消/重试同步回 `media_qa_reports`，应用重启后本地任务可安全恢复。
+
+## 预算、价格与审核
+
+- `project_budget_controls`：项目预算上限、币种和是否阻止未知价格。
+- `pricing_rules`：用户维护的供应商/模型/通道单价与计价单位；系统没有隐含价格表。
+- `usage_ledger`：任务入队时保存 units、estimated cost、币种和 pricing snapshot。actual cost 只有供应商有可靠回执时才能写，当前保持空值。
+- `composition_reviews`：追加式成片审核事件，保存 composition job、输出 checksum、通过/退回、意见、审核人和时间。
+
+预算校验发生在创建视频/图片/配音业务记录之前；没有规则时默认不估价，严格模式才阻断。当前复合任务只覆盖主模型费用，不能把预留值解释为最终供应商账单。
