@@ -103,12 +103,19 @@ export async function renderTimelinePreview(input: RenderInput) {
 
   const absoluteInputs: string[] = [];
   const videoMedia = [];
+  const missingVideoInputs: string[] = [];
   for (const clip of clips) {
     const absolutePath = await u.oss.getAbsolutePath(clip.path);
     const stat = await fs.stat(absolutePath).catch(() => null);
-    if (!stat?.isFile()) throw new Error(`视频片段不存在: ${clip.path}`);
+    if (!stat?.isFile()) {
+      missingVideoInputs.push(`视频轨道 ${clip.storyboardTrackId}（候选视频 ${clip.sourceId}）`);
+      continue;
+    }
     absoluteInputs.push(absolutePath);
     videoMedia.push(await probeMedia(clip.path));
+  }
+  if (missingVideoInputs.length) {
+    throw new Error(`以下镜头的本地视频文件已丢失：${missingVideoInputs.join("、")}。请重新生成或重新选片后再构建时间线。`);
   }
 
   const absoluteOutput = await u.oss.getAbsolutePath(input.outputPath);

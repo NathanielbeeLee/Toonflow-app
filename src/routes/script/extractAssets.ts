@@ -20,6 +20,7 @@ const NewAssetSchema = z.object({
 /** 已有资产：数据库中已存在的资产，只需给出名称和关联的剧本 */
 const ExistingAssetRefSchema = z.object({
   name: z.string().describe("已有资产的名称,必须与已有资产列表中的名称完全一致"),
+  type: z.enum(["role", "tool", "scene"]).optional().describe("已有资产类型；同名资产跨类型时用于准确关联"),
   scriptIds: z.array(z.number()).describe("使用该资产的剧本id数组"),
 });
 
@@ -32,6 +33,26 @@ export const AssetSchema = z.object({
 type NewAsset = z.infer<typeof NewAssetSchema>;
 type ExistingAssetRef = z.infer<typeof ExistingAssetRefSchema>;
 type Asset = z.infer<typeof AssetSchema>;
+
+type AssetIdentity = { id?: number; name?: string | null; type?: string | null };
+
+function normalizedAssetName(name: string, type?: string | null): string {
+  const compact = name.normalize("NFKC").replace(/[\s\u3000]+/g, "").toLowerCase();
+  if (type === "scene") return compact;
+  const withoutQualifier = compact
+    .replace(/[（(][^（）()]*[）)]/g, "")
+    .replace(/[（(].*$/, "");
+  return withoutQualifier || compact;
+}
+
+function findExistingAsset(assets: AssetIdentity[], name: string, type?: string | null): AssetIdentity | undefined {
+  const candidates = type ? assets.filter((asset) => asset.type === type) : assets;
+  const exact = candidates.filter((asset) => asset.name === name);
+  if (exact.length === 1) return exact[0];
+  const normalized = normalizedAssetName(name, type);
+  const matches = candidates.filter((asset) => asset.name && normalizedAssetName(asset.name, asset.type) === normalized);
+  return matches.length === 1 ? matches[0] : undefined;
+}
 
 /** 每批 AI 调用的结果 */
 type GroupResult = {
@@ -86,11 +107,15 @@ export default router.post(
       if (!newAssets.length && !existingRefs.length) return;
 
       // 查询已有资产
-      const existingAssets = await u.db("o_assets").where("projectId", projectId).select("id", "name");
-      const existingMap = new Map(existingAssets.map((a) => [a.name!, a.id!]));
+      const existingAssets = await u.db("o_assets").where("projectId", projectId).select("id", "name", "type");
 
-      // 插入新资产（不在已有列表中的）
-      const toInsert = newAssets.filter((asset) => !existingMap.has(asset.name));
+      // 插入新资产：角色/道具会忽略空白和括号内定位词，场景只忽略空白，避免误合并不同子场景。
+      const identities: AssetIdentity[] = [...existingAssets];
+      const toInsert = newAssets.filter((asset) => {
+        if (findExistingAsset(identities, asset.name, asset.type)) return false;
+        identities.push({ name: asset.name, type: asset.type });
+        return true;
+      });
       if (toInsert.length) {
         await u.db("o_assets").insert(
           toInsert.map((asset) => ({
@@ -103,16 +128,15 @@ export default router.post(
         );
       }
 
-      // 重新查询获取完整的 name -> id 映射
-      const allAssets = await u.db("o_assets").where("projectId", projectId).select("id", "name");
-      const nameToId = new Map(allAssets.map((a) => [a.name, a.id]));
+      // 重新查询，确保新资产和近名复用都能解析到持久 ID。
+      const allAssets = await u.db("o_assets").where("projectId", projectId).select("id", "name", "type");
 
       // 收集所有资产与剧本的关联关系
       const scriptAssetRows: { scriptId: number; assetId: number }[] = [];
 
       // 新资产的关联
       for (const asset of newAssets) {
-        const assetId = nameToId.get(asset.name);
+        const assetId = findExistingAsset(allAssets, asset.name, asset.type)?.id;
         if (assetId) {
           for (const sid of asset.scriptIds) {
             scriptAssetRows.push({ scriptId: sid, assetId });
@@ -122,7 +146,7 @@ export default router.post(
 
       // 已有资产的关联
       for (const ref of existingRefs) {
-        const assetId = nameToId.get(ref.name);
+        const assetId = findExistingAsset(allAssets, ref.name, ref.type)?.id;
         if (assetId) {
           for (const sid of ref.scriptIds) {
             scriptAssetRows.push({ scriptId: sid, assetId });
@@ -193,7 +217,7 @@ export default router.post(
                     .describe("新发现的资产列表（不在已有资产列表中的），需要完整的 prompt、name、desc、type 和使用该资产的 scriptIds"),
                   existingAssetRefs: z
                     .array(ExistingAssetRefSchema)
-                    .describe("已有资产的引用列表（在已有资产列表中已存在的），只需给出资产名称和使用该资产的 scriptIds"),
+                    .describe("已有资产的引用列表（在已有资产列表中已存在的），给出资产名称、类型和使用该资产的 scriptIds"),
                 })
                 .toJSONSchema(),
             ),
@@ -211,7 +235,7 @@ export default router.post(
             scriptAssetExtraction = promptData?.data ?? undefined;
           }
           const existingHint = existingAssetsList
-            ? `\n\n【已有资产列表】：${existingAssetsList}\n对于已有资产，如果在剧本中出现，只需在 existingAssetRefs 中给出资产名称和对应的 scriptIds 数组即可，无需重复生成 desc/type。对于新发现的资产（不在已有列表中），请在 newAssets 中给出完整信息。`
+            ? `\n\n【已有资产列表】：${existingAssetsList}\n对于已有资产，如果在剧本中出现，只需在 existingAssetRefs 中给出资产名称、type 和对应的 scriptIds 数组即可，无需重复生成描述。角色或道具名称仅多出括号定位词（如“林小雨（主角）”与“林小雨”）时必须复用已有资产；场景括号通常表示不同子地点，不要因此合并。对于新发现的资产（不在已有列表中），请在 newAssets 中给出完整信息。`
             : "";
           const output = await u.Ai.Text("universalAi").invoke({
             messages: [

@@ -238835,12 +238835,19 @@ async function renderTimelinePreview(input) {
   if (clips.length === 0) throw new Error("\u65F6\u95F4\u7EBF\u6CA1\u6709\u53EF\u6E32\u67D3\u7684\u89C6\u9891\u7247\u6BB5\uFF0C\u8BF7\u5148\u5728\u5236\u4F5C\u5DE5\u4F5C\u53F0\u5B8C\u6210\u9009\u7247\u5E76\u91CD\u65B0\u6784\u5EFA\u65F6\u95F4\u7EBF");
   const absoluteInputs = [];
   const videoMedia = [];
+  const missingVideoInputs = [];
   for (const clip of clips) {
     const absolutePath = await utils_default.oss.getAbsolutePath(clip.path);
     const stat = await import_promises5.default.stat(absolutePath).catch(() => null);
-    if (!stat?.isFile()) throw new Error(`\u89C6\u9891\u7247\u6BB5\u4E0D\u5B58\u5728: ${clip.path}`);
+    if (!stat?.isFile()) {
+      missingVideoInputs.push(`\u89C6\u9891\u8F68\u9053 ${clip.storyboardTrackId}\uFF08\u5019\u9009\u89C6\u9891 ${clip.sourceId}\uFF09`);
+      continue;
+    }
     absoluteInputs.push(absolutePath);
     videoMedia.push(await probeMedia(clip.path));
+  }
+  if (missingVideoInputs.length) {
+    throw new Error(`\u4EE5\u4E0B\u955C\u5934\u7684\u672C\u5730\u89C6\u9891\u6587\u4EF6\u5DF2\u4E22\u5931\uFF1A${missingVideoInputs.join("\u3001")}\u3002\u8BF7\u91CD\u65B0\u751F\u6210\u6216\u91CD\u65B0\u9009\u7247\u540E\u518D\u6784\u5EFA\u65F6\u95F4\u7EBF\u3002`);
   }
   const absoluteOutput = await utils_default.oss.getAbsolutePath(input.outputPath);
   await import_promises5.default.mkdir(import_node_path6.default.dirname(absoluteOutput), { recursive: true });
@@ -256739,6 +256746,20 @@ var init_exportScript = __esm({
 });
 
 // src/routes/script/extractAssets.ts
+function normalizedAssetName(name28, type) {
+  const compact = name28.normalize("NFKC").replace(/[\s\u3000]+/g, "").toLowerCase();
+  if (type === "scene") return compact;
+  const withoutQualifier = compact.replace(/[（(][^（）()]*[）)]/g, "").replace(/[（(].*$/, "");
+  return withoutQualifier || compact;
+}
+function findExistingAsset(assets, name28, type) {
+  const candidates = type ? assets.filter((asset) => asset.type === type) : assets;
+  const exact = candidates.filter((asset) => asset.name === name28);
+  if (exact.length === 1) return exact[0];
+  const normalized = normalizedAssetName(name28, type);
+  const matches = candidates.filter((asset) => asset.name && normalizedAssetName(asset.name, asset.type) === normalized);
+  return matches.length === 1 ? matches[0] : void 0;
+}
 function chunkArray(arr, groupSize) {
   const chunks = [];
   for (let i = 0; i < arr.length; i += 5) {
@@ -256769,6 +256790,7 @@ var init_extractAssets = __esm({
     });
     ExistingAssetRefSchema = external_exports.object({
       name: external_exports.string().describe("\u5DF2\u6709\u8D44\u4EA7\u7684\u540D\u79F0,\u5FC5\u987B\u4E0E\u5DF2\u6709\u8D44\u4EA7\u5217\u8868\u4E2D\u7684\u540D\u79F0\u5B8C\u5168\u4E00\u81F4"),
+      type: external_exports.enum(["role", "tool", "scene"]).optional().describe("\u5DF2\u6709\u8D44\u4EA7\u7C7B\u578B\uFF1B\u540C\u540D\u8D44\u4EA7\u8DE8\u7C7B\u578B\u65F6\u7528\u4E8E\u51C6\u786E\u5173\u8054"),
       scriptIds: external_exports.array(external_exports.number()).describe("\u4F7F\u7528\u8BE5\u8D44\u4EA7\u7684\u5267\u672Cid\u6570\u7EC4")
     });
     AssetSchema = external_exports.object({
@@ -256798,9 +256820,13 @@ var init_extractAssets = __esm({
           if (!result) return;
           const { batchScriptIds, newAssets, existingRefs } = result;
           if (!newAssets.length && !existingRefs.length) return;
-          const existingAssets = await utils_default.db("o_assets").where("projectId", projectId).select("id", "name");
-          const existingMap = new Map(existingAssets.map((a) => [a.name, a.id]));
-          const toInsert = newAssets.filter((asset) => !existingMap.has(asset.name));
+          const existingAssets = await utils_default.db("o_assets").where("projectId", projectId).select("id", "name", "type");
+          const identities = [...existingAssets];
+          const toInsert = newAssets.filter((asset) => {
+            if (findExistingAsset(identities, asset.name, asset.type)) return false;
+            identities.push({ name: asset.name, type: asset.type });
+            return true;
+          });
           if (toInsert.length) {
             await utils_default.db("o_assets").insert(
               toInsert.map((asset) => ({
@@ -256812,11 +256838,10 @@ var init_extractAssets = __esm({
               }))
             );
           }
-          const allAssets = await utils_default.db("o_assets").where("projectId", projectId).select("id", "name");
-          const nameToId = new Map(allAssets.map((a) => [a.name, a.id]));
+          const allAssets = await utils_default.db("o_assets").where("projectId", projectId).select("id", "name", "type");
           const scriptAssetRows = [];
           for (const asset of newAssets) {
-            const assetId = nameToId.get(asset.name);
+            const assetId = findExistingAsset(allAssets, asset.name, asset.type)?.id;
             if (assetId) {
               for (const sid of asset.scriptIds) {
                 scriptAssetRows.push({ scriptId: sid, assetId });
@@ -256824,7 +256849,7 @@ var init_extractAssets = __esm({
             }
           }
           for (const ref of existingRefs) {
-            const assetId = nameToId.get(ref.name);
+            const assetId = findExistingAsset(allAssets, ref.name, ref.type)?.id;
             if (assetId) {
               for (const sid of ref.scriptIds) {
                 scriptAssetRows.push({ scriptId: sid, assetId });
@@ -256877,7 +256902,7 @@ ${script.content}`).join("\n\n");
                 inputSchema: jsonSchema(
                   external_exports.object({
                     newAssets: external_exports.array(NewAssetSchema).describe("\u65B0\u53D1\u73B0\u7684\u8D44\u4EA7\u5217\u8868\uFF08\u4E0D\u5728\u5DF2\u6709\u8D44\u4EA7\u5217\u8868\u4E2D\u7684\uFF09\uFF0C\u9700\u8981\u5B8C\u6574\u7684 prompt\u3001name\u3001desc\u3001type \u548C\u4F7F\u7528\u8BE5\u8D44\u4EA7\u7684 scriptIds"),
-                    existingAssetRefs: external_exports.array(ExistingAssetRefSchema).describe("\u5DF2\u6709\u8D44\u4EA7\u7684\u5F15\u7528\u5217\u8868\uFF08\u5728\u5DF2\u6709\u8D44\u4EA7\u5217\u8868\u4E2D\u5DF2\u5B58\u5728\u7684\uFF09\uFF0C\u53EA\u9700\u7ED9\u51FA\u8D44\u4EA7\u540D\u79F0\u548C\u4F7F\u7528\u8BE5\u8D44\u4EA7\u7684 scriptIds")
+                    existingAssetRefs: external_exports.array(ExistingAssetRefSchema).describe("\u5DF2\u6709\u8D44\u4EA7\u7684\u5F15\u7528\u5217\u8868\uFF08\u5728\u5DF2\u6709\u8D44\u4EA7\u5217\u8868\u4E2D\u5DF2\u5B58\u5728\u7684\uFF09\uFF0C\u7ED9\u51FA\u8D44\u4EA7\u540D\u79F0\u3001\u7C7B\u578B\u548C\u4F7F\u7528\u8BE5\u8D44\u4EA7\u7684 scriptIds")
                   }).toJSONSchema()
                 ),
                 execute: async ({ newAssets, existingAssetRefs }) => {
@@ -256896,7 +256921,7 @@ ${script.content}`).join("\n\n");
               const existingHint = existingAssetsList ? `
 
 \u3010\u5DF2\u6709\u8D44\u4EA7\u5217\u8868\u3011\uFF1A${existingAssetsList}
-\u5BF9\u4E8E\u5DF2\u6709\u8D44\u4EA7\uFF0C\u5982\u679C\u5728\u5267\u672C\u4E2D\u51FA\u73B0\uFF0C\u53EA\u9700\u5728 existingAssetRefs \u4E2D\u7ED9\u51FA\u8D44\u4EA7\u540D\u79F0\u548C\u5BF9\u5E94\u7684 scriptIds \u6570\u7EC4\u5373\u53EF\uFF0C\u65E0\u9700\u91CD\u590D\u751F\u6210 desc/type\u3002\u5BF9\u4E8E\u65B0\u53D1\u73B0\u7684\u8D44\u4EA7\uFF08\u4E0D\u5728\u5DF2\u6709\u5217\u8868\u4E2D\uFF09\uFF0C\u8BF7\u5728 newAssets \u4E2D\u7ED9\u51FA\u5B8C\u6574\u4FE1\u606F\u3002` : "";
+\u5BF9\u4E8E\u5DF2\u6709\u8D44\u4EA7\uFF0C\u5982\u679C\u5728\u5267\u672C\u4E2D\u51FA\u73B0\uFF0C\u53EA\u9700\u5728 existingAssetRefs \u4E2D\u7ED9\u51FA\u8D44\u4EA7\u540D\u79F0\u3001type \u548C\u5BF9\u5E94\u7684 scriptIds \u6570\u7EC4\u5373\u53EF\uFF0C\u65E0\u9700\u91CD\u590D\u751F\u6210\u63CF\u8FF0\u3002\u89D2\u8272\u6216\u9053\u5177\u540D\u79F0\u4EC5\u591A\u51FA\u62EC\u53F7\u5B9A\u4F4D\u8BCD\uFF08\u5982\u201C\u6797\u5C0F\u96E8\uFF08\u4E3B\u89D2\uFF09\u201D\u4E0E\u201C\u6797\u5C0F\u96E8\u201D\uFF09\u65F6\u5FC5\u987B\u590D\u7528\u5DF2\u6709\u8D44\u4EA7\uFF1B\u573A\u666F\u62EC\u53F7\u901A\u5E38\u8868\u793A\u4E0D\u540C\u5B50\u5730\u70B9\uFF0C\u4E0D\u8981\u56E0\u6B64\u5408\u5E76\u3002\u5BF9\u4E8E\u65B0\u53D1\u73B0\u7684\u8D44\u4EA7\uFF08\u4E0D\u5728\u5DF2\u6709\u5217\u8868\u4E2D\uFF09\uFF0C\u8BF7\u5728 newAssets \u4E2D\u7ED9\u51FA\u5B8C\u6574\u4FE1\u606F\u3002` : "";
               const output = await utils_default.Ai.Text("universalAi").invoke({
                 messages: [
                   {
