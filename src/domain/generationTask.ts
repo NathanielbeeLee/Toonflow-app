@@ -59,6 +59,7 @@ export class TaskExecutionError extends Error {
     message: string,
     public readonly code: string,
     public readonly safeToRetry: boolean,
+    public readonly providerStateKnown: boolean = false,
   ) {
     super(message);
     this.name = "TaskExecutionError";

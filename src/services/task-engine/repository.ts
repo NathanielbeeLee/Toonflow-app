@@ -230,6 +230,27 @@ class GenerationTaskRepository {
     return task;
   }
 
+  async persistProviderJobId(id: string, workerId: string, providerJobId: string): Promise<GenerationTask> {
+    const before = await this.get(id);
+    if (!before) throw new Error(`任务不存在: ${id}`);
+    const updated = await db("generation_tasks")
+      .where("id", id)
+      .where("lease_owner", workerId)
+      .where("status", "submitting")
+      .whereNull("provider_job_id")
+      .update({
+        provider_job_id: providerJobId,
+        status: "submitted",
+        updated_at: Date.now(),
+      });
+    if (updated !== 1) throw new Error("远端任务 ID 写入失败；已停止自动处理以避免重复提交");
+    const task = await this.get(id);
+    if (!task) throw new Error(`任务不存在: ${id}`);
+    await recordEvent(task, "provider_job_persisted", { status: before.status }, { status: task.status, providerJobId });
+    await this.syncLegacyTask(task);
+    return task;
+  }
+
   async requestCancel(id: string): Promise<GenerationTask | null> {
     const task = await this.get(id);
     if (!task) return null;
@@ -331,14 +352,16 @@ class GenerationTaskRepository {
       if (task.cancelRequested || task.status === "cancelling") {
         await this.finish(task.id, "cancelled", { errorCode: "CANCELLED_DURING_RESTART", errorMessage: "应用退出前正在取消" });
         cancelled++;
-      } else if (task.status === "claimed") {
+      } else if (task.status === "claimed" || (task.providerJobId && ["submitted", "polling", "finalizing"].includes(task.status))) {
         await db("generation_tasks").where("id", task.id).update({
           status: "queued",
           lease_owner: null,
           lease_expires_at: null,
           next_run_at: now,
-          error_code: "LEASE_EXPIRED_BEFORE_SUBMIT",
-          error_message: "任务在付费提交前失去 worker，已安全重新排队",
+          error_code: task.providerJobId ? "RESUMING_PROVIDER_JOB" : "LEASE_EXPIRED_BEFORE_SUBMIT",
+          error_message: task.providerJobId
+            ? "已保存供应商任务 ID，应用重启后将继续轮询，不会重新提交"
+            : "任务在付费提交前失去 worker，已安全重新排队",
           updated_at: now,
         });
         await this.syncLegacyTask(await this.get(task.id));

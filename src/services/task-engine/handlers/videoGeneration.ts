@@ -1,5 +1,5 @@
 import u from "@/utils";
-import { GenerationTask, TaskExecutionError } from "@/domain/generationTask";
+import { GenerationTask, TaskCancelledError, TaskExecutionError } from "@/domain/generationTask";
 import { ReferenceList } from "@/utils/ai";
 import { TaskHandler, TaskHandlerContext } from "@/services/task-engine/worker";
 
@@ -54,9 +54,9 @@ export const videoGenerationTaskHandler: TaskHandler = {
     const references = await loadReferences(payload);
     await context.throwIfCancelled();
     const aiVideo = u.Ai.Video(payload.model);
-    await context.transitionToSubmitting();
+    let providerJobId = task.providerJobId;
     try {
-      await aiVideo.run({
+      const input = {
         prompt: payload.prompt,
         referenceList: references,
         mode: payload.mode as any,
@@ -64,17 +64,64 @@ export const videoGenerationTaskHandler: TaskHandler = {
         aspectRatio: payload.aspectRatio,
         resolution: payload.resolution,
         audio: payload.audio,
-      });
+      };
+      const resumable = await aiVideo.supportsResumable();
+      if (providerJobId && !resumable) {
+        throw new TaskExecutionError("已保存远端任务 ID，但当前供应商代码不再支持恢复轮询", "PROVIDER_RESUME_UNAVAILABLE", false);
+      }
+
+      if (resumable) {
+        if (!providerJobId) {
+          await context.transitionToSubmitting();
+          const submitted = await aiVideo.submit(input);
+          providerJobId = submitted.jobId;
+          await context.persistProviderJobId(providerJobId);
+        }
+        await context.transitionToPolling();
+        const startedAt = Date.now();
+        let providerSucceeded = false;
+        while (Date.now() - startedAt < 30 * 60 * 1000) {
+          await context.throwIfCancelled();
+          let polled;
+          try {
+            polled = await aiVideo.poll(providerJobId);
+          } catch (error) {
+            throw new TaskExecutionError(u.error(error).message, "PROVIDER_POLL_FAILED", true);
+          }
+          if (polled.status === "succeeded") {
+            providerSucceeded = true;
+            break;
+          }
+          if (polled.status === "failed") {
+            throw new TaskExecutionError(polled.error || "供应商视频任务失败", "PROVIDER_JOB_FAILED", false, true);
+          }
+          if (polled.status === "cancelled") throw new TaskCancelledError("供应商视频任务已取消");
+          await new Promise((resolve) => setTimeout(resolve, 10_000));
+        }
+        if (!providerSucceeded) {
+          throw new TaskExecutionError("供应商任务轮询超过 30 分钟，将稍后继续查询", "PROVIDER_POLL_TIMEOUT", true);
+        }
+      } else {
+        await context.transitionToSubmitting();
+        await aiVideo.run(input);
+      }
+
       await context.transitionToFinalizing();
-      await aiVideo.save(payload.videoPath);
+      try {
+        await aiVideo.save(payload.videoPath);
+      } catch (error) {
+        throw new TaskExecutionError(u.error(error).message, "VIDEO_SAVE_FAILED", Boolean(providerJobId), Boolean(providerJobId));
+      }
       await u.db("o_video").where("id", payload.videoId).update({ state: "生成成功", errorReason: null });
-      return { videoId: payload.videoId, videoPath: payload.videoPath };
+      return { videoId: payload.videoId, videoPath: payload.videoPath, providerJobId };
     } catch (error) {
-      const message = u.error(error).message;
-      await u.db("o_video").where("id", payload.videoId).update({
-        state: "需人工确认",
-        errorReason: `${message}。请先核对供应商后台，避免重复提交。`,
-      });
+      if (error instanceof TaskCancelledError && providerJobId) {
+        try {
+          await aiVideo.cancel(providerJobId);
+        } catch (cancelError) {
+          console.warn("[供应商远端取消失败]", u.error(cancelError).message);
+        }
+      }
       throw error;
     }
   },

@@ -14,7 +14,7 @@
 
 ## 重启会不会重复扣费
 
-`claimed`（尚未进入供应商调用）的过期任务会安全重排；`submitting/submitted/polling/finalizing` 的过期任务进入人工确认，不自动重提。等 provider adapter 拆出 job ID 后，才会对支持的供应商自动恢复轮询。
+`claimed`（尚未进入供应商调用）的过期任务会安全重排。普通火山引擎在 `submitted/polling/finalizing` 状态已有远端任务编号时，会恢复查询原任务，不重新提交。`submitting` 阶段尚未写入任务编号，或供应商没有恢复协议时，仍进入人工确认。
 
 ## 批量生成重复点击
 

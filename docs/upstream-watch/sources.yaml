@@ -16,7 +16,7 @@
       "last_scanned_release": "v0.25.0",
       "last_scanned_at": "2026-08-08T16:00:00+08:00",
       "last_adopted_commit": "d544f6137b289a648b391848f5311a0320187a74",
-      "adopted_capabilities": ["durable-generation-task-foundation"]
+      "adopted_capabilities": ["durable-generation-task-foundation", "provider-job-id-resume-contract"]
     },
     {
       "id": "openmontage",

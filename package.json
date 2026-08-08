@@ -32,11 +32,12 @@
     "dist:linux": "yarn build && electron-builder --linux",
     "debug:ai": "npx @ai-sdk/devtools",
     "license": "node scripts/license.ts",
-    "vendor2json": "node scripts/vendor2json.ts",
+    "vendor2json": "tsx scripts/vendor2json.ts",
     "knowledge:build": "tsx scripts/knowledge.ts build",
     "knowledge:check": "tsx scripts/knowledge.ts check",
     "upstream:scan": "tsx scripts/upstream-watch.ts scan",
-    "upstream:check": "tsx scripts/upstream-watch.ts check"
+    "upstream:check": "tsx scripts/upstream-watch.ts check",
+    "verify:provider-adapter": "tsx scripts/verify-provider-adapter.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.35",

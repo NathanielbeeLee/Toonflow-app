@@ -22,7 +22,17 @@ type AiType =
   | "productionAgent:storyboardPanelAgent"
   | "productionAgent:storyboardTableAgent";
 
-type FnName = "textRequest" | "imageRequest" | "videoRequest" | "ttsRequest";
+type FnName = "textRequest" | "imageRequest" | "videoRequest" | "videoSubmit" | "videoPoll" | "videoCancel" | "ttsRequest";
+
+export interface VideoSubmitResult {
+  jobId: string;
+}
+
+export interface VideoPollResult {
+  status: "pending" | "succeeded" | "failed" | "cancelled";
+  data?: string;
+  error?: string;
+}
 
 const AiTypeValues: AiType[] = [
   "scriptAgent",
@@ -137,6 +147,15 @@ async function getVendorTemplateFn(fnName: FnName, modelName: `${string}:${strin
       return fn(selectedModel, effectiveThink, thinkLevel);
     };
   else return <T>(input: T) => fn(input, selectedModel);
+}
+
+async function getOptionalVendorTemplateFn(fnName: FnName, modelName: `${string}:${string}`): Promise<((input: any) => Promise<any>) | null> {
+  try {
+    return await getVendorTemplateFn(fnName as any, modelName);
+  } catch (error) {
+    if (u.error(error).message.includes(`未找到供应商配置中的函数 ${fnName}`)) return null;
+    throw error;
+  }
 }
 
 async function withTaskRecord<T>(
@@ -294,6 +313,44 @@ class AiVideo {
   private result: string = "";
   constructor(key: `${string}:${string}`) {
     this.key = key;
+  }
+  async supportsResumable(): Promise<boolean> {
+    const modelName = await resolveModelName(this.key);
+    return Boolean(
+      (await getOptionalVendorTemplateFn("videoSubmit", modelName)) &&
+        (await getOptionalVendorTemplateFn("videoPoll", modelName)),
+    );
+  }
+  async submit(input: VideoConfig): Promise<VideoSubmitResult> {
+    const modelName = await resolveModelName(this.key);
+    const fn = await getOptionalVendorTemplateFn("videoSubmit", modelName);
+    if (!fn) throw new Error(`供应商 ${modelName.split(/:(.+)/)[0]} 不支持可恢复视频提交`);
+    await referenceList2imageBase642(modelName.split(/:(.+)/)[0], input);
+    const result = await fn(input);
+    const jobId = typeof result === "string" ? result : result?.jobId;
+    if (!jobId || typeof jobId !== "string") throw new Error("供应商提交成功但未返回有效 jobId");
+    return { jobId };
+  }
+  async poll(jobId: string): Promise<VideoPollResult> {
+    const modelName = await resolveModelName(this.key);
+    const fn = await getOptionalVendorTemplateFn("videoPoll", modelName);
+    if (!fn) throw new Error(`供应商 ${modelName.split(/:(.+)/)[0]} 不支持恢复轮询`);
+    const result = (await fn({ jobId })) as VideoPollResult;
+    if (!result || !["pending", "succeeded", "failed", "cancelled"].includes(result.status)) {
+      throw new Error("供应商轮询返回了无法识别的任务状态");
+    }
+    if (result.status === "succeeded") {
+      if (!result.data) throw new Error("供应商任务成功但未返回视频结果");
+      this.result = result.data.startsWith("http") ? await urlToBase64(result.data) : result.data;
+    }
+    return result;
+  }
+  async cancel(jobId: string): Promise<{ supported: boolean; cancelled: boolean }> {
+    const modelName = await resolveModelName(this.key);
+    const fn = await getOptionalVendorTemplateFn("videoCancel", modelName);
+    if (!fn) return { supported: false, cancelled: false };
+    const result = await fn({ jobId });
+    return { supported: true, cancelled: result?.cancelled === true };
   }
   async run(input: VideoConfig, taskRecord?: TaskRecord) {
     const modelName = await resolveModelName(this.key);

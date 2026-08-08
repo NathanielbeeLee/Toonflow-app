@@ -96,6 +96,12 @@ interface PollResult {
   error?: string;
 }
 
+interface VideoProviderPollResult {
+  status: "pending" | "succeeded" | "failed" | "cancelled";
+  data?: string;
+  error?: string;
+}
+
 // ============================================================
 // 全局声明
 // ============================================================
@@ -122,6 +128,8 @@ declare const exports: {
   textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;
   imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;
   videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;
+  videoSubmit: (c: VideoConfig, m: VideoModel) => Promise<{ jobId: string }>;
+  videoPoll: (c: { jobId: string }, m: VideoModel) => Promise<VideoProviderPollResult>;
   ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;
   checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;
   updateVendor?: () => Promise<string>;
@@ -133,7 +141,7 @@ declare const exports: {
 
 const vendor: VendorConfig = {
   id: "volcengine",
-  version: "2.4",
+  version: "2.5",
   author: "leeqi",
   name: "火山引擎(豆包)",
   description: "火山引擎豆包大模型，支持文本、图片生成、视频生成等能力。\n\n需要在[火山引擎控制台](https://console.volcengine.com/ark)获取API密钥。",
@@ -452,10 +460,7 @@ const imageRequest = async (config: ImageConfig, model: ImageModel): Promise<str
   throw new Error("图片生成失败：未返回有效结果");
 };
 
-const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {
-  const baseUrl = getBaseUrl();
-  const headers = getHeaders();
-
+const buildVideoRequestBody = (config: VideoConfig, model: VideoModel): Record<string, any> => {
   const content: any[] = [];
 
   if (config.prompt) {
@@ -588,6 +593,14 @@ const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<str
     body.generate_audio = false;
   }
 
+  return body;
+};
+
+const videoSubmit = async (config: VideoConfig, model: VideoModel): Promise<{ jobId: string }> => {
+  const baseUrl = getBaseUrl();
+  const headers = getHeaders();
+  const body = buildVideoRequestBody(config, model);
+
   logger(`[视频生成] 提交任务, 模型: ${model.modelName}, 时长: ${config.duration}s, 分辨率: ${config.resolution}`);
   const res = await fetch(`${baseUrl}/contents/generations/tasks`, {
     method: "POST",
@@ -609,35 +622,46 @@ const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<str
 
   logger(`[视频生成] 任务已创建, ID: ${taskId}`);
 
+  return { jobId: taskId };
+};
+
+const videoPoll = async ({ jobId }: { jobId: string }, _model: VideoModel): Promise<VideoProviderPollResult> => {
+  const queryRes = await fetch(`${getBaseUrl()}/contents/generations/tasks/${jobId}`, {
+    method: "GET",
+    headers: getHeaders(),
+  });
+  if (!queryRes.ok) {
+    const errorText = await queryRes.text();
+    throw new Error(`查询视频生成任务状态失败: ${errorText}`);
+  }
+  const task = await queryRes.json();
+  logger(`[视频生成] 任务状态: ${JSON.stringify(task)}`);
+
+  switch (task.status) {
+    case "succeeded":
+      return task.content?.video_url
+        ? { status: "succeeded", data: task.content.video_url }
+        : { status: "failed", error: "任务成功但未返回视频URL" };
+    case "failed":
+      return { status: "failed", error: task.error?.message || "视频生成失败" };
+    case "expired":
+      return { status: "failed", error: "视频生成任务超时" };
+    case "cancelled":
+      return { status: "cancelled", error: "视频生成任务已取消" };
+    default:
+      return { status: "pending" };
+  }
+};
+
+const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {
+  const { jobId } = await videoSubmit(config, model);
+
   const result = await pollTask(
     async (): Promise<PollResult> => {
-      const queryRes = await fetch(`${baseUrl}/contents/generations/tasks/${taskId}`, {
-        method: "GET",
-        headers,
-      });
-      if (!queryRes.ok) {
-        const errorText = await queryRes.text();
-        throw new Error(`查询视频生成任务状态失败: ${errorText}`);
-      }
-      const task = await queryRes.json();
-
-      logger(`[视频生成] 任务状态: ${JSON.stringify(task)}`);
-
-      switch (task.status) {
-        case "succeeded":
-          if (task.content?.video_url) {
-            return { completed: true, data: task.content.video_url };
-          }
-          return { completed: true, error: "任务成功但未返回视频URL" };
-        case "failed":
-          return { completed: true, error: task.error?.message || "视频生成失败" };
-        case "expired":
-          return { completed: true, error: "视频生成任务超时" };
-        case "cancelled":
-          return { completed: true, error: "视频生成任务已取消" };
-        default:
-          return { completed: false };
-      }
+      const task = await videoPoll({ jobId }, model);
+      if (task.status === "succeeded") return { completed: true, data: task.data };
+      if (task.status === "failed" || task.status === "cancelled") return { completed: true, error: task.error };
+      return { completed: false };
     },
     10000,
     600000 * 3,
@@ -670,6 +694,8 @@ exports.vendor = vendor;
 exports.textRequest = textRequest;
 exports.imageRequest = imageRequest;
 exports.videoRequest = videoRequest;
+exports.videoSubmit = videoSubmit;
+exports.videoPoll = videoPoll;
 exports.ttsRequest = ttsRequest;
 exports.checkForUpdates = checkForUpdates;
 exports.updateVendor = updateVendor;

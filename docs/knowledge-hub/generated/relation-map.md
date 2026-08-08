@@ -10,9 +10,14 @@
 | feature.durable-video-batch | writes | table.generation-tasks |
 | feature.durable-video-batch | exposed_by | api.generation-tasks |
 | feature.durable-video-batch | uses | concept.worker-lease |
+| feature.durable-video-batch | uses | feature.provider-job-resume |
 | feature.durable-video-batch | troubleshoots | troubleshooting.unknown-provider-state |
 | api.generation-tasks | reads | table.generation-tasks |
 | table.generation-tasks | documented_by | document.database-tasks |
 | concept.worker-lease | writes | table.generation-tasks |
+| feature.provider-job-resume | writes | table.generation-tasks |
+| feature.provider-job-resume | uses | provider.volcengine |
+| feature.provider-job-resume | depends_on | concept.worker-lease |
+| provider.volcengine | documented_by | document.database-tasks |
 | troubleshooting.unknown-provider-state | documented_by | document.troubleshooting |
 | document.upstream-watch | documented_by | document.feature-catalog |
