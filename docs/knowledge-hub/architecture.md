@@ -2,7 +2,8 @@
 
 ```mermaid
 flowchart LR
-  UI["data/web 前端 / Electron"] --> API["Express 路由"]
+  Source["frontend Vue 源码"] -->|"Vite 构建与安全同步"| UI["data/web 运行产物 / Electron"]
+  UI --> API["Express 路由"]
   API --> Domain["项目、剧本、资产、分镜"]
   Domain --> Agent["剧本 Agent / 生产 Agent / 导演 Skills"]
   API --> Queue["SQLite 持久任务引擎"]
@@ -14,4 +15,4 @@ flowchart LR
   Knowledge -.定位.-> Queue
 ```
 
-当前运行时是单个 TypeScript/Express/Electron 应用，数据库为本地 SQLite。外部参考项目不参与运行。`data/web` 仍是发布产物；可维护 Toonflow-web 源码已在统一外部目录登记，但尚未 subtree 导入 `frontend/`。
+当前运行时是 TypeScript/Express/Electron 后端加 Vue 前端，数据库为本地 SQLite。外部参考项目不参与运行。Toonflow-web `9c4cb0e` 已以 subtree 纳入 `frontend/`；`data/web` 仍只是发布产物，不能手工维护。

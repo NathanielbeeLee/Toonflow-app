@@ -4,9 +4,13 @@
 | --- | --- | --- |
 | workflow.novel-to-video | uses | feature.agent-directing |
 | workflow.novel-to-video | uses | feature.asset-consistency |
+| workflow.novel-to-video | uses | feature.infinite-canvas |
 | workflow.novel-to-video | uses | feature.durable-video-tasks |
 | feature.agent-directing | documented_by | document.feature-catalog |
 | feature.asset-consistency | documented_by | document.feature-catalog |
+| feature.infinite-canvas | implemented_by | component.frontend-source |
+| feature.infinite-canvas | documented_by | document.feature-catalog |
+| component.frontend-source | documented_by | document.frontend-upstream |
 | feature.durable-video-tasks | writes | table.generation-tasks |
 | feature.durable-video-tasks | exposed_by | api.generation-tasks |
 | feature.durable-video-tasks | uses | concept.worker-lease |
@@ -21,3 +25,4 @@
 | provider.volcengine | documented_by | document.database-tasks |
 | troubleshooting.unknown-provider-state | documented_by | document.troubleshooting |
 | document.upstream-watch | documented_by | document.feature-catalog |
+| document.frontend-upstream | documented_by | document.upstream-watch |

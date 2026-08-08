@@ -79,8 +79,8 @@
       "last_scanned_commit": "9c4cb0ec7d4f6b4067c7768e2df8cdc7f8587214",
       "last_scanned_release": null,
       "last_scanned_at": "2026-08-08T16:00:00+08:00",
-      "last_adopted_commit": null,
-      "adopted_capabilities": []
+      "last_adopted_commit": "9c4cb0ec7d4f6b4067c7768e2df8cdc7f8587214",
+      "adopted_capabilities": ["maintainable-frontend-source", "infinite-canvas-workbench-source"]
     }
   ]
 }

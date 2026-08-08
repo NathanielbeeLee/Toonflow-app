@@ -11,6 +11,17 @@ yarn upstream:check
 yarn upstream:scan
 ```
 
+前端独立开发与发布：
+
+```bash
+yarn frontend:install
+yarn frontend:dev
+yarn frontend:build
+yarn frontend:sync
+```
+
+只修改 `frontend/`；完整根构建会自动执行前端构建和同步。单独运行 `frontend:sync` 前必须先成功构建，它会通过临时目录交换 `data/web`，失败时恢复旧产物。上游增量同步命令和基线见 `docs/frontend-upstream.md`。
+
 ## 数据位置
 
 - 浏览器/服务模式：仓库 `data/db2.sqlite` 与 `data/oss/`。

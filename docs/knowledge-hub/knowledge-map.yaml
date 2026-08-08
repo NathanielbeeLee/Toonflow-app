@@ -11,6 +11,7 @@
       "relations": [
         { "type": "uses", "target": "feature.agent-directing" },
         { "type": "uses", "target": "feature.asset-consistency" },
+        { "type": "uses", "target": "feature.infinite-canvas" },
         { "type": "uses", "target": "feature.durable-video-tasks" }
       ],
       "introduced_in": "upstream/v1.1.8",
@@ -38,6 +39,30 @@
       "relations": [{ "type": "documented_by", "target": "document.feature-catalog" }],
       "introduced_in": "upstream/v1.1.8",
       "last_verified_commit": "toon-custom/d5eca2c"
+    },
+    {
+      "id": "feature.infinite-canvas",
+      "type": "feature",
+      "name": "无限画布生产工作台",
+      "summary": "以可缩放、可平移、可拖动节点的空间界面串联剧本、导演计划、资产、分镜和视频工作台",
+      "user_entry": { "page": "生产 Agent / 制作工作台", "action": "拖动节点排布；空格加左键平移；使用滚轮或自动布局浏览流程" },
+      "source_paths": ["frontend/src/views/production/index.vue", "frontend/src/views/production/utils/flowBuilder.ts", "frontend/src/views/production/node"],
+      "relations": [
+        { "type": "implemented_by", "target": "component.frontend-source" },
+        { "type": "documented_by", "target": "document.feature-catalog" }
+      ],
+      "introduced_in": "upstream/toonflow-web",
+      "last_verified_commit": "toon-custom/eee77980"
+    },
+    {
+      "id": "component.frontend-source",
+      "type": "component",
+      "name": "可维护 Vue 前端源码",
+      "summary": "以 subtree 跟踪 Toonflow-web，构建后安全同步为 data/web 运行产物",
+      "source_paths": ["frontend", "scripts/syncFrontend.ts", "package.json"],
+      "relations": [{ "type": "documented_by", "target": "document.frontend-upstream" }],
+      "introduced_in": "toon-custom/frontend-subtree-2026-08-08",
+      "last_verified_commit": "toon-custom/eee77980"
     },
     {
       "id": "feature.durable-video-tasks",
@@ -167,6 +192,16 @@
       "relations": [{ "type": "documented_by", "target": "document.feature-catalog" }],
       "introduced_in": "toon-custom/first-absorption-2026-08-08",
       "last_verified_commit": "toon-custom/d5eca2c"
+    },
+    {
+      "id": "document.frontend-upstream",
+      "type": "document",
+      "name": "前端上游与构建说明",
+      "summary": "记录 Toonflow-web 基线、subtree 增量同步和 data/web 构建规则",
+      "source_paths": ["docs/frontend-upstream.md"],
+      "relations": [{ "type": "documented_by", "target": "document.upstream-watch" }],
+      "introduced_in": "toon-custom/frontend-subtree-2026-08-08",
+      "last_verified_commit": "toon-custom/eee77980"
     }
   ]
 }

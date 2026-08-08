@@ -62,11 +62,25 @@
 - 单条与批量请求共享轨道资源占用；已有活动任务时复用同一 `videoId`，避免按钮重复点击造成重复提交。
 - 移除单条入口中独立的后台 Promise、引用图提前转 base64 和重复旧任务记录逻辑。
 
+## 2026-08-08 第四批：纳入可维护前端源码
+
+上游基线：HBAI-Ltd/Toonflow-web `9c4cb0ec7d4f6b4067c7768e2df8cdc7f8587214`。
+
+落地提交：`a631d1fc`（subtree 导入）和 `eee77980`（构建接线与兼容修复）。
+
+- 以 squash subtree 把完整 Vue 前端纳入 `frontend/`，后续可以从上述修订之后增量同步，而不再只能修改压缩后的 `data/web/index.html`。
+- 根项目新增前端安装、开发、构建和安全同步命令；`data/web` 明确改为构建产物，不允许手工修改。
+- 修正首次独立构建暴露的自动导入声明顺序、主题类型、Vite 类型和少量组件契约问题；删除两个未引用且阻塞类型检查的备份页面。
+- 根后端 TypeScript 检查与前端子工程隔离，前端由自己的 Vite/`vue-tsc` 配置验证。
+- 无限画布不是“无限生成”或“无限存储”，而是可缩放、可平移、可拖动节点的空间式生产界面；当前节点覆盖剧本、导演计划、资产、分镜表、分镜和视频工作台。
+
+验证：`yarn frontend:build`、`yarn frontend:sync`、根目录 `tsc --noEmit` 均通过。构建未调用任何 AI 或付费供应商 API。
+
 ## 下一批优先级
 
-1. 抽象 provider `submit/poll/resume/cancel`，先支持一个代表视频供应商，真正保存远端 job ID。
+1. 基于已纳入的前端源码制作任务中心 UI，展示排队、重试、取消、人工确认和远端续跑状态。
 2. 把批量图片迁入同一任务引擎，并增加按供应商/模型的并发和 RPM 限流。
-3. 纳入 Toonflow-web 可维护源码，制作任务中心 UI。
+3. 为更多视频供应商实现 `submit/poll/resume/cancel`，不支持远端取消的供应商继续保留本地取消边界。
 4. 再吸收 Huobao 的逐句 TTS/角色音色和 OpenMontage 的规范化时间线、多轨混音与媒体 QA。
 
 继续工作前先读：`docs/knowledge-hub/AI_ASSISTANT_CONTEXT.md`、`docs/upstream-watch/sources.yaml` 和最新扫描报告。
