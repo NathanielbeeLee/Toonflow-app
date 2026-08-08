@@ -2,6 +2,8 @@ import u from "@/utils";
 import { db } from "@/utils/db";
 import { GenerationTask, TaskExecutionError } from "@/domain/generationTask";
 import { TaskHandler, TaskHandlerContext } from "@/services/task-engine/worker";
+import { probeMedia } from "@/services/media/probe";
+import { voiceStudioRepository } from "@/services/voice-studio/repository";
 
 const sql = db as any;
 
@@ -54,13 +56,23 @@ export const utteranceTtsTaskHandler: TaskHandler = {
     } catch (error) {
       throw new TaskExecutionError(u.error(error).message, "AUDIO_SAVE_FAILED", false, true);
     }
+    const media = await probeMedia(payload.savePath);
     await sql("utterances").where("id", payload.utteranceId).update({
       audio_path: payload.savePath,
       cache_key: payload.cacheKey,
+      duration_ms: media?.durationMs ?? utterance.duration_ms ?? null,
       status: "succeeded",
       error_message: null,
       updated_at: Date.now(),
     });
-    return { utteranceId: payload.utteranceId, audioPath: payload.savePath, cacheKey: payload.cacheKey };
+    if (utterance.script_id) {
+      await voiceStudioRepository.rebuildCues({ projectId: payload.projectId, scriptId: utterance.script_id });
+    }
+    return {
+      utteranceId: payload.utteranceId,
+      audioPath: payload.savePath,
+      cacheKey: payload.cacheKey,
+      durationMs: media?.durationMs ?? utterance.duration_ms ?? null,
+    };
   },
 };

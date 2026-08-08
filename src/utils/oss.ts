@@ -69,6 +69,12 @@ class OSS {
     return fs.readFile(resolveSafeLocalPath(userRelPath, this.rootDir));
   }
 
+  /** Resolve a validated OSS-relative path for local media tools such as ffprobe. */
+  async getAbsolutePath(userRelPath: string): Promise<string> {
+    await this.ensureInit();
+    return resolveSafeLocalPath(userRelPath, this.rootDir);
+  }
+
   /**
    * 读取图片文件并转换为 base64 编码的 Data URL。
    * @param userRelPath 用户传入的相对文件路径（使用 / 作为分隔符）

@@ -170,6 +170,46 @@ const migrations: Migration[] = [
       }
     },
   },
+  {
+    id: "20260808_003_normalized_timelines",
+    up: async (db) => {
+      if (!(await db.schema.hasTable("project_timelines"))) {
+        await db.schema.createTable("project_timelines", (table) => {
+          table.text("id").primary();
+          table.integer("project_id").notNullable();
+          table.integer("script_id").notNullable();
+          table.integer("version").notNullable();
+          table.text("status").notNullable().defaultTo("draft");
+          table.text("payload").notNullable();
+          table.text("checksum").notNullable();
+          table.integer("created_at").notNullable();
+          table.integer("updated_at").notNullable();
+          table.unique(["project_id", "script_id", "version"], "project_timelines_version_unique");
+          table.index(["project_id", "script_id", "updated_at"], "project_timelines_latest_idx");
+        });
+      }
+      if (!(await db.schema.hasTable("composition_jobs"))) {
+        await db.schema.createTable("composition_jobs", (table) => {
+          table.text("id").primary();
+          table.integer("project_id").notNullable();
+          table.integer("script_id").notNullable();
+          table.text("timeline_id").notNullable();
+          table.integer("timeline_version").notNullable();
+          table.text("renderer").notNullable().defaultTo("ffmpeg");
+          table.text("preset").notNullable();
+          table.text("status").notNullable().defaultTo("draft");
+          table.text("output_path");
+          table.text("input_checksum").notNullable();
+          table.text("task_id");
+          table.text("error_message");
+          table.integer("created_at").notNullable();
+          table.integer("updated_at").notNullable();
+          table.index(["project_id", "script_id", "created_at"], "composition_jobs_script_idx");
+          table.index(["timeline_id", "timeline_version"], "composition_jobs_timeline_idx");
+        });
+      }
+    },
+  },
 ];
 
 export default async function runMigrations(db: Knex): Promise<void> {

@@ -19199,14 +19199,14 @@ var require_etag = __commonJS({
   "node_modules/etag/index.js"(exports2, module2) {
     "use strict";
     module2.exports = etag;
-    var crypto7 = require("crypto");
+    var crypto8 = require("crypto");
     var Stats = require("fs").Stats;
     var toString4 = Object.prototype.toString;
     function entitytag(entity) {
       if (entity.length === 0) {
         return '"0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"';
       }
-      var hash3 = crypto7.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
+      var hash3 = crypto8.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
       var len = typeof entity === "string" ? Buffer.byteLength(entity, "utf8") : entity.length;
       return '"' + len.toString(16) + "-" + hash3 + '"';
     }
@@ -20936,16 +20936,16 @@ var require_router = __commonJS({
         return new Router(options);
       }
       const opts = options || {};
-      function router178(req, res, next) {
-        router178.handle(req, res, next);
+      function router179(req, res, next) {
+        router179.handle(req, res, next);
       }
-      Object.setPrototypeOf(router178, this);
-      router178.caseSensitive = opts.caseSensitive;
-      router178.mergeParams = opts.mergeParams;
-      router178.params = {};
-      router178.strict = opts.strict;
-      router178.stack = [];
-      return router178;
+      Object.setPrototypeOf(router179, this);
+      router179.caseSensitive = opts.caseSensitive;
+      router179.mergeParams = opts.mergeParams;
+      router179.params = {};
+      router179.strict = opts.strict;
+      router179.stack = [];
+      return router179;
     }
     Router.prototype = function() {
     };
@@ -21333,7 +21333,7 @@ var require_application = __commonJS({
     var app2 = exports2 = module2.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router178 = null;
+      var router179 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -21342,13 +21342,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router178 === null) {
-            router178 = new Router({
+          if (router179 === null) {
+            router179 = new Router({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router178;
+          return router179;
         }
       });
     };
@@ -21419,15 +21419,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router178 = this.router;
+      var router179 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router178.use(path34, fn2);
+          return router179.use(path34, fn2);
         }
         debug(".use app under %s", path34);
         fn2.mountpath = path34;
         fn2.parent = this;
-        router178.use(path34, function mounted_app(req, res, next) {
+        router179.use(path34, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -22636,17 +22636,17 @@ var require_content_disposition = __commonJS({
 var require_cookie_signature = __commonJS({
   "node_modules/cookie-signature/index.js"(exports2) {
     "use strict";
-    var crypto7 = require("crypto");
+    var crypto8 = require("crypto");
     exports2.sign = function(val, secret) {
       if ("string" != typeof val) throw new TypeError("Cookie value must be provided as a string.");
       if (null == secret) throw new TypeError("Secret key must be provided.");
-      return val + "." + crypto7.createHmac("sha256", secret).update(val).digest("base64").replace(/\=+$/, "");
+      return val + "." + crypto8.createHmac("sha256", secret).update(val).digest("base64").replace(/\=+$/, "");
     };
     exports2.unsign = function(input, secret) {
       if ("string" != typeof input) throw new TypeError("Signed cookie string must be provided.");
       if (null == secret) throw new TypeError("Secret key must be provided.");
       var tentativeValue = input.slice(0, input.lastIndexOf(".")), expectedInput = exports2.sign(tentativeValue, secret), expectedBuffer = Buffer.from(expectedInput), inputBuffer = Buffer.from(input);
-      return expectedBuffer.length === inputBuffer.length && crypto7.timingSafeEqual(expectedBuffer, inputBuffer) ? tentativeValue : false;
+      return expectedBuffer.length === inputBuffer.length && crypto8.timingSafeEqual(expectedBuffer, inputBuffer) ? tentativeValue : false;
     };
   }
 });
@@ -33200,7 +33200,7 @@ var require_accepts2 = __commonJS({
 var require_base64id = __commonJS({
   "node_modules/base64id/lib/base64id.js"(exports2, module2) {
     "use strict";
-    var crypto7 = require("crypto");
+    var crypto8 = require("crypto");
     var Base64Id = function() {
     };
     Base64Id.prototype.getRandomBytes = function(bytes) {
@@ -33208,12 +33208,12 @@ var require_base64id = __commonJS({
       var self2 = this;
       bytes = bytes || 12;
       if (bytes > BUFFER_SIZE) {
-        return crypto7.randomBytes(bytes);
+        return crypto8.randomBytes(bytes);
       }
       var bytesInBuffer = parseInt(BUFFER_SIZE / bytes);
       var threshold = parseInt(bytesInBuffer * 0.85);
       if (!threshold) {
-        return crypto7.randomBytes(bytes);
+        return crypto8.randomBytes(bytes);
       }
       if (this.bytesBufferIndex == null) {
         this.bytesBufferIndex = -1;
@@ -33225,14 +33225,14 @@ var require_base64id = __commonJS({
       if (this.bytesBufferIndex == -1 || this.bytesBufferIndex > threshold) {
         if (!this.isGeneratingBytes) {
           this.isGeneratingBytes = true;
-          crypto7.randomBytes(BUFFER_SIZE, function(err, bytes2) {
+          crypto8.randomBytes(BUFFER_SIZE, function(err, bytes2) {
             self2.bytesBuffer = bytes2;
             self2.bytesBufferIndex = 0;
             self2.isGeneratingBytes = false;
           });
         }
         if (this.bytesBufferIndex == -1) {
-          return crypto7.randomBytes(bytes);
+          return crypto8.randomBytes(bytes);
         }
       }
       var result = this.bytesBuffer.slice(bytes * this.bytesBufferIndex, bytes * (this.bytesBufferIndex + 1));
@@ -33246,7 +33246,7 @@ var require_base64id = __commonJS({
       }
       this.sequenceNumber = this.sequenceNumber + 1 | 0;
       rand.writeInt32BE(this.sequenceNumber, 11);
-      if (crypto7.randomBytes) {
+      if (crypto8.randomBytes) {
         this.getRandomBytes(12).copy(rand);
       } else {
         [0, 4, 8].forEach(function(i) {
@@ -48834,8 +48834,8 @@ var require_lib4 = __commonJS({
         getWss: function getWss() {
           return wsServer;
         },
-        applyTo: function applyTo(router178) {
-          (0, _addWsMethod2.default)(router178);
+        applyTo: function applyTo(router179) {
+          (0, _addWsMethod2.default)(router179);
         }
       };
     }
@@ -56276,16 +56276,16 @@ var require_string2 = __commonJS({
       }
     }
     function arrayToList(array4, finalEscape, ctx) {
-      let sql4 = "";
+      let sql5 = "";
       for (let i = 0; i < array4.length; i++) {
         const val = array4[i];
         if (Array.isArray(val)) {
-          sql4 += (i === 0 ? "" : ", ") + "(" + arrayToList(val, finalEscape, ctx) + ")";
+          sql5 += (i === 0 ? "" : ", ") + "(" + arrayToList(val, finalEscape, ctx) + ")";
         } else {
-          sql4 += (i === 0 ? "" : ", ") + finalEscape(val, ctx);
+          sql5 += (i === 0 ? "" : ", ") + finalEscape(val, ctx);
         }
       }
-      return sql4;
+      return sql5;
     }
     function bufferToString(buffer) {
       return "X" + escapeString(buffer.toString("hex"));
@@ -58594,26 +58594,26 @@ var require_ensure_connection_callback = __commonJS({
     function ensureConnectionCallback(runner) {
       runner.client.emit("start", runner.builder);
       runner.builder.emit("start", runner.builder);
-      const sql4 = runner.builder.toSQL();
+      const sql5 = runner.builder.toSQL();
       if (runner.builder._debug) {
-        runner.client.logger.debug(sql4);
+        runner.client.logger.debug(sql5);
       }
-      if (Array.isArray(sql4)) {
-        return runner.queryArray(sql4);
+      if (Array.isArray(sql5)) {
+        return runner.queryArray(sql5);
       }
-      return runner.query(sql4);
+      return runner.query(sql5);
     }
     function ensureConnectionStreamCallback(runner, params) {
       try {
-        const sql4 = runner.builder.toSQL();
-        if (Array.isArray(sql4) && params.hasHandler) {
+        const sql5 = runner.builder.toSQL();
+        if (Array.isArray(sql5) && params.hasHandler) {
           throw new Error(
             "The stream may only be used with a single query statement."
           );
         }
         return runner.client.stream(
           runner.connection,
-          sql4,
+          sql5,
           params.stream,
           params.options
         );
@@ -58752,7 +58752,7 @@ var require_runner = __commonJS({
           if (!(error73 instanceof KnexTimeoutError)) {
             return Promise.reject(error73);
           }
-          const { timeout: timeout2, sql: sql4, bindings } = obj;
+          const { timeout: timeout2, sql: sql5, bindings } = obj;
           let cancelQuery;
           if (obj.cancelOnTimeout) {
             cancelQuery = this.client.cancelQuery(this.connection);
@@ -58764,14 +58764,14 @@ var require_runner = __commonJS({
             this.connection.__knex__disposed = error73;
             throw Object.assign(cancelError, {
               message: `After query timeout of ${timeout2}ms exceeded, cancelling of query failed.`,
-              sql: sql4,
+              sql: sql5,
               bindings,
               timeout: timeout2
             });
           }).then(() => {
             throw Object.assign(error73, {
               message: `Defined query timeout of ${timeout2}ms exceeded when running query.`,
-              sql: sql4,
+              sql: sql5,
               bindings,
               timeout: timeout2
             });
@@ -60529,12 +60529,12 @@ var require_fs5 = __commonJS({
     var flatten = require_flatten();
     var os = require("os");
     var path34 = require("path");
-    var { promisify } = require("util");
-    var stat = promisify(fs36.stat);
-    var readFile3 = promisify(fs36.readFile);
-    var writeFile3 = promisify(fs36.writeFile);
-    var readdir = promisify(fs36.readdir);
-    var mkdir = promisify(fs36.mkdir);
+    var { promisify: promisify2 } = require("util");
+    var stat = promisify2(fs36.stat);
+    var readFile3 = promisify2(fs36.readFile);
+    var writeFile3 = promisify2(fs36.writeFile);
+    var readdir = promisify2(fs36.readdir);
+    var mkdir = promisify2(fs36.mkdir);
     function existsSync4(path35) {
       try {
         fs36.accessSync(path35);
@@ -60544,7 +60544,7 @@ var require_fs5 = __commonJS({
       }
     }
     function createTemp() {
-      return promisify(fs36.mkdtemp)(`${os.tmpdir()}${path34.sep}`);
+      return promisify2(fs36.mkdtemp)(`${os.tmpdir()}${path34.sep}`);
     }
     function ensureDirectoryExists(dir) {
       return stat(dir).catch(() => mkdir(dir, { recursive: true }));
@@ -61419,8 +61419,8 @@ var require_async7 = __commonJS({
   "node_modules/get-package-type/async.cjs"(exports2, module2) {
     "use strict";
     var path34 = require("path");
-    var { promisify } = require("util");
-    var readFile3 = promisify(require("fs").readFile);
+    var { promisify: promisify2 } = require("util");
+    var readFile3 = promisify2(require("fs").readFile);
     var isNodeModules = require_is_node_modules();
     var resultsCache = require_cache();
     var promiseCache = /* @__PURE__ */ new Map();
@@ -63822,8 +63822,8 @@ var require_transaction = __commonJS({
           this._rejecter(error73);
         });
       }
-      query(conn, sql4, status, value) {
-        const q = this.trxClient.query(conn, sql4).catch((err) => {
+      query(conn, sql5, status, value) {
+        const q = this.trxClient.query(conn, sql5).catch((err) => {
           status = 2;
           value = err;
           this._completed = true;
@@ -63834,7 +63834,7 @@ var require_transaction = __commonJS({
           }
           if (status === 2) {
             if (value === void 0) {
-              if (this.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql4)) {
+              if (this.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql5)) {
                 this._resolver();
                 return;
               }
@@ -64020,8 +64020,8 @@ var require_transaction = __commonJS({
       return trxClient;
     }
     function completedError(trx, obj) {
-      const sql4 = typeof obj === "string" ? obj : obj && obj.sql;
-      debug("%s: Transaction completed: %s", trx.txid, sql4);
+      const sql5 = typeof obj === "string" ? obj : obj && obj.sql;
+      debug("%s: Transaction completed: %s", trx.txid, sql5);
       throw new Error(
         "Transaction query already complete, run with DEBUG=knex:tx for more info"
       );
@@ -64036,12 +64036,12 @@ var require_query_executioner = __commonJS({
     "use strict";
     var _debugQuery = require_src3()("knex:query");
     var debugBindings = require_src3()("knex:bindings");
-    var debugQuery = (sql4, txId) => _debugQuery(sql4.replace(/%/g, "%%"), txId);
+    var debugQuery = (sql5, txId) => _debugQuery(sql5.replace(/%/g, "%%"), txId);
     var { isString: isString2 } = require_is();
-    function formatQuery(sql4, bindings, timeZone, client) {
+    function formatQuery(sql5, bindings, timeZone, client) {
       bindings = bindings == null ? [] : [].concat(bindings);
       let index = 0;
-      return sql4.replace(/\\?\?/g, (match) => {
+      return sql5.replace(/\\?\?/g, (match) => {
         if (match === "\\?") {
           return "?";
         }
@@ -65355,8 +65355,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Adds a raw `where` clause to the query.
-      whereRaw(sql4, bindings) {
-        const raw = sql4.isRawInstance ? sql4 : this.client.raw(sql4, bindings);
+      whereRaw(sql5, bindings) {
+        const raw = sql5.isRawInstance ? sql5 : this.client.raw(sql5, bindings);
         this._statements.push({
           grouping: "where",
           type: "whereRaw",
@@ -65366,8 +65366,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      orWhereRaw(sql4, bindings) {
-        return this._bool("or").whereRaw(sql4, bindings);
+      orWhereRaw(sql5, bindings) {
+        return this._bool("or").whereRaw(sql5, bindings);
       }
       // Helper for compiling any advanced `where` queries.
       whereWrapped(callback) {
@@ -65525,8 +65525,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Adds a raw `group by` clause to the query.
-      groupByRaw(sql4, bindings) {
-        const raw = sql4.isRawInstance ? sql4 : this.client.raw(sql4, bindings);
+      groupByRaw(sql5, bindings) {
+        const raw = sql5.isRawInstance ? sql5 : this.client.raw(sql5, bindings);
         this._statements.push({
           grouping: "group",
           type: "groupByRaw",
@@ -65571,8 +65571,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Add a raw `order by` clause to the query.
-      orderByRaw(sql4, bindings) {
-        const raw = sql4.isRawInstance ? sql4 : this.client.raw(sql4, bindings);
+      orderByRaw(sql5, bindings) {
+        const raw = sql5.isRawInstance ? sql5 : this.client.raw(sql5, bindings);
         this._statements.push({
           grouping: "order",
           type: "orderByRaw",
@@ -65754,8 +65754,8 @@ var require_querybuilder = __commonJS({
         return this._bool("or")._not(true).havingIn(column, values);
       }
       // Adds a raw `having` clause to the query.
-      havingRaw(sql4, bindings) {
-        const raw = sql4.isRawInstance ? sql4 : this.client.raw(sql4, bindings);
+      havingRaw(sql5, bindings) {
+        const raw = sql5.isRawInstance ? sql5 : this.client.raw(sql5, bindings);
         this._statements.push({
           grouping: "having",
           type: "havingRaw",
@@ -65765,8 +65765,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      orHavingRaw(sql4, bindings) {
-        return this._bool("or").havingRaw(sql4, bindings);
+      orHavingRaw(sql5, bindings) {
+        return this._bool("or").havingRaw(sql5, bindings);
       }
       // set the skip binding parameter (= insert the raw value in the query) for an attribute.
       _setSkipBinding(attribute, options) {
@@ -66086,8 +66086,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      fromRaw(sql4, bindings) {
-        const raw = sql4.isRawInstance ? sql4 : this.client.raw(sql4, bindings);
+      fromRaw(sql5, bindings) {
+        const raw = sql5.isRawInstance ? sql5 : this.client.raw(sql5, bindings);
         return this.from(raw);
       }
       // Passes query to provided callback function, useful for e.g. composing
@@ -66734,15 +66734,15 @@ var require_wrappingFormatter = __commonJS({
       return ret.join(", ");
     }
     function outputQuery(compiled, isParameter, builder, client) {
-      let sql4 = compiled.sql || "";
-      if (sql4) {
+      let sql5 = compiled.sql || "";
+      if (sql5) {
         if ((compiled.method === "select" || compiled.method === "first") && (isParameter || compiled.as)) {
-          sql4 = `(${sql4})`;
+          sql5 = `(${sql5})`;
           if (compiled.as)
-            return client.alias(sql4, wrapString(compiled.as, builder, client));
+            return client.alias(sql5, wrapString(compiled.as, builder, client));
         }
       }
-      return sql4;
+      return sql5;
     }
     function rawOrFn(value, method, builder, client, bindingHolder) {
       if (typeof value === "function") {
@@ -66786,7 +66786,7 @@ var require_rawFormatter = __commonJS({
       const expectedBindings = raw.bindings.length;
       const values = raw.bindings;
       let index = 0;
-      const sql4 = raw.sql.replace(/\\?\?\??/g, function(match) {
+      const sql5 = raw.sql.replace(/\\?\?\??/g, function(match) {
         if (match === "\\?") {
           return match;
         }
@@ -66801,7 +66801,7 @@ var require_rawFormatter = __commonJS({
       }
       return {
         method: "raw",
-        sql: sql4,
+        sql: sql5,
         bindings: bindingsHolder.bindings
       };
     }
@@ -66812,7 +66812,7 @@ var require_rawFormatter = __commonJS({
       const builder = raw;
       const values = raw.bindings;
       const regex = /\\?(:(\w+):(?=::)|:(\w+):(?!:)|:(\w+))/g;
-      const sql4 = raw.sql.replace(regex, function(match, p1, p22, p3, p4) {
+      const sql5 = raw.sql.replace(regex, function(match, p1, p22, p3, p4) {
         if (match !== p1) {
           return p1;
         }
@@ -66836,7 +66836,7 @@ var require_rawFormatter = __commonJS({
       });
       return {
         method: "raw",
-        sql: sql4,
+        sql: sql5,
         bindings: bindingsHolder.bindings
       };
     }
@@ -66907,8 +66907,8 @@ var require_raw2 = __commonJS({
           saveAsyncStack(this, 4);
         }
       }
-      set(sql4, bindings) {
-        this.sql = sql4;
+      set(sql5, bindings) {
+        this.sql = sql5;
         this.bindings = isObject5(bindings) && !bindings.toSQL || bindings === void 0 ? bindings : [bindings];
         return this;
       }
@@ -67351,7 +67351,7 @@ var require_querycompiler = __commonJS({
       // the component compilers, trimming out the empties, and returning a
       // generated query string.
       select() {
-        let sql4 = this.with();
+        let sql5 = this.with();
         let unionStatement = "";
         const firstStatements = [];
         const endStatements = [];
@@ -67377,13 +67377,13 @@ var require_querycompiler = __commonJS({
           const statements = compact(firstStatements.concat(endStatements)).join(
             " "
           );
-          sql4 += unionStatement + (statements ? " " + statements : "");
+          sql5 += unionStatement + (statements ? " " + statements : "");
         } else {
           const allStatements = (wrapMainQuery ? "(" : "") + compact(firstStatements).join(" ") + (wrapMainQuery ? ")" : "");
           const endStat = compact(endStatements).join(" ");
-          sql4 += allStatements + (unionStatement ? " " + unionStatement : "") + (endStat ? " " + endStat : endStat);
+          sql5 += allStatements + (unionStatement ? " " + unionStatement : "") + (endStat ? " " + endStat : endStat);
         }
-        return sql4;
+        return sql5;
       }
       pluck() {
         let toPluck = this.single.pluck;
@@ -67399,55 +67399,55 @@ var require_querycompiler = __commonJS({
       // inserts using a single query statement.
       insert() {
         const insertValues = this.single.insert || [];
-        const sql4 = this.with() + `insert into ${this.tableName} `;
+        const sql5 = this.with() + `insert into ${this.tableName} `;
         const body = this._insertBody(insertValues);
-        return body === "" ? "" : sql4 + body;
+        return body === "" ? "" : sql5 + body;
       }
       _onConflictClause(columns) {
         return columns instanceof Raw ? this.formatter.wrap(columns) : `(${this.formatter.columnize(columns)})`;
       }
       _buildInsertValues(insertData) {
-        let sql4 = "";
+        let sql5 = "";
         let i = -1;
         while (++i < insertData.values.length) {
-          if (i !== 0) sql4 += "), (";
-          sql4 += this.client.parameterize(
+          if (i !== 0) sql5 += "), (";
+          sql5 += this.client.parameterize(
             insertData.values[i],
             this.client.valueForUndefined,
             this.builder,
             this.bindingsHolder
           );
         }
-        return sql4;
+        return sql5;
       }
       _insertBody(insertValues) {
-        let sql4 = "";
+        let sql5 = "";
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
             return "";
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
-          return sql4 + this._emptyInsertValue;
+          return sql5 + this._emptyInsertValue;
         }
         const insertData = this._prepInsert(insertValues);
         if (typeof insertData === "string") {
-          sql4 += insertData;
+          sql5 += insertData;
         } else {
           if (insertData.columns.length) {
-            sql4 += `(${columnize_(
+            sql5 += `(${columnize_(
               insertData.columns,
               this.builder,
               this.client,
               this.bindingsHolder
             )}`;
-            sql4 += ") values (" + this._buildInsertValues(insertData) + ")";
+            sql5 += ") values (" + this._buildInsertValues(insertData) + ")";
           } else if (insertValues.length === 1 && insertValues[0]) {
-            sql4 += this._emptyInsertValue;
+            sql5 += this._emptyInsertValue;
           } else {
-            sql4 = "";
+            sql5 = "";
           }
         }
-        return sql4;
+        return sql5;
       }
       // Compiles the "update" query.
       update() {
@@ -67469,7 +67469,7 @@ var require_querycompiler = __commonJS({
         if (this.onlyUnions()) return "";
         const hints = this._hintComments();
         const columns = this.grouped.columns || [];
-        let i = -1, sql4 = [];
+        let i = -1, sql5 = [];
         if (columns) {
           while (++i < columns.length) {
             const stmt = columns[i];
@@ -67479,15 +67479,15 @@ var require_querycompiler = __commonJS({
               continue;
             }
             if (stmt.type === "aggregate") {
-              sql4.push(...this.aggregate(stmt));
+              sql5.push(...this.aggregate(stmt));
             } else if (stmt.type === "aggregateRaw") {
-              sql4.push(this.aggregateRaw(stmt));
+              sql5.push(this.aggregateRaw(stmt));
             } else if (stmt.type === "analytic") {
-              sql4.push(this.analytic(stmt));
+              sql5.push(this.analytic(stmt));
             } else if (stmt.type === "json") {
-              sql4.push(this.json(stmt));
+              sql5.push(this.json(stmt));
             } else if (stmt.value && stmt.value.length > 0) {
-              sql4.push(
+              sql5.push(
                 columnize_(
                   stmt.value,
                   this.builder,
@@ -67498,9 +67498,9 @@ var require_querycompiler = __commonJS({
             }
           }
         }
-        if (sql4.length === 0) sql4 = ["*"];
+        if (sql5.length === 0) sql5 = ["*"];
         const select = this.onlyJson() ? "" : "select ";
-        return `${select}${hints}${distinctClause}` + sql4.join(", ") + (this.tableName ? ` from ${this.single.only ? "only " : ""}${this.tableName}` : "");
+        return `${select}${hints}${distinctClause}` + sql5.join(", ") + (this.tableName ? ` from ${this.single.only ? "only " : ""}${this.tableName}` : "");
       }
       // Add comments to the query
       comments() {
@@ -67583,16 +67583,16 @@ var require_querycompiler = __commonJS({
       // Compiles all each of the `join` clauses on the query,
       // including any nested join queries.
       join() {
-        let sql4 = "";
+        let sql5 = "";
         let i = -1;
         const joins = this.grouped.join;
         if (!joins) return "";
         while (++i < joins.length) {
           const join2 = joins[i];
           const table = this._joinTable(join2);
-          if (i > 0) sql4 += " ";
+          if (i > 0) sql5 += " ";
           if (join2.joinType === "raw") {
-            sql4 += unwrapRaw_(
+            sql5 += unwrapRaw_(
               join2.table,
               void 0,
               this.builder,
@@ -67600,7 +67600,7 @@ var require_querycompiler = __commonJS({
               this.bindingsHolder
             );
           } else {
-            sql4 += join2.joinType + " join " + wrap_(
+            sql5 += join2.joinType + " join " + wrap_(
               table,
               void 0,
               this.builder,
@@ -67611,18 +67611,18 @@ var require_querycompiler = __commonJS({
             while (++ii < join2.clauses.length) {
               const clause = join2.clauses[ii];
               if (ii > 0) {
-                sql4 += ` ${clause.bool} `;
+                sql5 += ` ${clause.bool} `;
               } else {
-                sql4 += ` ${clause.type === "onUsing" ? "using" : "on"} `;
+                sql5 += ` ${clause.type === "onUsing" ? "using" : "on"} `;
               }
               const val = this[clause.type](clause);
               if (val) {
-                sql4 += val;
+                sql5 += val;
               }
             }
           }
         }
-        return sql4;
+        return sql5;
       }
       onBetween(statement) {
         return wrap_(
@@ -67679,29 +67679,29 @@ var require_querycompiler = __commonJS({
         ) + " " + this._not(statement, "in ") + this.wrap(values);
       }
       multiOnIn(statement) {
-        let i = -1, sql4 = `(${columnize_(
+        let i = -1, sql5 = `(${columnize_(
           statement.column,
           this.builder,
           this.client,
           this.bindingsHolder
         )}) `;
-        sql4 += this._not(statement, "in ") + "((";
+        sql5 += this._not(statement, "in ") + "((";
         while (++i < statement.value.length) {
-          if (i !== 0) sql4 += "),(";
-          sql4 += this.client.parameterize(
+          if (i !== 0) sql5 += "),(";
+          sql5 += this.client.parameterize(
             statement.value[i],
             void 0,
             this.builder,
             this.bindingsHolder
           );
         }
-        return sql4 + "))";
+        return sql5 + "))";
       }
       // Compiles all `where` statements on the query.
       where() {
         const wheres = this.grouped.where;
         if (!wheres) return;
-        const sql4 = [];
+        const sql5 = [];
         let i = -1;
         while (++i < wheres.length) {
           const stmt = wheres[i];
@@ -67711,15 +67711,15 @@ var require_querycompiler = __commonJS({
           }
           const val = this[stmt.type](stmt);
           if (val) {
-            if (sql4.length === 0) {
-              sql4[0] = "where";
+            if (sql5.length === 0) {
+              sql5[0] = "where";
             } else {
-              sql4.push(stmt.bool);
+              sql5.push(stmt.bool);
             }
-            sql4.push(val);
+            sql5.push(val);
           }
         }
-        return sql4.length > 1 ? sql4.join(" ") : "";
+        return sql5.length > 1 ? sql5.join(" ") : "";
       }
       group() {
         return this._groupsOrders("group");
@@ -67731,21 +67731,21 @@ var require_querycompiler = __commonJS({
       having() {
         const havings = this.grouped.having;
         if (!havings) return "";
-        const sql4 = ["having"];
+        const sql5 = ["having"];
         for (let i = 0, l = havings.length; i < l; i++) {
           const s = havings[i];
           const val = this[s.type](s);
           if (val) {
-            if (sql4.length === 0) {
-              sql4[0] = "where";
+            if (sql5.length === 0) {
+              sql5[0] = "where";
             }
-            if (sql4.length > 1 || sql4.length === 1 && sql4[0] !== "having") {
-              sql4.push(s.bool);
+            if (sql5.length > 1 || sql5.length === 1 && sql5[0] !== "having") {
+              sql5.push(s.bool);
             }
-            sql4.push(val);
+            sql5.push(val);
           }
         }
-        return sql4.length > 1 ? sql4.join(" ") : "";
+        return sql5.length > 1 ? sql5.join(" ") : "";
       }
       havingRaw(statement) {
         return this._not(statement, "") + unwrapRaw_(
@@ -67834,11 +67834,11 @@ var require_querycompiler = __commonJS({
         const onlyUnions = this.onlyUnions();
         const unions = this.grouped.union;
         if (!unions) return "";
-        let sql4 = "";
+        let sql5 = "";
         for (let i = 0, l = unions.length; i < l; i++) {
           const union3 = unions[i];
-          if (i > 0) sql4 += " ";
-          if (i > 0 || !onlyUnions) sql4 += union3.clause + " ";
+          if (i > 0) sql5 += " ";
+          if (i > 0 || !onlyUnions) sql5 += union3.clause + " ";
           const statement = rawOrFn_(
             union3.value,
             void 0,
@@ -67848,12 +67848,12 @@ var require_querycompiler = __commonJS({
           );
           if (statement) {
             const wrap = union3.wrap;
-            if (wrap) sql4 += "(";
-            sql4 += statement;
-            if (wrap) sql4 += ")";
+            if (wrap) sql5 += "(";
+            sql5 += statement;
+            if (wrap) sql5 += ")";
           }
         }
-        return sql4;
+        return sql5;
       }
       // If we haven't specified any columns or a `tableName`, we're assuming this
       // is only being used for unions.
@@ -67928,19 +67928,19 @@ var require_querycompiler = __commonJS({
         const self2 = this;
         const wrapJoin = new JoinClause();
         clause.value.call(wrapJoin, wrapJoin);
-        let sql4 = "";
+        let sql5 = "";
         for (let ii = 0; ii < wrapJoin.clauses.length; ii++) {
           const wrapClause = wrapJoin.clauses[ii];
           if (ii > 0) {
-            sql4 += ` ${wrapClause.bool} `;
+            sql5 += ` ${wrapClause.bool} `;
           }
           const val = self2[wrapClause.type](wrapClause);
           if (val) {
-            sql4 += val;
+            sql5 += val;
           }
         }
-        if (sql4.length) {
-          return `(${sql4})`;
+        if (sql5.length) {
+          return `(${sql5})`;
         }
         return "";
       }
@@ -68141,32 +68141,32 @@ var require_querycompiler = __commonJS({
         return this[stmt.method](stmt.params);
       }
       analytic(stmt) {
-        let sql4 = "";
+        let sql5 = "";
         const self2 = this;
-        sql4 += stmt.method + "() over (";
+        sql5 += stmt.method + "() over (";
         if (stmt.raw) {
-          sql4 += stmt.raw;
+          sql5 += stmt.raw;
         } else {
           if (stmt.partitions.length) {
-            sql4 += "partition by ";
-            sql4 += map3(stmt.partitions, function(partition) {
+            sql5 += "partition by ";
+            sql5 += map3(stmt.partitions, function(partition) {
               if (isString2(partition)) {
                 return self2.formatter.columnize(partition);
               } else return self2.formatter.columnize(partition.column) + (partition.order ? " " + partition.order : "");
             }).join(", ") + " ";
           }
-          sql4 += "order by ";
-          sql4 += map3(stmt.order, function(order) {
+          sql5 += "order by ";
+          sql5 += map3(stmt.order, function(order) {
             if (isString2(order)) {
               return self2.formatter.columnize(order);
             } else return self2.formatter.columnize(order.column) + (order.order ? " " + order.order : "");
           }).join(", ");
         }
-        sql4 += ")";
+        sql5 += ")";
         if (stmt.alias) {
-          sql4 += " as " + stmt.alias;
+          sql5 += " as " + stmt.alias;
         }
-        return sql4;
+        return sql5;
       }
       // Compiles all `with` statements on the query.
       with() {
@@ -68175,7 +68175,7 @@ var require_querycompiler = __commonJS({
         }
         const withs = this.grouped.with;
         if (!withs) return;
-        const sql4 = [];
+        const sql5 = [];
         let i = -1;
         let isRecursive = false;
         while (++i < withs.length) {
@@ -68184,9 +68184,9 @@ var require_querycompiler = __commonJS({
             isRecursive = true;
           }
           const val = this[stmt.type](stmt);
-          sql4.push(val);
+          sql5.push(val);
         }
-        return `with ${isRecursive ? "recursive " : ""}${sql4.join(", ")} `;
+        return `with ${isRecursive ? "recursive " : ""}${sql5.join(", ")} `;
       }
       withWrapped(statement) {
         const val = rawOrFn_(
@@ -68358,10 +68358,10 @@ var require_querycompiler = __commonJS({
       _groupsOrders(type) {
         const items = this.grouped[type];
         if (!items) return "";
-        const sql4 = items.map((item) => {
+        const sql5 = items.map((item) => {
           return this._groupOrder(item, type);
         });
-        return sql4.length ? type + " by " + sql4.join(", ") : "";
+        return sql5.length ? type + " by " + sql5.join(", ") : "";
       }
       // Get the table name, wrapping it if necessary.
       // Implemented as a property to prevent ordering issues as described in #704.
@@ -68699,8 +68699,8 @@ var require_compiler = __commonJS({
           (materialized ? this.dropMaterializedViewPrefix : this.dropViewPrefix) + (ifExists ? "if exists " : "") + this.formatter.wrap(prefixedTableName(this.schema, viewName))
         );
       }
-      raw(sql4, bindings) {
-        this.sequence.push(this.client.raw(sql4, bindings).toSQL());
+      raw(sql5, bindings) {
+        this.sequence.push(this.client.raw(sql5, bindings).toSQL());
       }
       toSQL() {
         const sequence = this.builder._sequence;
@@ -68743,9 +68743,9 @@ var require_compiler = __commonJS({
         builder.queryContext(queryContext);
       }
       builder.setSchema(this.schema);
-      const sql4 = builder.toSQL();
-      for (let i = 0, l = sql4.length; i < l; i++) {
-        this.sequence.push(sql4[i]);
+      const sql5 = builder.toSQL();
+      for (let i = 0, l = sql5.length; i < l; i++) {
+        this.sequence.push(sql5[i]);
       }
     }
     function buildTable(type) {
@@ -69404,8 +69404,8 @@ var require_tablecompiler = __commonJS({
               const nullableType2 = nullable3 ? "null" : "not null";
               const columnType = columnInfo.type + (columnInfo.maxLength ? `(${columnInfo.maxLength})` : "");
               const defaultValue = columnInfo.defaultValue !== null && columnInfo.defaultValue !== void 0 ? `default '${columnInfo.defaultValue}'` : "";
-              const sql4 = `alter table ${tableName} ${alterColumnPrefix} ${columnName} ${columnType} ${nullableType2} ${defaultValue}`;
-              return this.client.raw(sql4);
+              const sql5 = `alter table ${tableName} ${alterColumnPrefix} ${columnName} ${columnType} ${nullableType2} ${defaultValue}`;
+              return this.client.raw(sql5);
             });
           }
         });
@@ -69420,8 +69420,8 @@ var require_tablecompiler = __commonJS({
         if (checkConstraintNames === void 0) return "";
         checkConstraintNames = normalizeArr(checkConstraintNames);
         const tableName = this.tableName();
-        const sql4 = `alter table ${tableName} ${checkConstraintNames.map((constraint) => `drop constraint ${constraint}`).join(", ")}`;
-        this.pushQuery(sql4);
+        const sql5 = `alter table ${tableName} ${checkConstraintNames.map((constraint) => `drop constraint ${constraint}`).join(", ")}`;
+        this.pushQuery(sql5);
       }
       check(checkPredicate, bindings, constraintName) {
         const tableName = this.tableName();
@@ -69430,8 +69430,8 @@ var require_tablecompiler = __commonJS({
           this.checksCount++;
           checkConstraint = tableName + "_" + this.checksCount;
         }
-        const sql4 = `alter table ${tableName} add constraint ${checkConstraint} check(${checkPredicate})`;
-        this.pushQuery(sql4);
+        const sql5 = `alter table ${tableName} add constraint ${checkConstraint} check(${checkPredicate})`;
+        this.pushQuery(sql5);
       }
       _addChecks() {
         if (this.grouped.checks) {
@@ -69875,8 +69875,8 @@ var require_ref2 = __commonJS({
         const string5 = this._schema ? `${this._schema}.${this.ref}` : this.ref;
         const formatter = this.client.formatter(this);
         const ref = formatter.columnize(string5);
-        const sql4 = this._alias ? `${ref} as ${formatter.wrap(this._alias)}` : ref;
-        this.set(sql4, []);
+        const sql5 = this._alias ? `${ref} as ${formatter.wrap(this._alias)}` : ref;
+        this.set(sql5, []);
         return super.toSQL(...arguments);
       }
     };
@@ -70047,24 +70047,24 @@ var require_viewcompiler = __commonJS({
           this.client,
           this.bindingsHolder
         ) + ")" : "";
-        let sql4 = createStatement + this.viewName() + columnList;
-        sql4 += " as ";
-        sql4 += selectQuery.toString();
+        let sql5 = createStatement + this.viewName() + columnList;
+        sql5 += " as ";
+        sql5 += selectQuery.toString();
         switch (this.single.checkOption) {
           case "default_option":
-            sql4 += " with check option";
+            sql5 += " with check option";
             break;
           case "local":
-            sql4 += " with local check option";
+            sql5 += " with local check option";
             break;
           case "cascaded":
-            sql4 += " with cascaded check option";
+            sql5 += " with cascaded check option";
             break;
           default:
             break;
         }
         this.pushQuery({
-          sql: sql4
+          sql: sql5
         });
       }
       renameView(from, to) {
@@ -70116,7 +70116,7 @@ var require_client2 = __commonJS({
     "use strict";
     var { Pool, TimeoutError } = require_tarn();
     var { EventEmitter: EventEmitter3 } = require("events");
-    var { promisify } = require("util");
+    var { promisify: promisify2 } = require("util");
     var { makeEscape } = require_string2();
     var cloneDeep = require_cloneDeep();
     var defaults2 = require_defaults();
@@ -70250,8 +70250,8 @@ var require_client2 = __commonJS({
       prepBindings(bindings) {
         return bindings;
       }
-      positionBindings(sql4) {
-        return sql4;
+      positionBindings(sql5) {
+        return sql5;
       }
       postProcessResponse(resp, queryContext) {
         if (this.config.postProcessResponse) {
@@ -70384,7 +70384,7 @@ ${e.message}`);
               connection.__knexLifetimeLimit = generateLifetimeLimit();
             }
             if (userAfterCreate) {
-              await promisify(userAfterCreate)(connection);
+              await promisify2(userAfterCreate)(connection);
             }
             return connection;
           },
@@ -70935,24 +70935,24 @@ var require_sqlite_querycompiler = __commonJS({
       // then join them all together with select unions to complete the queries.
       insert() {
         const insertValues = this.single.insert || [];
-        let sql4 = this.with() + `insert into ${this.tableName} `;
+        let sql5 = this.with() + `insert into ${this.tableName} `;
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
             return "";
           } else if (insertValues.length === 1 && insertValues[0] && isEmpty(insertValues[0])) {
             return {
-              sql: sql4 + this._emptyInsertValue
+              sql: sql5 + this._emptyInsertValue
             };
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql4 + this._emptyInsertValue
+            sql: sql5 + this._emptyInsertValue
           };
         }
         const insertData = this._prepInsert(insertValues);
         if (isString2(insertData)) {
           return {
-            sql: sql4 + insertData
+            sql: sql5 + insertData
           };
         }
         if (insertData.columns.length === 0) {
@@ -70960,7 +70960,7 @@ var require_sqlite_querycompiler = __commonJS({
             sql: ""
           };
         }
-        sql4 += `(${this.formatter.columnize(insertData.columns)})`;
+        sql5 += `(${this.formatter.columnize(insertData.columns)})`;
         if (this.client.valueForUndefined !== null) {
           insertData.values.forEach((bindings) => {
             each(bindings, (binding) => {
@@ -70978,20 +70978,20 @@ var require_sqlite_querycompiler = __commonJS({
             this.builder,
             this.bindingsHolder
           );
-          sql4 += ` values (${parameters})`;
+          sql5 += ` values (${parameters})`;
           const { onConflict: onConflict2, ignore: ignore2, merge: merge5 } = this.single;
-          if (onConflict2 && ignore2) sql4 += this._ignore(onConflict2);
+          if (onConflict2 && ignore2) sql5 += this._ignore(onConflict2);
           else if (onConflict2 && merge5) {
-            sql4 += this._merge(merge5.updates, onConflict2, insertValues);
+            sql5 += this._merge(merge5.updates, onConflict2, insertValues);
             const wheres = this.where();
-            if (wheres) sql4 += ` ${wheres}`;
+            if (wheres) sql5 += ` ${wheres}`;
           }
           const { returning: returning2 } = this.single;
           if (returning2) {
-            sql4 += this._returning(returning2);
+            sql5 += this._returning(returning2);
           }
           return {
-            sql: sql4,
+            sql: sql5,
             returning: returning2
           };
         }
@@ -71016,16 +71016,16 @@ var require_sqlite_querycompiler = __commonJS({
           }
           blocks[i] = block.join(", ");
         }
-        sql4 += " select " + blocks.join(" union all select ");
+        sql5 += " select " + blocks.join(" union all select ");
         const { onConflict, ignore, merge: merge4 } = this.single;
-        if (onConflict && ignore) sql4 += " where true" + this._ignore(onConflict);
+        if (onConflict && ignore) sql5 += " where true" + this._ignore(onConflict);
         else if (onConflict && merge4) {
-          sql4 += " where true" + this._merge(merge4.updates, onConflict, insertValues);
+          sql5 += " where true" + this._merge(merge4.updates, onConflict, insertValues);
         }
         const { returning } = this.single;
-        if (returning) sql4 += this._returning(returning);
+        if (returning) sql5 += this._returning(returning);
         return {
-          sql: sql4,
+          sql: sql5,
           returning
         };
       }
@@ -71047,9 +71047,9 @@ var require_sqlite_querycompiler = __commonJS({
         return ` on conflict ${this._onConflictClause(columns)} do nothing`;
       }
       _merge(updates, columns, insert) {
-        let sql4 = ` on conflict ${this._onConflictClause(columns)} do update set `;
+        let sql5 = ` on conflict ${this._onConflictClause(columns)} do update set `;
         if (updates && Array.isArray(updates)) {
-          sql4 += updates.map(
+          sql5 += updates.map(
             (column) => wrapString(
               column.split(".").pop(),
               this.formatter.builder,
@@ -71057,15 +71057,15 @@ var require_sqlite_querycompiler = __commonJS({
               this.formatter
             )
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql4;
+          return sql5;
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
           if (typeof updateData === "string") {
-            sql4 += updateData;
+            sql5 += updateData;
           } else {
-            sql4 += updateData.join(",");
+            sql5 += updateData.join(",");
           }
-          return sql4;
+          return sql5;
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -71073,10 +71073,10 @@ var require_sqlite_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          sql4 += insertData.columns.map(
+          sql5 += insertData.columns.map(
             (column) => wrapString(column.split(".").pop(), this.builder, this.client)
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql4;
+          return sql5;
         }
       }
       _returning(value) {
@@ -71230,12 +71230,12 @@ var require_sqlite_compiler = __commonJS({
       }
       // Compile the query to determine if a table exists.
       hasTable(tableName) {
-        const sql4 = `select * from sqlite_master where type = 'table' and name = ${this.client.parameter(
+        const sql5 = `select * from sqlite_master where type = 'table' and name = ${this.client.parameter(
           this.formatter.wrap(tableName).replace(/`/g, ""),
           this.builder,
           this.bindingsHolder
         )}`;
-        this.pushQuery({ sql: sql4, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql5, output: (resp) => resp.length > 0 });
       }
       // Compile the query to determine if a column exists.
       hasColumn(tableName, column) {
@@ -71357,17 +71357,17 @@ var require_sqlite_tablecompiler = __commonJS({
       // Create a new table.
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
-        let sql4 = createStatement + this.tableName();
+        let sql5 = createStatement + this.tableName();
         if (like && this.tableNameLike()) {
-          sql4 += " as select * from " + this.tableNameLike() + " where 0=1";
+          sql5 += " as select * from " + this.tableNameLike() + " where 0=1";
         } else {
-          sql4 += " (" + columns.sql.join(", ");
-          sql4 += this.foreignKeys() || "";
-          sql4 += this.primaryKeys() || "";
-          sql4 += this._addChecks();
-          sql4 += ")";
+          sql5 += " (" + columns.sql.join(", ");
+          sql5 += this.foreignKeys() || "";
+          sql5 += this.primaryKeys() || "";
+          sql5 += this._addChecks();
+          sql5 += ")";
         }
-        this.pushQuery(sql4);
+        this.pushQuery(sql5);
         if (like) {
           this.addColumns(columns, this.addColumnsPrefix);
         }
@@ -71563,7 +71563,7 @@ var require_sqlite_tablecompiler = __commonJS({
         }
       }
       foreignKeys() {
-        let sql4 = "";
+        let sql5 = "";
         const foreignKeys = filter6(this.grouped.alterTable || [], {
           method: "foreign"
         });
@@ -71576,11 +71576,11 @@ var require_sqlite_tablecompiler = __commonJS({
           if (constraintName) {
             constraintName = " constraint " + this.formatter.wrap(constraintName);
           }
-          sql4 += `,${constraintName} foreign key(${column}) references ${foreignTable}(${references})`;
-          if (foreign.onDelete) sql4 += ` on delete ${foreign.onDelete}`;
-          if (foreign.onUpdate) sql4 += ` on update ${foreign.onUpdate}`;
+          sql5 += `,${constraintName} foreign key(${column}) references ${foreignTable}(${references})`;
+          if (foreign.onDelete) sql5 += ` on delete ${foreign.onDelete}`;
+          if (foreign.onUpdate) sql5 += ` on update ${foreign.onUpdate}`;
         }
-        return sql4;
+        return sql5;
       }
       createTableBlock() {
         return this.getColumns().concat().join(",");
@@ -71836,20 +71836,20 @@ var require_parser = __commonJS({
       operator: /-|\(|\)|;|\+|\*|\/|%|==|=|<=|<>|<<|<|>=|>>|>|!=|,|&|~|\|\||\||\./,
       _ws: /\s+/
     };
-    function parseCreateTable(sql4) {
-      const result = createTable({ input: tokenize(sql4, TOKENS) });
+    function parseCreateTable(sql5) {
+      const result = createTable({ input: tokenize(sql5, TOKENS) });
       if (!result.success) {
         throw new Error(
-          `Parsing CREATE TABLE failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql4}"`
+          `Parsing CREATE TABLE failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql5}"`
         );
       }
       return result.ast;
     }
-    function parseCreateIndex(sql4) {
-      const result = createIndex({ input: tokenize(sql4, TOKENS) });
+    function parseCreateIndex(sql5) {
+      const result = createIndex({ input: tokenize(sql5, TOKENS) });
       if (!result.success) {
         throw new Error(
-          `Parsing CREATE INDEX failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql4}"`
+          `Parsing CREATE INDEX failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql5}"`
         );
       }
       return result.ast;
@@ -72912,16 +72912,16 @@ var require_ddl = __commonJS({
         );
       }
       async generateAlterCommands(newSql, createIndices, columns) {
-        const sql4 = [];
+        const sql5 = [];
         const pre = [];
         const post = [];
         let check3 = null;
-        sql4.push(newSql);
-        sql4.push(copyData(this.tableName(), this.alteredName, columns));
-        sql4.push(dropOriginal(this.tableName()));
-        sql4.push(renameTable(this.alteredName, this.tableName()));
+        sql5.push(newSql);
+        sql5.push(copyData(this.tableName(), this.alteredName, columns));
+        sql5.push(dropOriginal(this.tableName()));
+        sql5.push(renameTable(this.alteredName, this.tableName()));
         for (const createIndex of createIndices) {
-          sql4.push(createIndex);
+          sql5.push(createIndex);
         }
         const isForeignCheckEnabled2 = await this.isForeignCheckEnabled();
         if (isForeignCheckEnabled2) {
@@ -72929,7 +72929,7 @@ var require_ddl = __commonJS({
           post.push(setForeignCheck(true));
           check3 = executeForeignCheck();
         }
-        return { pre, sql: sql4, check: check3, post };
+        return { pre, sql: sql5, check: check3, post };
       }
     };
     module2.exports = SQLite3_DDL;
@@ -72980,7 +72980,7 @@ var require_sqlite3 = __commonJS({
     "use strict";
     var defaults2 = require_defaults();
     var map3 = require_map();
-    var { promisify } = require("util");
+    var { promisify: promisify2 } = require("util");
     var Client2 = require_client2();
     var Raw = require_raw2();
     var Transaction_Sqlite = require_sqlite_transaction();
@@ -73074,7 +73074,7 @@ var require_sqlite3 = __commonJS({
       // Used to explicitly close a connection, called internally by the pool when
       // a connection times out or the pool is shutdown.
       async destroyRawConnection(connection) {
-        const close = promisify((cb) => connection.close(cb));
+        const close = promisify2((cb) => connection.close(cb));
         return close();
       }
       // Runs the query on the specified connection, providing the bindings and any
@@ -73316,18 +73316,18 @@ var require_pg_querycompiler = __commonJS({
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        let sql4 = super.insert();
-        if (sql4 === "") return sql4;
+        let sql5 = super.insert();
+        if (sql5 === "") return sql5;
         const { returning, onConflict, ignore, merge: merge4, insert } = this.single;
-        if (onConflict && ignore) sql4 += this._ignore(onConflict);
+        if (onConflict && ignore) sql5 += this._ignore(onConflict);
         if (onConflict && merge4) {
-          sql4 += this._merge(merge4.updates, onConflict, insert);
+          sql5 += this._merge(merge4.updates, onConflict, insert);
           const wheres = this.where();
-          if (wheres) sql4 += ` ${wheres}`;
+          if (wheres) sql5 += ` ${wheres}`;
         }
-        if (returning) sql4 += this._returning(returning);
+        if (returning) sql5 += this._returning(returning);
         return {
-          sql: sql4,
+          sql: sql5,
           returning
         };
       }
@@ -73345,15 +73345,15 @@ var require_pg_querycompiler = __commonJS({
       using() {
         const usingTables = this.single.using;
         if (!usingTables) return;
-        let sql4 = "using ";
+        let sql5 = "using ";
         if (Array.isArray(usingTables)) {
-          sql4 += usingTables.map((table) => {
+          sql5 += usingTables.map((table) => {
             return this.formatter.wrap(table);
           }).join(",");
         } else {
-          sql4 += this.formatter.wrap(usingTables);
+          sql5 += this.formatter.wrap(usingTables);
         }
-        return sql4;
+        return sql5;
       }
       // Compiles an `delete` query, allowing for a return value.
       del() {
@@ -73393,10 +73393,10 @@ var require_pg_querycompiler = __commonJS({
             using += (using ? "," : "using ") + tableJoins.join(",");
           }
         }
-        const sql4 = withSQL + `delete from ${this.single.only ? "only " : ""}${tableName}` + (using ? ` ${using}` : "") + (wheres ? ` ${wheres}` : "");
+        const sql5 = withSQL + `delete from ${this.single.only ? "only " : ""}${tableName}` + (using ? ` ${using}` : "") + (wheres ? ` ${wheres}` : "");
         const { returning } = this.single;
         return {
-          sql: sql4 + this._returning(returning),
+          sql: sql5 + this._returning(returning),
           returning
         };
       }
@@ -73416,9 +73416,9 @@ var require_pg_querycompiler = __commonJS({
         return ` on conflict ${this._onConflictClause(columns)} do nothing`;
       }
       _merge(updates, columns, insert) {
-        let sql4 = ` on conflict ${this._onConflictClause(columns)} do update set `;
+        let sql5 = ` on conflict ${this._onConflictClause(columns)} do update set `;
         if (updates && Array.isArray(updates)) {
-          sql4 += updates.map(
+          sql5 += updates.map(
             (column) => wrapString(
               column.split(".").pop(),
               this.formatter.builder,
@@ -73426,15 +73426,15 @@ var require_pg_querycompiler = __commonJS({
               this.formatter
             )
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql4;
+          return sql5;
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
           if (typeof updateData === "string") {
-            sql4 += updateData;
+            sql5 += updateData;
           } else {
-            sql4 += updateData.join(",");
+            sql5 += updateData.join(",");
           }
-          return sql4;
+          return sql5;
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -73442,26 +73442,26 @@ var require_pg_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          sql4 += insertData.columns.map(
+          sql5 += insertData.columns.map(
             (column) => wrapString(column.split(".").pop(), this.builder, this.client)
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql4;
+          return sql5;
         }
       }
       // Join array of table names and apply default schema.
       _tableNames(tables) {
         const schemaName = this.single.schema;
-        const sql4 = [];
+        const sql5 = [];
         for (let i = 0; i < tables.length; i++) {
           let tableName = tables[i];
           if (tableName) {
             if (schemaName) {
               tableName = `${schemaName}.${tableName}`;
             }
-            sql4.push(this.formatter.wrap(tableName));
+            sql5.push(this.formatter.wrap(tableName));
           }
         }
-        return sql4.join(", ");
+        return sql5.join(", ");
       }
       _lockingClause(lockMode) {
         const tables = this.single.lockTables || [];
@@ -73496,19 +73496,19 @@ var require_pg_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        const sql4 = "select * from information_schema.columns where table_name = ? and table_catalog = current_database()";
+        const sql5 = "select * from information_schema.columns where table_name = ? and table_catalog = current_database()";
         const bindings = [table];
-        return this._buildColumnInfoQuery(schema, sql4, bindings, column);
+        return this._buildColumnInfoQuery(schema, sql5, bindings, column);
       }
-      _buildColumnInfoQuery(schema, sql4, bindings, column) {
+      _buildColumnInfoQuery(schema, sql5, bindings, column) {
         if (schema) {
-          sql4 += " and table_schema = ?";
+          sql5 += " and table_schema = ?";
           bindings.push(schema);
         } else {
-          sql4 += " and table_schema = current_schema()";
+          sql5 += " and table_schema = current_schema()";
         }
         return {
-          sql: sql4,
+          sql: sql5,
           bindings,
           output(resp) {
             const out = reduce(
@@ -73798,11 +73798,11 @@ var require_pg_tablecompiler = __commonJS({
       }
       _setNullableState(column, isNullable) {
         const constraintAction = isNullable ? "drop not null" : "set not null";
-        const sql4 = `alter table ${this.tableName()} alter column ${this.formatter.wrap(
+        const sql5 = `alter table ${this.tableName()} alter column ${this.formatter.wrap(
           column
         )} ${constraintAction}`;
         return this.pushQuery({
-          sql: sql4
+          sql: sql5
         });
       }
       compileAdd(builder) {
@@ -73816,11 +73816,11 @@ var require_pg_tablecompiler = __commonJS({
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
         const columnsSql = ` (${columns.sql.join(", ")}${this.primaryKeys() || ""}${this._addChecks()})`;
-        let sql4 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + " including all" + (columns.sql.length ? ", " + columns.sql.join(", ") : "") + ")" : columnsSql);
+        let sql5 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + " including all" + (columns.sql.length ? ", " + columns.sql.join(", ") : "") + ")" : columnsSql);
         if (this.single.inherits)
-          sql4 += ` inherits (${this.formatter.wrap(this.single.inherits)})`;
+          sql5 += ` inherits (${this.formatter.wrap(this.single.inherits)})`;
         this.pushQuery({
-          sql: sql4,
+          sql: sql5,
           bindings: columns.bindings
         });
         const hasComment = has(this.single, "comment");
@@ -74080,16 +74080,16 @@ var require_pg_compiler = __commonJS({
       }
       // Check whether the current table
       hasTable(tableName) {
-        let sql4 = "select * from information_schema.tables where table_name = ?";
+        let sql5 = "select * from information_schema.tables where table_name = ?";
         const bindings = [tableName];
         if (this.schema) {
-          sql4 += " and table_schema = ?";
+          sql5 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql4 += " and table_schema = current_schema()";
+          sql5 += " and table_schema = current_schema()";
         }
         this.pushQuery({
-          sql: sql4,
+          sql: sql5,
           bindings,
           output(resp) {
             return resp.rows.length > 0;
@@ -74098,16 +74098,16 @@ var require_pg_compiler = __commonJS({
       }
       // Compile the query to determine if a column exists in a table.
       hasColumn(tableName, columnName) {
-        let sql4 = "select * from information_schema.columns where table_name = ? and column_name = ?";
+        let sql5 = "select * from information_schema.columns where table_name = ? and column_name = ?";
         const bindings = [tableName, columnName];
         if (this.schema) {
-          sql4 += " and table_schema = ?";
+          sql5 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql4 += " and table_schema = current_schema()";
+          sql5 += " and table_schema = current_schema()";
         }
         this.pushQuery({
-          sql: sql4,
+          sql: sql5,
           bindings,
           output(resp) {
             return resp.rows.length > 0;
@@ -74187,7 +74187,7 @@ var require_postgres = __commonJS({
     "use strict";
     var extend4 = require_extend();
     var map3 = require_map();
-    var { promisify } = require("util");
+    var { promisify: promisify2 } = require("util");
     var Client2 = require_client2();
     var Transaction = require_pg_transaction();
     var QueryCompiler = require_pg_querycompiler();
@@ -74276,7 +74276,7 @@ var require_postgres = __commonJS({
       // Used to explicitly close a connection, called internally by the pool
       // when a connection times out or the pool is shutdown.
       async destroyRawConnection(connection) {
-        const end = promisify((cb) => connection.end(cb));
+        const end = promisify2((cb) => connection.end(cb));
         return end();
       }
       // In PostgreSQL, we need to do a version check to do some feature
@@ -74294,9 +74294,9 @@ var require_postgres = __commonJS({
       }
       // Position the bindings for the query. The escape sequence for question mark
       // is \? (e.g. knex.raw("\\?") since javascript requires '\' to be escaped too...)
-      positionBindings(sql4) {
+      positionBindings(sql5) {
         let questionCount = 0;
-        return sql4.replace(/(\\*)(\?)/g, function(match, escapes) {
+        return sql5.replace(/(\\*)(\?)/g, function(match, escapes) {
           if (escapes.length % 2) {
             return "?";
           } else {
@@ -74348,10 +74348,10 @@ var require_postgres = __commonJS({
             throw e;
           }
         }
-        const sql4 = obj.sql;
+        const sql5 = obj.sql;
         return new Promise(function(resolver, rejecter) {
           const queryStream = connection.query(
-            new PGQueryStream(sql4, obj.bindings, options)
+            new PGQueryStream(sql5, obj.bindings, options)
           );
           queryStream.on("error", function(error73) {
             rejecter(error73);
@@ -74509,20 +74509,20 @@ var require_crdb_querycompiler = __commonJS({
         return `truncate ${this.tableName}`;
       }
       upsert() {
-        let sql4 = this._upsert();
-        if (sql4 === "") return sql4;
+        let sql5 = this._upsert();
+        if (sql5 === "") return sql5;
         const { returning } = this.single;
-        if (returning) sql4 += this._returning(returning);
+        if (returning) sql5 += this._returning(returning);
         return {
-          sql: sql4,
+          sql: sql5,
           returning
         };
       }
       _upsert() {
         const upsertValues = this.single.upsert || [];
-        const sql4 = this.with() + `upsert into ${this.tableName} `;
+        const sql5 = this.with() + `upsert into ${this.tableName} `;
         const body = this._insertBody(upsertValues);
-        return body === "" ? "" : sql4 + body;
+        return body === "" ? "" : sql5 + body;
       }
       _groupOrder(item, type) {
         return this._basicGroupOrder(item, type);
@@ -75013,9 +75013,9 @@ var require_mssql_querycompiler = __commonJS({
         return result;
       }
       select() {
-        const sql4 = this.with();
+        const sql5 = this.with();
         const statements = components.map((component) => this[component](this));
-        return sql4 + compact(statements).join(" ");
+        return sql5 + compact(statements).join(" ");
       }
       //#region Insert
       // Compiles an "insert" query, allowing for multiple
@@ -75030,7 +75030,7 @@ var require_mssql_querycompiler = __commonJS({
       insertWithTriggers() {
         const insertValues = this.single.insert || [];
         const { returning } = this.single;
-        let sql4 = this.with() + `${this._buildTempTable(returning)}insert into ${this.tableName} `;
+        let sql5 = this.with() + `${this._buildTempTable(returning)}insert into ${this.tableName} `;
         const returningSql = returning ? this._returning("insert", returning, true) + " " : "";
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
@@ -75038,39 +75038,39 @@ var require_mssql_querycompiler = __commonJS({
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql4 + returningSql + this._emptyInsertValue + this._buildReturningSelect(returning),
+            sql: sql5 + returningSql + this._emptyInsertValue + this._buildReturningSelect(returning),
             returning
           };
         }
-        sql4 += this._buildInsertData(insertValues, returningSql);
+        sql5 += this._buildInsertData(insertValues, returningSql);
         if (returning) {
-          sql4 += this._buildReturningSelect(returning);
+          sql5 += this._buildReturningSelect(returning);
         }
         return {
-          sql: sql4,
+          sql: sql5,
           returning
         };
       }
       _buildInsertData(insertValues, returningSql) {
-        let sql4 = "";
+        let sql5 = "";
         const insertData = this._prepInsert(insertValues);
         if (typeof insertData === "string") {
-          sql4 += insertData;
+          sql5 += insertData;
         } else {
           if (insertData.columns.length) {
-            sql4 += `(${this.formatter.columnize(insertData.columns)}`;
-            sql4 += `) ${returningSql}values (` + this._buildInsertValues(insertData) + ")";
+            sql5 += `(${this.formatter.columnize(insertData.columns)}`;
+            sql5 += `) ${returningSql}values (` + this._buildInsertValues(insertData) + ")";
           } else if (insertValues.length === 1 && insertValues[0]) {
-            sql4 += returningSql + this._emptyInsertValue;
+            sql5 += returningSql + this._emptyInsertValue;
           } else {
             return "";
           }
         }
-        return sql4;
+        return sql5;
       }
       standardInsert() {
         const insertValues = this.single.insert || [];
-        let sql4 = this.with() + `insert into ${this.tableName} `;
+        let sql5 = this.with() + `insert into ${this.tableName} `;
         const { returning } = this.single;
         const returningSql = returning ? this._returning("insert", returning) + " " : "";
         if (Array.isArray(insertValues)) {
@@ -75079,13 +75079,13 @@ var require_mssql_querycompiler = __commonJS({
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql4 + returningSql + this._emptyInsertValue,
+            sql: sql5 + returningSql + this._emptyInsertValue,
             returning
           };
         }
-        sql4 += this._buildInsertData(insertValues, returningSql);
+        sql5 += this._buildInsertData(insertValues, returningSql);
         return {
-          sql: sql4,
+          sql: sql5,
           returning
         };
       }
@@ -75184,7 +75184,7 @@ var require_mssql_querycompiler = __commonJS({
         const top = this.top();
         const hints = this._hintComments();
         const columns = this.grouped.columns || [];
-        let i = -1, sql4 = [];
+        let i = -1, sql5 = [];
         if (columns) {
           while (++i < columns.length) {
             const stmt = columns[i];
@@ -75194,21 +75194,21 @@ var require_mssql_querycompiler = __commonJS({
               continue;
             }
             if (stmt.type === "aggregate") {
-              sql4.push(...this.aggregate(stmt));
+              sql5.push(...this.aggregate(stmt));
             } else if (stmt.type === "aggregateRaw") {
-              sql4.push(this.aggregateRaw(stmt));
+              sql5.push(this.aggregateRaw(stmt));
             } else if (stmt.type === "analytic") {
-              sql4.push(this.analytic(stmt));
+              sql5.push(this.analytic(stmt));
             } else if (stmt.type === "json") {
-              sql4.push(this.json(stmt));
+              sql5.push(this.json(stmt));
             } else if (stmt.value && stmt.value.length > 0) {
-              sql4.push(this.formatter.columnize(stmt.value));
+              sql5.push(this.formatter.columnize(stmt.value));
             }
           }
         }
-        if (sql4.length === 0) sql4 = ["*"];
+        if (sql5.length === 0) sql5 = ["*"];
         const select = this.onlyJson() ? "" : "select ";
-        return `${select}${hints}${distinctClause}` + (top ? top + " " : "") + sql4.join(", ") + (this.tableName ? ` from ${this.tableName}` : "");
+        return `${select}${hints}${distinctClause}` + (top ? top + " " : "") + sql5.join(", ") + (this.tableName ? ` from ${this.tableName}` : "");
       }
       _returning(method, value, withTrigger) {
         switch (method) {
@@ -75229,10 +75229,10 @@ var require_mssql_querycompiler = __commonJS({
           } else {
             selections = `[t].${this.formatter.columnize(values)}`;
           }
-          let sql4 = `select top(0) ${selections} into #out `;
-          sql4 += `from ${this.tableName} as t `;
-          sql4 += `left join ${this.tableName} on 0=1;`;
-          return sql4;
+          let sql5 = `select top(0) ${selections} into #out `;
+          sql5 += `from ${this.tableName} as t `;
+          sql5 += `left join ${this.tableName} on 0=1;`;
+          return sql5;
         }
         return "";
       }
@@ -75244,9 +75244,9 @@ var require_mssql_querycompiler = __commonJS({
           } else {
             selections = this.formatter.columnize(values);
           }
-          let sql4 = `; select ${selections} from #out; `;
-          sql4 += `drop table #out;`;
-          return sql4;
+          let sql5 = `; select ${selections} from #out; `;
+          sql5 += `drop table #out;`;
+          return sql5;
         }
         return "";
       }
@@ -75268,16 +75268,16 @@ var require_mssql_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        let sql4 = `select [COLUMN_NAME], [COLUMN_DEFAULT], [DATA_TYPE], [CHARACTER_MAXIMUM_LENGTH], [IS_NULLABLE] from INFORMATION_SCHEMA.COLUMNS where table_name = ? and table_catalog = ?`;
+        let sql5 = `select [COLUMN_NAME], [COLUMN_DEFAULT], [DATA_TYPE], [CHARACTER_MAXIMUM_LENGTH], [IS_NULLABLE] from INFORMATION_SCHEMA.COLUMNS where table_name = ? and table_catalog = ?`;
         const bindings = [table, this.client.database()];
         if (schema) {
-          sql4 += " and table_schema = ?";
+          sql5 += " and table_schema = ?";
           bindings.push(schema);
         } else {
-          sql4 += ` and table_schema = 'dbo'`;
+          sql5 += ` and table_schema = 'dbo'`;
         }
         return {
-          sql: sql4,
+          sql: sql5,
           bindings,
           output(resp) {
             const out = resp.reduce((columns, val) => {
@@ -75433,12 +75433,12 @@ var require_mssql_compiler = __commonJS({
           this.bindingsHolder
         );
         const bindings = [tableName];
-        let sql4 = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ${formattedTable}`;
+        let sql5 = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ${formattedTable}`;
         if (this.schema) {
-          sql4 += " AND TABLE_SCHEMA = ?";
+          sql5 += " AND TABLE_SCHEMA = ?";
           bindings.push(this.schema);
         }
-        this.pushQuery({ sql: sql4, bindings, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql5, bindings, output: (resp) => resp.length > 0 });
       }
       // Check whether a column exists on the schema.
       hasColumn(tableName, column) {
@@ -75452,8 +75452,8 @@ var require_mssql_compiler = __commonJS({
           this.builder,
           this.bindingsHolder
         );
-        const sql4 = `select object_id from sys.columns where name = ${formattedColumn} and object_id = object_id(${formattedTable})`;
-        this.pushQuery({ sql: sql4, output: (resp) => resp.length > 0 });
+        const sql5 = `select object_id from sys.columns where name = ${formattedColumn} and object_id = object_id(${formattedTable})`;
+        this.pushQuery({ sql: sql5, output: (resp) => resp.length > 0 });
       }
     };
     SchemaCompiler_MSSQL.prototype.dropTablePrefix = "DROP TABLE ";
@@ -75547,9 +75547,9 @@ ELSE
             this.pushQuery(baseQuery);
           }
         }
-        columns.sql.forEach((sql4) => {
+        columns.sql.forEach((sql5) => {
           this.pushQuery({
-            sql: (this.lowerCase ? "alter table " : "ALTER TABLE ") + this.tableName() + " " + (this.lowerCase ? this.alterColumnPrefix.toLowerCase() : this.alterColumnPrefix) + sql4,
+            sql: (this.lowerCase ? "alter table " : "ALTER TABLE ") + this.tableName() + " " + (this.lowerCase ? this.alterColumnPrefix.toLowerCase() : this.alterColumnPrefix) + sql5,
             bindings: columns.bindings
           });
         });
@@ -75769,18 +75769,18 @@ var require_mssql_viewcompiler = __commonJS({
       }
       createQuery(columns, selectQuery, materialized, replace) {
         const createStatement = "CREATE " + (replace ? "OR ALTER " : "") + "VIEW ";
-        let sql4 = createStatement + this.viewName();
+        let sql5 = createStatement + this.viewName();
         const columnList = columns ? " (" + columnize_(
           columns,
           this.viewBuilder,
           this.client,
           this.bindingsHolder
         ) + ")" : "";
-        sql4 += columnList;
-        sql4 += " AS ";
-        sql4 += selectQuery.toString();
+        sql5 += columnList;
+        sql5 += " AS ";
+        sql5 += selectQuery.toString();
         this.pushQuery({
-          sql: sql4
+          sql: sql5
         });
       }
       renameColumn(from, to) {
@@ -76103,9 +76103,9 @@ var require_mssql = __commonJS({
         });
       }
       // Position the bindings for the query.
-      positionBindings(sql4) {
+      positionBindings(sql5) {
         let questionCount = -1;
-        return sql4.replace(/\\?\?/g, (match) => {
+        return sql5.replace(/\\?\?/g, (match) => {
           if (match === "\\?") {
             return "?";
           }
@@ -76131,11 +76131,11 @@ var require_mssql = __commonJS({
       }
       _makeRequest(query, callback) {
         const Driver = this._driver();
-        const sql4 = typeof query === "string" ? query : query.sql;
+        const sql5 = typeof query === "string" ? query : query.sql;
         let rowCount = 0;
-        if (!sql4) throw new Error("The query is empty");
-        debug("request::request sql=%s", sql4);
-        const request = new Driver.Request(sql4, (err, remoteRowCount) => {
+        if (!sql5) throw new Error("The query is empty");
+        debug("request::request sql=%s", sql5);
+        const request = new Driver.Request(sql5, (err, remoteRowCount) => {
           if (err) {
             debug("request::error message=%s", err.message);
             return callback(err);
@@ -76392,9 +76392,9 @@ var require_transaction3 = __commonJS({
     var Debug = require_src3();
     var debug = Debug("knex:tx");
     var Transaction_MySQL = class extends Transaction {
-      query(conn, sql4, status, value) {
+      query(conn, sql5, status, value) {
         const t = this;
-        const q = this.trxClient.query(conn, sql4).catch((err) => {
+        const q = this.trxClient.query(conn, sql5).catch((err) => {
           if (err.errno === 1305) {
             this.trxClient.logger.warn(
               "Transaction was implicitly committed, do not mix transactions and DDL with MySQL (#805)"
@@ -76409,7 +76409,7 @@ var require_transaction3 = __commonJS({
           if (status === 1) t._resolver(value);
           if (status === 2) {
             if (value === void 0) {
-              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql4)) {
+              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql5)) {
                 t._resolver();
                 return;
               }
@@ -76476,22 +76476,22 @@ var require_mysql_querycompiler = __commonJS({
       }
       // Compiles an `delete` allowing comments
       del() {
-        const sql4 = super.del();
-        if (sql4 === "") return sql4;
+        const sql5 = super.del();
+        if (sql5 === "") return sql5;
         const comments = this.comments();
-        return (comments === "" ? "" : comments + " ") + sql4;
+        return (comments === "" ? "" : comments + " ") + sql5;
       }
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        let sql4 = super.insert();
-        if (sql4 === "") return sql4;
+        let sql5 = super.insert();
+        if (sql5 === "") return sql5;
         const comments = this.comments();
-        sql4 = (comments === "" ? "" : comments + " ") + sql4;
+        sql5 = (comments === "" ? "" : comments + " ") + sql5;
         const { ignore, merge: merge4, insert } = this.single;
-        if (ignore) sql4 = sql4.replace("insert into", "insert ignore into");
+        if (ignore) sql5 = sql5.replace("insert into", "insert ignore into");
         if (merge4) {
-          sql4 += this._merge(merge4.updates, insert);
+          sql5 += this._merge(merge4.updates, insert);
           const wheres = this.where();
           if (wheres) {
             throw new Error(
@@ -76499,24 +76499,24 @@ var require_mysql_querycompiler = __commonJS({
             );
           }
         }
-        return sql4;
+        return sql5;
       }
       upsert() {
         const upsertValues = this.single.upsert || [];
-        const sql4 = this.with() + `replace into ${this.tableName} `;
+        const sql5 = this.with() + `replace into ${this.tableName} `;
         const body = this._insertBody(upsertValues);
-        return body === "" ? "" : sql4 + body;
+        return body === "" ? "" : sql5 + body;
       }
       // Compiles merge for onConflict, allowing for different merge strategies
       _merge(updates, insert) {
-        const sql4 = " on duplicate key update ";
+        const sql5 = " on duplicate key update ";
         if (updates && Array.isArray(updates)) {
-          return sql4 + updates.map(
+          return sql5 + updates.map(
             (column) => wrapAsIdentifier(column, this.formatter.builder, this.client)
           ).map((column) => `${column} = values(${column})`).join(", ");
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
-          return sql4 + updateData.join(",");
+          return sql5 + updateData.join(",");
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -76524,7 +76524,7 @@ var require_mysql_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          return sql4 + insertData.columns.map((column) => wrapAsIdentifier(column, this.builder, this.client)).map((column) => `${column} = values(${column})`).join(", ");
+          return sql5 + insertData.columns.map((column) => wrapAsIdentifier(column, this.builder, this.client)).map((column) => `${column} = values(${column})`).join(", ");
         }
       }
       // Update method, including joins, wheres, order & limits.
@@ -76693,16 +76693,16 @@ var require_mysql_compiler = __commonJS({
       }
       // Check whether a table exists on the query.
       hasTable(tableName) {
-        let sql4 = "select * from information_schema.tables where table_name = ?";
+        let sql5 = "select * from information_schema.tables where table_name = ?";
         const bindings = [tableName];
         if (this.schema) {
-          sql4 += " and table_schema = ?";
+          sql5 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql4 += " and table_schema = database()";
+          sql5 += " and table_schema = database()";
         }
         this.pushQuery({
-          sql: sql4,
+          sql: sql5,
           bindings,
           output: function output(resp) {
             return resp.length > 0;
@@ -76743,16 +76743,16 @@ var require_mysql_tablecompiler = __commonJS({
         columnsSql += this.primaryKeys() || "";
         columnsSql += this._addChecks();
         columnsSql += ")";
-        let sql4 = createStatement + this.tableName() + (like && this.tableNameLike() ? " like " + this.tableNameLike() : columnsSql);
+        let sql5 = createStatement + this.tableName() + (like && this.tableNameLike() ? " like " + this.tableNameLike() : columnsSql);
         if (client.connectionSettings) {
           conn = client.connectionSettings;
         }
         const charset = this.single.charset || conn.charset || "";
         const collation = this.single.collate || conn.collate || "";
         const engine = this.single.engine || "";
-        if (charset && !like) sql4 += ` default character set ${charset}`;
-        if (collation) sql4 += ` collate ${collation}`;
-        if (engine) sql4 += ` engine = ${engine}`;
+        if (charset && !like) sql5 += ` default character set ${charset}`;
+        if (collation) sql5 += ` collate ${collation}`;
+        if (engine) sql5 += ` engine = ${engine}`;
         if (this.single.comment) {
           const comment = this.single.comment || "";
           const MAX_COMMENT_LENGTH = 1024;
@@ -76760,9 +76760,9 @@ var require_mysql_tablecompiler = __commonJS({
             this.client.logger.warn(
               `The max length for a table comment is ${MAX_COMMENT_LENGTH} characters`
             );
-          sql4 += ` comment = '${comment}'`;
+          sql5 += ` comment = '${comment}'`;
         }
-        this.pushQuery(sql4);
+        this.pushQuery(sql5);
         if (like) {
           this.addColumns(columns, this.addColumnsPrefix);
         }
@@ -76794,23 +76794,23 @@ var require_mysql_tablecompiler = __commonJS({
                   reject(e);
                 }
               }).then(function() {
-                let sql4 = `alter table ${table} change ${wrapped} ${column.Type}`;
+                let sql5 = `alter table ${table} change ${wrapped} ${column.Type}`;
                 if (String(column.Null).toUpperCase() !== "YES") {
-                  sql4 += ` NOT NULL`;
+                  sql5 += ` NOT NULL`;
                 } else {
-                  sql4 += ` NULL`;
+                  sql5 += ` NULL`;
                 }
                 if (column.Default !== void 0 && column.Default !== null) {
-                  sql4 += ` DEFAULT '${column.Default}'`;
+                  sql5 += ` DEFAULT '${column.Default}'`;
                 }
                 if (column.Collation !== void 0 && column.Collation !== null) {
-                  sql4 += ` COLLATE '${column.Collation}'`;
+                  sql5 += ` COLLATE '${column.Collation}'`;
                 }
                 if (column.Extra == "auto_increment") {
-                  sql4 += ` AUTO_INCREMENT`;
+                  sql5 += ` AUTO_INCREMENT`;
                 }
                 return runner.query({
-                  sql: sql4
+                  sql: sql5
                 });
               }).then(function() {
                 if (!refs.length) {
@@ -76872,7 +76872,7 @@ var require_mysql_tablecompiler = __commonJS({
         const bindingsHolder = {
           bindings: []
         };
-        const sql4 = "SELECT KCU.CONSTRAINT_NAME, KCU.TABLE_NAME, KCU.COLUMN_NAME,        KCU.REFERENCED_TABLE_NAME, KCU.REFERENCED_COLUMN_NAME,        RC.UPDATE_RULE, RC.DELETE_RULE FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC        USING(CONSTRAINT_NAME) WHERE KCU.REFERENCED_TABLE_NAME = " + this.client.parameter(
+        const sql5 = "SELECT KCU.CONSTRAINT_NAME, KCU.TABLE_NAME, KCU.COLUMN_NAME,        KCU.REFERENCED_TABLE_NAME, KCU.REFERENCED_COLUMN_NAME,        RC.UPDATE_RULE, RC.DELETE_RULE FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC        USING(CONSTRAINT_NAME) WHERE KCU.REFERENCED_TABLE_NAME = " + this.client.parameter(
           this.tableNameRaw,
           this.tableBuilder,
           bindingsHolder
@@ -76886,7 +76886,7 @@ var require_mysql_tablecompiler = __commonJS({
           bindingsHolder
         );
         return runner.query({
-          sql: sql4,
+          sql: sql5,
           bindings: bindingsHolder.bindings
         });
       }
@@ -77255,7 +77255,7 @@ var require_mysql = __commonJS({
     "use strict";
     var defer = require_defer();
     var map3 = require_map();
-    var { promisify } = require("util");
+    var { promisify: promisify2 } = require("util");
     var Client2 = require_client2();
     var Transaction = require_transaction3();
     var QueryBuilder = require_mysql_querybuilder();
@@ -77326,7 +77326,7 @@ var require_mysql = __commonJS({
       // when a connection times out or the pool is shutdown.
       async destroyRawConnection(connection) {
         try {
-          const end = promisify((cb) => connection.end(cb));
+          const end = promisify2((cb) => connection.end(cb));
           return await end();
         } catch (err) {
           connection.__knex__disposed = err;
@@ -77428,7 +77428,7 @@ var require_mysql = __commonJS({
             return this._resolveConfiguredVersion(this.version);
           }
           try {
-            const query = promisify(connection.query).bind(connection);
+            const query = promisify2(connection.query).bind(connection);
             const rows = await query("select version() as version");
             const rawVersion = rows?.[0]?.version;
             if (!rawVersion) {
@@ -77510,9 +77510,9 @@ var require_transaction4 = __commonJS({
     var Transaction = require_transaction();
     var debug = require_src3()("knex:tx");
     var Transaction_MySQL2 = class extends Transaction {
-      query(conn, sql4, status, value) {
+      query(conn, sql5, status, value) {
         const t = this;
-        const q = this.trxClient.query(conn, sql4).catch((err) => {
+        const q = this.trxClient.query(conn, sql5).catch((err) => {
           if (err.code === "ER_SP_DOES_NOT_EXIST") {
             this.trxClient.logger.warn(
               "Transaction was implicitly committed, do not mix transactions and DDL with MySQL (#805)"
@@ -77527,7 +77527,7 @@ var require_transaction4 = __commonJS({
           if (status === 1) t._resolver(value);
           if (status === 2) {
             if (value === void 0) {
-              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql4)) {
+              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql5)) {
                 t._resolver();
                 return;
               }
@@ -77608,7 +77608,7 @@ var require_utils10 = __commonJS({
         }
       }
       generateCombinedName(logger3, postfix, name28, subNames) {
-        const crypto7 = require("crypto");
+        const crypto8 = require("crypto");
         if (!Array.isArray(subNames)) subNames = subNames ? [subNames] : [];
         const table = name28.replace(/\.|-/g, "_");
         const subNamesPart = subNames.join("_");
@@ -77617,13 +77617,13 @@ var require_utils10 = __commonJS({
           logger3.warn(
             `Automatically generated name "${result}" exceeds ${this.limit} character limit for Oracle Database ${this.oracleVersion}. Using base64 encoded sha1 of that name instead.`
           );
-          result = crypto7.createHash("sha1").update(result).digest("base64").replace("=", "");
+          result = crypto8.createHash("sha1").update(result).digest("base64").replace("=", "");
         }
         return result;
       }
     };
-    function wrapSqlWithCatch(sql4, errorNumberToCatch) {
-      return `begin execute immediate '${sql4.replace(/'/g, "''")}'; exception when others then if sqlcode != ${errorNumberToCatch} then raise; end if; end;`;
+    function wrapSqlWithCatch(sql5, errorNumberToCatch) {
+      return `begin execute immediate '${sql5.replace(/'/g, "''")}'; exception when others then if sqlcode != ${errorNumberToCatch} then raise; end if; end;`;
     }
     function ReturningHelper(columnName) {
       this.columnName = columnName;
@@ -77807,7 +77807,7 @@ var require_oracle_compiler = __commonJS({
       }
       // Check whether a column exists on the schema.
       hasColumn(tableName, column) {
-        const sql4 = `select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = ${this.client.parameter(
+        const sql5 = `select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = ${this.client.parameter(
           tableName,
           this.builder,
           this.bindingsHolder
@@ -77816,7 +77816,7 @@ var require_oracle_compiler = __commonJS({
           this.builder,
           this.bindingsHolder
         )}`;
-        this.pushQuery({ sql: sql4, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql5, output: (resp) => resp.length > 0 });
       }
       dropSequenceIfExists(sequenceName) {
         const prefix = this.schema ? `"${this.schema}".` : "";
@@ -78127,14 +78127,14 @@ var require_oracle_tablecompiler = __commonJS({
           prefix = prefix || this.addColumnsPrefix;
           const columnSql = columns.sql;
           const alter = this.lowerCase ? "alter table " : "ALTER TABLE ";
-          let sql4 = `${alter}${this.tableName()} ${prefix}`;
+          let sql5 = `${alter}${this.tableName()} ${prefix}`;
           if (columns.sql.length > 1) {
-            sql4 += `(${columnSql.join(", ")})`;
+            sql5 += `(${columnSql.join(", ")})`;
           } else {
-            sql4 += columnSql.join(", ");
+            sql5 += columnSql.join(", ");
           }
           this.pushQuery({
-            sql: sql4,
+            sql: sql5,
             bindings: columns.bindings
           });
         }
@@ -78157,10 +78157,10 @@ var require_oracle_tablecompiler = __commonJS({
       // Adds the "create" query to the query sequence.
       createQuery(columns, ifNot, like) {
         const columnsSql = like && this.tableNameLike() ? " as (select * from " + this.tableNameLike() + " where 0=1)" : " (" + columns.sql.join(", ") + this._addChecks() + ")";
-        const sql4 = `create table ${this.tableName()}${columnsSql}`;
+        const sql5 = `create table ${this.tableName()}${columnsSql}`;
         this.pushQuery({
           // catch "name is already used by an existing object" for workaround for "if not exists"
-          sql: ifNot ? utils.wrapSqlWithCatch(sql4, -955) : sql4,
+          sql: ifNot ? utils.wrapSqlWithCatch(sql5, -955) : sql5,
           bindings: columns.bindings
         });
         if (this.single.comment) this.comment(this.single.comment);
@@ -78300,9 +78300,9 @@ var require_oracle = __commonJS({
         return this.connectionSettings.database;
       }
       // Position the bindings for the query.
-      positionBindings(sql4) {
+      positionBindings(sql5) {
         let questionCount = 0;
-        return sql4.replace(/\?/g, function() {
+        return sql5.replace(/\?/g, function() {
           questionCount += 1;
           return `:${questionCount}`;
         });
@@ -78406,7 +78406,7 @@ var require_oracle_querycompiler = __commonJS({
           return "";
         }
         const insertData = this._prepInsert(insertValues);
-        const sql4 = {};
+        const sql5 = {};
         if (isString2(insertData)) {
           return this._addReturningToSqlAndConvert(
             `insert into ${this.tableName} ${insertData}`,
@@ -78428,7 +78428,7 @@ var require_oracle_querycompiler = __commonJS({
           );
         }
         const insertDefaultsOnly = insertData.columns.length === 0;
-        sql4.sql = "begin " + insertData.values.map((value) => {
+        sql5.sql = "begin " + insertData.values.map((value) => {
           let returningHelper;
           const parameterizedValues = !insertDefaultsOnly ? this.client.parameterize(
             value,
@@ -78440,7 +78440,7 @@ var require_oracle_querycompiler = __commonJS({
           let subSql = `insert into ${this.tableName} `;
           if (returning) {
             returningHelper = new ReturningHelper(returningValues.join(":"));
-            sql4.outParams = (sql4.outParams || []).concat(returningHelper);
+            sql5.outParams = (sql5.outParams || []).concat(returningHelper);
           }
           if (insertDefaultsOnly) {
             subSql += `(${this.formatter.wrap(
@@ -78461,24 +78461,24 @@ var require_oracle_querycompiler = __commonJS({
           return `execute immediate '${subSql.replace(/'/g, "''")}` + (parameterizedValuesWithoutDefault || returning ? "' using " : "") + parameterizedValuesWithoutDefault + (parameterizedValuesWithoutDefault && returning ? ", " : "") + (returning ? "out ?" : "") + ";";
         }).join(" ") + "end;";
         if (returning) {
-          sql4.returning = returning;
-          sql4.returningSql = `select ${this.formatter.columnize(returning)} from ` + this.tableName + " where ROWID in (" + sql4.outParams.map((v, i) => `:${i + 1}`).join(", ") + ") order by case ROWID " + sql4.outParams.map((v, i) => `when CHARTOROWID(:${i + 1}) then ${i}`).join(" ") + " end";
+          sql5.returning = returning;
+          sql5.returningSql = `select ${this.formatter.columnize(returning)} from ` + this.tableName + " where ROWID in (" + sql5.outParams.map((v, i) => `:${i + 1}`).join(", ") + ") order by case ROWID " + sql5.outParams.map((v, i) => `when CHARTOROWID(:${i + 1}) then ${i}`).join(" ") + " end";
         }
-        return sql4;
+        return sql5;
       }
       // Update method, including joins, wheres, order & limits.
       update() {
         const updates = this._prepUpdate(this.single.update);
         const where = this.where();
         let { returning } = this.single;
-        const sql4 = `update ${this.tableName} set ` + updates.join(", ") + (where ? ` ${where}` : "");
+        const sql5 = `update ${this.tableName} set ` + updates.join(", ") + (where ? ` ${where}` : "");
         if (!returning) {
-          return sql4;
+          return sql5;
         }
         if (!Array.isArray(returning)) {
           returning = [returning];
         }
-        return this._addReturningToSqlAndConvert(sql4, returning, this.tableName);
+        return this._addReturningToSqlAndConvert(sql5, returning, this.tableName);
       }
       // Compiles a `truncate` query.
       truncate() {
@@ -78497,7 +78497,7 @@ var require_oracle_querycompiler = __commonJS({
       columnInfo() {
         const column = this.single.columnInfo;
         const table = this.client.customWrapIdentifier(this.single.table, identity2);
-        const sql4 = `select * from xmltable( '/ROWSET/ROW'
+        const sql5 = `select * from xmltable( '/ROWSET/ROW'
       passing dbms_xmlgen.getXMLType('
       select char_col_decl_length, column_name, data_type, data_default, nullable
       from all_tab_columns where table_name = ''${table}'' ')
@@ -78505,7 +78505,7 @@ var require_oracle_querycompiler = __commonJS({
       CHAR_COL_DECL_LENGTH number, COLUMN_NAME varchar2(200), DATA_TYPE varchar2(106),
       DATA_DEFAULT clob, NULLABLE varchar2(1))`;
         return {
-          sql: sql4,
+          sql: sql5,
           output(resp) {
             const out = reduce(
               resp,
@@ -78536,16 +78536,16 @@ var require_oracle_querycompiler = __commonJS({
         return this._aggregate(stmt, { aliasSeparator: " " });
       }
       // for single commands only
-      _addReturningToSqlAndConvert(sql4, returning, tableName) {
+      _addReturningToSqlAndConvert(sql5, returning, tableName) {
         const res = {
-          sql: sql4
+          sql: sql5
         };
         if (!returning) {
           return res;
         }
         const returningValues = Array.isArray(returning) ? returning : [returning];
         const returningHelper = new ReturningHelper(returningValues.join(":"));
-        res.sql = sql4 + " returning ROWID into " + this.client.parameter(returningHelper, this.builder, this.bindingsHolder);
+        res.sql = sql5 + " returning ROWID into " + this.client.parameter(returningHelper, this.builder, this.bindingsHolder);
         res.returningSql = `select ${this.formatter.columnize(
           returning
         )} from ${tableName} where ROWID = :1`;
@@ -78579,7 +78579,7 @@ var require_utils11 = __commonJS({
   "node_modules/knex/lib/dialects/oracledb/utils.js"(exports2, module2) {
     "use strict";
     var Utils = require_utils10();
-    var { promisify } = require("util");
+    var { promisify: promisify2 } = require("util");
     var stream4 = require("stream");
     function BlobHelper(columnName, value) {
       this.columnName = columnName;
@@ -78654,7 +78654,7 @@ var require_utils11 = __commonJS({
           });
         });
       };
-      const fetchAsync = promisify(function(sql4, bindParams, options, cb) {
+      const fetchAsync = promisify2(function(sql5, bindParams, options, cb) {
         options = options || {};
         options.outFormat = client.driver.OUT_FORMAT_OBJECT || client.driver.OBJECT;
         if (!options.outFormat) {
@@ -78662,7 +78662,7 @@ var require_utils11 = __commonJS({
         }
         if (options.resultSet) {
           connection.execute(
-            sql4,
+            sql5,
             bindParams || [],
             options,
             function(err, result) {
@@ -78705,7 +78705,7 @@ var require_utils11 = __commonJS({
           );
         } else {
           connection.execute(
-            sql4,
+            sql5,
             bindParams || [],
             options,
             function(err, result) {
@@ -78722,10 +78722,10 @@ var require_utils11 = __commonJS({
           );
         }
       });
-      connection.executeAsync = function(sql4, bindParams, options) {
-        return fetchAsync(sql4, bindParams, options).then(async (results) => {
+      connection.executeAsync = function(sql5, bindParams, options) {
+        return fetchAsync(sql5, bindParams, options).then(async (results) => {
           const closeResultSet = () => {
-            return results.resultSet ? promisify(results.resultSet.close).call(results.resultSet) : Promise.resolve();
+            return results.resultSet ? promisify2(results.resultSet.close).call(results.resultSet) : Promise.resolve();
           };
           const lobs = [];
           if (results.rows) {
@@ -78800,7 +78800,7 @@ var require_oracledb_querycompiler = __commonJS({
           return "";
         }
         const insertData = this._prepInsert(insertValues);
-        const sql4 = {};
+        const sql5 = {};
         if (isString2(insertData)) {
           return this._addReturningToSqlAndConvert(
             "insert into " + this.tableName + " " + insertData,
@@ -78823,8 +78823,8 @@ var require_oracledb_querycompiler = __commonJS({
           );
         }
         const insertDefaultsOnly = insertData.columns.length === 0;
-        sql4.returning = returning;
-        sql4.sql = "begin " + insertData.values.map(function(value, index) {
+        sql5.returning = returning;
+        sql5.sql = "begin " + insertData.values.map(function(value, index) {
           const parameterizedValues = !insertDefaultsOnly ? self2.client.parameterize(
             value,
             self2.client.valueForUndefined,
@@ -78867,9 +78867,9 @@ var require_oracledb_querycompiler = __commonJS({
           const parameterizedValuesWithoutDefaultAndBlob = parameterizedValues.replace(/DEFAULT, /g, "").replace(/, DEFAULT/g, "").replace("EMPTY_BLOB(), ", "").replace(", EMPTY_BLOB()", "");
           return "execute immediate '" + subSql.replace(/'/g, "''") + (parameterizedValuesWithoutDefaultAndBlob || value ? "' using " : "") + parameterizedValuesWithoutDefaultAndBlob + (parameterizedValuesWithoutDefaultAndBlob && outClause ? "," : "") + outClause + ";";
         }).join(" ") + "end;";
-        sql4.outBinding = outBinding;
+        sql5.outBinding = outBinding;
         if (returning[0] === "*") {
-          sql4.returningSql = function() {
+          sql5.returningSql = function() {
             return "select * from " + self2.tableName + " where ROWID in (" + this.outBinding.map(function(v, i) {
               return ":" + (i + 1);
             }).join(", ") + ") order by case ROWID " + this.outBinding.map(function(v, i) {
@@ -78877,7 +78877,7 @@ var require_oracledb_querycompiler = __commonJS({
             }).join(" ") + " end";
           };
         }
-        return sql4;
+        return sql5;
       }
       with() {
         const undoList = [];
@@ -78895,10 +78895,10 @@ var require_oracledb_querycompiler = __commonJS({
         }
         return result;
       }
-      _addReturningToSqlAndConvert(sql4, outBinding, tableName, returning) {
+      _addReturningToSqlAndConvert(sql5, outBinding, tableName, returning) {
         const self2 = this;
         const res = {
-          sql: sql4
+          sql: sql5
         };
         if (!outBinding) {
           return res;
@@ -78915,7 +78915,7 @@ var require_oracledb_querycompiler = __commonJS({
           }
           self2.formatter.bindings.push(new ReturningHelper(columnName));
         });
-        res.sql = sql4;
+        res.sql = sql5;
         returningClause = returningClause.slice(0, -1);
         intoClause = intoClause.slice(0, -1);
         if (returningClause && intoClause) {
@@ -78972,7 +78972,7 @@ var require_oracledb_querycompiler = __commonJS({
       }
       update() {
         const self2 = this;
-        const sql4 = {};
+        const sql5 = {};
         const outBindPrep = this._prepOutbindings(
           this.single.update || this.single.counter,
           this.single.returning
@@ -78999,15 +78999,15 @@ var require_oracledb_querycompiler = __commonJS({
         });
         returningClause = returningClause.slice(0, -1);
         intoClause = intoClause.slice(0, -1);
-        sql4.outBinding = outBinding;
-        sql4.returning = returning;
-        sql4.sql = "update " + this.tableName + " set " + updates.join(", ") + (where ? " " + where : "");
+        sql5.outBinding = outBinding;
+        sql5.returning = returning;
+        sql5.sql = "update " + this.tableName + " set " + updates.join(", ") + (where ? " " + where : "");
         if (outBinding.length && !isEmpty(outBinding[0])) {
-          sql4.sql += " returning " + returningClause + " into" + intoClause;
+          sql5.sql += " returning " + returningClause + " into" + intoClause;
         }
         if (returning[0] === "*") {
-          sql4.returningSql = function() {
-            let sql5 = "select * from " + self2.tableName;
+          sql5.returningSql = function() {
+            let sql6 = "select * from " + self2.tableName;
             const modifiedRowsCount = this.rowsAffected.length || this.rowsAffected;
             let returningSqlIn = " where ROWID in (";
             let returningSqlOrderBy = ") order by case ROWID ";
@@ -79022,10 +79022,10 @@ var require_oracledb_querycompiler = __commonJS({
               returningSqlIn = returningSqlIn.slice(0, -2);
               returningSqlOrderBy = returningSqlOrderBy.slice(0, -1);
             }
-            return sql5 += returningSqlIn + returningSqlOrderBy + " end";
+            return sql6 += returningSqlIn + returningSqlOrderBy + " end";
           };
         }
-        return sql4;
+        return sql5;
       }
       _jsonPathWrap(extraction) {
         return `'${extraction.path || extraction[1]}'`;
@@ -79114,11 +79114,11 @@ var require_oracledb_tablecompiler = __commonJS({
       }
       _setNullableState(column, isNullable) {
         const nullability = isNullable ? "NULL" : "NOT NULL";
-        const sql4 = `alter table ${this.tableName()} modify (${this.formatter.wrap(
+        const sql5 = `alter table ${this.tableName()} modify (${this.formatter.wrap(
           column
         )} ${nullability})`;
         return this.pushQuery({
-          sql: sql4
+          sql: sql5
         });
       }
     };
@@ -79715,27 +79715,27 @@ var require_redshift_querycompiler = __commonJS({
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        const sql4 = QueryCompiler.prototype.insert.apply(this, arguments);
-        if (sql4 === "") return sql4;
+        const sql5 = QueryCompiler.prototype.insert.apply(this, arguments);
+        if (sql5 === "") return sql5;
         this._slightReturn();
         return {
-          sql: sql4
+          sql: sql5
         };
       }
       // Compiles an `update` query, warning on unsupported returning
       update() {
-        const sql4 = QueryCompiler.prototype.update.apply(this, arguments);
+        const sql5 = QueryCompiler.prototype.update.apply(this, arguments);
         this._slightReturn();
         return {
-          sql: sql4
+          sql: sql5
         };
       }
       // Compiles an `delete` query, warning on unsupported returning
       del() {
-        const sql4 = QueryCompiler.prototype.del.apply(this, arguments);
+        const sql5 = QueryCompiler.prototype.del.apply(this, arguments);
         this._slightReturn();
         return {
-          sql: sql4
+          sql: sql5
         };
       }
       // simple: if trying to return, warn
@@ -79774,12 +79774,12 @@ var require_redshift_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        const sql4 = "select * from information_schema.columns where table_name = ? and table_catalog = ?";
+        const sql5 = "select * from information_schema.columns where table_name = ? and table_catalog = ?";
         const bindings = [
           table.toLowerCase(),
           this.client.database().toLowerCase()
         ];
-        return this._buildColumnInfoQuery(schema, sql4, bindings, column);
+        return this._buildColumnInfoQuery(schema, sql5, bindings, column);
       }
       jsonExtract(params) {
         let extractions;
@@ -79951,11 +79951,11 @@ var require_redshift_tablecompiler = __commonJS({
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
         const columnsSql = " (" + columns.sql.join(", ") + this._addChecks() + ")";
-        let sql4 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + ")" : columnsSql);
+        let sql5 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + ")" : columnsSql);
         if (this.single.inherits)
-          sql4 += ` like (${this.formatter.wrap(this.single.inherits)})`;
+          sql5 += ` like (${this.formatter.wrap(this.single.inherits)})`;
         this.pushQuery({
-          sql: sql4,
+          sql: sql5,
           bindings: columns.bindings
         });
         const hasComment = has(this.single, "comment");
@@ -106849,6 +106849,46 @@ var init_migrations = __esm({
             });
           }
         }
+      },
+      {
+        id: "20260808_003_normalized_timelines",
+        up: async (db2) => {
+          if (!await db2.schema.hasTable("project_timelines")) {
+            await db2.schema.createTable("project_timelines", (table) => {
+              table.text("id").primary();
+              table.integer("project_id").notNullable();
+              table.integer("script_id").notNullable();
+              table.integer("version").notNullable();
+              table.text("status").notNullable().defaultTo("draft");
+              table.text("payload").notNullable();
+              table.text("checksum").notNullable();
+              table.integer("created_at").notNullable();
+              table.integer("updated_at").notNullable();
+              table.unique(["project_id", "script_id", "version"], "project_timelines_version_unique");
+              table.index(["project_id", "script_id", "updated_at"], "project_timelines_latest_idx");
+            });
+          }
+          if (!await db2.schema.hasTable("composition_jobs")) {
+            await db2.schema.createTable("composition_jobs", (table) => {
+              table.text("id").primary();
+              table.integer("project_id").notNullable();
+              table.integer("script_id").notNullable();
+              table.text("timeline_id").notNullable();
+              table.integer("timeline_version").notNullable();
+              table.text("renderer").notNullable().defaultTo("ffmpeg");
+              table.text("preset").notNullable();
+              table.text("status").notNullable().defaultTo("draft");
+              table.text("output_path");
+              table.text("input_checksum").notNullable();
+              table.text("task_id");
+              table.text("error_message");
+              table.integer("created_at").notNullable();
+              table.integer("updated_at").notNullable();
+              table.index(["project_id", "script_id", "created_at"], "composition_jobs_script_idx");
+              table.index(["timeline_id", "timeline_version"], "composition_jobs_timeline_idx");
+            });
+          }
+        }
       }
     ];
   }
@@ -107046,7 +107086,7 @@ async function getAllEnums(db2, config3) {
   return await getTableEnums(db2, config3);
 }
 async function getAllTables(db2, schemas) {
-  const sql4 = `
+  const sql5 = `
     SELECT
       TABLE_NAME AS name,
       TABLE_SCHEMA AS 'schema',
@@ -107054,10 +107094,10 @@ async function getAllTables(db2, schemas) {
     FROM INFORMATION_SCHEMA.TABLES
     WHERE TABLE_SCHEMA NOT IN('mysql', 'information_schema', 'performance_schema', 'sys')
     ${schemas.length > 0 ? " AND TABLE_SCHEMA IN (:schemas)" : ""}`;
-  return (await db2.raw(sql4, { schemas }))[0];
+  return (await db2.raw(sql5, { schemas }))[0];
 }
 async function getAllColumns(db2, config3, table, schema) {
-  const sql4 = `
+  const sql5 = `
     SELECT
       column_name as name,
       is_nullable as isNullable,
@@ -107078,7 +107118,7 @@ async function getAllColumns(db2, config3, table, schema) {
       AND c.TABLE_SCHEMA = :schema
       ORDER BY ORDINAL_POSITION
     `;
-  return (await db2.raw(sql4, { table, schema }))[0].map((c) => ({
+  return (await db2.raw(sql5, { table, schema }))[0].map((c) => ({
     name: c.name,
     type: c.fullType == "tinyint(1)" ? c.fullType : c.type,
     // tinyint(1) typically aliased as a boolean
@@ -107122,7 +107162,7 @@ var init_mssql = __esm({
         return await getTableEnums(db2, config3);
       },
       async getAllTables(db2, schemas) {
-        const sql4 = `
+        const sql5 = `
       SELECT
         TABLE_NAME name,
         TABLE_SCHEMA [schema],
@@ -107134,10 +107174,10 @@ var init_mssql = __esm({
           SELECT TOP 1 value FROM fn_listextendedproperty (NULL, 'schema', TABLE_SCHEMA, 'view', TABLE_NAME, null, null) EP WHERE EP.name = 'MS_Description'
         ) EP 
       ${schemas.length > 0 ? `WHERE TABLE_SCHEMA IN (${schemas.map((_) => "?").join(",")})` : ""}`;
-        return await db2.raw(sql4, schemas);
+        return await db2.raw(sql5, schemas);
       },
       async getAllColumns(db2, config3, table, schema) {
-        const sql4 = `
+        const sql5 = `
       SELECT
 				COLUMN_NAME as name,
 				IS_NULLABLE AS isNullable,
@@ -107161,7 +107201,7 @@ var init_mssql = __esm({
         WHERE c.TABLE_NAME = :table
         AND c.TABLE_SCHEMA = :schema
       `;
-        return (await db2.raw(sql4, { table, schema })).map((c) => ({
+        return (await db2.raw(sql5, { table, schema })).map((c) => ({
           name: c.name,
           type: c.type,
           nullable: c.isNullable === "YES",
@@ -109581,7 +109621,7 @@ var init_postgres = __esm({
     init_SharedAdapterTasks();
     postgres_default = {
       async getAllEnums(db2, config3) {
-        const sql4 = `
+        const sql5 = `
     SELECT 
       pg_namespace.nspname AS schema, 
       pg_enum.enumsortorder AS order, 
@@ -109592,7 +109632,7 @@ var init_postgres = __esm({
     JOIN pg_namespace ON pg_namespace.oid = pg_type.typnamespace
     ${config3.schemas.length > 0 ? ` WHERE pg_namespace.nspname = ANY(:schemas)` : ""}
     `;
-        const ungroupedEnums = (await db2.raw(sql4, { schemas: config3.schemas })).rows;
+        const ungroupedEnums = (await db2.raw(sql5, { schemas: config3.schemas })).rows;
         const groupedEnums = uniqBy_default(ungroupedEnums, (e) => `${e.name}.${e.schema}`).map((row) => ({
           name: row.name,
           schema: row.schema,
@@ -109602,7 +109642,7 @@ var init_postgres = __esm({
         return groupedEnums.concat(tableEnums);
       },
       async getAllTables(db2, schemas) {
-        const sql4 = `
+        const sql5 = `
       WITH schemas AS (
         SELECT nspname AS name, oid AS oid
         FROM pg_namespace
@@ -109617,11 +109657,11 @@ var init_postgres = __esm({
         WHERE pg_class.relkind IN ('r', 'p', 'v', 'm')
         AND NOT pg_class.relispartition
     `;
-        const results = await db2.raw(sql4, { schemas });
+        const results = await db2.raw(sql5, { schemas });
         return results.rows;
       },
       async getAllColumns(db2, config3, table, schema) {
-        const sql4 = `
+        const sql5 = `
       SELECT
         typns.nspname typeschema,
         pg_type.typname,
@@ -109652,7 +109692,7 @@ var init_postgres = __esm({
       AND pg_class.relname = :table
       AND pg_namespace.nspname = :schema
     `;
-        return (await db2.raw(sql4, { table, schema })).rows.map((c) => ({
+        return (await db2.raw(sql5, { table, schema })).rows.map((c) => ({
           name: c.name,
           type: c.typname,
           nullable: !c.notnullable,
@@ -109679,12 +109719,12 @@ var init_sqlite = __esm({
         return await getTableEnums(db2, config3);
       },
       async getAllTables(db2, schemas) {
-        const sql4 = `
+        const sql5 = `
       SELECT tbl_name from sqlite_master
       WHERE tbl_name <> 'sqlite_sequence'
       AND type IN ('table', 'view')
     `;
-        return (await db2.raw(sql4)).map((t) => ({ name: t.tbl_name, schema: "main", comment: "" }));
+        return (await db2.raw(sql5)).map((t) => ({ name: t.tbl_name, schema: "main", comment: "" }));
       },
       async getAllColumns(db2, config3, table, schema) {
         return (await db2.raw(`pragma table_info(${table})`)).map((c) => ({
@@ -116497,6 +116537,11 @@ var init_oss = __esm({
       async getFile(userRelPath) {
         await this.ensureInit();
         return import_promises3.default.readFile(resolveSafeLocalPath(userRelPath, this.rootDir));
+      }
+      /** Resolve a validated OSS-relative path for local media tools such as ffprobe. */
+      async getAbsolutePath(userRelPath) {
+        await this.ensureInit();
+        return resolveSafeLocalPath(userRelPath, this.rootDir);
       }
       /**
        * 读取图片文件并转换为 base64 编码的 Data URL。
@@ -126338,7 +126383,7 @@ var require_form_data = __commonJS({
     var parseUrl2 = require("url").parse;
     var fs36 = require("fs");
     var Stream = require("stream").Stream;
-    var crypto7 = require("crypto");
+    var crypto8 = require("crypto");
     var mime = require_mime_types3();
     var asynckit = require_asynckit();
     var setToStringTag = require_es_set_tostringtag();
@@ -126544,7 +126589,7 @@ var require_form_data = __commonJS({
       return Buffer.concat([dataBuffer, Buffer.from(this._lastBoundary())]);
     };
     FormData4.prototype._generateBoundary = function() {
-      this._boundary = "--------------------------" + crypto7.randomBytes(12).toString("hex");
+      this._boundary = "--------------------------" + crypto8.randomBytes(12).toString("hex");
     };
     FormData4.prototype.getLengthSync = function() {
       var knownLength = this._overheadLength + this._valueLength;
@@ -198946,13 +198991,13 @@ var require_dist9 = __commonJS({
       };
     }
     var import_provider_utils210 = require_dist8();
-    var import_zod159 = require_zod();
-    var qwenErrorDataSchema = import_zod159.z.object({
-      object: import_zod159.z.literal("error"),
-      message: import_zod159.z.string(),
-      type: import_zod159.z.string(),
-      param: import_zod159.z.string().nullable(),
-      code: import_zod159.z.string().nullable()
+    var import_zod160 = require_zod();
+    var qwenErrorDataSchema = import_zod160.z.object({
+      object: import_zod160.z.literal("error"),
+      message: import_zod160.z.string(),
+      type: import_zod160.z.string(),
+      param: import_zod160.z.string().nullable(),
+      code: import_zod160.z.string().nullable()
     });
     var qwenFailedResponseHandler = (0, import_provider_utils210.createJsonErrorResponseHandler)({
       errorSchema: qwenErrorDataSchema,
@@ -221875,14 +221920,14 @@ var require_jwa = __commonJS({
   "node_modules/jwa/index.js"(exports2, module2) {
     "use strict";
     var Buffer3 = require_safe_buffer2().Buffer;
-    var crypto7 = require("crypto");
+    var crypto8 = require("crypto");
     var formatEcdsa = require_ecdsa_sig_formatter();
     var util4 = require("util");
     var MSG_INVALID_ALGORITHM = '"%s" is not a valid algorithm.\n  Supported algorithms are:\n  "HS256", "HS384", "HS512", "RS256", "RS384", "RS512", "PS256", "PS384", "PS512", "ES256", "ES384", "ES512" and "none".';
     var MSG_INVALID_SECRET = "secret must be a string or buffer";
     var MSG_INVALID_VERIFIER_KEY = "key must be a string or a buffer";
     var MSG_INVALID_SIGNER_KEY = "key must be a string, a buffer or an object";
-    var supportsKeyObjects = typeof crypto7.createPublicKey === "function";
+    var supportsKeyObjects = typeof crypto8.createPublicKey === "function";
     if (supportsKeyObjects) {
       MSG_INVALID_VERIFIER_KEY += " or a KeyObject";
       MSG_INVALID_SECRET += "or a KeyObject";
@@ -221972,17 +222017,17 @@ var require_jwa = __commonJS({
       return function sign(thing, secret) {
         checkIsSecretKey(secret);
         thing = normalizeInput(thing);
-        var hmac = crypto7.createHmac("sha" + bits, secret);
+        var hmac = crypto8.createHmac("sha" + bits, secret);
         var sig = (hmac.update(thing), hmac.digest("base64"));
         return fromBase64(sig);
       };
     }
     var bufferEqual;
-    var timingSafeEqual = "timingSafeEqual" in crypto7 ? function timingSafeEqual2(a, b) {
+    var timingSafeEqual = "timingSafeEqual" in crypto8 ? function timingSafeEqual2(a, b) {
       if (a.byteLength !== b.byteLength) {
         return false;
       }
-      return crypto7.timingSafeEqual(a, b);
+      return crypto8.timingSafeEqual(a, b);
     } : function timingSafeEqual2(a, b) {
       if (!bufferEqual) {
         bufferEqual = require_buffer_equal_constant_time();
@@ -221999,7 +222044,7 @@ var require_jwa = __commonJS({
       return function sign(thing, privateKey) {
         checkIsPrivateKey(privateKey);
         thing = normalizeInput(thing);
-        var signer = crypto7.createSign("RSA-SHA" + bits);
+        var signer = crypto8.createSign("RSA-SHA" + bits);
         var sig = (signer.update(thing), signer.sign(privateKey, "base64"));
         return fromBase64(sig);
       };
@@ -222009,7 +222054,7 @@ var require_jwa = __commonJS({
         checkIsPublicKey(publicKey);
         thing = normalizeInput(thing);
         signature = toBase64(signature);
-        var verifier = crypto7.createVerify("RSA-SHA" + bits);
+        var verifier = crypto8.createVerify("RSA-SHA" + bits);
         verifier.update(thing);
         return verifier.verify(publicKey, signature, "base64");
       };
@@ -222018,11 +222063,11 @@ var require_jwa = __commonJS({
       return function sign(thing, privateKey) {
         checkIsPrivateKey(privateKey);
         thing = normalizeInput(thing);
-        var signer = crypto7.createSign("RSA-SHA" + bits);
+        var signer = crypto8.createSign("RSA-SHA" + bits);
         var sig = (signer.update(thing), signer.sign({
           key: privateKey,
-          padding: crypto7.constants.RSA_PKCS1_PSS_PADDING,
-          saltLength: crypto7.constants.RSA_PSS_SALTLEN_DIGEST
+          padding: crypto8.constants.RSA_PKCS1_PSS_PADDING,
+          saltLength: crypto8.constants.RSA_PSS_SALTLEN_DIGEST
         }, "base64"));
         return fromBase64(sig);
       };
@@ -222032,12 +222077,12 @@ var require_jwa = __commonJS({
         checkIsPublicKey(publicKey);
         thing = normalizeInput(thing);
         signature = toBase64(signature);
-        var verifier = crypto7.createVerify("RSA-SHA" + bits);
+        var verifier = crypto8.createVerify("RSA-SHA" + bits);
         verifier.update(thing);
         return verifier.verify({
           key: publicKey,
-          padding: crypto7.constants.RSA_PKCS1_PSS_PADDING,
-          saltLength: crypto7.constants.RSA_PSS_SALTLEN_DIGEST
+          padding: crypto8.constants.RSA_PKCS1_PSS_PADDING,
+          saltLength: crypto8.constants.RSA_PSS_SALTLEN_DIGEST
         }, signature, "base64");
       };
     }
@@ -237784,14 +237829,14 @@ var init_repository = __esm({
         const row = await db("generation_tasks").where("id", id).first();
         return row ? mapRow(row) : null;
       }
-      async list(filters2) {
-        const page = Math.max(1, filters2.page ?? 1);
-        const limit = Math.min(100, Math.max(1, filters2.limit ?? 20));
+      async list(filters3) {
+        const page = Math.max(1, filters3.page ?? 1);
+        const limit = Math.min(100, Math.max(1, filters3.limit ?? 20));
         const apply = (query) => {
-          if (filters2.projectId != null) query.where("project_id", filters2.projectId);
-          if (filters2.lane) query.where("lane", filters2.lane);
-          if (filters2.status) query.where("status", filters2.status);
-          if (filters2.type) query.where("type", filters2.type);
+          if (filters3.projectId != null) query.where("project_id", filters3.projectId);
+          if (filters3.lane) query.where("lane", filters3.lane);
+          if (filters3.status) query.where("status", filters3.status);
+          if (filters3.type) query.where("type", filters3.type);
           return query;
         };
         const rows = await apply(db("generation_tasks").select("*")).orderBy("created_at", "desc").offset((page - 1) * limit).limit(limit);
@@ -238053,6 +238098,342 @@ var init_repository = __esm({
       }
     };
     generationTaskRepository = new GenerationTaskRepository();
+  }
+});
+
+// src/services/voice-studio/dialogue.ts
+function normalizeLabel(value) {
+  return value.trim().replace(/^\[|\]$/g, "").toLocaleLowerCase();
+}
+function classifySpeaker(speaker) {
+  const normalized = normalizeLabel(speaker);
+  if (narrationLabels.has(normalized)) return "narration";
+  if (chorusLabels.has(normalized)) return "chorus";
+  return "dialogue";
+}
+function cleanLine(value) {
+  return value.trim().replace(/^[-*]\s+/, "").trim();
+}
+function parseDialogue(content, roleAssets) {
+  const roleByName = new Map(roleAssets.map((asset) => [normalizeLabel(asset.name), asset.id]));
+  const parsed = [];
+  for (const rawLine of content.replace(/\r\n?/g, "\n").split("\n")) {
+    const line = cleanLine(rawLine);
+    if (!line || /^#{1,6}\s/.test(line)) continue;
+    const match = line.match(/^([^：:]{1,32})[：:]\s*(.+)$/);
+    if (match) {
+      const speaker = match[1].trim();
+      const text2 = match[2].trim();
+      if (!text2) continue;
+      const kind = classifySpeaker(speaker);
+      parsed.push({
+        kind,
+        speaker: kind === "narration" ? "\u65C1\u767D" : kind === "chorus" ? "\u7FA4\u58F0" : speaker,
+        text: text2,
+        roleAssetId: kind === "dialogue" ? roleByName.get(normalizeLabel(speaker)) ?? null : null
+      });
+      continue;
+    }
+    const previous = parsed.at(-1);
+    if (previous && previous.kind !== "narration") {
+      previous.text = `${previous.text}
+${line}`;
+    } else {
+      parsed.push({ kind: "narration", speaker: "\u65C1\u767D", text: line, roleAssetId: null });
+    }
+  }
+  return parsed.map((item, ordinal) => ({ ...item, ordinal }));
+}
+function formatSubtitleTime(milliseconds, separator) {
+  const safe = Math.max(0, Math.round(milliseconds));
+  const hours = Math.floor(safe / 36e5);
+  const minutes = Math.floor(safe % 36e5 / 6e4);
+  const seconds = Math.floor(safe % 6e4 / 1e3);
+  const millis = safe % 1e3;
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}${separator}${String(millis).padStart(3, "0")}`;
+}
+function serializeSubtitles(cues, format) {
+  const body = cues.map((cue, index) => {
+    const separator = format === "srt" ? "," : ".";
+    const timing = `${formatSubtitleTime(cue.startMs, separator)} --> ${formatSubtitleTime(cue.endMs, separator)}`;
+    return format === "srt" ? `${index + 1}
+${timing}
+${cue.text}` : `${timing}
+${cue.text}`;
+  }).join("\n\n");
+  return format === "vtt" ? `WEBVTT
+
+${body}
+` : `${body}
+`;
+}
+var narrationLabels, chorusLabels;
+var init_dialogue = __esm({
+  "src/services/voice-studio/dialogue.ts"() {
+    "use strict";
+    narrationLabels = /* @__PURE__ */ new Set(["\u65C1\u767D", "\u753B\u5916\u97F3", "\u89E3\u8BF4", "\u53D9\u8FF0", "narrator"]);
+    chorusLabels = /* @__PURE__ */ new Set(["\u7FA4\u58F0", "\u4F17\u4EBA", "\u6240\u6709\u4EBA", "\u5408\u58F0", "chorus"]);
+  }
+});
+
+// src/services/voice-studio/repository.ts
+function mapVoiceCast(row) {
+  return {
+    id: row.id,
+    projectId: row.project_id,
+    roleAssetId: row.role_asset_id ?? null,
+    name: row.name,
+    provider: row.provider,
+    model: row.model,
+    voice: row.voice,
+    speechRate: row.speech_rate,
+    pitchRate: row.pitch_rate,
+    volume: row.volume,
+    emotion: row.emotion ?? null,
+    isDefault: row.is_default === 1,
+    previewAssetId: row.preview_asset_id ?? null,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+function mapUtterance(row) {
+  return {
+    id: row.id,
+    projectId: row.project_id,
+    scriptId: row.script_id ?? null,
+    storyboardId: row.storyboard_id ?? null,
+    ordinal: row.ordinal,
+    kind: row.kind,
+    roleAssetId: row.role_asset_id ?? null,
+    speaker: row.speaker,
+    text: row.text,
+    voiceCastId: row.voice_cast_id ?? null,
+    audioPath: row.audio_path ?? null,
+    cacheKey: row.cache_key ?? null,
+    durationMs: row.duration_ms ?? null,
+    status: row.status,
+    errorMessage: row.error_message ?? null,
+    locked: row.locked === 1,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+function mapCue(row) {
+  let style = null;
+  try {
+    style = row.style ? JSON.parse(row.style) : null;
+  } catch {
+    style = null;
+  }
+  return {
+    id: row.id,
+    projectId: row.project_id,
+    utteranceId: row.utterance_id,
+    ordinal: row.ordinal,
+    startMs: row.start_ms,
+    endMs: row.end_ms,
+    text: row.text,
+    style,
+    locked: row.locked === 1,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+function normalizeName(value) {
+  return value.trim().toLocaleLowerCase();
+}
+var sql, VoiceStudioRepository, voiceStudioRepository;
+var init_repository2 = __esm({
+  "src/services/voice-studio/repository.ts"() {
+    "use strict";
+    init_dist_node();
+    init_db();
+    init_dialogue();
+    sql = db;
+    VoiceStudioRepository = class {
+      async listVoiceCasts(projectId) {
+        const rows = await sql("voice_cast").where("project_id", projectId).orderBy("is_default", "desc").orderBy("name", "asc");
+        return rows.map(mapVoiceCast);
+      }
+      async upsertVoiceCast(input) {
+        const now2 = Date.now();
+        const existing = input.id ? await sql("voice_cast").where({ id: input.id, project_id: input.projectId }).first() : await sql("voice_cast").where({ project_id: input.projectId, name: input.name }).first();
+        const id = existing?.id ?? input.id ?? v4_default();
+        const row = {
+          id,
+          project_id: input.projectId,
+          role_asset_id: input.roleAssetId ?? null,
+          name: input.name.trim(),
+          provider: input.provider.trim(),
+          model: input.model.trim(),
+          voice: input.voice.trim(),
+          speech_rate: input.speechRate ?? 1,
+          pitch_rate: input.pitchRate ?? 0,
+          volume: input.volume ?? 1,
+          emotion: input.emotion ?? null,
+          is_default: input.isDefault ? 1 : 0,
+          preview_asset_id: input.previewAssetId ?? null,
+          created_at: existing?.created_at ?? now2,
+          updated_at: now2
+        };
+        await sql.transaction(async (trx) => {
+          if (input.isDefault) {
+            await trx("voice_cast").where("project_id", input.projectId).whereNot("id", id).update({ is_default: 0, updated_at: now2 });
+          }
+          await trx("voice_cast").insert(row).onConflict("id").merge(row);
+          await trx("utterances").where("project_id", input.projectId).whereNull("voice_cast_id").andWhere((query) => {
+            if (input.roleAssetId != null) query.where("role_asset_id", input.roleAssetId);
+            else query.whereRaw("lower(speaker) = lower(?)", [input.name.trim()]);
+          }).update({ voice_cast_id: id, status: "ready", updated_at: now2 });
+        });
+        return mapVoiceCast(await sql("voice_cast").where("id", id).first());
+      }
+      async importScript(input) {
+        const script = await sql("o_script").where({ id: input.scriptId, projectId: input.projectId }).first();
+        if (!script) throw new Error("\u5267\u672C\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
+        const roleRows = await sql("o_assets").leftJoin("o_scriptAssets", "o_assets.id", "o_scriptAssets.assetId").where("o_scriptAssets.scriptId", input.scriptId).where("o_assets.type", "role").select("o_assets.id", "o_assets.name");
+        const fallbackRoles = roleRows.length ? roleRows : await sql("o_assets").where({ projectId: input.projectId, type: "role" }).select("id", "name");
+        const casts = await this.listVoiceCasts(input.projectId);
+        const castByRole = new Map(casts.filter((item) => item.roleAssetId != null).map((item) => [item.roleAssetId, item.id]));
+        const castByName = new Map(casts.map((item) => [normalizeName(item.name), item.id]));
+        const defaultCast = casts.find((item) => item.isDefault)?.id ?? null;
+        const sources = [{ content: script.content ?? "", storyboardId: null }];
+        if (input.includeStoryboardDescriptions) {
+          const storyboards = await sql("o_storyboard").where({ projectId: input.projectId, scriptId: input.scriptId }).whereNotNull("videoDesc").orderBy("index", "asc");
+          sources.push(...storyboards.map((item) => ({ content: item.videoDesc, storyboardId: item.id })));
+        }
+        const parsed = sources.flatMap(
+          (source) => parseDialogue(source.content, fallbackRoles).map((item) => ({ ...item, storyboardId: source.storyboardId }))
+        );
+        const now2 = Date.now();
+        const existingLocked = await sql("utterances").where({ project_id: input.projectId, script_id: input.scriptId, locked: 1 });
+        const lockedSignatures = new Set(existingLocked.map((item) => `${item.storyboard_id ?? ""}\0${item.speaker}\0${item.text}`));
+        const imported = parsed.filter((item) => !lockedSignatures.has(`${item.storyboardId ?? ""}\0${item.speaker}\0${item.text}`));
+        await sql.transaction(async (trx) => {
+          const removable = await trx("utterances").where({ project_id: input.projectId, script_id: input.scriptId, locked: 0 }).select("id");
+          if (removable.length) {
+            await trx("subtitle_cues").whereIn("utterance_id", removable.map((item) => item.id)).where("locked", 0).delete();
+            await trx("utterances").whereIn("id", removable.map((item) => item.id)).delete();
+          }
+          if (imported.length) {
+            await trx("utterances").insert(
+              imported.map((item, index) => {
+                const voiceCastId = item.roleAssetId != null ? castByRole.get(item.roleAssetId) ?? castByName.get(normalizeName(item.speaker)) ?? defaultCast : castByName.get(normalizeName(item.speaker)) ?? defaultCast;
+                return {
+                  id: v4_default(),
+                  project_id: input.projectId,
+                  script_id: input.scriptId,
+                  storyboard_id: item.storyboardId,
+                  ordinal: index,
+                  kind: item.kind,
+                  role_asset_id: item.roleAssetId,
+                  speaker: item.speaker,
+                  text: item.text,
+                  voice_cast_id: voiceCastId,
+                  status: voiceCastId ? "ready" : "draft",
+                  locked: 0,
+                  created_at: now2,
+                  updated_at: now2
+                };
+              })
+            );
+          }
+        });
+        await this.rebuildCues({ projectId: input.projectId, scriptId: input.scriptId });
+        return { imported: imported.length, preservedLocked: existingLocked.length, data: await this.listUtterances(input) };
+      }
+      async listUtterances(filters3) {
+        const query = sql("utterances").where("project_id", filters3.projectId);
+        if (filters3.scriptId != null) query.where("script_id", filters3.scriptId);
+        if (filters3.storyboardId != null) query.where("storyboard_id", filters3.storyboardId);
+        return (await query.orderBy("ordinal", "asc").orderBy("created_at", "asc")).map(mapUtterance);
+      }
+      async updateUtterance(input) {
+        const existing = await sql("utterances").where({ id: input.id, project_id: input.projectId }).first();
+        if (!existing) throw new Error("\u53F0\u8BCD\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
+        const changedContent = input.text !== void 0 && input.text !== existing.text;
+        const updates = { updated_at: Date.now() };
+        if (input.speaker !== void 0) updates.speaker = input.speaker.trim();
+        if (input.text !== void 0) updates.text = input.text.trim();
+        if (input.kind !== void 0) updates.kind = input.kind;
+        if (input.roleAssetId !== void 0) updates.role_asset_id = input.roleAssetId;
+        if (input.voiceCastId !== void 0) updates.voice_cast_id = input.voiceCastId;
+        if (input.durationMs !== void 0) updates.duration_ms = input.durationMs;
+        if (input.locked !== void 0) updates.locked = input.locked ? 1 : 0;
+        if (changedContent || input.voiceCastId !== void 0) {
+          updates.audio_path = null;
+          updates.cache_key = null;
+          updates.error_message = null;
+          updates.status = input.voiceCastId ?? existing.voice_cast_id ? "ready" : "draft";
+        }
+        await sql("utterances").where("id", input.id).update(updates);
+        await sql("subtitle_cues").where({ utterance_id: input.id, locked: 0 }).update({
+          text: updates.text ?? existing.text,
+          updated_at: Date.now()
+        });
+        return mapUtterance(await sql("utterances").where("id", input.id).first());
+      }
+      async rebuildCues(filters3) {
+        const utterances = await this.listUtterances(filters3);
+        const ids = utterances.map((item) => item.id);
+        if (!ids.length) return [];
+        const lockedRows = await sql("subtitle_cues").whereIn("utterance_id", ids).where("locked", 1);
+        const lockedByUtterance = new Map(lockedRows.map((row) => [row.utterance_id, row]));
+        const now2 = Date.now();
+        let cursor = 0;
+        await sql.transaction(async (trx) => {
+          await trx("subtitle_cues").whereIn("utterance_id", ids).where("locked", 0).delete();
+          const rows = [];
+          for (const utterance of utterances) {
+            const locked = lockedByUtterance.get(utterance.id);
+            if (locked) {
+              cursor = Math.max(cursor, locked.end_ms + 120);
+              continue;
+            }
+            const duration4 = utterance.durationMs ?? Math.max(1200, Math.min(12e3, utterance.text.length * 180));
+            rows.push({
+              id: v4_default(),
+              project_id: filters3.projectId,
+              utterance_id: utterance.id,
+              ordinal: 0,
+              start_ms: cursor,
+              end_ms: cursor + duration4,
+              text: utterance.text,
+              style: null,
+              locked: 0,
+              created_at: now2,
+              updated_at: now2
+            });
+            cursor += duration4 + 120;
+          }
+          if (rows.length) await trx("subtitle_cues").insert(rows);
+        });
+        return this.listCues(filters3);
+      }
+      async listCues(filters3) {
+        const query = sql("subtitle_cues").leftJoin("utterances", "utterances.id", "subtitle_cues.utterance_id").where("subtitle_cues.project_id", filters3.projectId).select("subtitle_cues.*");
+        if (filters3.scriptId != null) query.where("utterances.script_id", filters3.scriptId);
+        return (await query.orderBy("subtitle_cues.start_ms", "asc").orderBy("subtitle_cues.ordinal", "asc")).map(mapCue);
+      }
+      async updateCue(input) {
+        const existing = await sql("subtitle_cues").where({ id: input.id, project_id: input.projectId }).first();
+        if (!existing) throw new Error("\u5B57\u5E55 cue \u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
+        const startMs = input.startMs ?? existing.start_ms;
+        const endMs = input.endMs ?? existing.end_ms;
+        if (endMs <= startMs) throw new Error("\u5B57\u5E55\u7ED3\u675F\u65F6\u95F4\u5FC5\u987B\u665A\u4E8E\u5F00\u59CB\u65F6\u95F4");
+        const updates = { start_ms: startMs, end_ms: endMs, updated_at: Date.now() };
+        if (input.text !== void 0) updates.text = input.text.trim();
+        if (input.style !== void 0) updates.style = input.style == null ? null : JSON.stringify(input.style);
+        if (input.locked !== void 0) updates.locked = input.locked ? 1 : 0;
+        await sql("subtitle_cues").where("id", input.id).update(updates);
+        return mapCue(await sql("subtitle_cues").where("id", input.id).first());
+      }
+      async exportSubtitles(filters3) {
+        const cues = await this.listCues(filters3);
+        return serializeSubtitles(cues, filters3.format);
+      }
+    };
+    voiceStudioRepository = new VoiceStudioRepository();
   }
 });
 
@@ -239710,19 +240091,230 @@ var init_getBigImage = __esm({
   }
 });
 
+// src/services/composition/timeline.ts
+function mapTimelineRow(row) {
+  return {
+    id: row.id,
+    projectId: row.project_id,
+    scriptId: row.script_id,
+    version: row.version,
+    status: row.status,
+    payload: JSON.parse(row.payload),
+    checksum: row.checksum,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+function safeStyle(value) {
+  if (typeof value !== "string" || !value) return null;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+}
+async function buildNormalizedTimeline(input) {
+  const [project, script] = await Promise.all([
+    sql3("o_project").where("id", input.projectId).first(),
+    sql3("o_script").where({ id: input.scriptId, projectId: input.projectId }).first()
+  ]);
+  if (!project || !script) throw new Error("\u9879\u76EE\u6216\u5267\u672C\u4E0D\u5B58\u5728");
+  const [tracks, storyboards, utterances, cueRows] = await Promise.all([
+    sql3("o_videoTrack").where({ projectId: input.projectId, scriptId: input.scriptId }),
+    sql3("o_storyboard").where({ projectId: input.projectId, scriptId: input.scriptId }).orderBy("index", "asc"),
+    sql3("utterances").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("ordinal", "asc"),
+    sql3("subtitle_cues").leftJoin("utterances", "utterances.id", "subtitle_cues.utterance_id").where("subtitle_cues.project_id", input.projectId).where("utterances.script_id", input.scriptId).select("subtitle_cues.*").orderBy("subtitle_cues.start_ms", "asc")
+  ]);
+  const firstStoryboardIndex = /* @__PURE__ */ new Map();
+  for (const storyboard of storyboards) {
+    if (storyboard.trackId != null && !firstStoryboardIndex.has(storyboard.trackId)) {
+      firstStoryboardIndex.set(storyboard.trackId, Number(storyboard.index ?? Number.MAX_SAFE_INTEGER));
+    }
+  }
+  tracks.sort(
+    (a, b) => (firstStoryboardIndex.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (firstStoryboardIndex.get(b.id) ?? Number.MAX_SAFE_INTEGER)
+  );
+  const selectedIds = tracks.map((track) => track.videoId).filter((id2) => typeof id2 === "number");
+  const videos = selectedIds.length ? await sql3("o_video").whereIn("id", selectedIds) : [];
+  const videoById = new Map(videos.map((video) => [video.id, video]));
+  const warnings = [];
+  const videoClips = [];
+  let cursor = 0;
+  for (const track of tracks) {
+    const selected = videoById.get(track.videoId);
+    const durationMs = Math.max(1e3, Math.round((Number(track.duration) || 5) * 1e3));
+    if (!selected?.filePath || !["\u751F\u6210\u6210\u529F", "\u5DF2\u5B8C\u6210"].includes(selected.state)) {
+      warnings.push(`\u89C6\u9891\u8F68\u9053 ${track.id} \u5C1A\u672A\u9009\u62E9\u5DF2\u6210\u529F\u7684\u89C6\u9891\uFF0C\u672A\u52A0\u5165\u65F6\u95F4\u7EBF`);
+      continue;
+    }
+    videoClips.push({
+      id: `video-${selected.id}`,
+      sourceType: "selected_video",
+      sourceId: selected.id,
+      storyboardTrackId: track.id,
+      path: selected.filePath,
+      startMs: cursor,
+      inMs: 0,
+      outMs: durationMs,
+      durationMs,
+      transitionOut: { type: "cut", durationMs: 0 }
+    });
+    cursor += durationMs;
+  }
+  const nativeClips = videoClips.map((clip) => ({
+    id: `native-${clip.sourceId}`,
+    sourceType: "embedded_video_audio",
+    sourceId: clip.sourceId,
+    path: clip.path,
+    startMs: clip.startMs,
+    inMs: clip.inMs,
+    durationMs: clip.durationMs,
+    gainDb: 0,
+    fadeInMs: 0,
+    fadeOutMs: 0
+  }));
+  const utteranceById = new Map(utterances.map((row) => [row.id, row]));
+  const dialogueClips = [];
+  const narrationClips = [];
+  for (const cue of cueRows) {
+    const utterance = utteranceById.get(cue.utterance_id);
+    if (!utterance?.audio_path || utterance.status !== "succeeded") continue;
+    const target = utterance.kind === "narration" ? narrationClips : dialogueClips;
+    target.push({
+      id: `utterance-${utterance.id}`,
+      sourceType: "utterance_audio",
+      sourceId: utterance.id,
+      path: utterance.audio_path,
+      startMs: cue.start_ms,
+      inMs: 0,
+      durationMs: utterance.duration_ms ?? Math.max(1, cue.end_ms - cue.start_ms),
+      gainDb: 0,
+      fadeInMs: 10,
+      fadeOutMs: 30
+    });
+  }
+  if (cueRows.some((cue) => cue.end_ms > cursor) && cursor > 0) {
+    warnings.push("\u90E8\u5206\u5B57\u5E55\u6216\u914D\u97F3\u8D85\u51FA\u5DF2\u9009\u89C6\u9891\u603B\u65F6\u957F");
+  }
+  const ratio = project.videoRatio === "9:16" ? "9:16" : "16:9";
+  const payload = {
+    schemaVersion: 1,
+    projectId: input.projectId,
+    scriptId: input.scriptId,
+    settings: {
+      width: ratio === "9:16" ? 1080 : 1920,
+      height: ratio === "9:16" ? 1920 : 1080,
+      fps: 24,
+      colorSpace: "bt709",
+      audioSampleRate: 48e3,
+      loudnessTargetLufs: -16,
+      truePeakDb: -1.5
+    },
+    durationMs: cursor,
+    videoTracks: [{ id: "video-main", clips: videoClips }],
+    audioTracks: [
+      { id: "audio-native", kind: "native", clips: nativeClips },
+      { id: "audio-dialogue", kind: "dialogue", clips: dialogueClips },
+      { id: "audio-narration", kind: "narration", clips: narrationClips },
+      { id: "audio-sfx", kind: "sfx", clips: [] },
+      { id: "audio-ambience", kind: "ambience", clips: [] },
+      { id: "audio-bgm", kind: "bgm", clips: [] }
+    ],
+    subtitleTracks: [
+      {
+        id: "subtitles-main",
+        cues: cueRows.map((cue) => ({
+          id: cue.id,
+          utteranceId: cue.utterance_id,
+          startMs: cue.start_ms,
+          endMs: cue.end_ms,
+          text: cue.text,
+          style: safeStyle(cue.style),
+          locked: cue.locked === 1
+        }))
+      }
+    ],
+    warnings
+  };
+  const serialized = JSON.stringify(payload);
+  const checksum = import_node_crypto5.default.createHash("sha256").update(serialized).digest("hex");
+  const latest = await sql3("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
+  if (latest?.checksum === checksum) return { timeline: mapTimelineRow(latest), deduped: true };
+  const now2 = Date.now();
+  const id = v4_default();
+  await sql3("project_timelines").insert({
+    id,
+    project_id: input.projectId,
+    script_id: input.scriptId,
+    version: Number(latest?.version ?? 0) + 1,
+    status: "draft",
+    payload: serialized,
+    checksum,
+    created_at: now2,
+    updated_at: now2
+  });
+  return { timeline: mapTimelineRow(await sql3("project_timelines").where("id", id).first()), deduped: false };
+}
+async function getLatestTimeline(input) {
+  const row = await sql3("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
+  return row ? mapTimelineRow(row) : null;
+}
+async function listTimelines(input) {
+  const rows = await sql3("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc");
+  return rows.map(mapTimelineRow);
+}
+var import_node_crypto5, sql3;
+var init_timeline = __esm({
+  "src/services/composition/timeline.ts"() {
+    "use strict";
+    import_node_crypto5 = __toESM(require("node:crypto"));
+    init_dist_node();
+    init_db();
+    sql3 = db;
+  }
+});
+
+// src/routes/composition/timeline.ts
+var import_express28, router28, filters, timeline_default;
+var init_timeline2 = __esm({
+  "src/routes/composition/timeline.ts"() {
+    "use strict";
+    import_express28 = __toESM(require_express2());
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_timeline();
+    router28 = import_express28.default.Router();
+    filters = {
+      projectId: external_exports.number().int().positive(),
+      scriptId: external_exports.number().int().positive()
+    };
+    router28.post("/build", validateFields(filters), async (req, res) => {
+      res.status(200).send(success3(await buildNormalizedTimeline(req.body)));
+    });
+    router28.post("/latest", validateFields(filters), async (req, res) => {
+      res.status(200).send(success3(await getLatestTimeline(req.body)));
+    });
+    router28.post("/list", validateFields(filters), async (req, res) => {
+      res.status(200).send(success3(await listTimelines(req.body)));
+    });
+    timeline_default = router28;
+  }
+});
+
 // src/routes/cornerScape/batchBindAudio.ts
-var import_express28, router28, batchBindAudio_default;
+var import_express29, router29, batchBindAudio_default;
 var init_batchBindAudio = __esm({
   "src/routes/cornerScape/batchBindAudio.ts"() {
     "use strict";
-    import_express28 = __toESM(require_express2());
+    import_express29 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_dist22();
-    router28 = import_express28.default.Router();
-    batchBindAudio_default = router28.post(
+    router29 = import_express29.default.Router();
+    batchBindAudio_default = router29.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -239803,17 +240395,17 @@ var init_batchBindAudio = __esm({
 });
 
 // src/routes/cornerScape/getAllAssets.ts
-var import_express29, router29, getAllAssets_default;
+var import_express30, router30, getAllAssets_default;
 var init_getAllAssets = __esm({
   "src/routes/cornerScape/getAllAssets.ts"() {
     "use strict";
-    import_express29 = __toESM(require_express2());
+    import_express30 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router29 = import_express29.default.Router();
-    getAllAssets_default = router29.post(
+    router30 = import_express30.default.Router();
+    getAllAssets_default = router30.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -239865,17 +240457,17 @@ var init_getAllAssets = __esm({
 });
 
 // src/routes/cornerScape/pollingAudio.ts
-var import_express30, router30, pollingAudio_default;
+var import_express31, router31, pollingAudio_default;
 var init_pollingAudio = __esm({
   "src/routes/cornerScape/pollingAudio.ts"() {
     "use strict";
-    import_express30 = __toESM(require_express2());
+    import_express31 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router30 = import_express30.default.Router();
-    pollingAudio_default = router30.post(
+    router31 = import_express31.default.Router();
+    pollingAudio_default = router31.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -239890,17 +240482,17 @@ var init_pollingAudio = __esm({
 });
 
 // src/routes/cornerScape/updateAssetsAudio.ts
-var import_express31, router31, updateAssetsAudio_default;
+var import_express32, router32, updateAssetsAudio_default;
 var init_updateAssetsAudio = __esm({
   "src/routes/cornerScape/updateAssetsAudio.ts"() {
     "use strict";
-    import_express31 = __toESM(require_express2());
+    import_express32 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router31 = import_express31.default.Router();
-    updateAssetsAudio_default = router31.post(
+    router32 = import_express32.default.Router();
+    updateAssetsAudio_default = router32.post(
       "/",
       validateFields({
         assetsId: external_exports.number(),
@@ -239920,17 +240512,17 @@ var init_updateAssetsAudio = __esm({
 });
 
 // src/routes/general/generalStatistics.ts
-var import_express32, router32, generalStatistics_default;
+var import_express33, router33, generalStatistics_default;
 var init_generalStatistics = __esm({
   "src/routes/general/generalStatistics.ts"() {
     "use strict";
-    import_express32 = __toESM(require_express2());
+    import_express33 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router32 = import_express32.default.Router();
-    generalStatistics_default = router32.post(
+    router33 = import_express33.default.Router();
+    generalStatistics_default = router33.post(
       "/",
       validateFields({
         projectId: external_exports.number()
@@ -239956,17 +240548,17 @@ var init_generalStatistics = __esm({
 });
 
 // src/routes/general/getSingleProject.ts
-var import_express33, router33, getSingleProject_default;
+var import_express34, router34, getSingleProject_default;
 var init_getSingleProject = __esm({
   "src/routes/general/getSingleProject.ts"() {
     "use strict";
-    import_express33 = __toESM(require_express2());
+    import_express34 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router33 = import_express33.default.Router();
-    getSingleProject_default = router33.post(
+    router34 = import_express34.default.Router();
+    getSingleProject_default = router34.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -239981,17 +240573,17 @@ var init_getSingleProject = __esm({
 });
 
 // src/routes/general/updateProject.ts
-var import_express34, router34, updateProject_default;
+var import_express35, router35, updateProject_default;
 var init_updateProject = __esm({
   "src/routes/general/updateProject.ts"() {
     "use strict";
-    import_express34 = __toESM(require_express2());
+    import_express35 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router34 = import_express34.default.Router();
-    updateProject_default = router34.post(
+    router35 = import_express35.default.Router();
+    updateProject_default = router35.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -240017,17 +240609,17 @@ var init_updateProject = __esm({
 });
 
 // src/routes/generationTasks/cancel.ts
-var import_express35, router35, cancel_default;
+var import_express36, router36, cancel_default;
 var init_cancel = __esm({
   "src/routes/generationTasks/cancel.ts"() {
     "use strict";
-    import_express35 = __toESM(require_express2());
+    import_express36 = __toESM(require_express2());
     init_zod();
     init_middleware();
     init_responseFormat();
     init_repository();
-    router35 = import_express35.default.Router();
-    cancel_default = router35.post("/", validateFields({ taskId: external_exports.string().uuid() }), async (req, res) => {
+    router36 = import_express36.default.Router();
+    cancel_default = router36.post("/", validateFields({ taskId: external_exports.string().uuid() }), async (req, res) => {
       const task = await generationTaskRepository.requestCancel(req.body.taskId);
       if (!task) return res.status(404).send({ message: "\u4EFB\u52A1\u4E0D\u5B58\u5728" });
       return res.status(200).send(success3(task));
@@ -240036,17 +240628,17 @@ var init_cancel = __esm({
 });
 
 // src/routes/generationTasks/get.ts
-var import_express36, router36, get_default2;
+var import_express37, router37, get_default2;
 var init_get2 = __esm({
   "src/routes/generationTasks/get.ts"() {
     "use strict";
-    import_express36 = __toESM(require_express2());
+    import_express37 = __toESM(require_express2());
     init_zod();
     init_middleware();
     init_responseFormat();
     init_repository();
-    router36 = import_express36.default.Router();
-    get_default2 = router36.post("/", validateFields({ taskId: external_exports.string().uuid() }), async (req, res) => {
+    router37 = import_express37.default.Router();
+    get_default2 = router37.post("/", validateFields({ taskId: external_exports.string().uuid() }), async (req, res) => {
       const task = await generationTaskRepository.get(req.body.taskId);
       if (!task) return res.status(404).send({ message: "\u4EFB\u52A1\u4E0D\u5B58\u5728" });
       return res.status(200).send(success3(task));
@@ -240055,22 +240647,22 @@ var init_get2 = __esm({
 });
 
 // src/routes/generationTasks/limits.ts
-var import_express37, router37, limits_default;
+var import_express38, router38, limits_default;
 var init_limits = __esm({
   "src/routes/generationTasks/limits.ts"() {
     "use strict";
-    import_express37 = __toESM(require_express2());
+    import_express38 = __toESM(require_express2());
     init_zod();
     init_middleware();
     init_responseFormat();
     init_generationTask();
     init_db();
-    router37 = import_express37.default.Router();
-    router37.post("/list", async (_req, res) => {
+    router38 = import_express38.default.Router();
+    router38.post("/list", async (_req, res) => {
       const rows = await db("provider_limits").select("provider", "model", "lane", "max_concurrency as maxConcurrency", "rpm", "cooldown_ms as cooldownMs", "updated_at as updatedAt").orderBy(["provider", "model", "lane"]);
       res.status(200).send(success3(rows));
     });
-    router37.post(
+    router38.post(
       "/upsert",
       validateFields({
         provider: external_exports.string().trim().min(1),
@@ -240095,23 +240687,23 @@ var init_limits = __esm({
         res.status(200).send(success3(row));
       }
     );
-    limits_default = router37;
+    limits_default = router38;
   }
 });
 
 // src/routes/generationTasks/list.ts
-var import_express38, router38, list_default;
+var import_express39, router39, list_default;
 var init_list = __esm({
   "src/routes/generationTasks/list.ts"() {
     "use strict";
-    import_express38 = __toESM(require_express2());
+    import_express39 = __toESM(require_express2());
     init_zod();
     init_middleware();
     init_responseFormat();
     init_generationTask();
     init_repository();
-    router38 = import_express38.default.Router();
-    list_default = router38.post(
+    router39 = import_express39.default.Router();
+    list_default = router39.post(
       "/",
       validateFields({
         projectId: external_exports.number().optional(),
@@ -240129,17 +240721,17 @@ var init_list = __esm({
 });
 
 // src/routes/generationTasks/retry.ts
-var import_express39, router39, retry_default;
+var import_express40, router40, retry_default;
 var init_retry = __esm({
   "src/routes/generationTasks/retry.ts"() {
     "use strict";
-    import_express39 = __toESM(require_express2());
+    import_express40 = __toESM(require_express2());
     init_zod();
     init_middleware();
     init_responseFormat();
     init_repository();
-    router39 = import_express39.default.Router();
-    retry_default = router39.post(
+    router40 = import_express40.default.Router();
+    retry_default = router40.post(
       "/",
       validateFields({ taskId: external_exports.string().uuid(), confirmUnknownProviderState: external_exports.boolean().optional() }),
       async (req, res) => {
@@ -240161,18 +240753,18 @@ function setToken(payload, expiresIn, secret) {
   }
   return import_jsonwebtoken4.default.sign(payload, secret, { expiresIn });
 }
-var import_express40, import_jsonwebtoken4, router40, login_default;
+var import_express41, import_jsonwebtoken4, router41, login_default;
 var init_login = __esm({
   "src/routes/login/login.ts"() {
     "use strict";
-    import_express40 = __toESM(require_express2());
+    import_express41 = __toESM(require_express2());
     init_utils3();
     import_jsonwebtoken4 = __toESM(require_jsonwebtoken());
     init_responseFormat();
     init_middleware();
     init_zod();
-    router40 = import_express40.default.Router();
-    login_default = router40.post(
+    router41 = import_express41.default.Router();
+    login_default = router41.post(
       "/",
       validateFields({
         username: external_exports.string(),
@@ -240203,17 +240795,17 @@ var init_login = __esm({
 });
 
 // src/routes/modelSelect/getModelDetail.ts
-var import_express41, router41, getModelDetail_default;
+var import_express42, router42, getModelDetail_default;
 var init_getModelDetail = __esm({
   "src/routes/modelSelect/getModelDetail.ts"() {
     "use strict";
-    import_express41 = __toESM(require_express2());
+    import_express42 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router41 = import_express41.default.Router();
-    getModelDetail_default = router41.post(
+    router42 = import_express42.default.Router();
+    getModelDetail_default = router42.post(
       "/",
       validateFields({
         modelId: external_exports.string()
@@ -240230,17 +240822,17 @@ var init_getModelDetail = __esm({
 });
 
 // src/routes/modelSelect/getModelList.ts
-var import_express42, router42, getModelList_default;
+var import_express43, router43, getModelList_default;
 var init_getModelList = __esm({
   "src/routes/modelSelect/getModelList.ts"() {
     "use strict";
-    import_express42 = __toESM(require_express2());
+    import_express43 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router42 = import_express42.default.Router();
-    getModelList_default = router42.post(
+    router43 = import_express43.default.Router();
+    getModelList_default = router43.post(
       "/",
       validateFields({
         type: external_exports.enum(["text", "image", "video", "all"])
@@ -240273,17 +240865,17 @@ var init_getModelList = __esm({
 });
 
 // src/routes/novel/addNovel.ts
-var import_express43, router43, addNovel_default;
+var import_express44, router44, addNovel_default;
 var init_addNovel = __esm({
   "src/routes/novel/addNovel.ts"() {
     "use strict";
-    import_express43 = __toESM(require_express2());
+    import_express44 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router43 = import_express43.default.Router();
-    addNovel_default = router43.post(
+    router44 = import_express44.default.Router();
+    addNovel_default = router44.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -240329,17 +240921,17 @@ var init_addNovel = __esm({
 });
 
 // src/routes/novel/batchDeleteNovel.ts
-var import_express44, router44, batchDeleteNovel_default;
+var import_express45, router45, batchDeleteNovel_default;
 var init_batchDeleteNovel = __esm({
   "src/routes/novel/batchDeleteNovel.ts"() {
     "use strict";
-    import_express44 = __toESM(require_express2());
+    import_express45 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router44 = import_express44.default.Router();
-    batchDeleteNovel_default = router44.post(
+    router45 = import_express45.default.Router();
+    batchDeleteNovel_default = router45.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -240361,17 +240953,17 @@ var init_batchDeleteNovel = __esm({
 });
 
 // src/routes/novel/delNovel.ts
-var import_express45, router45, delNovel_default;
+var import_express46, router46, delNovel_default;
 var init_delNovel = __esm({
   "src/routes/novel/delNovel.ts"() {
     "use strict";
-    import_express45 = __toESM(require_express2());
+    import_express46 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router45 = import_express45.default.Router();
-    delNovel_default = router45.post(
+    router46 = import_express46.default.Router();
+    delNovel_default = router46.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -240390,17 +240982,17 @@ var init_delNovel = __esm({
 });
 
 // src/routes/novel/event/batchDeleteEvent.ts
-var import_express46, router46, batchDeleteEvent_default;
+var import_express47, router47, batchDeleteEvent_default;
 var init_batchDeleteEvent = __esm({
   "src/routes/novel/event/batchDeleteEvent.ts"() {
     "use strict";
-    import_express46 = __toESM(require_express2());
+    import_express47 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router46 = import_express46.default.Router();
-    batchDeleteEvent_default = router46.post(
+    router47 = import_express47.default.Router();
+    batchDeleteEvent_default = router47.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -240416,17 +241008,17 @@ var init_batchDeleteEvent = __esm({
 });
 
 // src/routes/novel/event/deletEvent.ts
-var import_express47, router47, deletEvent_default;
+var import_express48, router48, deletEvent_default;
 var init_deletEvent = __esm({
   "src/routes/novel/event/deletEvent.ts"() {
     "use strict";
-    import_express47 = __toESM(require_express2());
+    import_express48 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router47 = import_express47.default.Router();
-    deletEvent_default = router47.post(
+    router48 = import_express48.default.Router();
+    deletEvent_default = router48.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -240442,17 +241034,17 @@ var init_deletEvent = __esm({
 });
 
 // src/routes/novel/event/generateEvents.ts
-var import_express48, router48, generateEvents_default;
+var import_express49, router49, generateEvents_default;
 var init_generateEvents = __esm({
   "src/routes/novel/event/generateEvents.ts"() {
     "use strict";
-    import_express48 = __toESM(require_express2());
+    import_express49 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router48 = import_express48.default.Router();
-    generateEvents_default = router48.post(
+    router49 = import_express49.default.Router();
+    generateEvents_default = router49.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -240480,18 +241072,18 @@ var init_generateEvents = __esm({
 });
 
 // src/routes/novel/event/getEvent.ts
-var import_express49, router49, getEvent_default;
+var import_express50, router50, getEvent_default;
 var init_getEvent = __esm({
   "src/routes/novel/event/getEvent.ts"() {
     "use strict";
-    import_express49 = __toESM(require_express2());
+    import_express50 = __toESM(require_express2());
     init_utils3();
     init_db();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router49 = import_express49.default.Router();
-    getEvent_default = router49.post(
+    router50 = import_express50.default.Router();
+    getEvent_default = router50.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -240525,17 +241117,17 @@ var init_getEvent = __esm({
 });
 
 // src/routes/novel/getNovel.ts
-var import_express50, router50, getNovel_default;
+var import_express51, router51, getNovel_default;
 var init_getNovel = __esm({
   "src/routes/novel/getNovel.ts"() {
     "use strict";
-    import_express50 = __toESM(require_express2());
+    import_express51 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router50 = import_express50.default.Router();
-    getNovel_default = router50.post(
+    router51 = import_express51.default.Router();
+    getNovel_default = router51.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -240563,17 +241155,17 @@ var init_getNovel = __esm({
 });
 
 // src/routes/novel/getNovelData.ts
-var import_express51, router51, getNovelData_default;
+var import_express52, router52, getNovelData_default;
 var init_getNovelData = __esm({
   "src/routes/novel/getNovelData.ts"() {
     "use strict";
-    import_express51 = __toESM(require_express2());
+    import_express52 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router51 = import_express51.default.Router();
-    getNovelData_default = router51.post(
+    router52 = import_express52.default.Router();
+    getNovelData_default = router52.post(
       "/",
       validateFields({
         projectId: external_exports.number()
@@ -240588,17 +241180,17 @@ var init_getNovelData = __esm({
 });
 
 // src/routes/novel/getNovelEventState.ts
-var import_express52, router52, getNovelEventState_default;
+var import_express53, router53, getNovelEventState_default;
 var init_getNovelEventState = __esm({
   "src/routes/novel/getNovelEventState.ts"() {
     "use strict";
-    import_express52 = __toESM(require_express2());
+    import_express53 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router52 = import_express52.default.Router();
-    getNovelEventState_default = router52.post(
+    router53 = import_express53.default.Router();
+    getNovelEventState_default = router53.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -240613,17 +241205,17 @@ var init_getNovelEventState = __esm({
 });
 
 // src/routes/novel/getNovelIndex.ts
-var import_express53, router53, getNovelIndex_default;
+var import_express54, router54, getNovelIndex_default;
 var init_getNovelIndex = __esm({
   "src/routes/novel/getNovelIndex.ts"() {
     "use strict";
-    import_express53 = __toESM(require_express2());
+    import_express54 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router53 = import_express53.default.Router();
-    getNovelIndex_default = router53.post(
+    router54 = import_express54.default.Router();
+    getNovelIndex_default = router54.post(
       "/",
       validateFields({
         projectId: external_exports.number()
@@ -240638,17 +241230,17 @@ var init_getNovelIndex = __esm({
 });
 
 // src/routes/novel/updateNovel.ts
-var import_express54, router54, updateNovel_default;
+var import_express55, router55, updateNovel_default;
 var init_updateNovel = __esm({
   "src/routes/novel/updateNovel.ts"() {
     "use strict";
-    import_express54 = __toESM(require_express2());
+    import_express55 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router54 = import_express54.default.Router();
-    updateNovel_default = router54.post(
+    router55 = import_express55.default.Router();
+    updateNovel_default = router55.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -240674,16 +241266,16 @@ var init_updateNovel = __esm({
 });
 
 // src/routes/other/deleteAllData.ts
-var import_express55, router55, deleteAllData_default;
+var import_express56, router56, deleteAllData_default;
 var init_deleteAllData = __esm({
   "src/routes/other/deleteAllData.ts"() {
     "use strict";
-    import_express55 = __toESM(require_express2());
+    import_express56 = __toESM(require_express2());
     init_initDB();
     init_db();
     init_responseFormat();
-    router55 = import_express55.default.Router();
-    deleteAllData_default = router55.post(
+    router56 = import_express56.default.Router();
+    deleteAllData_default = router56.post(
       "/",
       async (req, res) => {
         await initDB_default(db, true);
@@ -240694,15 +241286,15 @@ var init_deleteAllData = __esm({
 });
 
 // src/routes/other/getVersion.ts
-var import_express56, router56, getVersion_default;
+var import_express57, router57, getVersion_default;
 var init_getVersion = __esm({
   "src/routes/other/getVersion.ts"() {
     "use strict";
-    import_express56 = __toESM(require_express2());
+    import_express57 = __toESM(require_express2());
     init_responseFormat();
     init_writeVersion();
-    router56 = import_express56.default.Router();
-    getVersion_default = router56.get("/", async (req, res) => {
+    router57 = import_express57.default.Router();
+    getVersion_default = router57.get("/", async (req, res) => {
       const version3 = await getVersion();
       res.status(200).send(success3(version3));
     });
@@ -240820,19 +241412,19 @@ var init_enqueueImage = __esm({
 });
 
 // src/routes/production/assets/batchGenerateAssetsImage.ts
-var import_express57, router57, batchGenerateAssetsImage_default;
+var import_express58, router58, batchGenerateAssetsImage_default;
 var init_batchGenerateAssetsImage = __esm({
   "src/routes/production/assets/batchGenerateAssetsImage.ts"() {
     "use strict";
-    import_express57 = __toESM(require_express2());
+    import_express58 = __toESM(require_express2());
     init_zod();
     init_dist_node();
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_enqueueImage();
-    router57 = import_express57.default.Router();
-    batchGenerateAssetsImage_default = router57.post(
+    router58 = import_express58.default.Router();
+    batchGenerateAssetsImage_default = router58.post(
       "/",
       validateFields({
         assetIds: external_exports.array(external_exports.number()),
@@ -240876,17 +241468,17 @@ var init_batchGenerateAssetsImage = __esm({
 });
 
 // src/routes/production/assets/deleteAssetsDireve.ts
-var import_express58, router58, deleteAssetsDireve_default;
+var import_express59, router59, deleteAssetsDireve_default;
 var init_deleteAssetsDireve = __esm({
   "src/routes/production/assets/deleteAssetsDireve.ts"() {
     "use strict";
-    import_express58 = __toESM(require_express2());
+    import_express59 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router58 = import_express58.default.Router();
-    deleteAssetsDireve_default = router58.post(
+    router59 = import_express59.default.Router();
+    deleteAssetsDireve_default = router59.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -240908,17 +241500,17 @@ var init_deleteAssetsDireve = __esm({
 });
 
 // src/routes/production/assets/pollingImage.ts
-var import_express59, router59, pollingImage_default;
+var import_express60, router60, pollingImage_default;
 var init_pollingImage = __esm({
   "src/routes/production/assets/pollingImage.ts"() {
     "use strict";
-    import_express59 = __toESM(require_express2());
+    import_express60 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router59 = import_express59.default.Router();
-    pollingImage_default = router59.post(
+    router60 = import_express60.default.Router();
+    pollingImage_default = router60.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -240939,17 +241531,17 @@ var init_pollingImage = __esm({
 });
 
 // src/routes/production/assets/updateAssetsUrl.ts
-var import_express60, router60, updateAssetsUrl_default;
+var import_express61, router61, updateAssetsUrl_default;
 var init_updateAssetsUrl = __esm({
   "src/routes/production/assets/updateAssetsUrl.ts"() {
     "use strict";
-    import_express60 = __toESM(require_express2());
+    import_express61 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router60 = import_express60.default.Router();
-    updateAssetsUrl_default = router60.post(
+    router61 = import_express61.default.Router();
+    updateAssetsUrl_default = router61.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -240981,18 +241573,18 @@ async function urlToBase643(imageUrl) {
   const base644 = Buffer.from(response.data, "binary").toString("base64");
   return `data:${contentType};base64,${base644}`;
 }
-var import_express61, router61, generateFlowImage_default;
+var import_express62, router62, generateFlowImage_default;
 var init_generateFlowImage = __esm({
   "src/routes/production/editImage/generateFlowImage.ts"() {
     "use strict";
-    import_express61 = __toESM(require_express2());
+    import_express62 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_axios2();
-    router61 = import_express61.default.Router();
-    generateFlowImage_default = router61.post(
+    router62 = import_express62.default.Router();
+    generateFlowImage_default = router62.post(
       "/",
       validateFields({
         model: external_exports.string(),
@@ -241038,17 +241630,17 @@ var init_generateFlowImage = __esm({
 });
 
 // src/routes/production/editImage/getImageDefaultModle.ts
-var import_express62, router62, getImageDefaultModle_default;
+var import_express63, router63, getImageDefaultModle_default;
 var init_getImageDefaultModle = __esm({
   "src/routes/production/editImage/getImageDefaultModle.ts"() {
     "use strict";
-    import_express62 = __toESM(require_express2());
+    import_express63 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router62 = import_express62.default.Router();
-    getImageDefaultModle_default = router62.post(
+    router63 = import_express63.default.Router();
+    getImageDefaultModle_default = router63.post(
       "/",
       validateFields({
         projectId: external_exports.number()
@@ -241063,17 +241655,17 @@ var init_getImageDefaultModle = __esm({
 });
 
 // src/routes/production/editImage/getImageFlow.ts
-var import_express63, router63, getImageFlow_default;
+var import_express64, router64, getImageFlow_default;
 var init_getImageFlow = __esm({
   "src/routes/production/editImage/getImageFlow.ts"() {
     "use strict";
-    import_express63 = __toESM(require_express2());
+    import_express64 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router63 = import_express63.default.Router();
-    getImageFlow_default = router63.post(
+    router64 = import_express64.default.Router();
+    getImageFlow_default = router64.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -241106,17 +241698,17 @@ var init_getImageFlow = __esm({
 });
 
 // src/routes/production/editImage/saveImageFlow.ts
-var import_express64, router64, saveImageFlow_default;
+var import_express65, router65, saveImageFlow_default;
 var init_saveImageFlow = __esm({
   "src/routes/production/editImage/saveImageFlow.ts"() {
     "use strict";
-    import_express64 = __toESM(require_express2());
+    import_express65 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router64 = import_express64.default.Router();
-    saveImageFlow_default = router64.post(
+    router65 = import_express65.default.Router();
+    saveImageFlow_default = router65.post(
       "/",
       validateFields({
         edges: external_exports.any(),
@@ -241145,17 +241737,17 @@ var init_saveImageFlow = __esm({
 });
 
 // src/routes/production/editImage/updateImageFlow.ts
-var import_express65, router65, updateImageFlow_default;
+var import_express66, router66, updateImageFlow_default;
 var init_updateImageFlow = __esm({
   "src/routes/production/editImage/updateImageFlow.ts"() {
     "use strict";
-    import_express65 = __toESM(require_express2());
+    import_express66 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router65 = import_express65.default.Router();
-    updateImageFlow_default = router65.post(
+    router66 = import_express66.default.Router();
+    updateImageFlow_default = router66.post(
       "/",
       validateFields({
         edges: external_exports.any(),
@@ -241185,18 +241777,18 @@ var init_updateImageFlow = __esm({
 });
 
 // src/routes/production/editImage/uploadImage.ts
-var import_express66, router66, uploadImage_default;
+var import_express67, router67, uploadImage_default;
 var init_uploadImage = __esm({
   "src/routes/production/editImage/uploadImage.ts"() {
     "use strict";
-    import_express66 = __toESM(require_express2());
+    import_express67 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_zod();
     init_dist_node();
-    router66 = import_express66.default.Router();
-    uploadImage_default = router66.post(
+    router67 = import_express67.default.Router();
+    uploadImage_default = router67.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -241236,17 +241828,17 @@ var init_uploadImage = __esm({
 });
 
 // src/routes/production/getFlowData.ts
-var import_express67, router67, getFlowData_default;
+var import_express68, router68, getFlowData_default;
 var init_getFlowData = __esm({
   "src/routes/production/getFlowData.ts"() {
     "use strict";
-    import_express67 = __toESM(require_express2());
+    import_express68 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router67 = import_express67.default.Router();
-    getFlowData_default = router67.post(
+    router68 = import_express68.default.Router();
+    getFlowData_default = router68.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -241376,17 +241968,17 @@ var init_getFlowData = __esm({
 });
 
 // src/routes/production/getStoryboardData.ts
-var import_express68, router68, getStoryboardData_default;
+var import_express69, router69, getStoryboardData_default;
 var init_getStoryboardData = __esm({
   "src/routes/production/getStoryboardData.ts"() {
     "use strict";
-    import_express68 = __toESM(require_express2());
+    import_express69 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router68 = import_express68.default.Router();
-    getStoryboardData_default = router68.post(
+    router69 = import_express69.default.Router();
+    getStoryboardData_default = router69.post(
       "/",
       validateFields({
         scriptId: external_exports.number(),
@@ -241450,17 +242042,17 @@ var init_getStoryboardData = __esm({
 });
 
 // src/routes/production/saveFlowData.ts
-var import_express69, router69, saveFlowData_default;
+var import_express70, router70, saveFlowData_default;
 var init_saveFlowData = __esm({
   "src/routes/production/saveFlowData.ts"() {
     "use strict";
-    import_express69 = __toESM(require_express2());
+    import_express70 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router69 = import_express69.default.Router();
-    saveFlowData_default = router69.post(
+    router70 = import_express70.default.Router();
+    saveFlowData_default = router70.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -241509,17 +242101,17 @@ var init_saveFlowData = __esm({
 });
 
 // src/routes/production/storyboard/addStoryboard.ts
-var import_express70, router70, addStoryboard_default;
+var import_express71, router71, addStoryboard_default;
 var init_addStoryboard = __esm({
   "src/routes/production/storyboard/addStoryboard.ts"() {
     "use strict";
-    import_express70 = __toESM(require_express2());
+    import_express71 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router70 = import_express70.default.Router();
-    addStoryboard_default = router70.post(
+    router71 = import_express71.default.Router();
+    addStoryboard_default = router71.post(
       "/",
       validateFields({
         prompt: external_exports.string(),
@@ -241557,17 +242149,17 @@ var init_addStoryboard = __esm({
 });
 
 // src/routes/production/storyboard/batchAddStoryboardInfo.ts
-var import_express71, router71, batchAddStoryboardInfo_default;
+var import_express72, router72, batchAddStoryboardInfo_default;
 var init_batchAddStoryboardInfo = __esm({
   "src/routes/production/storyboard/batchAddStoryboardInfo.ts"() {
     "use strict";
-    import_express71 = __toESM(require_express2());
+    import_express72 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router71 = import_express71.default.Router();
-    batchAddStoryboardInfo_default = router71.post(
+    router72 = import_express72.default.Router();
+    batchAddStoryboardInfo_default = router72.post(
       "/",
       validateFields({
         data: external_exports.array(
@@ -241662,17 +242254,17 @@ var init_batchAddStoryboardInfo = __esm({
 });
 
 // src/routes/production/storyboard/batchDelete.ts
-var import_express72, router72, batchDelete_default2;
+var import_express73, router73, batchDelete_default2;
 var init_batchDelete2 = __esm({
   "src/routes/production/storyboard/batchDelete.ts"() {
     "use strict";
-    import_express72 = __toESM(require_express2());
+    import_express73 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router72 = import_express72.default.Router();
-    batchDelete_default2 = router72.post(
+    router73 = import_express73.default.Router();
+    batchDelete_default2 = router73.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number()),
@@ -241696,19 +242288,19 @@ var init_batchDelete2 = __esm({
 });
 
 // src/routes/production/storyboard/batchGenerateImage.ts
-var import_express73, router73, batchGenerateImage_default;
+var import_express74, router74, batchGenerateImage_default;
 var init_batchGenerateImage = __esm({
   "src/routes/production/storyboard/batchGenerateImage.ts"() {
     "use strict";
-    import_express73 = __toESM(require_express2());
+    import_express74 = __toESM(require_express2());
     init_zod();
     init_dist_node();
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_enqueueImage();
-    router73 = import_express73.default.Router();
-    batchGenerateImage_default = router73.post(
+    router74 = import_express74.default.Router();
+    batchGenerateImage_default = router74.post(
       "/",
       validateFields({
         storyboardIds: external_exports.array(external_exports.number()),
@@ -241786,17 +242378,17 @@ var init_batchGenerateImage = __esm({
 });
 
 // src/routes/production/storyboard/downPreviewImage.ts
-var import_express74, import_sharp3, router74, downPreviewImage_default;
+var import_express75, import_sharp3, router75, downPreviewImage_default;
 var init_downPreviewImage = __esm({
   "src/routes/production/storyboard/downPreviewImage.ts"() {
     "use strict";
-    import_express74 = __toESM(require_express2());
+    import_express75 = __toESM(require_express2());
     init_utils3();
     init_zod();
     import_sharp3 = __toESM(require("sharp"));
     init_middleware();
-    router74 = import_express74.default.Router();
-    downPreviewImage_default = router74.post(
+    router75 = import_express75.default.Router();
+    downPreviewImage_default = router75.post(
       "/",
       validateFields({
         storyboardIds: external_exports.array(external_exports.number())
@@ -241882,17 +242474,17 @@ var init_downPreviewImage = __esm({
 });
 
 // src/routes/production/storyboard/editStoryboardInfo.ts
-var import_express75, router75, editStoryboardInfo_default;
+var import_express76, router76, editStoryboardInfo_default;
 var init_editStoryboardInfo = __esm({
   "src/routes/production/storyboard/editStoryboardInfo.ts"() {
     "use strict";
-    import_express75 = __toESM(require_express2());
+    import_express76 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router75 = import_express75.default.Router();
-    editStoryboardInfo_default = router75.post(
+    router76 = import_express76.default.Router();
+    editStoryboardInfo_default = router76.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -241912,17 +242504,17 @@ var init_editStoryboardInfo = __esm({
 });
 
 // src/routes/production/storyboard/getStoryboardData.ts
-var import_express76, router76, getStoryboardData_default2;
+var import_express77, router77, getStoryboardData_default2;
 var init_getStoryboardData2 = __esm({
   "src/routes/production/storyboard/getStoryboardData.ts"() {
     "use strict";
-    import_express76 = __toESM(require_express2());
+    import_express77 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router76 = import_express76.default.Router();
-    getStoryboardData_default2 = router76.post(
+    router77 = import_express77.default.Router();
+    getStoryboardData_default2 = router77.post(
       "/",
       validateFields({
         scriptId: external_exports.number(),
@@ -241960,17 +242552,17 @@ var init_getStoryboardData2 = __esm({
 });
 
 // src/routes/production/storyboard/pollingImage.ts
-var import_express77, router77, pollingImage_default2;
+var import_express78, router78, pollingImage_default2;
 var init_pollingImage2 = __esm({
   "src/routes/production/storyboard/pollingImage.ts"() {
     "use strict";
-    import_express77 = __toESM(require_express2());
+    import_express78 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router77 = import_express77.default.Router();
-    pollingImage_default2 = router77.post(
+    router78 = import_express78.default.Router();
+    pollingImage_default2 = router78.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -241991,18 +242583,18 @@ var init_pollingImage2 = __esm({
 });
 
 // src/routes/production/storyboard/previewImage.ts
-var import_express78, import_sharp4, router78, previewImage_default;
+var import_express79, import_sharp4, router79, previewImage_default;
 var init_previewImage = __esm({
   "src/routes/production/storyboard/previewImage.ts"() {
     "use strict";
-    import_express78 = __toESM(require_express2());
+    import_express79 = __toESM(require_express2());
     init_utils3();
     init_zod();
     import_sharp4 = __toESM(require("sharp"));
     init_responseFormat();
     init_middleware();
-    router78 = import_express78.default.Router();
-    previewImage_default = router78.post(
+    router79 = import_express79.default.Router();
+    previewImage_default = router79.post(
       "/",
       validateFields({
         storyboardIds: external_exports.array(external_exports.number())
@@ -242099,17 +242691,17 @@ var init_previewImage = __esm({
 });
 
 // src/routes/production/storyboard/removeFrame.ts
-var import_express79, router79, removeFrame_default;
+var import_express80, router80, removeFrame_default;
 var init_removeFrame = __esm({
   "src/routes/production/storyboard/removeFrame.ts"() {
     "use strict";
-    import_express79 = __toESM(require_express2());
+    import_express80 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router79 = import_express79.default.Router();
-    removeFrame_default = router79.post(
+    router80 = import_express80.default.Router();
+    removeFrame_default = router80.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -242130,17 +242722,17 @@ var init_removeFrame = __esm({
 });
 
 // src/routes/production/storyboard/updateStoryboardUrl.ts
-var import_express80, router80, updateStoryboardUrl_default;
+var import_express81, router81, updateStoryboardUrl_default;
 var init_updateStoryboardUrl = __esm({
   "src/routes/production/storyboard/updateStoryboardUrl.ts"() {
     "use strict";
-    import_express80 = __toESM(require_express2());
+    import_express81 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router80 = import_express80.default.Router();
-    updateStoryboardUrl_default = router80.post(
+    router81 = import_express81.default.Router();
+    updateStoryboardUrl_default = router81.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -242162,17 +242754,17 @@ var init_updateStoryboardUrl = __esm({
 });
 
 // src/routes/production/workbench/addTrack.ts
-var import_express81, router81, addTrack_default;
+var import_express82, router82, addTrack_default;
 var init_addTrack = __esm({
   "src/routes/production/workbench/addTrack.ts"() {
     "use strict";
-    import_express81 = __toESM(require_express2());
+    import_express82 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router81 = import_express81.default.Router();
-    addTrack_default = router81.post(
+    router82 = import_express82.default.Router();
+    addTrack_default = router82.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -242198,11 +242790,11 @@ var init_addTrack = __esm({
 });
 
 // src/routes/production/workbench/batchGeneratePrompt.ts
-var import_express82, import_promises5, import_path12, router82, batchGeneratePrompt_default;
+var import_express83, import_promises5, import_path12, router83, batchGeneratePrompt_default;
 var init_batchGeneratePrompt = __esm({
   "src/routes/production/workbench/batchGeneratePrompt.ts"() {
     "use strict";
-    import_express82 = __toESM(require_express2());
+    import_express83 = __toESM(require_express2());
     init_utils3();
     init_p_limit();
     init_zod();
@@ -242210,8 +242802,8 @@ var init_batchGeneratePrompt = __esm({
     init_middleware();
     import_promises5 = __toESM(require("fs/promises"));
     import_path12 = __toESM(require("path"));
-    router82 = import_express82.default.Router();
-    batchGeneratePrompt_default = router82.post(
+    router83 = import_express83.default.Router();
+    batchGeneratePrompt_default = router83.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -242447,18 +243039,18 @@ var init_enqueueVideo = __esm({
 });
 
 // src/routes/production/workbench/batchGenerateVideo.ts
-var import_express83, router83, batchGenerateVideo_default;
+var import_express84, router84, batchGenerateVideo_default;
 var init_batchGenerateVideo = __esm({
   "src/routes/production/workbench/batchGenerateVideo.ts"() {
     "use strict";
-    import_express83 = __toESM(require_express2());
+    import_express84 = __toESM(require_express2());
     init_zod();
     init_dist_node();
     init_responseFormat();
     init_middleware();
     init_enqueueVideo();
-    router83 = import_express83.default.Router();
-    batchGenerateVideo_default = router83.post(
+    router84 = import_express84.default.Router();
+    batchGenerateVideo_default = router84.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -242524,17 +243116,17 @@ var init_batchGenerateVideo = __esm({
 });
 
 // src/routes/production/workbench/checkVideoPrompt.ts
-var import_express84, router84, checkVideoPrompt_default;
+var import_express85, router85, checkVideoPrompt_default;
 var init_checkVideoPrompt = __esm({
   "src/routes/production/workbench/checkVideoPrompt.ts"() {
     "use strict";
-    import_express84 = __toESM(require_express2());
+    import_express85 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router84 = import_express84.default.Router();
-    checkVideoPrompt_default = router84.post(
+    router85 = import_express85.default.Router();
+    checkVideoPrompt_default = router85.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -242551,17 +243143,17 @@ var init_checkVideoPrompt = __esm({
 });
 
 // src/routes/production/workbench/checkVideoStateList.ts
-var import_express85, router85, checkVideoStateList_default;
+var import_express86, router86, checkVideoStateList_default;
 var init_checkVideoStateList = __esm({
   "src/routes/production/workbench/checkVideoStateList.ts"() {
     "use strict";
-    import_express85 = __toESM(require_express2());
+    import_express86 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router85 = import_express85.default.Router();
-    checkVideoStateList_default = router85.post(
+    router86 = import_express86.default.Router();
+    checkVideoStateList_default = router86.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -242587,17 +243179,17 @@ var init_checkVideoStateList = __esm({
 });
 
 // src/routes/production/workbench/deleteTrack.ts
-var import_express86, router86, deleteTrack_default;
+var import_express87, router87, deleteTrack_default;
 var init_deleteTrack = __esm({
   "src/routes/production/workbench/deleteTrack.ts"() {
     "use strict";
-    import_express86 = __toESM(require_express2());
+    import_express87 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router86 = import_express86.default.Router();
-    deleteTrack_default = router86.post(
+    router87 = import_express87.default.Router();
+    deleteTrack_default = router87.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -242615,17 +243207,17 @@ var init_deleteTrack = __esm({
 });
 
 // src/routes/production/workbench/delVideo.ts
-var import_express87, router87, delVideo_default;
+var import_express88, router88, delVideo_default;
 var init_delVideo = __esm({
   "src/routes/production/workbench/delVideo.ts"() {
     "use strict";
-    import_express87 = __toESM(require_express2());
+    import_express88 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router87 = import_express87.default.Router();
-    delVideo_default = router87.post(
+    router88 = import_express88.default.Router();
+    delVideo_default = router88.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -242643,18 +243235,18 @@ var init_delVideo = __esm({
 });
 
 // src/routes/production/workbench/generateVideo.ts
-var import_express88, router88, generateVideo_default;
+var import_express89, router89, generateVideo_default;
 var init_generateVideo = __esm({
   "src/routes/production/workbench/generateVideo.ts"() {
     "use strict";
-    import_express88 = __toESM(require_express2());
+    import_express89 = __toESM(require_express2());
     init_zod();
     init_dist_node();
     init_responseFormat();
     init_middleware();
     init_enqueueVideo();
-    router88 = import_express88.default.Router();
-    generateVideo_default = router88.post(
+    router89 = import_express89.default.Router();
+    generateVideo_default = router89.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -242699,19 +243291,19 @@ var init_generateVideo = __esm({
 });
 
 // src/routes/production/workbench/generateVideoPrompt.ts
-var import_express89, import_promises6, import_path13, router89, generateVideoPrompt_default;
+var import_express90, import_promises6, import_path13, router90, generateVideoPrompt_default;
 var init_generateVideoPrompt = __esm({
   "src/routes/production/workbench/generateVideoPrompt.ts"() {
     "use strict";
-    import_express89 = __toESM(require_express2());
+    import_express90 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     import_promises6 = __toESM(require("fs/promises"));
     import_path13 = __toESM(require("path"));
-    router89 = import_express89.default.Router();
-    generateVideoPrompt_default = router89.post(
+    router90 = import_express90.default.Router();
+    generateVideoPrompt_default = router90.post(
       "/",
       validateFields({
         trackId: external_exports.number(),
@@ -242868,17 +243460,17 @@ var init_generateVideoPrompt = __esm({
 });
 
 // src/routes/production/workbench/getAudioBindAssetsList.ts
-var import_express90, router90, getAudioBindAssetsList_default;
+var import_express91, router91, getAudioBindAssetsList_default;
 var init_getAudioBindAssetsList = __esm({
   "src/routes/production/workbench/getAudioBindAssetsList.ts"() {
     "use strict";
-    import_express90 = __toESM(require_express2());
+    import_express91 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router90 = import_express90.default.Router();
-    getAudioBindAssetsList_default = router90.post(
+    router91 = import_express91.default.Router();
+    getAudioBindAssetsList_default = router91.post(
       "/",
       validateFields({
         assetsIds: external_exports.array(external_exports.number())
@@ -242912,17 +243504,17 @@ var init_getAudioBindAssetsList = __esm({
 });
 
 // src/routes/production/workbench/getFileUrl.ts
-var import_express91, router91, getFileUrl_default;
+var import_express92, router92, getFileUrl_default;
 var init_getFileUrl = __esm({
   "src/routes/production/workbench/getFileUrl.ts"() {
     "use strict";
-    import_express91 = __toESM(require_express2());
+    import_express92 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router91 = import_express91.default.Router();
-    getFileUrl_default = router91.post(
+    router92 = import_express92.default.Router();
+    getFileUrl_default = router92.post(
       "/",
       validateFields({
         items: external_exports.array(external_exports.object({
@@ -242956,17 +243548,17 @@ var init_getFileUrl = __esm({
 });
 
 // src/routes/production/workbench/getGenerateData.ts
-var import_express92, router92, getGenerateData_default;
+var import_express93, router93, getGenerateData_default;
 var init_getGenerateData = __esm({
   "src/routes/production/workbench/getGenerateData.ts"() {
     "use strict";
-    import_express92 = __toESM(require_express2());
+    import_express93 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router92 = import_express92.default.Router();
-    getGenerateData_default = router92.post(
+    router93 = import_express93.default.Router();
+    getGenerateData_default = router93.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -243135,17 +243727,17 @@ var init_getGenerateData = __esm({
 });
 
 // src/routes/production/workbench/getVideoList.ts
-var import_express93, router93, getVideoList_default;
+var import_express94, router94, getVideoList_default;
 var init_getVideoList = __esm({
   "src/routes/production/workbench/getVideoList.ts"() {
     "use strict";
-    import_express93 = __toESM(require_express2());
+    import_express94 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router93 = import_express93.default.Router();
-    getVideoList_default = router93.post(
+    router94 = import_express94.default.Router();
+    getVideoList_default = router94.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -243174,17 +243766,17 @@ var init_getVideoList = __esm({
 });
 
 // src/routes/production/workbench/selectVideo.ts
-var import_express94, router94, selectVideo_default;
+var import_express95, router95, selectVideo_default;
 var init_selectVideo = __esm({
   "src/routes/production/workbench/selectVideo.ts"() {
     "use strict";
-    import_express94 = __toESM(require_express2());
+    import_express95 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router94 = import_express94.default.Router();
-    selectVideo_default = router94.post(
+    router95 = import_express95.default.Router();
+    selectVideo_default = router95.post(
       "/",
       validateFields({
         trackId: external_exports.number(),
@@ -243202,17 +243794,17 @@ var init_selectVideo = __esm({
 });
 
 // src/routes/production/workbench/updateVideoDuration.ts
-var import_express95, router95, updateVideoDuration_default;
+var import_express96, router96, updateVideoDuration_default;
 var init_updateVideoDuration = __esm({
   "src/routes/production/workbench/updateVideoDuration.ts"() {
     "use strict";
-    import_express95 = __toESM(require_express2());
+    import_express96 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router95 = import_express95.default.Router();
-    updateVideoDuration_default = router95.post(
+    router96 = import_express96.default.Router();
+    updateVideoDuration_default = router96.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -243230,17 +243822,17 @@ var init_updateVideoDuration = __esm({
 });
 
 // src/routes/production/workbench/updateVideoPrompt.ts
-var import_express96, router96, updateVideoPrompt_default;
+var import_express97, router97, updateVideoPrompt_default;
 var init_updateVideoPrompt = __esm({
   "src/routes/production/workbench/updateVideoPrompt.ts"() {
     "use strict";
-    import_express96 = __toESM(require_express2());
+    import_express97 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router96 = import_express96.default.Router();
-    updateVideoPrompt_default = router96.post(
+    router97 = import_express97.default.Router();
+    updateVideoPrompt_default = router97.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -243258,19 +243850,19 @@ var init_updateVideoPrompt = __esm({
 });
 
 // src/routes/project/addDirectorManual.ts
-var import_express97, import_fs8, import_path14, router97, addDirectorManual_default;
+var import_express98, import_fs8, import_path14, router98, addDirectorManual_default;
 var init_addDirectorManual = __esm({
   "src/routes/project/addDirectorManual.ts"() {
     "use strict";
-    import_express97 = __toESM(require_express2());
+    import_express98 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs8 = __toESM(require("fs"));
     import_path14 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router97 = import_express97.default.Router();
-    addDirectorManual_default = router97.post(
+    router98 = import_express98.default.Router();
+    addDirectorManual_default = router98.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -243348,17 +243940,17 @@ var init_addDirectorManual = __esm({
 });
 
 // src/routes/project/addProject.ts
-var import_express98, router98, addProject_default;
+var import_express99, router99, addProject_default;
 var init_addProject = __esm({
   "src/routes/project/addProject.ts"() {
     "use strict";
-    import_express98 = __toESM(require_express2());
+    import_express99 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router98 = import_express98.default.Router();
-    addProject_default = router98.post(
+    router99 = import_express99.default.Router();
+    addProject_default = router99.post(
       "/",
       validateFields({
         projectType: external_exports.string(),
@@ -243398,19 +243990,19 @@ var init_addProject = __esm({
 });
 
 // src/routes/project/addVisualManual.ts
-var import_express99, import_fs9, import_path15, router99, addVisualManual_default;
+var import_express100, import_fs9, import_path15, router100, addVisualManual_default;
 var init_addVisualManual = __esm({
   "src/routes/project/addVisualManual.ts"() {
     "use strict";
-    import_express99 = __toESM(require_express2());
+    import_express100 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs9 = __toESM(require("fs"));
     import_path15 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router99 = import_express99.default.Router();
-    addVisualManual_default = router99.post(
+    router100 = import_express100.default.Router();
+    addVisualManual_default = router100.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -243497,18 +244089,18 @@ var init_addVisualManual = __esm({
 });
 
 // src/routes/project/deleteDirectorManual.ts
-var import_express100, import_promises7, router100, deleteDirectorManual_default;
+var import_express101, import_promises7, router101, deleteDirectorManual_default;
 var init_deleteDirectorManual = __esm({
   "src/routes/project/deleteDirectorManual.ts"() {
     "use strict";
-    import_express100 = __toESM(require_express2());
+    import_express101 = __toESM(require_express2());
     init_utils3();
     import_promises7 = __toESM(require("node:fs/promises"));
     init_zod();
     init_responseFormat();
     init_middleware();
-    router100 = import_express100.default.Router();
-    deleteDirectorManual_default = router100.post(
+    router101 = import_express101.default.Router();
+    deleteDirectorManual_default = router101.post(
       "/",
       validateFields({
         name: external_exports.string()
@@ -243540,18 +244132,18 @@ var init_deleteDirectorManual = __esm({
 });
 
 // src/routes/project/deleteVisualManual.ts
-var import_express101, import_promises8, router101, deleteVisualManual_default;
+var import_express102, import_promises8, router102, deleteVisualManual_default;
 var init_deleteVisualManual = __esm({
   "src/routes/project/deleteVisualManual.ts"() {
     "use strict";
-    import_express101 = __toESM(require_express2());
+    import_express102 = __toESM(require_express2());
     init_utils3();
     import_promises8 = __toESM(require("node:fs/promises"));
     init_zod();
     init_responseFormat();
     init_middleware();
-    router101 = import_express101.default.Router();
-    deleteVisualManual_default = router101.post(
+    router102 = import_express102.default.Router();
+    deleteVisualManual_default = router102.post(
       "/",
       validateFields({
         name: external_exports.string()
@@ -243583,17 +244175,17 @@ var init_deleteVisualManual = __esm({
 });
 
 // src/routes/project/delProject.ts
-var import_express102, router102, delProject_default;
+var import_express103, router103, delProject_default;
 var init_delProject = __esm({
   "src/routes/project/delProject.ts"() {
     "use strict";
-    import_express102 = __toESM(require_express2());
+    import_express103 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router102 = import_express102.default.Router();
-    delProject_default = router102.post(
+    router103 = import_express103.default.Router();
+    delProject_default = router103.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -243625,6 +244217,8 @@ var init_delProject = __esm({
           await utils_default.db("generation_tasks").whereIn("id", generationTaskIds).delete();
         }
         await utils_default.db("project_events").where("project_id", id).delete();
+        await utils_default.db("composition_jobs").where("project_id", id).delete();
+        await utils_default.db("project_timelines").where("project_id", id).delete();
         const storyboardData = await utils_default.db("o_storyboard").where("projectId", id).select("id");
         const storyboardIds = storyboardData.map((item) => item.id);
         if (storyboardIds.length > 0) {
@@ -243654,19 +244248,19 @@ var init_delProject = __esm({
 });
 
 // src/routes/project/editDirectorlManual.ts
-var import_express103, import_fs10, import_path16, router103, editDirectorlManual_default;
+var import_express104, import_fs10, import_path16, router104, editDirectorlManual_default;
 var init_editDirectorlManual = __esm({
   "src/routes/project/editDirectorlManual.ts"() {
     "use strict";
-    import_express103 = __toESM(require_express2());
+    import_express104 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs10 = __toESM(require("fs"));
     import_path16 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router103 = import_express103.default.Router();
-    editDirectorlManual_default = router103.post(
+    router104 = import_express104.default.Router();
+    editDirectorlManual_default = router104.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -243746,17 +244340,17 @@ ${item.data}` : item.data;
 });
 
 // src/routes/project/editProject.ts
-var import_express104, router104, editProject_default;
+var import_express105, router105, editProject_default;
 var init_editProject = __esm({
   "src/routes/project/editProject.ts"() {
     "use strict";
-    import_express104 = __toESM(require_express2());
+    import_express105 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router104 = import_express104.default.Router();
-    editProject_default = router104.post(
+    router105 = import_express105.default.Router();
+    editProject_default = router105.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -243794,19 +244388,19 @@ var init_editProject = __esm({
 });
 
 // src/routes/project/editVisualManual.ts
-var import_express105, import_fs11, import_path17, router105, editVisualManual_default;
+var import_express106, import_fs11, import_path17, router106, editVisualManual_default;
 var init_editVisualManual = __esm({
   "src/routes/project/editVisualManual.ts"() {
     "use strict";
-    import_express105 = __toESM(require_express2());
+    import_express106 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs11 = __toESM(require("fs"));
     import_path17 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router105 = import_express105.default.Router();
-    editVisualManual_default = router105.post(
+    router106 = import_express106.default.Router();
+    editVisualManual_default = router106.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -243895,17 +244489,17 @@ ${item.data}` : item.data;
 });
 
 // src/routes/project/getModelDetails.ts
-var import_express106, router106, getModelDetails_default;
+var import_express107, router107, getModelDetails_default;
 var init_getModelDetails = __esm({
   "src/routes/project/getModelDetails.ts"() {
     "use strict";
-    import_express106 = __toESM(require_express2());
+    import_express107 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router106 = import_express106.default.Router();
-    getModelDetails_default = router106.post(
+    router107 = import_express107.default.Router();
+    getModelDetails_default = router107.post(
       "/",
       validateFields({
         key: external_exports.enum(["scriptAgent", "productionAgent"])
@@ -243924,15 +244518,15 @@ var init_getModelDetails = __esm({
 });
 
 // src/routes/project/getProject.ts
-var import_express107, router107, getProject_default;
+var import_express108, router108, getProject_default;
 var init_getProject = __esm({
   "src/routes/project/getProject.ts"() {
     "use strict";
-    import_express107 = __toESM(require_express2());
+    import_express108 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router107 = import_express107.default.Router();
-    getProject_default = router107.post("/", async (req, res) => {
+    router108 = import_express108.default.Router();
+    getProject_default = router108.post("/", async (req, res) => {
       const data = await utils_default.db("o_project").select("*");
       res.status(200).send(success3(data));
     });
@@ -243961,16 +244555,16 @@ async function readAllImages(imagesDir) {
     return [];
   }
 }
-var import_express108, import_fs12, import_path18, router108, DATA_MAP, getVisualManual_default;
+var import_express109, import_fs12, import_path18, router109, DATA_MAP, getVisualManual_default;
 var init_getVisualManual = __esm({
   "src/routes/project/getVisualManual.ts"() {
     "use strict";
-    import_express108 = __toESM(require_express2());
+    import_express109 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs12 = __toESM(require("fs"));
     import_path18 = __toESM(require("path"));
-    router108 = import_express108.default.Router();
+    router109 = import_express109.default.Router();
     DATA_MAP = [
       { label: "README", value: "README" },
       { label: "\u524D\u7F00", value: "prefix" },
@@ -243985,7 +244579,7 @@ var init_getVisualManual = __esm({
       { label: "\u6280\u6CD5-\u5BFC\u6F14\u89C4\u5212", value: "director_planning_style", subDir: "driector_skills" },
       { label: "\u6280\u6CD5-\u5206\u955C\u8868\u8BBE\u8BA1", value: "director_storyboard_table_style", subDir: "driector_skills" }
     ];
-    getVisualManual_default = router108.post("/", async (req, res) => {
+    getVisualManual_default = router109.post("/", async (req, res) => {
       try {
         const artPromptsDir = utils_default.getPath(["skills", "art_skills"]);
         const styleDirs = import_fs12.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
@@ -244047,22 +244641,22 @@ async function readAllImages2(imagesDir) {
     return [];
   }
 }
-var import_express109, import_fs13, import_path19, router109, DATA_MAP2, queryDirectorManual_default;
+var import_express110, import_fs13, import_path19, router110, DATA_MAP2, queryDirectorManual_default;
 var init_queryDirectorManual = __esm({
   "src/routes/project/queryDirectorManual.ts"() {
     "use strict";
-    import_express109 = __toESM(require_express2());
+    import_express110 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs13 = __toESM(require("fs"));
     import_path19 = __toESM(require("path"));
-    router109 = import_express109.default.Router();
+    router110 = import_express110.default.Router();
     DATA_MAP2 = [
       { label: "README", value: "README" },
       { label: "\u5BFC\u6F14\u89C4\u5212", value: "director_planning_narrative", subDir: "driector_skills" },
       { label: "\u5206\u955C\u8868", value: "director_storyboard_table_narrative", subDir: "driector_skills" }
     ];
-    queryDirectorManual_default = router109.post("/", async (req, res) => {
+    queryDirectorManual_default = router110.post("/", async (req, res) => {
       try {
         const artPromptsDir = utils_default.getPath(["skills", "story_skills"]);
         const styleDirs = import_fs13.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
@@ -244103,19 +244697,19 @@ var init_queryDirectorManual = __esm({
 });
 
 // src/routes/project/visualManual.ts
-var import_express110, import_fs14, import_path20, router110, visualManual_default;
+var import_express111, import_fs14, import_path20, router111, visualManual_default;
 var init_visualManual = __esm({
   "src/routes/project/visualManual.ts"() {
     "use strict";
-    import_express110 = __toESM(require_express2());
+    import_express111 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_getPath();
     import_fs14 = __toESM(require("fs"));
     import_path20 = __toESM(require("path"));
-    router110 = import_express110.default.Router();
-    visualManual_default = router110.post(
+    router111 = import_express111.default.Router();
+    visualManual_default = router111.post(
       "/",
       validateFields({
         type: external_exports.string()
@@ -244149,17 +244743,17 @@ var init_visualManual = __esm({
 });
 
 // src/routes/script/addScript.ts
-var import_express111, router111, addScript_default;
+var import_express112, router112, addScript_default;
 var init_addScript = __esm({
   "src/routes/script/addScript.ts"() {
     "use strict";
-    import_express111 = __toESM(require_express2());
+    import_express112 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router111 = import_express111.default.Router();
-    addScript_default = router111.post(
+    router112 = import_express112.default.Router();
+    addScript_default = router112.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -244195,17 +244789,17 @@ var init_addScript = __esm({
 });
 
 // src/routes/script/batchAddScript.ts
-var import_express112, router112, batchAddScript_default;
+var import_express113, router113, batchAddScript_default;
 var init_batchAddScript = __esm({
   "src/routes/script/batchAddScript.ts"() {
     "use strict";
-    import_express112 = __toESM(require_express2());
+    import_express113 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router112 = import_express112.default.Router();
-    batchAddScript_default = router112.post(
+    router113 = import_express113.default.Router();
+    batchAddScript_default = router113.post(
       "/",
       validateFields({
         data: external_exports.array(
@@ -244235,17 +244829,17 @@ var init_batchAddScript = __esm({
 });
 
 // src/routes/script/delScript.ts
-var import_express113, router113, delScript_default;
+var import_express114, router114, delScript_default;
 var init_delScript = __esm({
   "src/routes/script/delScript.ts"() {
     "use strict";
-    import_express113 = __toESM(require_express2());
+    import_express114 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router113 = import_express113.default.Router();
-    delScript_default = router113.post(
+    router114 = import_express114.default.Router();
+    delScript_default = router114.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -254452,17 +255046,17 @@ var require_compressing = __commonJS({
 });
 
 // src/routes/script/exportScript.ts
-var import_express114, import_compressing, router114, exportScript_default;
+var import_express115, import_compressing, router115, exportScript_default;
 var init_exportScript = __esm({
   "src/routes/script/exportScript.ts"() {
     "use strict";
-    import_express114 = __toESM(require_express2());
+    import_express115 = __toESM(require_express2());
     init_utils3();
     init_zod();
     import_compressing = __toESM(require_compressing());
     init_middleware();
-    router114 = import_express114.default.Router();
-    exportScript_default = router114.post(
+    router115 = import_express115.default.Router();
+    exportScript_default = router115.post(
       "/",
       validateFields({
         id: external_exports.array(external_exports.number())
@@ -254495,17 +255089,17 @@ function chunkArray(arr, groupSize) {
   }
   return groupChunks;
 }
-var import_express115, router115, NewAssetSchema, ExistingAssetRefSchema, AssetSchema, extractAssets_default;
+var import_express116, router116, NewAssetSchema, ExistingAssetRefSchema, AssetSchema, extractAssets_default;
 var init_extractAssets = __esm({
   "src/routes/script/extractAssets.ts"() {
     "use strict";
-    import_express115 = __toESM(require_express2());
+    import_express116 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_dist22();
-    router115 = import_express115.default.Router();
+    router116 = import_express116.default.Router();
     NewAssetSchema = external_exports.object({
       name: external_exports.string().describe("\u8D44\u4EA7\u540D\u79F0,\u4EC5\u4E3A\u540D\u79F0\u4E0D\u505A\u5176\u4ED6\u4EFB\u4F55\u8868\u8FF0"),
       desc: external_exports.string().describe("\u8D44\u4EA7\u63CF\u8FF0"),
@@ -254521,7 +255115,7 @@ var init_extractAssets = __esm({
       desc: external_exports.string().describe("\u8D44\u4EA7\u63CF\u8FF0"),
       type: external_exports.enum(["role", "tool", "scene"]).describe("\u8D44\u4EA7\u7C7B\u578B")
     });
-    extractAssets_default = router115.post(
+    extractAssets_default = router116.post(
       "/",
       validateFields({
         scriptIds: external_exports.array(external_exports.number()),
@@ -254688,17 +255282,17 @@ ${scriptsContent}`
 });
 
 // src/routes/script/getAiRegex.ts
-var import_express116, router116, getAiRegex_default;
+var import_express117, router117, getAiRegex_default;
 var init_getAiRegex = __esm({
   "src/routes/script/getAiRegex.ts"() {
     "use strict";
-    import_express116 = __toESM(require_express2());
+    import_express117 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router116 = import_express116.default.Router();
-    getAiRegex_default = router116.post(
+    router117 = import_express117.default.Router();
+    getAiRegex_default = router117.post(
       "/",
       validateFields({
         content: external_exports.string()
@@ -254730,17 +255324,17 @@ var init_getAiRegex = __esm({
 });
 
 // src/routes/script/getScrptApi.ts
-var import_express117, router117, getScrptApi_default;
+var import_express118, router118, getScrptApi_default;
 var init_getScrptApi = __esm({
   "src/routes/script/getScrptApi.ts"() {
     "use strict";
-    import_express117 = __toESM(require_express2());
+    import_express118 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router117 = import_express117.default.Router();
-    getScrptApi_default = router117.post(
+    router118 = import_express118.default.Router();
+    getScrptApi_default = router118.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -254781,17 +255375,17 @@ var init_getScrptApi = __esm({
 });
 
 // src/routes/script/pollScriptAssets.ts
-var import_express118, router118, pollScriptAssets_default;
+var import_express119, router119, pollScriptAssets_default;
 var init_pollScriptAssets = __esm({
   "src/routes/script/pollScriptAssets.ts"() {
     "use strict";
-    import_express118 = __toESM(require_express2());
+    import_express119 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router118 = import_express118.default.Router();
-    pollScriptAssets_default = router118.post(
+    router119 = import_express119.default.Router();
+    pollScriptAssets_default = router119.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -254806,17 +255400,17 @@ var init_pollScriptAssets = __esm({
 });
 
 // src/routes/script/updateScript.ts
-var import_express119, router119, updateScript_default;
+var import_express120, router120, updateScript_default;
 var init_updateScript = __esm({
   "src/routes/script/updateScript.ts"() {
     "use strict";
-    import_express119 = __toESM(require_express2());
+    import_express120 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router119 = import_express119.default.Router();
-    updateScript_default = router119.post(
+    router120 = import_express120.default.Router();
+    updateScript_default = router120.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -254850,17 +255444,17 @@ var init_updateScript = __esm({
 });
 
 // src/routes/scriptAgent/getPlanData.ts
-var import_express120, router120, getPlanData_default;
+var import_express121, router121, getPlanData_default;
 var init_getPlanData = __esm({
   "src/routes/scriptAgent/getPlanData.ts"() {
     "use strict";
-    import_express120 = __toESM(require_express2());
+    import_express121 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router120 = import_express120.default.Router();
-    getPlanData_default = router120.post(
+    router121 = import_express121.default.Router();
+    getPlanData_default = router121.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -254897,17 +255491,17 @@ var init_getPlanData = __esm({
 });
 
 // src/routes/scriptAgent/setPlanData.ts
-var import_express121, router121, setPlanData_default;
+var import_express122, router122, setPlanData_default;
 var init_setPlanData = __esm({
   "src/routes/scriptAgent/setPlanData.ts"() {
     "use strict";
-    import_express121 = __toESM(require_express2());
+    import_express122 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router121 = import_express121.default.Router();
-    setPlanData_default = router121.post(
+    router122 = import_express122.default.Router();
+    setPlanData_default = router122.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -254940,17 +255534,17 @@ var init_setPlanData = __esm({
 });
 
 // src/routes/scriptAgent/updateData.ts
-var import_express122, router122, updateData_default;
+var import_express123, router123, updateData_default;
 var init_updateData = __esm({
   "src/routes/scriptAgent/updateData.ts"() {
     "use strict";
-    import_express122 = __toESM(require_express2());
+    import_express123 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router122 = import_express122.default.Router();
-    updateData_default = router122.post(
+    router123 = import_express123.default.Router();
+    updateData_default = router123.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -254977,17 +255571,17 @@ var init_updateData = __esm({
 });
 
 // src/routes/setting/about/checkUpdate.ts
-var import_express123, import_fs15, import_path21, router123, APP_VERSION2, checkUpdate_default;
+var import_express124, import_fs15, import_path21, router124, APP_VERSION2, checkUpdate_default;
 var init_checkUpdate = __esm({
   "src/routes/setting/about/checkUpdate.ts"() {
     "use strict";
-    import_express123 = __toESM(require_express2());
+    import_express124 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
     import_fs15 = __toESM(require("fs"));
     import_path21 = __toESM(require("path"));
-    router123 = import_express123.default.Router();
+    router124 = import_express124.default.Router();
     APP_VERSION2 = (() => {
       if (true) {
         return "1.1.8";
@@ -254996,7 +255590,7 @@ var init_checkUpdate = __esm({
       const pkg = JSON.parse(import_fs15.default.readFileSync(pkgPath, "utf8"));
       return pkg.version;
     })();
-    checkUpdate_default = router123.post(
+    checkUpdate_default = router124.post(
       "/",
       validateFields({
         source: external_exports.enum(["toonflow", "github", "gitee", "atomgit"]),
@@ -255038,11 +255632,11 @@ var init_checkUpdate = __esm({
 });
 
 // src/routes/setting/about/downloadApp.ts
-var import_express124, import_fs16, import_compressing2, router124, downloadApp_default;
+var import_express125, import_fs16, import_compressing2, router125, downloadApp_default;
 var init_downloadApp = __esm({
   "src/routes/setting/about/downloadApp.ts"() {
     "use strict";
-    import_express124 = __toESM(require_express2());
+    import_express125 = __toESM(require_express2());
     init_zod();
     init_middleware();
     init_utils3();
@@ -255050,8 +255644,8 @@ var init_downloadApp = __esm({
     init_axios2();
     import_compressing2 = __toESM(require_compressing());
     init_responseFormat();
-    router124 = import_express124.default.Router();
-    downloadApp_default = router124.post(
+    router125 = import_express125.default.Router();
+    downloadApp_default = router125.post(
       "/",
       validateFields({
         url: zod_default.url(),
@@ -255079,17 +255673,17 @@ var init_downloadApp = __esm({
 });
 
 // src/routes/setting/agentDeploy/agentSetKey.ts
-var import_express125, router125, agentSetKey_default;
+var import_express126, router126, agentSetKey_default;
 var init_agentSetKey = __esm({
   "src/routes/setting/agentDeploy/agentSetKey.ts"() {
     "use strict";
-    import_express125 = __toESM(require_express2());
+    import_express126 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router125 = import_express125.default.Router();
-    agentSetKey_default = router125.post(
+    router126 = import_express126.default.Router();
+    agentSetKey_default = router126.post(
       "/",
       validateFields({
         key: external_exports.string().optional()
@@ -255138,17 +255732,17 @@ var init_agentSetKey = __esm({
 });
 
 // src/routes/setting/agentDeploy/deployAgentModel.ts
-var import_express126, router126, deployAgentModel_default;
+var import_express127, router127, deployAgentModel_default;
 var init_deployAgentModel = __esm({
   "src/routes/setting/agentDeploy/deployAgentModel.ts"() {
     "use strict";
-    import_express126 = __toESM(require_express2());
+    import_express127 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router126 = import_express126.default.Router();
-    deployAgentModel_default = router126.post(
+    router127 = import_express127.default.Router();
+    deployAgentModel_default = router127.post(
       "/",
       validateFields({
         items: external_exports.array(
@@ -255177,15 +255771,15 @@ var init_deployAgentModel = __esm({
 });
 
 // src/routes/setting/agentDeploy/getAgentDeploy.ts
-var import_express127, router127, getAgentDeploy_default;
+var import_express128, router128, getAgentDeploy_default;
 var init_getAgentDeploy = __esm({
   "src/routes/setting/agentDeploy/getAgentDeploy.ts"() {
     "use strict";
-    import_express127 = __toESM(require_express2());
+    import_express128 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router127 = import_express127.default.Router();
-    getAgentDeploy_default = router127.post("/", async (req, res) => {
+    router128 = import_express128.default.Router();
+    getAgentDeploy_default = router128.post("/", async (req, res) => {
       const allData = await utils_default.db("o_agentDeploy").leftJoin("o_vendorConfig", "o_vendorConfig.id", "o_agentDeploy.vendorId").select("o_agentDeploy.*");
       const qrdinaryData = allData.filter((item) => !item.key?.includes(":"));
       const advancedData = allData.filter((item) => item.key?.includes(":") || item.key == "universalAi");
@@ -255195,15 +255789,15 @@ var init_getAgentDeploy = __esm({
 });
 
 // src/routes/setting/agentDeploy/getAgentUseMode.ts
-var import_express128, router128, getAgentUseMode_default;
+var import_express129, router129, getAgentUseMode_default;
 var init_getAgentUseMode = __esm({
   "src/routes/setting/agentDeploy/getAgentUseMode.ts"() {
     "use strict";
-    import_express128 = __toESM(require_express2());
+    import_express129 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router128 = import_express128.default.Router();
-    getAgentUseMode_default = router128.get("/", async (req, res) => {
+    router129 = import_express129.default.Router();
+    getAgentUseMode_default = router129.get("/", async (req, res) => {
       const useMode = await utils_default.db("o_setting").where("key", "agentUseMode").first();
       console.log("%c Line:9 \u{1F353} useMode", "background:#33a5ff", useMode);
       res.status(200).send(success3(useMode?.value || "0"));
@@ -255212,17 +255806,17 @@ var init_getAgentUseMode = __esm({
 });
 
 // src/routes/setting/agentDeploy/updateAgentModel.ts
-var import_express129, router129, updateAgentModel_default;
+var import_express130, router130, updateAgentModel_default;
 var init_updateAgentModel = __esm({
   "src/routes/setting/agentDeploy/updateAgentModel.ts"() {
     "use strict";
-    import_express129 = __toESM(require_express2());
+    import_express130 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router129 = import_express129.default.Router();
-    updateAgentModel_default = router129.post(
+    router130 = import_express130.default.Router();
+    updateAgentModel_default = router130.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -255244,17 +255838,17 @@ var init_updateAgentModel = __esm({
 });
 
 // src/routes/setting/agentDeploy/updateUseMode.ts
-var import_express130, router130, updateUseMode_default;
+var import_express131, router131, updateUseMode_default;
 var init_updateUseMode = __esm({
   "src/routes/setting/agentDeploy/updateUseMode.ts"() {
     "use strict";
-    import_express130 = __toESM(require_express2());
+    import_express131 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router130 = import_express130.default.Router();
-    updateUseMode_default = router130.post(
+    router131 = import_express131.default.Router();
+    updateUseMode_default = router131.post(
       "/",
       validateFields({
         agentUseMode: external_exports.string()
@@ -255271,16 +255865,16 @@ var init_updateUseMode = __esm({
 });
 
 // src/routes/setting/dbConfig/clearData.ts
-var import_express131, router131, clearData_default;
+var import_express132, router132, clearData_default;
 var init_clearData = __esm({
   "src/routes/setting/dbConfig/clearData.ts"() {
     "use strict";
-    import_express131 = __toESM(require_express2());
+    import_express132 = __toESM(require_express2());
     init_responseFormat();
     init_db();
     init_initDB();
-    router131 = import_express131.default.Router();
-    clearData_default = router131.get("/", async (req, res) => {
+    router132 = import_express132.default.Router();
+    clearData_default = router132.get("/", async (req, res) => {
       try {
         const tables = await db.raw(
           `SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'knex_%'`
@@ -255300,15 +255894,15 @@ var init_clearData = __esm({
 });
 
 // src/routes/setting/dbConfig/clearTable.ts
-var import_express132, router132, clearTable_default;
+var import_express133, router133, clearTable_default;
 var init_clearTable = __esm({
   "src/routes/setting/dbConfig/clearTable.ts"() {
     "use strict";
-    import_express132 = __toESM(require_express2());
+    import_express133 = __toESM(require_express2());
     init_responseFormat();
     init_db();
-    router132 = import_express132.default.Router();
-    clearTable_default = router132.post("/", async (req, res) => {
+    router133 = import_express133.default.Router();
+    clearTable_default = router133.post("/", async (req, res) => {
       try {
         const { tableName } = req.body;
         if (!tableName || typeof tableName !== "string") {
@@ -255331,15 +255925,15 @@ var init_clearTable = __esm({
 });
 
 // src/routes/setting/dbConfig/dbInfo.ts
-var import_express133, router133, dbInfo_default;
+var import_express134, router134, dbInfo_default;
 var init_dbInfo = __esm({
   "src/routes/setting/dbConfig/dbInfo.ts"() {
     "use strict";
-    import_express133 = __toESM(require_express2());
+    import_express134 = __toESM(require_express2());
     init_responseFormat();
     init_db();
-    router133 = import_express133.default.Router();
-    dbInfo_default = router133.get("/", async (req, res) => {
+    router134 = import_express134.default.Router();
+    dbInfo_default = router134.get("/", async (req, res) => {
       try {
         const tables = await db.raw(
           `SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'knex_%'`
@@ -255361,15 +255955,15 @@ var init_dbInfo = __esm({
 });
 
 // src/routes/setting/dbConfig/exportData.ts
-var import_express134, router134, exportData_default;
+var import_express135, router135, exportData_default;
 var init_exportData = __esm({
   "src/routes/setting/dbConfig/exportData.ts"() {
     "use strict";
-    import_express134 = __toESM(require_express2());
+    import_express135 = __toESM(require_express2());
     init_responseFormat();
     init_db();
-    router134 = import_express134.default.Router();
-    exportData_default = router134.get("/", async (req, res) => {
+    router135 = import_express135.default.Router();
+    exportData_default = router135.get("/", async (req, res) => {
       try {
         const tables = await db.raw(
           `SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'knex_%'`
@@ -255393,16 +255987,16 @@ var init_exportData = __esm({
 });
 
 // src/routes/setting/dbConfig/importData.ts
-var import_express135, router135, importData_default;
+var import_express136, router136, importData_default;
 var init_importData = __esm({
   "src/routes/setting/dbConfig/importData.ts"() {
     "use strict";
-    import_express135 = __toESM(require_express2());
+    import_express136 = __toESM(require_express2());
     init_responseFormat();
     init_db();
     init_initDB();
-    router135 = import_express135.default.Router();
-    importData_default = router135.post("/", async (req, res) => {
+    router136 = import_express136.default.Router();
+    importData_default = router136.post("/", async (req, res) => {
       try {
         const { tables: importTables } = req.body;
         if (!importTables || typeof importTables !== "object") {
@@ -255441,15 +256035,15 @@ var init_importData = __esm({
 });
 
 // src/routes/setting/dev/getSwitchAiDevTool.ts
-var import_express136, router136, getSwitchAiDevTool_default;
+var import_express137, router137, getSwitchAiDevTool_default;
 var init_getSwitchAiDevTool = __esm({
   "src/routes/setting/dev/getSwitchAiDevTool.ts"() {
     "use strict";
-    import_express136 = __toESM(require_express2());
+    import_express137 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router136 = import_express136.default.Router();
-    getSwitchAiDevTool_default = router136.get("/", async (req, res) => {
+    router137 = import_express137.default.Router();
+    getSwitchAiDevTool_default = router137.get("/", async (req, res) => {
       const switchAiDevTool = await utils_default.db("o_setting").where("key", "switchAiDevTool").first();
       res.status(200).send(success3(switchAiDevTool?.value || "0"));
     });
@@ -255457,17 +256051,17 @@ var init_getSwitchAiDevTool = __esm({
 });
 
 // src/routes/setting/dev/updateSwitchAiDevTool.ts
-var import_express137, router137, updateSwitchAiDevTool_default;
+var import_express138, router138, updateSwitchAiDevTool_default;
 var init_updateSwitchAiDevTool = __esm({
   "src/routes/setting/dev/updateSwitchAiDevTool.ts"() {
     "use strict";
-    import_express137 = __toESM(require_express2());
+    import_express138 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router137 = import_express137.default.Router();
-    updateSwitchAiDevTool_default = router137.post(
+    router138 = import_express138.default.Router();
+    updateSwitchAiDevTool_default = router138.post(
       "/",
       validateFields({
         switchAiDevTool: external_exports.string()
@@ -255484,19 +256078,19 @@ var init_updateSwitchAiDevTool = __esm({
 });
 
 // src/routes/setting/fileManagement/openFolder.ts
-var import_express138, import_child_process, router138, openFolder_default;
+var import_express139, import_child_process, router139, openFolder_default;
 var init_openFolder = __esm({
   "src/routes/setting/fileManagement/openFolder.ts"() {
     "use strict";
-    import_express138 = __toESM(require_express2());
+    import_express139 = __toESM(require_express2());
     init_zod();
     import_child_process = require("child_process");
     init_responseFormat();
     init_middleware();
     init_getPath();
     init_utils3();
-    router138 = import_express138.default.Router();
-    openFolder_default = router138.post(
+    router139 = import_express139.default.Router();
+    openFolder_default = router139.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -255521,14 +256115,14 @@ var init_openFolder = __esm({
 });
 
 // src/routes/setting/getTextModel.ts
-var import_express139, router139, getTextModel_default;
+var import_express140, router140, getTextModel_default;
 var init_getTextModel = __esm({
   "src/routes/setting/getTextModel.ts"() {
     "use strict";
-    import_express139 = __toESM(require_express2());
+    import_express140 = __toESM(require_express2());
     init_responseFormat();
-    router139 = import_express139.default.Router();
-    getTextModel_default = router139.post(
+    router140 = import_express140.default.Router();
+    getTextModel_default = router140.post(
       "/",
       async (req, res) => {
         res.status(200).send(success3("123"));
@@ -255538,15 +256132,15 @@ var init_getTextModel = __esm({
 });
 
 // src/routes/setting/loginConfig/getUser.ts
-var import_express140, router140, getUser_default;
+var import_express141, router141, getUser_default;
 var init_getUser = __esm({
   "src/routes/setting/loginConfig/getUser.ts"() {
     "use strict";
-    import_express140 = __toESM(require_express2());
+    import_express141 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router140 = import_express140.default.Router();
-    getUser_default = router140.get("/", async (req, res) => {
+    router141 = import_express141.default.Router();
+    getUser_default = router141.get("/", async (req, res) => {
       const data = await utils_default.db("o_user").select("*").first();
       res.status(200).send(success3(data));
     });
@@ -255554,17 +256148,17 @@ var init_getUser = __esm({
 });
 
 // src/routes/setting/loginConfig/updateUserPwd.ts
-var import_express141, router141, updateUserPwd_default;
+var import_express142, router142, updateUserPwd_default;
 var init_updateUserPwd = __esm({
   "src/routes/setting/loginConfig/updateUserPwd.ts"() {
     "use strict";
-    import_express141 = __toESM(require_express2());
+    import_express142 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router141 = import_express141.default.Router();
-    updateUserPwd_default = router141.post(
+    router142 = import_express142.default.Router();
+    updateUserPwd_default = router142.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -255584,15 +256178,15 @@ var init_updateUserPwd = __esm({
 });
 
 // src/routes/setting/memoryConfig/delAllMemory.ts
-var import_express142, router142, delAllMemory_default;
+var import_express143, router143, delAllMemory_default;
 var init_delAllMemory = __esm({
   "src/routes/setting/memoryConfig/delAllMemory.ts"() {
     "use strict";
-    import_express142 = __toESM(require_express2());
+    import_express143 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router142 = import_express142.default.Router();
-    delAllMemory_default = router142.post("/", async (req, res) => {
+    router143 = import_express143.default.Router();
+    delAllMemory_default = router143.post("/", async (req, res) => {
       await utils_default.db("memories").del();
       res.status(200).send(success3(true));
     });
@@ -255600,15 +256194,15 @@ var init_delAllMemory = __esm({
 });
 
 // src/routes/setting/memoryConfig/getMemory.ts
-var import_express143, router143, getMemory_default2;
+var import_express144, router144, getMemory_default2;
 var init_getMemory2 = __esm({
   "src/routes/setting/memoryConfig/getMemory.ts"() {
     "use strict";
-    import_express143 = __toESM(require_express2());
+    import_express144 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router143 = import_express143.default.Router();
-    getMemory_default2 = router143.get("/", async (req, res) => {
+    router144 = import_express144.default.Router();
+    getMemory_default2 = router144.get("/", async (req, res) => {
       const settingData = await utils_default.db("o_setting").whereIn("key", [
         "messagesPerSummary",
         "shortTermLimit",
@@ -255638,17 +256232,17 @@ var init_getMemory2 = __esm({
 });
 
 // src/routes/setting/memoryConfig/sureMemory.ts
-var import_express144, router144, sureMemory_default;
+var import_express145, router145, sureMemory_default;
 var init_sureMemory = __esm({
   "src/routes/setting/memoryConfig/sureMemory.ts"() {
     "use strict";
-    import_express144 = __toESM(require_express2());
+    import_express145 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router144 = import_express144.default.Router();
-    sureMemory_default = router144.post(
+    router145 = import_express145.default.Router();
+    sureMemory_default = router145.post(
       "/",
       validateFields({
         messagesPerSummary: external_exports.number(),
@@ -255685,17 +256279,17 @@ var init_sureMemory = __esm({
 });
 
 // src/routes/setting/modelMap/bindingPrompt.ts
-var import_express145, router145, bindingPrompt_default;
+var import_express146, router146, bindingPrompt_default;
 var init_bindingPrompt = __esm({
   "src/routes/setting/modelMap/bindingPrompt.ts"() {
     "use strict";
-    import_express145 = __toESM(require_express2());
+    import_express146 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router145 = import_express145.default.Router();
-    bindingPrompt_default = router145.post(
+    router146 = import_express146.default.Router();
+    bindingPrompt_default = router146.post(
       "/",
       validateFields({
         vendorId: external_exports.string(),
@@ -255719,19 +256313,19 @@ var init_bindingPrompt = __esm({
 });
 
 // src/routes/setting/modelMap/deletePrompt.ts
-var import_express146, import_promises9, import_path22, router146, deletePrompt_default;
+var import_express147, import_promises9, import_path22, router147, deletePrompt_default;
 var init_deletePrompt = __esm({
   "src/routes/setting/modelMap/deletePrompt.ts"() {
     "use strict";
-    import_express146 = __toESM(require_express2());
+    import_express147 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
     import_promises9 = __toESM(require("fs/promises"));
     import_path22 = __toESM(require("path"));
-    router146 = import_express146.default.Router();
-    deletePrompt_default = router146.post(
+    router147 = import_express147.default.Router();
+    deletePrompt_default = router147.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -255757,15 +256351,15 @@ var init_deletePrompt = __esm({
 });
 
 // src/routes/setting/modelMap/getImageAndVideoModel.ts
-var import_express147, router147, getImageAndVideoModel_default;
+var import_express148, router148, getImageAndVideoModel_default;
 var init_getImageAndVideoModel = __esm({
   "src/routes/setting/modelMap/getImageAndVideoModel.ts"() {
     "use strict";
-    import_express147 = __toESM(require_express2());
+    import_express148 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router147 = import_express147.default.Router();
-    getImageAndVideoModel_default = router147.post("/", async (req, res) => {
+    router148 = import_express148.default.Router();
+    getImageAndVideoModel_default = router148.post("/", async (req, res) => {
       const dataList = await utils_default.db("o_vendorConfig").select("id").where("enable", 1);
       if (!dataList || dataList.length === 0) {
         return res.status(404).send({ error: "\u6A21\u578B\u672A\u627E\u5230" });
@@ -255795,18 +256389,18 @@ var init_getImageAndVideoModel = __esm({
 });
 
 // src/routes/setting/modelMap/getPromptList.ts
-var import_express148, import_fast_glob3, import_promises10, import_path23, router148, getPromptList_default;
+var import_express149, import_fast_glob3, import_promises10, import_path23, router149, getPromptList_default;
 var init_getPromptList = __esm({
   "src/routes/setting/modelMap/getPromptList.ts"() {
     "use strict";
-    import_express148 = __toESM(require_express2());
+    import_express149 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     import_fast_glob3 = __toESM(require_out4());
     import_promises10 = __toESM(require("fs/promises"));
     import_path23 = __toESM(require("path"));
-    router148 = import_express148.default.Router();
-    getPromptList_default = router148.get("/", async (req, res) => {
+    router149 = import_express149.default.Router();
+    getPromptList_default = router149.get("/", async (req, res) => {
       const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
       const entries = await (0, import_fast_glob3.default)("**/*.md", {
         cwd: modelPromptRoot.replace(/\\/g, "/"),
@@ -255827,19 +256421,19 @@ var init_getPromptList = __esm({
 });
 
 // src/routes/setting/modelMap/savePrompt.ts
-var import_express149, import_promises11, import_path24, router149, savePrompt_default;
+var import_express150, import_promises11, import_path24, router150, savePrompt_default;
 var init_savePrompt = __esm({
   "src/routes/setting/modelMap/savePrompt.ts"() {
     "use strict";
-    import_express149 = __toESM(require_express2());
+    import_express150 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
     import_promises11 = __toESM(require("fs/promises"));
     import_path24 = __toESM(require("path"));
-    router149 = import_express149.default.Router();
-    savePrompt_default = router149.post(
+    router150 = import_express150.default.Router();
+    savePrompt_default = router150.post(
       "/",
       validateFields({
         name: external_exports.string().min(1),
@@ -255860,19 +256454,19 @@ var init_savePrompt = __esm({
 });
 
 // src/routes/setting/modelMap/updatePrompt.ts
-var import_express150, import_promises12, import_path25, router150, updatePrompt_default;
+var import_express151, import_promises12, import_path25, router151, updatePrompt_default;
 var init_updatePrompt = __esm({
   "src/routes/setting/modelMap/updatePrompt.ts"() {
     "use strict";
-    import_express150 = __toESM(require_express2());
+    import_express151 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
     import_promises12 = __toESM(require("fs/promises"));
     import_path25 = __toESM(require("path"));
-    router150 = import_express150.default.Router();
-    updatePrompt_default = router150.post(
+    router151 = import_express151.default.Router();
+    updatePrompt_default = router151.post(
       "/",
       validateFields({
         name: external_exports.string().min(1),
@@ -255901,15 +256495,15 @@ var init_updatePrompt = __esm({
 });
 
 // src/routes/setting/promptManage/getPrompt.ts
-var import_express151, router151, getPrompt_default;
+var import_express152, router152, getPrompt_default;
 var init_getPrompt = __esm({
   "src/routes/setting/promptManage/getPrompt.ts"() {
     "use strict";
-    import_express151 = __toESM(require_express2());
+    import_express152 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router151 = import_express151.default.Router();
-    getPrompt_default = router151.post("/", async (req, res) => {
+    router152 = import_express152.default.Router();
+    getPrompt_default = router152.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_prompt").select("*");
       const data = await Promise.all(
         list2.map(async (item) => {
@@ -255925,17 +256519,17 @@ var init_getPrompt = __esm({
 });
 
 // src/routes/setting/promptManage/updatePrompt.ts
-var import_express152, router152, updatePrompt_default2;
+var import_express153, router153, updatePrompt_default2;
 var init_updatePrompt2 = __esm({
   "src/routes/setting/promptManage/updatePrompt.ts"() {
     "use strict";
-    import_express152 = __toESM(require_express2());
+    import_express153 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router152 = import_express152.default.Router();
-    updatePrompt_default2 = router152.post(
+    router153 = import_express153.default.Router();
+    updatePrompt_default2 = router153.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -255952,11 +256546,11 @@ var init_updatePrompt2 = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillContent.ts
-var import_express153, import_path26, fs31, router153, getSkillContent_default;
+var import_express154, import_path26, fs31, router154, getSkillContent_default;
 var init_getSkillContent = __esm({
   "src/routes/setting/skillManagement/getSkillContent.ts"() {
     "use strict";
-    import_express153 = __toESM(require_express2());
+    import_express154 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
@@ -255964,8 +256558,8 @@ var init_getSkillContent = __esm({
     init_utils3();
     import_path26 = __toESM(require("path"));
     fs31 = __toESM(require("fs"));
-    router153 = import_express153.default.Router();
-    getSkillContent_default = router153.post(
+    router154 = import_express154.default.Router();
+    getSkillContent_default = router154.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -255985,16 +256579,16 @@ var init_getSkillContent = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillList.ts
-var import_express154, import_fast_glob4, router154, getSkillList_default;
+var import_express155, import_fast_glob4, router155, getSkillList_default;
 var init_getSkillList = __esm({
   "src/routes/setting/skillManagement/getSkillList.ts"() {
     "use strict";
-    import_express154 = __toESM(require_express2());
+    import_express155 = __toESM(require_express2());
     init_responseFormat();
     import_fast_glob4 = __toESM(require_out4());
     init_utils3();
-    router154 = import_express154.default.Router();
-    getSkillList_default = router154.post("/", async (req, res) => {
+    router155 = import_express155.default.Router();
+    getSkillList_default = router155.post("/", async (req, res) => {
       const skillsRoot = utils_default.getPath(["skills"]);
       const entries = await (0, import_fast_glob4.default)("**/*.md", {
         cwd: skillsRoot.replace(/\\/g, "/"),
@@ -256006,11 +256600,11 @@ var init_getSkillList = __esm({
 });
 
 // src/routes/setting/skillManagement/saveSkillContent.ts
-var import_express155, import_path27, fs32, router155, saveSkillContent_default;
+var import_express156, import_path27, fs32, router156, saveSkillContent_default;
 var init_saveSkillContent = __esm({
   "src/routes/setting/skillManagement/saveSkillContent.ts"() {
     "use strict";
-    import_express155 = __toESM(require_express2());
+    import_express156 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
@@ -256018,8 +256612,8 @@ var init_saveSkillContent = __esm({
     init_utils3();
     import_path27 = __toESM(require("path"));
     fs32 = __toESM(require("fs"));
-    router155 = import_express155.default.Router();
-    saveSkillContent_default = router155.post(
+    router156 = import_express156.default.Router();
+    saveSkillContent_default = router156.post(
       "/",
       validateFields({
         path: external_exports.string(),
@@ -256043,17 +256637,17 @@ var init_saveSkillContent = __esm({
 });
 
 // src/routes/setting/vendorConfig/addVendor.ts
-var import_express156, import_sucrase4, router156, vendorConfigSchema, addVendor_default;
+var import_express157, import_sucrase4, router157, vendorConfigSchema, addVendor_default;
 var init_addVendor = __esm({
   "src/routes/setting/vendorConfig/addVendor.ts"() {
     "use strict";
-    import_express156 = __toESM(require_express2());
+    import_express157 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     import_sucrase4 = __toESM(require_dist5());
-    router156 = import_express156.default.Router();
+    router157 = import_express157.default.Router();
     vendorConfigSchema = external_exports.object({
       id: external_exports.string(),
       author: external_exports.string(),
@@ -256105,7 +256699,7 @@ var init_addVendor = __esm({
         ])
       )
     });
-    addVendor_default = router156.post(
+    addVendor_default = router157.post(
       "/",
       validateFields({
         tsCode: external_exports.string()
@@ -256157,17 +256751,17 @@ ${issueLines.join("\n")}`));
 });
 
 // src/routes/setting/vendorConfig/addVendorModel.ts
-var import_express157, router157, addVendorModel_default;
+var import_express158, router158, addVendorModel_default;
 var init_addVendorModel = __esm({
   "src/routes/setting/vendorConfig/addVendorModel.ts"() {
     "use strict";
-    import_express157 = __toESM(require_express2());
+    import_express158 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router157 = import_express157.default.Router();
-    addVendorModel_default = router157.post(
+    router158 = import_express158.default.Router();
+    addVendorModel_default = router158.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -256221,19 +256815,19 @@ var init_addVendorModel = __esm({
 });
 
 // src/routes/setting/vendorConfig/deleteVendor.ts
-var import_express158, import_path28, import_fs17, router158, deleteVendor_default;
+var import_express159, import_path28, import_fs17, router159, deleteVendor_default;
 var init_deleteVendor = __esm({
   "src/routes/setting/vendorConfig/deleteVendor.ts"() {
     "use strict";
-    import_express158 = __toESM(require_express2());
+    import_express159 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     import_path28 = __toESM(require("path"));
     import_fs17 = __toESM(require("fs"));
     init_utils3();
     init_zod();
-    router158 = import_express158.default.Router();
-    deleteVendor_default = router158.post(
+    router159 = import_express159.default.Router();
+    deleteVendor_default = router159.post(
       "/",
       validateFields({
         id: external_exports.string()
@@ -256253,17 +256847,17 @@ var init_deleteVendor = __esm({
 });
 
 // src/routes/setting/vendorConfig/delVendorModel.ts
-var import_express159, router159, delVendorModel_default;
+var import_express160, router160, delVendorModel_default;
 var init_delVendorModel = __esm({
   "src/routes/setting/vendorConfig/delVendorModel.ts"() {
     "use strict";
-    import_express159 = __toESM(require_express2());
+    import_express160 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router159 = import_express159.default.Router();
-    delVendorModel_default = router159.post(
+    router160 = import_express160.default.Router();
+    delVendorModel_default = router160.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -256289,17 +256883,17 @@ var init_delVendorModel = __esm({
 });
 
 // src/routes/setting/vendorConfig/enableVendor.ts
-var import_express160, router160, enableVendor_default;
+var import_express161, router161, enableVendor_default;
 var init_enableVendor = __esm({
   "src/routes/setting/vendorConfig/enableVendor.ts"() {
     "use strict";
-    import_express160 = __toESM(require_express2());
+    import_express161 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router160 = import_express160.default.Router();
-    enableVendor_default = router160.post(
+    router161 = import_express161.default.Router();
+    enableVendor_default = router161.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -256315,16 +256909,16 @@ var init_enableVendor = __esm({
 });
 
 // src/routes/setting/vendorConfig/getCodeByLink.ts
-var import_express161, router161, getCodeByLink_default;
+var import_express162, router162, getCodeByLink_default;
 var init_getCodeByLink = __esm({
   "src/routes/setting/vendorConfig/getCodeByLink.ts"() {
     "use strict";
-    import_express161 = __toESM(require_express2());
+    import_express162 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
-    router161 = import_express161.default.Router();
-    getCodeByLink_default = router161.post(
+    router162 = import_express162.default.Router();
+    getCodeByLink_default = router162.post(
       "/",
       validateFields({
         link: external_exports.string()
@@ -256339,15 +256933,15 @@ var init_getCodeByLink = __esm({
 });
 
 // src/routes/setting/vendorConfig/getVendorList.ts
-var import_express162, router162, getVendorList_default;
+var import_express163, router163, getVendorList_default;
 var init_getVendorList = __esm({
   "src/routes/setting/vendorConfig/getVendorList.ts"() {
     "use strict";
-    import_express162 = __toESM(require_express2());
+    import_express163 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router162 = import_express162.default.Router();
-    getVendorList_default = router162.post("/", async (req, res) => {
+    router163 = import_express163.default.Router();
+    getVendorList_default = router163.post("/", async (req, res) => {
       const data = await utils_default.db("o_vendorConfig").select("*");
       const list2 = (await Promise.all(
         data.map(async (item) => {
@@ -256377,18 +256971,18 @@ var init_getVendorList = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest.ts
-var import_express163, router163, modelTest_default;
+var import_express164, router164, modelTest_default;
 var init_modelTest = __esm({
   "src/routes/setting/vendorConfig/modelTest.ts"() {
     "use strict";
-    import_express163 = __toESM(require_express2());
+    import_express164 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     init_dist22();
-    router163 = import_express163.default.Router();
-    modelTest_default = router163.post(
+    router164 = import_express164.default.Router();
+    modelTest_default = router164.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -256481,17 +257075,17 @@ var init_modelTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/imageTest.ts
-var import_express164, router164, imageTest_default;
+var import_express165, router165, imageTest_default;
 var init_imageTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/imageTest.ts"() {
     "use strict";
-    import_express164 = __toESM(require_express2());
+    import_express165 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router164 = import_express164.default.Router();
-    imageTest_default = router164.post(
+    router165 = import_express165.default.Router();
+    imageTest_default = router165.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -256528,18 +257122,18 @@ var init_imageTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/textTest.ts
-var import_express165, router165, textTest_default;
+var import_express166, router166, textTest_default;
 var init_textTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/textTest.ts"() {
     "use strict";
-    import_express165 = __toESM(require_express2());
+    import_express166 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     init_dist22();
-    router165 = import_express165.default.Router();
-    textTest_default = router165.post(
+    router166 = import_express166.default.Router();
+    textTest_default = router166.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -256591,17 +257185,17 @@ var init_textTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/videoTest.ts
-var import_express166, router166, videoTest_default;
+var import_express167, router167, videoTest_default;
 var init_videoTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/videoTest.ts"() {
     "use strict";
-    import_express166 = __toESM(require_express2());
+    import_express167 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router166 = import_express166.default.Router();
-    videoTest_default = router166.post(
+    router167 = import_express167.default.Router();
+    videoTest_default = router167.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -256667,18 +257261,18 @@ var init_videoTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/updateCode.ts
-var import_express167, import_sucrase5, router167, vendorConfigSchema2, updateCode_default;
+var import_express168, import_sucrase5, router168, vendorConfigSchema2, updateCode_default;
 var init_updateCode = __esm({
   "src/routes/setting/vendorConfig/updateCode.ts"() {
     "use strict";
-    import_express167 = __toESM(require_express2());
+    import_express168 = __toESM(require_express2());
     init_serialize_error();
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     import_sucrase5 = __toESM(require_dist5());
-    router167 = import_express167.default.Router();
+    router168 = import_express168.default.Router();
     vendorConfigSchema2 = external_exports.object({
       id: external_exports.string(),
       author: external_exports.string(),
@@ -256730,7 +257324,7 @@ var init_updateCode = __esm({
         ])
       )
     });
-    updateCode_default = router167.post(
+    updateCode_default = router168.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -256767,17 +257361,17 @@ var init_updateCode = __esm({
 });
 
 // src/routes/setting/vendorConfig/updateVendorInputs.ts
-var import_express168, router168, updateVendorInputs_default;
+var import_express169, router169, updateVendorInputs_default;
 var init_updateVendorInputs = __esm({
   "src/routes/setting/vendorConfig/updateVendorInputs.ts"() {
     "use strict";
-    import_express168 = __toESM(require_express2());
+    import_express169 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router168 = import_express168.default.Router();
-    updateVendorInputs_default = router168.post(
+    router169 = import_express169.default.Router();
+    updateVendorInputs_default = router169.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -256795,17 +257389,17 @@ var init_updateVendorInputs = __esm({
 });
 
 // src/routes/setting/vendorConfig/upVendorModel.ts
-var import_express169, router169, upVendorModel_default;
+var import_express170, router170, upVendorModel_default;
 var init_upVendorModel = __esm({
   "src/routes/setting/vendorConfig/upVendorModel.ts"() {
     "use strict";
-    import_express169 = __toESM(require_express2());
+    import_express170 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router169 = import_express169.default.Router();
-    upVendorModel_default = router169.post(
+    router170 = import_express170.default.Router();
+    upVendorModel_default = router170.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -256864,15 +257458,15 @@ var init_upVendorModel = __esm({
 });
 
 // src/routes/task/getProject.ts
-var import_express170, router170, getProject_default2;
+var import_express171, router171, getProject_default2;
 var init_getProject2 = __esm({
   "src/routes/task/getProject.ts"() {
     "use strict";
-    import_express170 = __toESM(require_express2());
+    import_express171 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router170 = import_express170.default.Router();
-    getProject_default2 = router170.post("/", async (req, res) => {
+    router171 = import_express171.default.Router();
+    getProject_default2 = router171.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_project").select("id", "name").groupBy("name");
       const data = list2.filter((item) => item.name);
       res.status(200).send(success3(data));
@@ -256881,17 +257475,17 @@ var init_getProject2 = __esm({
 });
 
 // src/routes/task/getTaskApi.ts
-var import_express171, router171, getTaskApi_default;
+var import_express172, router172, getTaskApi_default;
 var init_getTaskApi = __esm({
   "src/routes/task/getTaskApi.ts"() {
     "use strict";
-    import_express171 = __toESM(require_express2());
+    import_express172 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_zod();
-    router171 = import_express171.default.Router();
-    getTaskApi_default = router171.post(
+    router172 = import_express172.default.Router();
+    getTaskApi_default = router172.post(
       "/",
       validateFields({
         state: external_exports.string().optional().nullable(),
@@ -256932,15 +257526,15 @@ var init_getTaskApi = __esm({
 });
 
 // src/routes/task/getTaskCategories.ts
-var import_express172, router172, getTaskCategories_default;
+var import_express173, router173, getTaskCategories_default;
 var init_getTaskCategories = __esm({
   "src/routes/task/getTaskCategories.ts"() {
     "use strict";
-    import_express172 = __toESM(require_express2());
+    import_express173 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router172 = import_express172.default.Router();
-    getTaskCategories_default = router172.post("/", async (req, res) => {
+    router173 = import_express173.default.Router();
+    getTaskCategories_default = router173.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_tasks").select("taskClass").groupBy("taskClass");
       const data = list2.filter((item) => item.taskClass);
       res.status(200).send(success3(data));
@@ -256949,17 +257543,17 @@ var init_getTaskCategories = __esm({
 });
 
 // src/routes/task/taskDetails.ts
-var import_express173, router173, taskDetails_default;
+var import_express174, router174, taskDetails_default;
 var init_taskDetails = __esm({
   "src/routes/task/taskDetails.ts"() {
     "use strict";
-    import_express173 = __toESM(require_express2());
+    import_express174 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_zod();
-    router173 = import_express173.default.Router();
-    taskDetails_default = router173.post(
+    router174 = import_express174.default.Router();
+    taskDetails_default = router174.post(
       "/",
       validateFields({
         taskId: external_exports.number()
@@ -256974,15 +257568,15 @@ var init_taskDetails = __esm({
 });
 
 // src/routes/test/test.ts
-var import_express174, import_fs18, router174, test_default;
+var import_express175, import_fs18, router175, test_default;
 var init_test = __esm({
   "src/routes/test/test.ts"() {
     "use strict";
-    import_express174 = __toESM(require_express2());
+    import_express175 = __toESM(require_express2());
     init_utils3();
     import_fs18 = __toESM(require("fs"));
-    router174 = import_express174.default.Router();
-    test_default = router174.get("/", async (req, res) => {
+    router175 = import_express175.default.Router();
+    test_default = router175.get("/", async (req, res) => {
       return res.send("ok");
       const test2 = await utils_default.db("o_vendorConfig").select("*");
       import_fs18.default.writeFileSync("test.json", JSON.stringify(test2, null, 2));
@@ -256991,361 +257585,25 @@ var init_test = __esm({
   }
 });
 
-// src/services/voice-studio/dialogue.ts
-function normalizeLabel(value) {
-  return value.trim().replace(/^\[|\]$/g, "").toLocaleLowerCase();
-}
-function classifySpeaker(speaker) {
-  const normalized = normalizeLabel(speaker);
-  if (narrationLabels.has(normalized)) return "narration";
-  if (chorusLabels.has(normalized)) return "chorus";
-  return "dialogue";
-}
-function cleanLine(value) {
-  return value.trim().replace(/^[-*]\s+/, "").trim();
-}
-function parseDialogue(content, roleAssets) {
-  const roleByName = new Map(roleAssets.map((asset) => [normalizeLabel(asset.name), asset.id]));
-  const parsed = [];
-  for (const rawLine of content.replace(/\r\n?/g, "\n").split("\n")) {
-    const line = cleanLine(rawLine);
-    if (!line || /^#{1,6}\s/.test(line)) continue;
-    const match = line.match(/^([^：:]{1,32})[：:]\s*(.+)$/);
-    if (match) {
-      const speaker = match[1].trim();
-      const text2 = match[2].trim();
-      if (!text2) continue;
-      const kind = classifySpeaker(speaker);
-      parsed.push({
-        kind,
-        speaker: kind === "narration" ? "\u65C1\u767D" : kind === "chorus" ? "\u7FA4\u58F0" : speaker,
-        text: text2,
-        roleAssetId: kind === "dialogue" ? roleByName.get(normalizeLabel(speaker)) ?? null : null
-      });
-      continue;
-    }
-    const previous = parsed.at(-1);
-    if (previous && previous.kind !== "narration") {
-      previous.text = `${previous.text}
-${line}`;
-    } else {
-      parsed.push({ kind: "narration", speaker: "\u65C1\u767D", text: line, roleAssetId: null });
-    }
-  }
-  return parsed.map((item, ordinal) => ({ ...item, ordinal }));
-}
-function formatSubtitleTime(milliseconds, separator) {
-  const safe = Math.max(0, Math.round(milliseconds));
-  const hours = Math.floor(safe / 36e5);
-  const minutes = Math.floor(safe % 36e5 / 6e4);
-  const seconds = Math.floor(safe % 6e4 / 1e3);
-  const millis = safe % 1e3;
-  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}${separator}${String(millis).padStart(3, "0")}`;
-}
-function serializeSubtitles(cues, format) {
-  const body = cues.map((cue, index) => {
-    const separator = format === "srt" ? "," : ".";
-    const timing = `${formatSubtitleTime(cue.startMs, separator)} --> ${formatSubtitleTime(cue.endMs, separator)}`;
-    return format === "srt" ? `${index + 1}
-${timing}
-${cue.text}` : `${timing}
-${cue.text}`;
-  }).join("\n\n");
-  return format === "vtt" ? `WEBVTT
-
-${body}
-` : `${body}
-`;
-}
-var narrationLabels, chorusLabels;
-var init_dialogue = __esm({
-  "src/services/voice-studio/dialogue.ts"() {
-    "use strict";
-    narrationLabels = /* @__PURE__ */ new Set(["\u65C1\u767D", "\u753B\u5916\u97F3", "\u89E3\u8BF4", "\u53D9\u8FF0", "narrator"]);
-    chorusLabels = /* @__PURE__ */ new Set(["\u7FA4\u58F0", "\u4F17\u4EBA", "\u6240\u6709\u4EBA", "\u5408\u58F0", "chorus"]);
-  }
-});
-
-// src/services/voice-studio/repository.ts
-function mapVoiceCast(row) {
-  return {
-    id: row.id,
-    projectId: row.project_id,
-    roleAssetId: row.role_asset_id ?? null,
-    name: row.name,
-    provider: row.provider,
-    model: row.model,
-    voice: row.voice,
-    speechRate: row.speech_rate,
-    pitchRate: row.pitch_rate,
-    volume: row.volume,
-    emotion: row.emotion ?? null,
-    isDefault: row.is_default === 1,
-    previewAssetId: row.preview_asset_id ?? null,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
-  };
-}
-function mapUtterance(row) {
-  return {
-    id: row.id,
-    projectId: row.project_id,
-    scriptId: row.script_id ?? null,
-    storyboardId: row.storyboard_id ?? null,
-    ordinal: row.ordinal,
-    kind: row.kind,
-    roleAssetId: row.role_asset_id ?? null,
-    speaker: row.speaker,
-    text: row.text,
-    voiceCastId: row.voice_cast_id ?? null,
-    audioPath: row.audio_path ?? null,
-    cacheKey: row.cache_key ?? null,
-    durationMs: row.duration_ms ?? null,
-    status: row.status,
-    errorMessage: row.error_message ?? null,
-    locked: row.locked === 1,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
-  };
-}
-function mapCue(row) {
-  let style = null;
-  try {
-    style = row.style ? JSON.parse(row.style) : null;
-  } catch {
-    style = null;
-  }
-  return {
-    id: row.id,
-    projectId: row.project_id,
-    utteranceId: row.utterance_id,
-    ordinal: row.ordinal,
-    startMs: row.start_ms,
-    endMs: row.end_ms,
-    text: row.text,
-    style,
-    locked: row.locked === 1,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
-  };
-}
-function normalizeName(value) {
-  return value.trim().toLocaleLowerCase();
-}
-var sql2, VoiceStudioRepository, voiceStudioRepository;
-var init_repository2 = __esm({
-  "src/services/voice-studio/repository.ts"() {
-    "use strict";
-    init_dist_node();
-    init_db();
-    init_dialogue();
-    sql2 = db;
-    VoiceStudioRepository = class {
-      async listVoiceCasts(projectId) {
-        const rows = await sql2("voice_cast").where("project_id", projectId).orderBy("is_default", "desc").orderBy("name", "asc");
-        return rows.map(mapVoiceCast);
-      }
-      async upsertVoiceCast(input) {
-        const now2 = Date.now();
-        const existing = input.id ? await sql2("voice_cast").where({ id: input.id, project_id: input.projectId }).first() : await sql2("voice_cast").where({ project_id: input.projectId, name: input.name }).first();
-        const id = existing?.id ?? input.id ?? v4_default();
-        const row = {
-          id,
-          project_id: input.projectId,
-          role_asset_id: input.roleAssetId ?? null,
-          name: input.name.trim(),
-          provider: input.provider.trim(),
-          model: input.model.trim(),
-          voice: input.voice.trim(),
-          speech_rate: input.speechRate ?? 1,
-          pitch_rate: input.pitchRate ?? 0,
-          volume: input.volume ?? 1,
-          emotion: input.emotion ?? null,
-          is_default: input.isDefault ? 1 : 0,
-          preview_asset_id: input.previewAssetId ?? null,
-          created_at: existing?.created_at ?? now2,
-          updated_at: now2
-        };
-        await sql2.transaction(async (trx) => {
-          if (input.isDefault) {
-            await trx("voice_cast").where("project_id", input.projectId).whereNot("id", id).update({ is_default: 0, updated_at: now2 });
-          }
-          await trx("voice_cast").insert(row).onConflict("id").merge(row);
-          await trx("utterances").where("project_id", input.projectId).whereNull("voice_cast_id").andWhere((query) => {
-            if (input.roleAssetId != null) query.where("role_asset_id", input.roleAssetId);
-            else query.whereRaw("lower(speaker) = lower(?)", [input.name.trim()]);
-          }).update({ voice_cast_id: id, status: "ready", updated_at: now2 });
-        });
-        return mapVoiceCast(await sql2("voice_cast").where("id", id).first());
-      }
-      async importScript(input) {
-        const script = await sql2("o_script").where({ id: input.scriptId, projectId: input.projectId }).first();
-        if (!script) throw new Error("\u5267\u672C\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
-        const roleRows = await sql2("o_assets").leftJoin("o_scriptAssets", "o_assets.id", "o_scriptAssets.assetId").where("o_scriptAssets.scriptId", input.scriptId).where("o_assets.type", "role").select("o_assets.id", "o_assets.name");
-        const fallbackRoles = roleRows.length ? roleRows : await sql2("o_assets").where({ projectId: input.projectId, type: "role" }).select("id", "name");
-        const casts = await this.listVoiceCasts(input.projectId);
-        const castByRole = new Map(casts.filter((item) => item.roleAssetId != null).map((item) => [item.roleAssetId, item.id]));
-        const castByName = new Map(casts.map((item) => [normalizeName(item.name), item.id]));
-        const defaultCast = casts.find((item) => item.isDefault)?.id ?? null;
-        const sources = [{ content: script.content ?? "", storyboardId: null }];
-        if (input.includeStoryboardDescriptions) {
-          const storyboards = await sql2("o_storyboard").where({ projectId: input.projectId, scriptId: input.scriptId }).whereNotNull("videoDesc").orderBy("index", "asc");
-          sources.push(...storyboards.map((item) => ({ content: item.videoDesc, storyboardId: item.id })));
-        }
-        const parsed = sources.flatMap(
-          (source) => parseDialogue(source.content, fallbackRoles).map((item) => ({ ...item, storyboardId: source.storyboardId }))
-        );
-        const now2 = Date.now();
-        const existingLocked = await sql2("utterances").where({ project_id: input.projectId, script_id: input.scriptId, locked: 1 });
-        const lockedSignatures = new Set(existingLocked.map((item) => `${item.storyboard_id ?? ""}\0${item.speaker}\0${item.text}`));
-        const imported = parsed.filter((item) => !lockedSignatures.has(`${item.storyboardId ?? ""}\0${item.speaker}\0${item.text}`));
-        await sql2.transaction(async (trx) => {
-          const removable = await trx("utterances").where({ project_id: input.projectId, script_id: input.scriptId, locked: 0 }).select("id");
-          if (removable.length) {
-            await trx("subtitle_cues").whereIn("utterance_id", removable.map((item) => item.id)).where("locked", 0).delete();
-            await trx("utterances").whereIn("id", removable.map((item) => item.id)).delete();
-          }
-          if (imported.length) {
-            await trx("utterances").insert(
-              imported.map((item, index) => {
-                const voiceCastId = item.roleAssetId != null ? castByRole.get(item.roleAssetId) ?? castByName.get(normalizeName(item.speaker)) ?? defaultCast : castByName.get(normalizeName(item.speaker)) ?? defaultCast;
-                return {
-                  id: v4_default(),
-                  project_id: input.projectId,
-                  script_id: input.scriptId,
-                  storyboard_id: item.storyboardId,
-                  ordinal: index,
-                  kind: item.kind,
-                  role_asset_id: item.roleAssetId,
-                  speaker: item.speaker,
-                  text: item.text,
-                  voice_cast_id: voiceCastId,
-                  status: voiceCastId ? "ready" : "draft",
-                  locked: 0,
-                  created_at: now2,
-                  updated_at: now2
-                };
-              })
-            );
-          }
-        });
-        await this.rebuildCues({ projectId: input.projectId, scriptId: input.scriptId });
-        return { imported: imported.length, preservedLocked: existingLocked.length, data: await this.listUtterances(input) };
-      }
-      async listUtterances(filters2) {
-        const query = sql2("utterances").where("project_id", filters2.projectId);
-        if (filters2.scriptId != null) query.where("script_id", filters2.scriptId);
-        if (filters2.storyboardId != null) query.where("storyboard_id", filters2.storyboardId);
-        return (await query.orderBy("ordinal", "asc").orderBy("created_at", "asc")).map(mapUtterance);
-      }
-      async updateUtterance(input) {
-        const existing = await sql2("utterances").where({ id: input.id, project_id: input.projectId }).first();
-        if (!existing) throw new Error("\u53F0\u8BCD\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
-        const changedContent = input.text !== void 0 && input.text !== existing.text;
-        const updates = { updated_at: Date.now() };
-        if (input.speaker !== void 0) updates.speaker = input.speaker.trim();
-        if (input.text !== void 0) updates.text = input.text.trim();
-        if (input.kind !== void 0) updates.kind = input.kind;
-        if (input.roleAssetId !== void 0) updates.role_asset_id = input.roleAssetId;
-        if (input.voiceCastId !== void 0) updates.voice_cast_id = input.voiceCastId;
-        if (input.durationMs !== void 0) updates.duration_ms = input.durationMs;
-        if (input.locked !== void 0) updates.locked = input.locked ? 1 : 0;
-        if (changedContent || input.voiceCastId !== void 0) {
-          updates.audio_path = null;
-          updates.cache_key = null;
-          updates.error_message = null;
-          updates.status = input.voiceCastId ?? existing.voice_cast_id ? "ready" : "draft";
-        }
-        await sql2("utterances").where("id", input.id).update(updates);
-        await sql2("subtitle_cues").where({ utterance_id: input.id, locked: 0 }).update({
-          text: updates.text ?? existing.text,
-          updated_at: Date.now()
-        });
-        return mapUtterance(await sql2("utterances").where("id", input.id).first());
-      }
-      async rebuildCues(filters2) {
-        const utterances = await this.listUtterances(filters2);
-        const ids = utterances.map((item) => item.id);
-        if (!ids.length) return [];
-        const lockedRows = await sql2("subtitle_cues").whereIn("utterance_id", ids).where("locked", 1);
-        const lockedByUtterance = new Map(lockedRows.map((row) => [row.utterance_id, row]));
-        const now2 = Date.now();
-        let cursor = 0;
-        await sql2.transaction(async (trx) => {
-          await trx("subtitle_cues").whereIn("utterance_id", ids).where("locked", 0).delete();
-          const rows = [];
-          for (const utterance of utterances) {
-            const locked = lockedByUtterance.get(utterance.id);
-            if (locked) {
-              cursor = Math.max(cursor, locked.end_ms + 120);
-              continue;
-            }
-            const duration4 = utterance.durationMs ?? Math.max(1200, Math.min(12e3, utterance.text.length * 180));
-            rows.push({
-              id: v4_default(),
-              project_id: filters2.projectId,
-              utterance_id: utterance.id,
-              ordinal: 0,
-              start_ms: cursor,
-              end_ms: cursor + duration4,
-              text: utterance.text,
-              style: null,
-              locked: 0,
-              created_at: now2,
-              updated_at: now2
-            });
-            cursor += duration4 + 120;
-          }
-          if (rows.length) await trx("subtitle_cues").insert(rows);
-        });
-        return this.listCues(filters2);
-      }
-      async listCues(filters2) {
-        const query = sql2("subtitle_cues").leftJoin("utterances", "utterances.id", "subtitle_cues.utterance_id").where("subtitle_cues.project_id", filters2.projectId).select("subtitle_cues.*");
-        if (filters2.scriptId != null) query.where("utterances.script_id", filters2.scriptId);
-        return (await query.orderBy("subtitle_cues.start_ms", "asc").orderBy("subtitle_cues.ordinal", "asc")).map(mapCue);
-      }
-      async updateCue(input) {
-        const existing = await sql2("subtitle_cues").where({ id: input.id, project_id: input.projectId }).first();
-        if (!existing) throw new Error("\u5B57\u5E55 cue \u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
-        const startMs = input.startMs ?? existing.start_ms;
-        const endMs = input.endMs ?? existing.end_ms;
-        if (endMs <= startMs) throw new Error("\u5B57\u5E55\u7ED3\u675F\u65F6\u95F4\u5FC5\u987B\u665A\u4E8E\u5F00\u59CB\u65F6\u95F4");
-        const updates = { start_ms: startMs, end_ms: endMs, updated_at: Date.now() };
-        if (input.text !== void 0) updates.text = input.text.trim();
-        if (input.style !== void 0) updates.style = input.style == null ? null : JSON.stringify(input.style);
-        if (input.locked !== void 0) updates.locked = input.locked ? 1 : 0;
-        await sql2("subtitle_cues").where("id", input.id).update(updates);
-        return mapCue(await sql2("subtitle_cues").where("id", input.id).first());
-      }
-      async exportSubtitles(filters2) {
-        const cues = await this.listCues(filters2);
-        return serializeSubtitles(cues, filters2.format);
-      }
-    };
-    voiceStudioRepository = new VoiceStudioRepository();
-  }
-});
-
 // src/routes/voiceStudio/casts.ts
-var import_express175, router175, casts_default;
+var import_express176, router176, casts_default;
 var init_casts = __esm({
   "src/routes/voiceStudio/casts.ts"() {
     "use strict";
-    import_express175 = __toESM(require_express2());
+    import_express176 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_repository2();
-    router175 = import_express175.default.Router();
-    router175.post(
+    router176 = import_express176.default.Router();
+    router176.post(
       "/list",
       validateFields({ projectId: external_exports.number().int().positive() }),
       async (req, res) => {
         res.status(200).send(success3(await voiceStudioRepository.listVoiceCasts(req.body.projectId)));
       }
     );
-    router175.post(
+    router176.post(
       "/upsert",
       validateFields({
         id: external_exports.string().uuid().optional(),
@@ -257366,32 +257624,32 @@ var init_casts = __esm({
         res.status(200).send(success3(await voiceStudioRepository.upsertVoiceCast(req.body)));
       }
     );
-    casts_default = router175;
+    casts_default = router176;
   }
 });
 
 // src/routes/voiceStudio/cues.ts
-var import_express176, router176, filters, cues_default;
+var import_express177, router177, filters2, cues_default;
 var init_cues = __esm({
   "src/routes/voiceStudio/cues.ts"() {
     "use strict";
-    import_express176 = __toESM(require_express2());
+    import_express177 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_repository2();
-    router176 = import_express176.default.Router();
-    filters = {
+    router177 = import_express177.default.Router();
+    filters2 = {
       projectId: external_exports.number().int().positive(),
       scriptId: external_exports.number().int().positive().optional()
     };
-    router176.post("/list", validateFields(filters), async (req, res) => {
+    router177.post("/list", validateFields(filters2), async (req, res) => {
       res.status(200).send(success3(await voiceStudioRepository.listCues(req.body)));
     });
-    router176.post("/rebuild", validateFields(filters), async (req, res) => {
+    router177.post("/rebuild", validateFields(filters2), async (req, res) => {
       res.status(200).send(success3(await voiceStudioRepository.rebuildCues(req.body)));
     });
-    router176.post(
+    router177.post(
       "/update",
       validateFields({
         id: external_exports.string().uuid(),
@@ -257406,24 +257664,24 @@ var init_cues = __esm({
         res.status(200).send(success3(await voiceStudioRepository.updateCue(req.body)));
       }
     );
-    router176.post(
+    router177.post(
       "/export",
-      validateFields({ ...filters, format: external_exports.enum(["srt", "vtt"]) }),
+      validateFields({ ...filters2, format: external_exports.enum(["srt", "vtt"]) }),
       async (req, res) => {
         const content = await voiceStudioRepository.exportSubtitles(req.body);
         res.status(200).send(success3({ format: req.body.format, content }));
       }
     );
-    cues_default = router176;
+    cues_default = router177;
   }
 });
 
 // src/services/task-engine/enqueueUtteranceTts.ts
 async function enqueueUtteranceTts(input) {
-  const utterance = await sql3("utterances").where({ id: input.utteranceId, project_id: input.projectId }).first();
+  const utterance = await sql4("utterances").where({ id: input.utteranceId, project_id: input.projectId }).first();
   if (!utterance) throw new Error("\u53F0\u8BCD\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
   if (!utterance.voice_cast_id) throw new Error("\u8BF7\u5148\u4E3A\u8FD9\u53E5\u53F0\u8BCD\u5206\u914D\u89D2\u8272\u97F3\u8272");
-  const voiceCast = await sql3("voice_cast").where({ id: utterance.voice_cast_id, project_id: input.projectId }).first();
+  const voiceCast = await sql4("voice_cast").where({ id: utterance.voice_cast_id, project_id: input.projectId }).first();
   if (!voiceCast) throw new Error("\u53F0\u8BCD\u7ED1\u5B9A\u7684\u89D2\u8272\u97F3\u8272\u4E0D\u5B58\u5728");
   const model = `${voiceCast.provider}:${voiceCast.model}`;
   const cacheKey = stableIdempotencyKey({
@@ -257441,7 +257699,7 @@ async function enqueueUtteranceTts(input) {
   }
   let referenceAudioPath;
   if (voiceCast.preview_asset_id) {
-    const reference = await sql3("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", voiceCast.preview_asset_id).select("o_image.filePath").first();
+    const reference = await sql4("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", voiceCast.preview_asset_id).select("o_image.filePath").first();
     referenceAudioPath = reference?.filePath ?? void 0;
   }
   const resourceKey = `audio:utterance:${input.utteranceId}`;
@@ -257460,7 +257718,7 @@ async function enqueueUtteranceTts(input) {
     savePath,
     cacheKey
   };
-  const [legacyTaskId] = await sql3("o_tasks").insert({
+  const [legacyTaskId] = await sql4("o_tasks").insert({
     projectId: input.projectId,
     taskClass: "\u9010\u53E5\u914D\u97F3",
     relatedObjects: JSON.stringify({ utteranceId: input.utteranceId }),
@@ -257481,10 +257739,10 @@ async function enqueueUtteranceTts(input) {
     maxAttempts: 2
   });
   if (result.deduped) {
-    await sql3("o_tasks").where("id", legacyTaskId).delete();
+    await sql4("o_tasks").where("id", legacyTaskId).delete();
     const existingResult = result.task.result;
     if (result.task.status === "succeeded" && existingResult?.audioPath) {
-      await sql3("utterances").where("id", input.utteranceId).update({
+      await sql4("utterances").where("id", input.utteranceId).update({
         audio_path: existingResult.audioPath,
         cache_key: cacheKey,
         status: "succeeded",
@@ -257493,7 +257751,7 @@ async function enqueueUtteranceTts(input) {
       });
     }
   } else {
-    await sql3("utterances").where("id", input.utteranceId).update({
+    await sql4("utterances").where("id", input.utteranceId).update({
       status: "queued",
       cache_key: cacheKey,
       error_message: null,
@@ -257502,31 +257760,31 @@ async function enqueueUtteranceTts(input) {
   }
   return { task: result.task, payload: result.task.payload, deduped: result.deduped, cached: false };
 }
-var sql3;
+var sql4;
 var init_enqueueUtteranceTts = __esm({
   "src/services/task-engine/enqueueUtteranceTts.ts"() {
     "use strict";
     init_db();
     init_repository();
-    sql3 = db;
+    sql4 = db;
   }
 });
 
 // src/routes/voiceStudio/utterances.ts
-var import_express177, router177, utteranceKinds, utterances_default;
+var import_express178, router178, utteranceKinds, utterances_default;
 var init_utterances = __esm({
   "src/routes/voiceStudio/utterances.ts"() {
     "use strict";
-    import_express177 = __toESM(require_express2());
+    import_express178 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_repository2();
     init_enqueueUtteranceTts();
     init_db();
-    router177 = import_express177.default.Router();
+    router178 = import_express178.default.Router();
     utteranceKinds = ["dialogue", "narration", "chorus"];
-    router177.post(
+    router178.post(
       "/import",
       validateFields({
         projectId: external_exports.number().int().positive(),
@@ -257537,7 +257795,7 @@ var init_utterances = __esm({
         res.status(200).send(success3(await voiceStudioRepository.importScript(req.body)));
       }
     );
-    router177.post(
+    router178.post(
       "/list",
       validateFields({
         projectId: external_exports.number().int().positive(),
@@ -257548,7 +257806,7 @@ var init_utterances = __esm({
         res.status(200).send(success3(await voiceStudioRepository.listUtterances(req.body)));
       }
     );
-    router177.post(
+    router178.post(
       "/update",
       validateFields({
         id: external_exports.string().uuid(),
@@ -257565,7 +257823,7 @@ var init_utterances = __esm({
         res.status(200).send(success3(await voiceStudioRepository.updateUtterance(req.body)));
       }
     );
-    router177.post(
+    router178.post(
       "/generate",
       validateFields({
         projectId: external_exports.number().int().positive(),
@@ -257580,7 +257838,7 @@ var init_utterances = __esm({
         }
       }
     );
-    router177.post(
+    router178.post(
       "/batchGenerate",
       validateFields({
         projectId: external_exports.number().int().positive(),
@@ -257609,7 +257867,7 @@ var init_utterances = __esm({
         }
       }
     );
-    utterances_default = router177;
+    utterances_default = router178;
   }
 });
 
@@ -257649,6 +257907,7 @@ var init_router = __esm({
     init_generateAssets();
     init_polishAssetsPrompt();
     init_getBigImage();
+    init_timeline2();
     init_batchBindAudio();
     init_getAllAssets();
     init_pollingAudio();
@@ -257827,6 +258086,7 @@ var init_router = __esm({
       app2.use("/api/assetsGenerate/generateAssets", generateAssets_default);
       app2.use("/api/assetsGenerate/polishAssetsPrompt", polishAssetsPrompt_default);
       app2.use("/api/common/getBigImage", getBigImage_default);
+      app2.use("/api/composition/timeline", timeline_default);
       app2.use("/api/cornerScape/batchBindAudio", batchBindAudio_default);
       app2.use("/api/cornerScape/getAllAssets", getAllAssets_default);
       app2.use("/api/cornerScape/pollingAudio", pollingAudio_default);
@@ -258032,7 +258292,7 @@ if (!env) {
 }
 
 // src/app.ts
-var import_express178 = __toESM(require_express2());
+var import_express179 = __toESM(require_express2());
 
 // node_modules/socket.io/wrapper.mjs
 var import_dist = __toESM(require_dist3(), 1);
@@ -260650,18 +260910,44 @@ var storyboardImageTaskHandler = {
 init_utils3();
 init_db();
 init_generationTask();
-var sql = db;
+
+// src/services/media/probe.ts
+var import_node_child_process = require("node:child_process");
+var import_node_util = require("node:util");
+init_utils3();
+var execFileAsync = (0, import_node_util.promisify)(import_node_child_process.execFile);
+async function probeMedia(userPath) {
+  const absolutePath = await utils_default.oss.getAbsolutePath(userPath);
+  const executable = process.env.FFPROBE_PATH?.trim() || "ffprobe";
+  try {
+    const { stdout } = await execFileAsync(
+      executable,
+      ["-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", absolutePath],
+      { timeout: 15e3, maxBuffer: 64 * 1024 }
+    );
+    const seconds = Number(stdout.trim());
+    if (!Number.isFinite(seconds) || seconds <= 0) return null;
+    return { durationMs: Math.max(1, Math.round(seconds * 1e3)) };
+  } catch (error73) {
+    console.warn("[\u5A92\u4F53\u63A2\u6D4B] ffprobe \u4E0D\u53EF\u7528\u6216\u6587\u4EF6\u65E0\u6CD5\u63A2\u6D4B:", error73 instanceof Error ? error73.message : String(error73));
+    return null;
+  }
+}
+
+// src/services/task-engine/handlers/utteranceTts.ts
+init_repository2();
+var sql2 = db;
 var utteranceTtsTaskHandler = {
   async execute(task, context2) {
     const payload = task.payload;
-    const utterance = await sql("utterances").where({ id: payload.utteranceId, project_id: payload.projectId }).first();
+    const utterance = await sql2("utterances").where({ id: payload.utteranceId, project_id: payload.projectId }).first();
     if (!utterance) {
       throw new TaskExecutionError("\u5F85\u914D\u97F3\u53F0\u8BCD\u4E0D\u5B58\u5728", "UTTERANCE_NOT_FOUND", false, true);
     }
     const referenceList = payload.referenceAudioPath ? [{ type: "audio", base64: await utils_default.oss.getImageBase64(payload.referenceAudioPath) }] : void 0;
     await context2.throwIfCancelled();
     await context2.transitionToSubmitting();
-    await sql("utterances").where("id", payload.utteranceId).update({
+    await sql2("utterances").where("id", payload.utteranceId).update({
       status: "generating",
       error_message: null,
       updated_at: Date.now()
@@ -260681,14 +260967,24 @@ var utteranceTtsTaskHandler = {
     } catch (error73) {
       throw new TaskExecutionError(utils_default.error(error73).message, "AUDIO_SAVE_FAILED", false, true);
     }
-    await sql("utterances").where("id", payload.utteranceId).update({
+    const media = await probeMedia(payload.savePath);
+    await sql2("utterances").where("id", payload.utteranceId).update({
       audio_path: payload.savePath,
       cache_key: payload.cacheKey,
+      duration_ms: media?.durationMs ?? utterance.duration_ms ?? null,
       status: "succeeded",
       error_message: null,
       updated_at: Date.now()
     });
-    return { utteranceId: payload.utteranceId, audioPath: payload.savePath, cacheKey: payload.cacheKey };
+    if (utterance.script_id) {
+      await voiceStudioRepository.rebuildCues({ projectId: payload.projectId, scriptId: utterance.script_id });
+    }
+    return {
+      utteranceId: payload.utteranceId,
+      audioPath: payload.savePath,
+      cacheKey: payload.cacheKey,
+      durationMs: media?.durationMs ?? utterance.duration_ms ?? null
+    };
   }
 };
 
@@ -260710,7 +261006,7 @@ async function stopGenerationTaskEngine() {
 }
 
 // src/app.ts
-var app = (0, import_express178.default)();
+var app = (0, import_express179.default)();
 var server = import_node_http.default.createServer(app);
 async function checkPermissions() {
   if (!isEletron()) return true;
@@ -260748,8 +261044,8 @@ async function startServe(randomPort = false) {
   (0, import_express_ws.default)(app);
   app.use((0, import_morgan.default)("dev"));
   app.use((0, import_cors.default)({ origin: "*" }));
-  app.use(import_express178.default.json({ limit: "100mb" }));
-  app.use(import_express178.default.urlencoded({ extended: true, limit: "100mb" }));
+  app.use(import_express179.default.json({ limit: "100mb" }));
+  app.use(import_express179.default.urlencoded({ extended: true, limit: "100mb" }));
   const ossDir = utils_default.getPath("oss");
   if (!import_fs19.default.existsSync(ossDir)) {
     import_fs19.default.mkdirSync(ossDir, { recursive: true });
@@ -260776,7 +261072,7 @@ async function startServe(randomPort = false) {
           sizeSubDir = `${percentMatch[1]}p`;
           sizeOpts = { type: "percentage", value: pct };
         } else {
-          import_express178.default.static(ossDir, { acceptRanges: false })(req, res, next);
+          import_express179.default.static(ossDir, { acceptRanges: false })(req, res, next);
           return;
         }
         const ext = import_path29.default.extname(req.path);
@@ -260787,14 +261083,14 @@ async function startServe(randomPort = false) {
           if (thumbnailPath) {
             res.sendFile(thumbnailPath);
           } else {
-            import_express178.default.static(ossDir, { acceptRanges: false })(req, res, next);
+            import_express179.default.static(ossDir, { acceptRanges: false })(req, res, next);
           }
         });
         return;
       }
       next();
     },
-    import_express178.default.static(ossDir, { acceptRanges: false })
+    import_express179.default.static(ossDir, { acceptRanges: false })
   );
   const skillsDir = utils_default.getPath("skills");
   if (!import_fs19.default.existsSync(skillsDir)) {
@@ -260806,18 +261102,18 @@ async function startServe(randomPort = false) {
     (req, res, next) => {
       /\.(jpe?g|png|gif|webp|svg|ico|bmp)$/i.test(req.path) ? next() : res.status(403).end();
     },
-    import_express178.default.static(skillsDir, { acceptRanges: false })
+    import_express179.default.static(skillsDir, { acceptRanges: false })
   );
   const assetsDir = utils_default.getPath("assets");
   if (!import_fs19.default.existsSync(assetsDir)) {
     import_fs19.default.mkdirSync(assetsDir, { recursive: true });
   }
   console.log("\u6587\u4EF6\u76EE\u5F55:", assetsDir);
-  app.use("/assets", import_express178.default.static(assetsDir, { acceptRanges: false }));
+  app.use("/assets", import_express179.default.static(assetsDir, { acceptRanges: false }));
   const webDir = utils_default.getPath("web");
   if (import_fs19.default.existsSync(webDir)) {
     console.log("\u9759\u6001\u7F51\u7AD9\u76EE\u5F55:", webDir);
-    app.use(import_express178.default.static(webDir, { acceptRanges: false }));
+    app.use(import_express179.default.static(webDir, { acceptRanges: false }));
   } else {
     console.warn("\u9759\u6001\u7F51\u7AD9\u76EE\u5F55\u4E0D\u5B58\u5728:", webDir);
   }
@@ -260837,8 +261133,8 @@ async function startServe(randomPort = false) {
       return res.status(401).send({ message: "\u65E0\u6548\u7684token" });
     }
   });
-  const router178 = await Promise.resolve().then(() => (init_router(), router_exports));
-  await router178.default(app);
+  const router179 = await Promise.resolve().then(() => (init_router(), router_exports));
+  await router179.default(app);
   app.use((_, res, next) => {
     return res.status(404).send({ message: "API 404 Not Found" });
   });

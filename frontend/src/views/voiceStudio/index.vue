@@ -107,6 +107,33 @@
             </template>
           </t-table>
         </t-tab-panel>
+
+        <t-tab-panel value="timeline" label="规范化时间线">
+          <div class="timelineHeader">
+            <t-alert
+              theme="info"
+              message="时间线只保存结构化版本，不会立即渲染或调用付费 API。原生音频、对白、旁白、SFX、环境声和 BGM 始终分轨。" />
+            <t-button :disabled="!selectedScriptId" :loading="buildingTimeline" @click="buildTimeline">构建新版本</t-button>
+          </div>
+          <t-empty v-if="!timeline" description="尚未构建时间线" />
+          <template v-else>
+            <div class="timelineStats">
+              <div><span>版本</span><strong>v{{ timeline.version }}</strong></div>
+              <div><span>总时长</span><strong>{{ formatMilliseconds(timeline.payload.durationMs) }}</strong></div>
+              <div><span>画面</span><strong>{{ timeline.payload.settings.width }} × {{ timeline.payload.settings.height }}</strong></div>
+              <div><span>帧率</span><strong>{{ timeline.payload.settings.fps }} fps</strong></div>
+              <div><span>响度目标</span><strong>{{ timeline.payload.settings.loudnessTargetLufs }} LUFS</strong></div>
+              <div><span>校验和</span><t-tooltip :content="timeline.checksum"><strong>{{ timeline.checksum.slice(0, 12) }}…</strong></t-tooltip></div>
+            </div>
+            <t-alert
+              v-for="warning in timeline.payload.warnings"
+              :key="warning"
+              theme="warning"
+              :message="warning"
+              class="timelineWarning" />
+            <t-table row-key="id" :columns="timelineColumns" :data="timelineTrackRows" size="small" hover stripe />
+          </template>
+        </t-tab-panel>
       </t-tabs>
     </template>
 
@@ -231,6 +258,20 @@ interface VendorItem {
   models: Array<{ name: string; modelName: string; type: string; voices?: Array<{ title: string; voice: string }> }>;
 }
 
+interface TimelineRecord {
+  id: string;
+  version: number;
+  checksum: string;
+  payload: {
+    durationMs: number;
+    settings: { width: number; height: number; fps: number; loudnessTargetLufs: number };
+    videoTracks: Array<{ id: string; clips: unknown[] }>;
+    audioTracks: Array<{ id: string; kind: string; clips: unknown[] }>;
+    subtitleTracks: Array<{ id: string; cues: unknown[] }>;
+    warnings: string[];
+  };
+}
+
 const { project } = storeToRefs(projectStore());
 const projectId = computed(() => (project.value?.id ? Number(project.value.id) : 0));
 const activeTab = ref("utterances");
@@ -239,6 +280,7 @@ const loadingScripts = ref(false);
 const importing = ref(false);
 const generating = ref(false);
 const savingCast = ref(false);
+const buildingTimeline = ref(false);
 const selectedScriptId = ref<number>();
 const includeStoryboardDescriptions = ref(false);
 const scriptOptions = ref<Array<{ label: string; value: number }>>([]);
@@ -248,6 +290,7 @@ const casts = ref<VoiceCast[]>([]);
 const vendors = ref<VendorItem[]>([]);
 const utterances = ref<Utterance[]>([]);
 const cues = ref<Cue[]>([]);
+const timeline = ref<TimelineRecord | null>(null);
 const selectedUtteranceIds = ref<Array<string | number>>([]);
 const castDialogVisible = ref(false);
 const utteranceDialogVisible = ref(false);
@@ -293,6 +336,11 @@ const castColumns: any[] = [
   { colKey: "voice", title: "音色", ellipsis: true },
   { colKey: "operation", title: "操作", width: 65, cell: "operation" },
 ];
+const timelineColumns: any[] = [
+  { colKey: "name", title: "轨道" },
+  { colKey: "kind", title: "类型", width: 140 },
+  { colKey: "count", title: "片段/cue 数", width: 140 },
+];
 const castOptions = computed(() => casts.value.map((item) => ({ label: `${item.name} · ${item.voice}`, value: item.id })));
 const providerOptions = computed(() =>
   vendors.value
@@ -309,6 +357,14 @@ const currentTtsModel = computed(() => currentVendor.value?.models.find((model) 
 const voiceOptions = computed(() =>
   (currentTtsModel.value?.voices || []).map((item) => ({ label: item.title, value: item.voice })),
 );
+const timelineTrackRows = computed(() => {
+  if (!timeline.value) return [];
+  return [
+    ...timeline.value.payload.videoTracks.map((track) => ({ id: track.id, name: track.id, kind: "video", count: track.clips.length })),
+    ...timeline.value.payload.audioTracks.map((track) => ({ id: track.id, name: track.id, kind: track.kind, count: track.clips.length })),
+    ...timeline.value.payload.subtitleTracks.map((track) => ({ id: track.id, name: track.id, kind: "subtitle", count: track.cues.length })),
+  ];
+});
 const kindOptions = [
   { label: "对白", value: "dialogue" },
   { label: "旁白", value: "narration" },
@@ -381,20 +437,40 @@ async function loadWorkspace(showLoading = true) {
   if (!selectedScriptId.value) {
     utterances.value = [];
     cues.value = [];
+    timeline.value = null;
     return;
   }
   if (showLoading) loading.value = true;
   try {
-    const [{ data: utteranceData }, { data: cueData }] = await Promise.all([
+    const [{ data: utteranceData }, { data: cueData }, { data: timelineData }] = await Promise.all([
       axios.post("/voiceStudio/utterances/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/voiceStudio/cues/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
+      axios.post("/composition/timeline/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
     ]);
     utterances.value = utteranceData;
     cues.value = cueData;
+    timeline.value = timelineData;
   } catch (error) {
     showError(error, "获取配音工作区失败");
   } finally {
     if (showLoading) loading.value = false;
+  }
+}
+
+async function buildTimeline() {
+  if (!selectedScriptId.value) return;
+  buildingTimeline.value = true;
+  try {
+    const { data } = await axios.post("/composition/timeline/build", {
+      projectId: projectId.value,
+      scriptId: selectedScriptId.value,
+    });
+    timeline.value = data.timeline;
+    window.$message.success(data.deduped ? "输入未变化，已复用最新时间线版本" : `已构建时间线 v${data.timeline.version}`);
+  } catch (error) {
+    showError(error, "构建时间线失败");
+  } finally {
+    buildingTimeline.value = false;
   }
 }
 
@@ -709,6 +785,18 @@ function showError(error: any, fallback: string) {
 }
 .cueActions { margin-bottom: 14px; }
 .cueActions .t-alert { flex: 1; }
+.timelineHeader { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.timelineHeader .t-alert { flex: 1; }
+.timelineStats {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+  > div { display: flex; flex-direction: column; gap: 6px; padding: 12px; border-radius: 8px; background: #f5f7fa; }
+  span { color: #6b7280; font-size: 12px; }
+  strong { font-size: 15px; }
+}
+.timelineWarning { margin-bottom: 8px; }
 .dialogGrid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
@@ -722,6 +810,8 @@ function showError(error: any, fallback: string) {
 .twoColumns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (max-width: 1100px) {
   .header, .toolbar, .cueActions { align-items: flex-start; flex-direction: column; }
+  .timelineHeader { align-items: flex-start; flex-direction: column; }
+  .timelineStats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .dialogGrid { grid-template-columns: 1fr; }
   .castForm { padding: 20px 0 0; border-left: 0; border-top: 1px solid #e7e7e7; }
 }
