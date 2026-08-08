@@ -7,6 +7,7 @@
       </div>
       <div class="headerActions f ac">
         <span v-if="activeTab === 'durable'" class="autoRefreshHint">{{ $t("workbench.task.durable.autoRefresh") }}</span>
+        <t-button v-if="activeTab === 'durable'" variant="outline" @click="exportDiagnostics">导出诊断</t-button>
         <t-button v-if="activeTab === 'durable'" variant="outline" @click="openBudget">预算与价格</t-button>
         <t-button v-if="activeTab === 'durable'" variant="outline" @click="openLimits">{{ $t("workbench.task.durable.limits.button") }}</t-button>
         <t-button @click="refreshActiveTab">
@@ -509,6 +510,22 @@ async function openBudget() {
     if (budgetProjectId.value) await loadBudget();
   } catch (error) {
     window.$message.error(errorText(error, "读取预算与价格失败"));
+  }
+}
+
+async function exportDiagnostics() {
+  try {
+    const report = await axios.post("/setting/diagnostics/export");
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `toonflow-diagnostics-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    window.$message.success("脱敏诊断报告已导出");
+  } catch (error) {
+    window.$message.error(errorText(error, "导出诊断失败"));
   }
 }
 

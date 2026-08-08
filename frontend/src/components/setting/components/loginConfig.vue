@@ -42,7 +42,7 @@ const formRules: FormRules<UserForm> = {
   ],
   password: [
     { required: true, message: $t("settings.login.msg.enterPassword"), trigger: "blur" },
-    { min: 6, max: 20, message: $t("settings.login.msg.passwordLength"), trigger: "blur" },
+    { min: 8, max: 128, message: "密码长度应为 8–128 位", trigger: "blur" },
   ],
 };
 

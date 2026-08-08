@@ -319,6 +319,15 @@ const migrations: Migration[] = [
       }
     },
   },
+  {
+    id: "20260808_009_password_security",
+    up: async (db) => {
+      if (!(await db.schema.hasColumn("o_user", "must_change_password"))) {
+        await db.schema.alterTable("o_user", (table) => table.integer("must_change_password").notNullable().defaultTo(0));
+      }
+      await db("o_user").where("password", "admin123").update({ must_change_password: 1 });
+    },
+  },
 ];
 
 export default async function runMigrations(db: Knex): Promise<void> {

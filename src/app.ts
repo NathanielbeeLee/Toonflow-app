@@ -188,11 +188,15 @@ export default async function startServe(randomPort: Boolean = false) {
   });
 
   const port = randomPort ? 0 : 10588;
+  const host = process.env.TOONFLOW_HOST?.trim() || "127.0.0.1";
+  if (!["127.0.0.1", "localhost", "::1"].includes(host)) {
+    console.warn(`[安全警告] 服务将监听非本机地址 ${host}。请同时配置防火墙、TLS 反向代理和受限 CORS。`);
+  }
   return await new Promise((resolve) => {
-    server.listen(port, async () => {
+    server.listen(port, host, async () => {
       const address = server.address();
       const realPort = typeof address === "string" ? address : address?.port;
-      console.log(`[服务启动成功]: http://localhost:${realPort}`);
+      console.log(`[服务启动成功]: http://${host}:${realPort}`);
       resolve(realPort);
     });
   });

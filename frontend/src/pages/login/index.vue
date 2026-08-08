@@ -40,6 +40,18 @@
       </template>
     </t-button>
   </div>
+  <t-dialog
+    v-model:visible="mustChangePasswordVisible"
+    header="首次登录必须修改默认密码"
+    :close-btn="false"
+    :close-on-overlay-click="false"
+    :on-confirm="changeDefaultPassword">
+    <t-alert theme="warning" message="默认账号密码是公开信息。请设置至少 8 位的新密码后继续。" />
+    <t-form label-align="top" class="passwordChangeForm">
+      <t-form-item label="新密码"><t-input v-model="passwordChange.password" type="password" autocomplete="new-password" /></t-form-item>
+      <t-form-item label="确认新密码"><t-input v-model="passwordChange.confirm" type="password" autocomplete="new-password" /></t-form-item>
+    </t-form>
+  </t-dialog>
 </template>
 
 <script setup>
@@ -85,6 +97,15 @@ const state = ref({
     password: [{ required: true, message: $t("login.passwordRequired") }],
   },
 });
+const mustChangePasswordVisible = ref(false);
+const loggedInUser = ref({ id: 0, name: "" });
+const passwordChange = ref({ password: "", confirm: "" });
+
+const completeLogin = () => {
+  Router.push("/project");
+  window.$message.success($t("login.loginSuccess"));
+  state.value.loginLoading = false;
+};
 
 const handleLogin = () => {
   if (!state.value.user.username || !state.value.user.password) {
@@ -98,14 +119,42 @@ const handleLogin = () => {
     .then(({ data }) => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data.id);
-      Router.push("/project");
-      window.$message.success($t("login.loginSuccess"));
-      state.value.loginLoading = false;
+      loggedInUser.value = { id: data.id, name: data.name };
+      if (data.mustChangePassword) {
+        mustChangePasswordVisible.value = true;
+        state.value.loginLoading = false;
+      } else {
+        completeLogin();
+      }
     })
     .catch((e) => {
       state.value.loginLoading = false;
       window.$message.error(e.message);
     });
+};
+
+const changeDefaultPassword = async () => {
+  if (passwordChange.value.password.length < 8) {
+    window.$message.warning("新密码至少 8 位");
+    return false;
+  }
+  if (passwordChange.value.password !== passwordChange.value.confirm) {
+    window.$message.warning("两次输入的密码不一致");
+    return false;
+  }
+  try {
+    await axios.post("/setting/loginConfig/updateUserPwd", {
+      id: loggedInUser.value.id,
+      name: loggedInUser.value.name,
+      password: passwordChange.value.password,
+    });
+    mustChangePasswordVisible.value = false;
+    completeLogin();
+    return true;
+  } catch (error) {
+    window.$message.error(error?.message || "修改密码失败");
+    return false;
+  }
 };
 </script>
 
@@ -207,6 +256,7 @@ const handleLogin = () => {
     border: 1px solid var(--td-component-border);
   }
 }
+.passwordChangeForm { margin-top: 14px; }
 
 .settingBtn {
   position: fixed;
