@@ -13,7 +13,7 @@ function goHome() {
   router.push("/");
 }
 const isElectron = computed(() => {
-  return window?.$electron;
+  return "$electron" in window;
 });
 </script>
 

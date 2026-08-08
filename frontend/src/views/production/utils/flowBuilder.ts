@@ -55,7 +55,7 @@ export interface Storyboard {
   shouldGenerateImage: number;
 }
 
-interface VideoList {
+export interface VideoList {
   id: number;
   prompt: string;
   duration: number;
@@ -71,6 +71,8 @@ export interface FlowData {
   storyboard: Storyboard[];
   workbench: {
     videoList: VideoList[];
+    cover?: string;
+    gradient?: string;
   };
 }
 

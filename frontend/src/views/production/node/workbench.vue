@@ -30,17 +30,9 @@
 <script setup lang="ts">
 import workbench from "../components/workbench/index.vue";
 import { Handle, Position } from "@vue-flow/core";
+import type { FlowData } from "../utils/flowBuilder";
 
 const visible = ref(false);
-
-interface WorkbenchData {
-  name: string;
-  duration: string;
-  resolution: string;
-  fps: string;
-  cover?: string;
-  gradient?: string;
-}
 
 const props = defineProps<{
   id: string;
@@ -50,7 +42,7 @@ const props = defineProps<{
   };
 }>();
 
-const workbenchData = defineModel<WorkbenchData>({ required: true });
+const workbenchData = defineModel<FlowData["workbench"]>({ required: true });
 </script>
 
 <style lang="scss" scoped>
