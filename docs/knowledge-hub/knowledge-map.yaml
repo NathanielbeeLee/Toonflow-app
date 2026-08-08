@@ -171,17 +171,18 @@
       "name": "供应商远端任务恢复",
       "summary": "保存视频供应商 job ID，重启或轮询失败后继续查询原任务",
       "user_entry": { "page": "制作工作台", "action": "使用支持远端任务恢复的视频供应商生成视频" },
-      "source_paths": ["src/utils/ai.ts", "src/services/task-engine/handlers/videoGeneration.ts", "data/vendor/volcengine.ts", "data/vendor/openai.ts", "data/vendor/minimax.ts"],
+      "source_paths": ["src/utils/ai.ts", "src/services/task-engine/handlers/videoGeneration.ts", "data/vendor/volcengine.ts", "data/vendor/openai.ts", "data/vendor/minimax.ts", "data/vendor/klingai.ts"],
       "tables": ["generation_tasks"],
       "relations": [
         { "type": "writes", "target": "table.generation-tasks" },
         { "type": "uses", "target": "provider.volcengine" },
         { "type": "uses", "target": "provider.openai-compatible" },
         { "type": "uses", "target": "provider.minimax" },
+        { "type": "uses", "target": "provider.kling" },
         { "type": "depends_on", "target": "concept.worker-lease" }
       ],
       "introduced_in": "toon-custom/provider-resume-2026-08-08",
-      "last_verified_commit": "toon-custom/6acff39d"
+      "last_verified_commit": "toon-custom/550ce044"
     },
     {
       "id": "provider.volcengine",
@@ -218,6 +219,19 @@
       ],
       "introduced_in": "toon-custom/6acff39d",
       "last_verified_commit": "toon-custom/6acff39d"
+    },
+    {
+      "id": "provider.kling",
+      "type": "provider",
+      "name": "可灵视频供应商",
+      "summary": "保存白名单查询路径与 task ID，覆盖文生、图生、多图和 Omni 的重启续跑",
+      "source_paths": ["data/vendor/klingai.ts", "scripts/verify-kling-provider.ts"],
+      "relations": [
+        { "type": "uses", "target": "feature.provider-job-resume" },
+        { "type": "documented_by", "target": "document.providers-models" }
+      ],
+      "introduced_in": "toon-custom/550ce044",
+      "last_verified_commit": "toon-custom/550ce044"
     },
     {
       "id": "troubleshooting.unknown-provider-state",

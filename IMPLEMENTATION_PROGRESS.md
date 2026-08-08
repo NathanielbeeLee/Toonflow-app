@@ -108,11 +108,21 @@
 - 当前模板没有已确认的 MiniMax 远端取消接口，因此取消只停止 Toonflow 后续处理，不宣称取消供应商端任务。
 - 本地 Mock、根 TypeScript 检查和后端构建通过；未调用真实 MiniMax API。
 
+## 2026-08-08 第八批：可灵多路径任务恢复
+
+落地提交：`550ce044`。
+
+- 可灵供应商升级到 2.1，文生、图生、多图和 Omni 模式统一实现 `videoSubmit/videoPoll`。
+- 持久远端身份同时保存受控 API 路径和 task ID，重启后回到正确路径查询；只允许四个模板预定义视频路径，拒绝任意路径。
+- 原 `videoRequest` 保持兼容并复用拆分后的提交/查询逻辑。
+- 当前模板未实现未经确认的可灵远端取消接口，继续保持本地取消边界。
+- 本地 JWT/HTTP Mock、根 TypeScript 检查和后端构建通过；未调用真实可灵 API。
+
 ## 下一批优先级
 
-1. 为可灵等更多视频供应商拆分 `submit/poll/resume`；无远端取消 API 时继续只做本地取消。
-2. 将单张图片编辑/生成入口和 TTS 迁入持久任务，避免仍存在的页面级后台 Promise。
-3. 吸收 Huobao 的逐句 TTS/角色音色流程。
-4. 吸收 OpenMontage 的规范化时间线、多轨混音与媒体 QA。
+1. 将单张图片编辑/生成入口和 TTS 迁入持久任务，避免仍存在的页面级后台 Promise。
+2. 吸收 Huobao 的逐句 TTS/角色音色流程。
+3. 吸收 OpenMontage 的规范化时间线、多轨混音与媒体 QA。
+4. 为其余供应商逐个核对真实远端任务/取消 API，不猜测未公开契约。
 
 继续工作前先读：`docs/knowledge-hub/AI_ASSISTANT_CONTEXT.md`、`docs/upstream-watch/sources.yaml` 和最新扫描报告。
