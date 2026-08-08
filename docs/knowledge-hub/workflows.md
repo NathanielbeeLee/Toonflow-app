@@ -23,6 +23,14 @@
 5. 使用 OpenAI 标准供应商时，可从下拉框选择 GPT-4o mini TTS/TTS-1 系列及内置音色；选择一条或多条台词进入持久配音队列，从任务中心查看 `audio` 通道状态。其他空 TTS 供应商会明确失败。
 6. 在“字幕 cue”校准毫秒时间并锁定人工调整；重建只替换未锁定 cue，最后导出 SRT 或 WebVTT。
 
+## 从 AI Novel 导入成品
+
+1. 在 AI Novel Writing Assistant 导出整本小说 JSON，或导出成品短剧项目 JSON；也可以保持其本机服务运行并复制 Novel ID / Drama Project ID。
+2. 打开 Toonflow 项目的“剧本”，点击“导入 AI Novel 成品”，选择粘贴、JSON 文件或本机 API；API 默认使用 `http://127.0.0.1:3000`。
+3. 点击“仅校验并预览”，核对作品、角色、章节顺序、空正文警告和每集的新增/更新/无变化动作。来源未提供的结构化场次、对白和道具会明确显示为不可识别。
+4. 勾选要作为 Toonflow 分集剧本的章节并确认导入。重复导入相同版本安全复用；新版本只更新同一外部章节映射的剧本。
+5. 角色不会自动变成资产；确认剧本后选中分集并运行“提取资产”，再人工审核角色、场景和道具。
+
 ## 同步外部能力
 
 运行 `yarn upstream:check` 和 `yarn upstream:scan` 只产生增量证据。由 Codex 按 `docs/upstream-watch/README.md` 评估、重写、验证并更新游标，参考仓库不会直接 merge 到 Toonflow。

@@ -7,6 +7,7 @@
 | workflow.novel-to-video | uses | feature.infinite-canvas |
 | workflow.novel-to-video | uses | feature.durable-video-tasks |
 | workflow.novel-to-video | uses | feature.durable-image-tasks |
+| workflow.novel-to-video | uses | feature.ai-novel-import |
 | workflow.novel-to-video | uses | feature.voice-utterance-studio |
 | workflow.novel-to-video | uses | feature.normalized-timeline |
 | workflow.novel-to-video | uses | feature.ffmpeg-preview-render |
@@ -25,6 +26,9 @@
 | feature.durable-image-tasks | uses | feature.provider-limits |
 | feature.durable-image-tasks | uses | provider.openai-compatible |
 | feature.durable-image-tasks | visualized_by | feature.durable-task-center |
+| feature.ai-novel-import | feeds | workflow.novel-to-video |
+| feature.ai-novel-import | feeds | feature.voice-utterance-studio |
+| feature.ai-novel-import | documented_by | document.upstream-watch |
 | feature.provider-limits | protects | feature.durable-video-tasks |
 | feature.voice-utterance-studio | writes | table.generation-tasks |
 | feature.voice-utterance-studio | uses | feature.provider-limits |

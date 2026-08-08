@@ -8,6 +8,8 @@
 | `POST /api/production/workbench/generateVideo` | 单条视频任务入队；保持返回原 `videoId`，可选 `requestId` |
 | `POST /api/assetsGenerate/generateAssets` | 单张角色、场景或道具图片入队，返回持久任务与图片占位记录 |
 | `POST /api/production/editImage/generateFlowImage` | 图片编辑画布节点入队，返回节点应保存的持久任务 ID |
+| `POST /api/script/importNovel/preview` | 校验 AI Novel 小说/短剧 JSON 或本机 API，仅返回预览和计划动作 |
+| `POST /api/script/importNovel/commit` | 按所选外部章节执行版本化幂等导入 |
 | `POST /api/generationTasks/list` | 按项目、lane、状态、类型分页查询 |
 | `POST /api/generationTasks/get` | 查询单个持久任务 |
 | `POST /api/generationTasks/cancel` | 请求取消任务 |

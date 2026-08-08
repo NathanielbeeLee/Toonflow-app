@@ -14,6 +14,7 @@
         { "type": "uses", "target": "feature.infinite-canvas" },
         { "type": "uses", "target": "feature.durable-video-tasks" },
         { "type": "uses", "target": "feature.durable-image-tasks" },
+        { "type": "uses", "target": "feature.ai-novel-import" },
         { "type": "uses", "target": "feature.voice-utterance-studio" },
         { "type": "uses", "target": "feature.normalized-timeline" },
         { "type": "uses", "target": "feature.ffmpeg-preview-render" }
@@ -107,6 +108,23 @@
       ],
       "introduced_in": "toon-custom/c4a5c5a0",
       "last_verified_commit": "toon-custom/e345aac7"
+    },
+    {
+      "id": "feature.ai-novel-import",
+      "type": "feature",
+      "name": "AI Novel 成品版本化导入",
+      "summary": "从小说章节或成品短剧 JSON 预览、选择并按外部 ID 幂等导入 Toonflow 剧本",
+      "user_entry": { "page": "剧本", "action": "点击“导入 AI Novel 成品”，选择粘贴、JSON 文件或本机 API，预览后确认" },
+      "source_paths": ["src/services/script-import/novelExport.ts", "src/services/script-import/importNovel.ts", "src/services/script-import/persistence.ts", "src/routes/script/importNovel.ts", "frontend/src/views/script/components/importNovelProject.vue"],
+      "api": ["POST /api/script/importNovel/preview", "POST /api/script/importNovel/commit"],
+      "tables": ["script_import_batches", "script_import_items", "o_script", "project_events"],
+      "relations": [
+        { "type": "feeds", "target": "workflow.novel-to-video" },
+        { "type": "feeds", "target": "feature.voice-utterance-studio" },
+        { "type": "documented_by", "target": "document.upstream-watch" }
+      ],
+      "introduced_in": "toon-custom/e4018fbe",
+      "last_verified_commit": "toon-custom/e4018fbe"
     },
     {
       "id": "feature.provider-limits",

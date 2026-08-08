@@ -12,6 +12,10 @@
 | o_image | 持久图片任务 | feature.durable-image-tasks |
 | o_storyboard | 持久图片任务 | feature.durable-image-tasks |
 | o_imageFlow | 持久图片任务 | feature.durable-image-tasks |
+| script_import_batches | AI Novel 成品版本化导入 | feature.ai-novel-import |
+| script_import_items | AI Novel 成品版本化导入 | feature.ai-novel-import |
+| o_script | AI Novel 成品版本化导入 | feature.ai-novel-import |
+| project_events | AI Novel 成品版本化导入 | feature.ai-novel-import |
 | provider_limits | 供应商与模型限流 | feature.provider-limits |
 | voice_cast | 角色音色、逐句台词与字幕 cue | feature.voice-utterance-studio |
 | utterances | 角色音色、逐句台词与字幕 cue | feature.voice-utterance-studio |

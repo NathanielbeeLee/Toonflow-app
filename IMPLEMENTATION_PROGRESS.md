@@ -249,10 +249,25 @@
 
 验证：根 `yarn lint`、前端 `vue-tsc --build --force`、完整 `yarn build` 和 `git diff --check` 通过；未调用任何图片供应商或付费 API。
 
+## 2026-08-08 第二十批：AI Novel 成品剧本版本化导入
+
+参考项目扫描基线：`AI-Novel-Writing-Assistant` 当前 `1854470419bcc8194e121f70c481b6758bf4c4bc`；小说导出稳定化提交 `6f6a8d11e32372d0a807cd2bcf5770c8327a3c26`，短剧项目导出基线 `14aaa5fbc546934a0693a006a127aa4ef1d6ac26`。
+
+落地提交：`e4018fbe`。
+
+- 依据真实 JSON 契约独立实现两类导入器：小说 `metadata + data.chapter.chapters / data.character.characters`，以及短剧项目根级 `episodes / characters`；参考项目为 AGPL，仅核对接口和 DTO，没有复制源码。
+- 剧本页新增“导入 AI Novel 成品”，支持粘贴 JSON、选择 JSON 文件和本机 API。API 模式可选小说或短剧项目，默认地址为 `127.0.0.1:3000`。
+- 预览先验证外部项目 ID、版本、章节唯一性和正文，显示角色、空正文、来源未提供的场次/对白/道具边界，以及每一集正式导入时将新增、更新还是保持不变。
+- `script_import_batches` 保存来源/选择校验和、外部版本、导入器版本和报告；`script_import_items` 保存外部章节映射和每次导入快照。同一版本与选择重复提交直接复用；新版本更新同一外部 ID 对应剧本，未变化章节不重建。
+- 正式导入使用单个 SQLite 事务，并写项目事件。角色只用于预览，不自动创建/合并资产；用户可在导入后运行现有“提取资产”，避免根据小说角色字段猜 Toonflow 资产契约。
+- API 抓取有 20 秒/25MB 上限并拒绝重定向；默认仅允许 localhost、127.0.0.1 和 ::1，远端主机必须显式配置 `TOONFLOW_NOVEL_IMPORT_HOSTS`，可选 token 只用于当次请求且不保存。
+
+验证：小说/短剧 fixture 解析、规范化校验和、同版本幂等、新版本仅更新变化章节、两次迁移幂等、本机两类 API 路径和远端主机阻断均通过；根 TypeScript、前端 Vue 类型检查、完整前后端构建和生产路由打包通过。未调用 LLM 或付费 API。
+
 ## 下一批优先级
 
-1. 调研本地 `AI-Novel-Writing-Assistant` 的真实导出或 API 契约；只有证据充分时才实现剧本导入预览、校验、版本与外部 ID 幂等。
-2. 继续从登记游标之后增量扫描参考项目；优先选择无需新运行时、许可证允许且能复用当前持久任务/时间线体系的能力。
-3. 为火山等其余供应商逐个核对真实 TTS、远端任务和取消 API；没有公开契约或付费授权时保持停点，不猜字段、不真实试片。
+1. 继续从登记游标之后增量扫描参考项目；优先补齐发布打包体验和现有供应商已公开、可本地 Mock 的恢复能力。
+2. 正式版本化 OpenAPI、独立 API Key 和 webhook 属于新的公网自动化安全边界，应单独设计权限、轮换、签名和重放保护后再实现。
+3. Remotion/HyperFrames 仍等待具体品牌模板或 FFmpeg 无法满足的明确需求；真实付费试片、actual cost 和未公开取消 API 继续等待授权/契约。
 
 继续工作前先读：`docs/knowledge-hub/AI_ASSISTANT_CONTEXT.md`、`docs/upstream-watch/sources.yaml` 和最新扫描报告。
