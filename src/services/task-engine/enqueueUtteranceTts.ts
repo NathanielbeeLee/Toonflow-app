@@ -1,6 +1,7 @@
 import { db } from "@/utils/db";
 import { generationTaskRepository, stableIdempotencyKey } from "@/services/task-engine/repository";
 import { UtteranceTtsTaskPayload } from "@/services/task-engine/handlers/utteranceTts";
+import { prepareCostReservation } from "@/services/task-engine/budget";
 
 const sql = db as any;
 
@@ -28,6 +29,12 @@ export async function enqueueUtteranceTts(input: { projectId: number; utteranceI
   if (utterance.status === "succeeded" && utterance.audio_path && utterance.cache_key === cacheKey) {
     return { task: null, payload: null, deduped: true, cached: true, audioPath: utterance.audio_path };
   }
+  const costReservation = await prepareCostReservation({
+    projectId: input.projectId,
+    lane: "audio",
+    model,
+    metrics: { request: 1, character: Array.from(String(utterance.text)).length },
+  });
   let referenceAudioPath: string | undefined;
   if (voiceCast.preview_asset_id) {
     const reference = await sql("o_assets")
@@ -72,6 +79,7 @@ export async function enqueueUtteranceTts(input: { projectId: number; utteranceI
     provider: voiceCast.provider,
     idempotencyKey: stableIdempotencyKey({ type: "tts.utterance.generate", cacheKey, requestId: input.requestId }),
     maxAttempts: 2,
+    costReservation,
   });
   if (result.deduped) {
     await sql("o_tasks").where("id", legacyTaskId).delete();

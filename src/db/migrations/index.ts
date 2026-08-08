@@ -272,6 +272,53 @@ const migrations: Migration[] = [
       }
     },
   },
+  {
+    id: "20260808_007_budget_and_pricing",
+    up: async (db) => {
+      if (!(await db.schema.hasTable("project_budget_controls"))) {
+        await db.schema.createTable("project_budget_controls", (table) => {
+          table.integer("project_id").primary();
+          table.float("budget_limit");
+          table.text("currency").notNullable().defaultTo("CNY");
+          table.integer("block_unknown_price").notNullable().defaultTo(0);
+          table.integer("updated_at").notNullable();
+        });
+      }
+      if (!(await db.schema.hasTable("pricing_rules"))) {
+        await db.schema.createTable("pricing_rules", (table) => {
+          table.text("id").primary();
+          table.text("provider").notNullable();
+          table.text("model").notNullable().defaultTo("*");
+          table.text("lane").notNullable();
+          table.text("unit_type").notNullable();
+          table.float("unit_price").notNullable();
+          table.text("currency").notNullable().defaultTo("CNY");
+          table.integer("updated_at").notNullable();
+          table.unique(["provider", "model", "lane"], "pricing_rules_identity_unique");
+        });
+      }
+    },
+  },
+  {
+    id: "20260808_008_composition_reviews",
+    up: async (db) => {
+      if (!(await db.schema.hasTable("composition_reviews"))) {
+        await db.schema.createTable("composition_reviews", (table) => {
+          table.text("id").primary();
+          table.integer("project_id").notNullable();
+          table.integer("script_id").notNullable();
+          table.text("composition_job_id").notNullable();
+          table.text("output_checksum").notNullable();
+          table.text("status").notNullable();
+          table.text("note");
+          table.text("reviewer").notNullable();
+          table.integer("created_at").notNullable();
+          table.index(["project_id", "script_id", "created_at"], "composition_reviews_script_idx");
+          table.index(["composition_job_id", "created_at"], "composition_reviews_job_idx");
+        });
+      }
+    },
+  },
 ];
 
 export default async function runMigrations(db: Knex): Promise<void> {

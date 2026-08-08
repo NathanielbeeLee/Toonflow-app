@@ -191,6 +191,17 @@
                   <template #time="{ row }">{{ row.startMs == null ? "-" : formatMilliseconds(row.startMs) }}</template>
                 </t-table>
               </div>
+              <div v-if="compositionJob.status === 'succeeded'" class="reviewBar">
+                <div>
+                  <strong>人工审核</strong>
+                  <span v-if="compositionReview">{{ compositionReview.status === 'approved' ? '已通过' : '已退回' }} · {{ compositionReview.reviewer }}<template v-if="compositionReview.note"> · {{ compositionReview.note }}</template></span>
+                  <span v-else>尚未审核</span>
+                </div>
+                <t-space>
+                  <t-button size="small" theme="success" variant="outline" @click="openReviewDialog('approved')">审核通过</t-button>
+                  <t-button size="small" theme="danger" variant="outline" @click="openReviewDialog('rejected')">退回修改</t-button>
+                </t-space>
+              </div>
             </div>
           </template>
         </t-tab-panel>
@@ -312,6 +323,11 @@
         </div>
       </div>
     </t-dialog>
+
+    <t-dialog v-model:visible="reviewDialogVisible" :header="reviewForm.status === 'approved' ? '审核通过成片' : '退回成片'" :on-confirm="saveCompositionReview">
+      <t-alert :theme="reviewForm.status === 'approved' ? 'success' : 'warning'" :message="reviewForm.status === 'approved' ? '审核记录会绑定当前成片校验和。' : '请填写需要调整的镜头、声音或字幕。'" />
+      <t-textarea v-model="reviewForm.note" class="reviewNote" placeholder="审核意见（可选）" :autosize="{ minRows: 4, maxRows: 8 }" />
+    </t-dialog>
   </div>
 </template>
 
@@ -429,6 +445,15 @@ interface QaReport {
   };
 }
 
+interface CompositionReview {
+  id: string;
+  compositionJobId: string;
+  status: "approved" | "rejected";
+  note: string | null;
+  reviewer: string;
+  createdAt: number;
+}
+
 const { project } = storeToRefs(projectStore());
 const projectId = computed(() => (project.value?.id ? Number(project.value.id) : 0));
 const activeTab = ref("utterances");
@@ -454,11 +479,14 @@ const timeline = ref<TimelineRecord | null>(null);
 const compositionJob = ref<CompositionJob | null>(null);
 const audioClips = ref<ProjectAudioClip[]>([]);
 const qaReport = ref<QaReport | null>(null);
+const compositionReview = ref<CompositionReview | null>(null);
 const selectedUtteranceIds = ref<Array<string | number>>([]);
 const castDialogVisible = ref(false);
 const utteranceDialogVisible = ref(false);
 const cueDialogVisible = ref(false);
 const audioClipDialogVisible = ref(false);
+const reviewDialogVisible = ref(false);
+const reviewForm = ref({ status: "approved" as CompositionReview["status"], note: "" });
 
 const emptyCastForm = () => ({
   id: undefined as string | undefined,
@@ -641,24 +669,27 @@ async function loadWorkspace(showLoading = true) {
     compositionJob.value = null;
     audioClips.value = [];
     qaReport.value = null;
+    compositionReview.value = null;
     return;
   }
   if (showLoading) loading.value = true;
   try {
-    const [{ data: utteranceData }, { data: cueData }, { data: timelineData }, { data: jobData }, { data: audioClipData }, { data: qaData }] = await Promise.all([
+    const [{ data: utteranceData }, { data: cueData }, { data: timelineData }, { data: jobData }, { data: audioClipData }, { data: qaData }, { data: reviewData }] = await Promise.all([
       axios.post("/voiceStudio/utterances/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/voiceStudio/cues/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/composition/timeline/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/composition/timeline/jobs/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/composition/timeline/audio/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/composition/timeline/qa/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
+      axios.post("/composition/timeline/review/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
     ]);
     utterances.value = utteranceData;
     cues.value = cueData;
     timeline.value = timelineData;
     compositionJob.value = jobData;
     audioClips.value = audioClipData;
-    qaReport.value = qaData;
+    qaReport.value = qaData?.compositionJobId === jobData?.id ? qaData : null;
+    compositionReview.value = reviewData?.compositionJobId === jobData?.id ? reviewData : null;
   } catch (error) {
     showError(error, "获取配音工作区失败");
   } finally {
@@ -697,6 +728,7 @@ async function generatePreview(preset: CompositionJob["preset"]) {
     });
     compositionJob.value = data.job;
     if (qaReport.value?.compositionJobId !== data.job?.id) qaReport.value = null;
+    if (compositionReview.value?.compositionJobId !== data.job?.id) compositionReview.value = null;
     const label = preset === "final-high" ? "高清成片" : "低清预览";
     window.$message.success(data.cached ? `已复用相同时间线的${label}` : data.deduped ? `${label}已经在队列中` : `${label}已进入本地渲染队列`);
   } catch (error) {
@@ -753,6 +785,30 @@ function qaSeverityLabel(severity: QaFinding["severity"]) {
 
 function qaSeverityTheme(severity: QaFinding["severity"]) {
   return ({ info: "primary", warning: "warning", error: "danger" } as Record<string, any>)[severity];
+}
+
+function openReviewDialog(status: CompositionReview["status"]) {
+  reviewForm.value = { status, note: "" };
+  reviewDialogVisible.value = true;
+}
+
+async function saveCompositionReview() {
+  if (!selectedScriptId.value || !compositionJob.value) return false;
+  try {
+    const { data } = await axios.post("/composition/timeline/review/record", {
+      projectId: projectId.value,
+      scriptId: selectedScriptId.value,
+      compositionJobId: compositionJob.value.id,
+      ...reviewForm.value,
+    });
+    compositionReview.value = data;
+    reviewDialogVisible.value = false;
+    window.$message.success(reviewForm.value.status === "approved" ? "已记录审核通过" : "已记录退回意见");
+    return true;
+  } catch (error) {
+    showError(error, "保存审核记录失败");
+    return false;
+  }
 }
 
 function audioKindLabel(kind: ProjectAudioClip["kind"]) {
@@ -1161,6 +1217,10 @@ function showError(error: any, fallback: string) {
 .audioFormActions { margin-top: 14px; }
 .qaPanel { margin-top: 18px; padding-top: 16px; border-top: 1px solid #e7e7e7; }
 .qaStats { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 12px; color: #6b7280; font-size: 13px; }
+.reviewBar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e7e7e7; }
+.reviewBar > div { display: flex; flex-direction: column; gap: 4px; }
+.reviewBar span { color: #6b7280; font-size: 12px; }
+.reviewNote { margin-top: 14px; }
 .dialogGrid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;

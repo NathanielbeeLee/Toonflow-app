@@ -7,6 +7,7 @@
       </div>
       <div class="headerActions f ac">
         <span v-if="activeTab === 'durable'" class="autoRefreshHint">{{ $t("workbench.task.durable.autoRefresh") }}</span>
+        <t-button v-if="activeTab === 'durable'" variant="outline" @click="openBudget">预算与价格</t-button>
         <t-button v-if="activeTab === 'durable'" variant="outline" @click="openLimits">{{ $t("workbench.task.durable.limits.button") }}</t-button>
         <t-button @click="refreshActiveTab">
           <template #icon><i-redo :size="20" /></template>
@@ -154,6 +155,40 @@
         </template>
       </t-table>
     </t-dialog>
+
+    <t-dialog v-model:visible="budgetDialogVisible" header="项目预算与模型价格" width="900px" :footer="false">
+      <t-alert theme="info" message="价格必须由你按供应商账单配置，系统不会猜价。已知价格会在入队前预留预算；开启阻止未知价格后，没有规则的生成任务将被拒绝。复合任务当前只预留列表中的主模型费用。" />
+      <div class="budgetSummary">
+        <t-select v-model="budgetProjectId" label="项目" :options="projectOptions.filter((item) => item.value !== '')" @change="loadBudget" />
+        <t-input-number v-model="budgetForm.budgetLimit" label="预算上限" :min="0" clearable />
+        <t-select v-model="budgetForm.currency" label="币种" :options="currencyOptions" />
+        <div class="switchField"><span>阻止未知价格</span><t-switch v-model="budgetForm.blockUnknownPrice" /></div>
+        <t-button :disabled="!budgetProjectId" @click="saveBudget">保存项目预算</t-button>
+      </div>
+      <div v-if="budgetInfo" class="budgetNumbers">
+        <span>已预留：{{ budgetInfo.reservedCost.toFixed(4) }} {{ budgetInfo.currency }}</span>
+        <span>剩余：{{ budgetInfo.remaining == null ? '未设上限' : `${budgetInfo.remaining.toFixed(4)} ${budgetInfo.currency}` }}</span>
+      </div>
+      <div class="sectionTitle">模型价格规则</div>
+      <div class="pricingForm">
+        <t-input v-model="pricingForm.provider" label="供应商" placeholder="openai" />
+        <t-input v-model="pricingForm.model" label="模型" placeholder="*" />
+        <t-select v-model="pricingForm.lane" label="通道" :options="laneOptions.slice(1)" />
+        <t-select v-model="pricingForm.unitType" label="计价单位" :options="pricingUnitOptions" />
+        <t-input-number v-model="pricingForm.unitPrice" label="单价" :min="0" :decimal-places="6" />
+        <t-select v-model="pricingForm.currency" label="币种" :options="currencyOptions" />
+        <t-button @click="savePricingRule">{{ pricingForm.id ? '更新规则' : '新增规则' }}</t-button>
+      </div>
+      <t-table :data="pricingRules" :columns="pricingColumns" row-key="id" size="small">
+        <template #unit="{ row }">{{ row.unitPrice }} / {{ pricingUnitLabel(row.unitType) }}</template>
+        <template #operation="{ row }">
+          <t-space :size="4">
+            <t-button size="small" variant="text" @click="editPricingRule(row)">编辑</t-button>
+            <t-button size="small" variant="text" theme="danger" @click="removePricingRule(row)">删除</t-button>
+          </t-space>
+        </template>
+      </t-table>
+    </t-dialog>
   </div>
 </template>
 
@@ -220,6 +255,24 @@ interface ProviderLimit {
   cooldownMs: number;
 }
 
+interface PricingRule {
+  id: string;
+  provider: string;
+  model: string;
+  lane: DurableLane;
+  unitType: "request" | "second" | "character";
+  unitPrice: number;
+  currency: "CNY" | "USD";
+}
+
+interface BudgetInfo {
+  budgetLimit: number | null;
+  currency: "CNY" | "USD";
+  blockUnknownPrice: boolean;
+  reservedCost: number;
+  remaining: number | null;
+}
+
 const { project } = storeToRefs(projectStore());
 const activeTab = ref<"durable" | "legacy">("durable");
 const selectedProjectId = ref<number | "">(project.value?.id ? Number(project.value.id) : "");
@@ -234,6 +287,13 @@ const limitDialogVisible = ref(false);
 const limitsLoading = ref(false);
 const limitRows = ref<ProviderLimit[]>([]);
 const limitForm = ref<ProviderLimit>({ provider: "", model: "*", lane: "video", maxConcurrency: 2, rpm: 10, cooldownMs: 0 });
+const budgetDialogVisible = ref(false);
+const budgetProjectId = ref<number | "">(selectedProjectId.value);
+const budgetInfo = ref<BudgetInfo | null>(null);
+const budgetForm = ref<{ budgetLimit: number | undefined; currency: "CNY" | "USD"; blockUnknownPrice: boolean }>({ budgetLimit: undefined, currency: "CNY", blockUnknownPrice: false });
+const pricingRules = ref<PricingRule[]>([]);
+const emptyPricingForm = () => ({ id: undefined as string | undefined, provider: "", model: "*", lane: "video" as DurableLane, unitType: "second" as PricingRule["unitType"], unitPrice: 0, currency: "CNY" as PricingRule["currency"] });
+const pricingForm = ref(emptyPricingForm());
 
 const legacyTaskList = ref<LegacyTask[]>([]);
 const taskClass = ref("");
@@ -262,6 +322,16 @@ const limitColumns: TableProps["columns"] = [
   { colKey: "cooldownMs", title: $t("workbench.task.durable.limits.cooldown"), width: 100 },
   { colKey: "operation", title: $t("workbench.task.durable.col.operation"), width: 70, cell: "operation" },
 ];
+const pricingColumns: TableProps["columns"] = [
+  { colKey: "provider", title: "供应商", width: 100 },
+  { colKey: "model", title: "模型", ellipsis: true },
+  { colKey: "lane", title: "通道", width: 80 },
+  { colKey: "unit", title: "单价", width: 150, cell: "unit" },
+  { colKey: "currency", title: "币种", width: 70 },
+  { colKey: "operation", title: "操作", width: 120, cell: "operation" },
+];
+const currencyOptions = [{ label: "人民币 CNY", value: "CNY" }, { label: "美元 USD", value: "USD" }];
+const pricingUnitOptions = [{ label: "每次请求", value: "request" }, { label: "每秒", value: "second" }, { label: "每字符", value: "character" }];
 
 const legacyColumns: TableProps["columns"] = [
   { colKey: "taskClass", title: $t("workbench.task.col.taskClass"), width: 120, ellipsis: true },
@@ -430,6 +500,69 @@ async function saveLimit() {
   }
 }
 
+async function openBudget() {
+  budgetDialogVisible.value = true;
+  if (!budgetProjectId.value) budgetProjectId.value = projectOptions.value.find((item) => item.value !== "")?.value || "";
+  try {
+    const { data } = await axios.post("/generationTasks/limits/pricing/list");
+    pricingRules.value = data;
+    if (budgetProjectId.value) await loadBudget();
+  } catch (error) {
+    window.$message.error(errorText(error, "读取预算与价格失败"));
+  }
+}
+
+async function loadBudget() {
+  if (!budgetProjectId.value) return;
+  const { data } = await axios.post("/generationTasks/limits/budget/get", { projectId: budgetProjectId.value });
+  budgetInfo.value = data;
+  budgetForm.value = { budgetLimit: data.budgetLimit ?? undefined, currency: data.currency, blockUnknownPrice: data.blockUnknownPrice };
+}
+
+async function saveBudget() {
+  if (!budgetProjectId.value) return;
+  try {
+    const { data } = await axios.post("/generationTasks/limits/budget/upsert", { projectId: budgetProjectId.value, ...budgetForm.value, budgetLimit: budgetForm.value.budgetLimit ?? null });
+    budgetInfo.value = data;
+    window.$message.success("项目预算已保存");
+  } catch (error) {
+    window.$message.error(errorText(error, "保存项目预算失败"));
+  }
+}
+
+function pricingUnitLabel(unit: PricingRule["unitType"]) {
+  return pricingUnitOptions.find((item) => item.value === unit)?.label || unit;
+}
+
+function editPricingRule(row: PricingRule) {
+  pricingForm.value = { ...row };
+}
+
+async function savePricingRule() {
+  if (!pricingForm.value.provider.trim() || !pricingForm.value.model.trim()) {
+    window.$message.warning("供应商和模型不能为空");
+    return;
+  }
+  try {
+    await axios.post("/generationTasks/limits/pricing/upsert", pricingForm.value);
+    pricingForm.value = emptyPricingForm();
+    window.$message.success("价格规则已保存");
+    await openBudget();
+  } catch (error) {
+    window.$message.error(errorText(error, "保存价格规则失败"));
+  }
+}
+
+async function removePricingRule(row: PricingRule) {
+  try {
+    await axios.post("/generationTasks/limits/pricing/delete", { id: row.id });
+    window.$message.success("价格规则已删除");
+    await openBudget();
+  } catch (error) {
+    window.$message.error(errorText(error, "删除价格规则失败"));
+  }
+}
+
 function confirmCancel(task: DurableTask) {
   const dialog = DialogPlugin.confirm({
     header: $t("workbench.task.durable.cancelTitle"),
@@ -578,6 +711,28 @@ function errorText(error: unknown, fallback: string) {
     gap: 12px;
     margin-bottom: 16px;
   }
+
+  .budgetSummary,
+  .pricingForm {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+    align-items: end;
+  }
+
+  .budgetNumbers {
+    display: flex;
+    gap: 24px;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 8px;
+    background: var(--td-bg-color-secondarycontainer);
+  }
+
+  .switchField { display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
+
+  .sectionTitle { margin: 18px 0 8px; font-size: 16px; font-weight: 600; }
 
   .taskTypeCell {
     display: flex;

@@ -12,6 +12,7 @@ import {
   upsertProjectAudioClip,
 } from "@/services/composition/audioClips";
 import { enqueueCompositionQa, getLatestQaReport } from "@/services/composition/qaJobs";
+import { getLatestCompositionReview, recordCompositionReview, reviewStatuses } from "@/services/composition/reviews";
 
 const router = express.Router();
 const filters = {
@@ -42,6 +43,34 @@ router.post("/audio/list", validateFields(filters), async (req, res) => {
 router.post("/qa/latest", validateFields(filters), async (req, res) => {
   res.status(200).send(success(await getLatestQaReport(req.body)));
 });
+
+router.post(
+  "/review/latest",
+  validateFields({ ...filters, compositionJobId: z.string().uuid().optional() }),
+  async (req, res) => {
+    res.status(200).send(success(await getLatestCompositionReview(req.body)));
+  },
+);
+
+router.post(
+  "/review/record",
+  validateFields({
+    ...filters,
+    compositionJobId: z.string().uuid(),
+    status: z.enum(reviewStatuses),
+    note: z.string().trim().max(1000).optional(),
+  }),
+  async (req, res) => {
+    try {
+      res.status(200).send(success(await recordCompositionReview({
+        ...req.body,
+        reviewer: String((req as any).user?.username || (req as any).user?.name || "local-user"),
+      })));
+    } catch (cause) {
+      res.status(400).send(error(cause instanceof Error ? cause.message : String(cause)));
+    }
+  },
+);
 
 router.post(
   "/qa/run",

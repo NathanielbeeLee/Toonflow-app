@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 import u from "@/utils";
 import { generationTaskRepository, stableIdempotencyKey } from "@/services/task-engine/repository";
 import { AssetImageTaskPayload, StoryboardImageTaskPayload } from "@/services/task-engine/handlers/imageGeneration";
+import { prepareCostReservation } from "@/services/task-engine/budget";
 
 const terminal = new Set(["cancelled", "succeeded", "failed"]);
 
@@ -25,6 +26,12 @@ export async function enqueueAssetImageGeneration(input: {
   const resourceKey = `image:asset:${input.assetId}`;
   const existing = await activeTask(input.projectId, "asset.image.generate", resourceKey);
   if (existing) return { task: existing, payload: existing.payload as AssetImageTaskPayload, deduped: true };
+  const costReservation = await prepareCostReservation({
+    projectId: input.projectId,
+    lane: "image",
+    model: input.model,
+    metrics: { request: 1 },
+  });
 
   const savePath = `/${input.projectId}/assets/${input.scriptId}/${input.assetType}/${uuid()}.jpg`;
   const [imageId] = await u.db("o_image").insert({
@@ -68,6 +75,7 @@ export async function enqueueAssetImageGeneration(input: {
     provider: input.model.split(/:(.+)/)[0],
     idempotencyKey: stableIdempotencyKey({ requestId: input.requestId, resourceKey, type: "asset.image.generate" }),
     maxAttempts: 3,
+    costReservation,
   });
   if (result.deduped) {
     await u.db("o_image").where("id", imageId).delete();
@@ -93,6 +101,12 @@ export async function enqueueStoryboardImageGeneration(input: {
   const resourceKey = `image:storyboard:${input.storyboardId}`;
   const existing = await activeTask(input.projectId, "storyboard.image.generate", resourceKey);
   if (existing) return { task: existing, payload: existing.payload as StoryboardImageTaskPayload, deduped: true };
+  const costReservation = await prepareCostReservation({
+    projectId: input.projectId,
+    lane: "image",
+    model: input.model,
+    metrics: { request: 1 },
+  });
 
   const [legacyTaskId] = await u.db("o_tasks").insert({
     projectId: input.projectId,
@@ -124,6 +138,7 @@ export async function enqueueStoryboardImageGeneration(input: {
     provider: input.model.split(/:(.+)/)[0],
     idempotencyKey: stableIdempotencyKey({ requestId: input.requestId, resourceKey, type: "storyboard.image.generate" }),
     maxAttempts: 3,
+    costReservation,
   });
   if (result.deduped) await u.db("o_tasks").where("id", legacyTaskId).delete();
   return { task: result.task, payload: result.task.payload as StoryboardImageTaskPayload, deduped: result.deduped };

@@ -56276,16 +56276,16 @@ var require_string2 = __commonJS({
       }
     }
     function arrayToList(array4, finalEscape, ctx) {
-      let sql10 = "";
+      let sql12 = "";
       for (let i = 0; i < array4.length; i++) {
         const val = array4[i];
         if (Array.isArray(val)) {
-          sql10 += (i === 0 ? "" : ", ") + "(" + arrayToList(val, finalEscape, ctx) + ")";
+          sql12 += (i === 0 ? "" : ", ") + "(" + arrayToList(val, finalEscape, ctx) + ")";
         } else {
-          sql10 += (i === 0 ? "" : ", ") + finalEscape(val, ctx);
+          sql12 += (i === 0 ? "" : ", ") + finalEscape(val, ctx);
         }
       }
-      return sql10;
+      return sql12;
     }
     function bufferToString(buffer) {
       return "X" + escapeString(buffer.toString("hex"));
@@ -58594,26 +58594,26 @@ var require_ensure_connection_callback = __commonJS({
     function ensureConnectionCallback(runner) {
       runner.client.emit("start", runner.builder);
       runner.builder.emit("start", runner.builder);
-      const sql10 = runner.builder.toSQL();
+      const sql12 = runner.builder.toSQL();
       if (runner.builder._debug) {
-        runner.client.logger.debug(sql10);
+        runner.client.logger.debug(sql12);
       }
-      if (Array.isArray(sql10)) {
-        return runner.queryArray(sql10);
+      if (Array.isArray(sql12)) {
+        return runner.queryArray(sql12);
       }
-      return runner.query(sql10);
+      return runner.query(sql12);
     }
     function ensureConnectionStreamCallback(runner, params) {
       try {
-        const sql10 = runner.builder.toSQL();
-        if (Array.isArray(sql10) && params.hasHandler) {
+        const sql12 = runner.builder.toSQL();
+        if (Array.isArray(sql12) && params.hasHandler) {
           throw new Error(
             "The stream may only be used with a single query statement."
           );
         }
         return runner.client.stream(
           runner.connection,
-          sql10,
+          sql12,
           params.stream,
           params.options
         );
@@ -58752,7 +58752,7 @@ var require_runner = __commonJS({
           if (!(error73 instanceof KnexTimeoutError)) {
             return Promise.reject(error73);
           }
-          const { timeout: timeout2, sql: sql10, bindings } = obj;
+          const { timeout: timeout2, sql: sql12, bindings } = obj;
           let cancelQuery;
           if (obj.cancelOnTimeout) {
             cancelQuery = this.client.cancelQuery(this.connection);
@@ -58764,14 +58764,14 @@ var require_runner = __commonJS({
             this.connection.__knex__disposed = error73;
             throw Object.assign(cancelError, {
               message: `After query timeout of ${timeout2}ms exceeded, cancelling of query failed.`,
-              sql: sql10,
+              sql: sql12,
               bindings,
               timeout: timeout2
             });
           }).then(() => {
             throw Object.assign(error73, {
               message: `Defined query timeout of ${timeout2}ms exceeded when running query.`,
-              sql: sql10,
+              sql: sql12,
               bindings,
               timeout: timeout2
             });
@@ -63822,8 +63822,8 @@ var require_transaction = __commonJS({
           this._rejecter(error73);
         });
       }
-      query(conn, sql10, status, value) {
-        const q = this.trxClient.query(conn, sql10).catch((err) => {
+      query(conn, sql12, status, value) {
+        const q = this.trxClient.query(conn, sql12).catch((err) => {
           status = 2;
           value = err;
           this._completed = true;
@@ -63834,7 +63834,7 @@ var require_transaction = __commonJS({
           }
           if (status === 2) {
             if (value === void 0) {
-              if (this.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql10)) {
+              if (this.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql12)) {
                 this._resolver();
                 return;
               }
@@ -64020,8 +64020,8 @@ var require_transaction = __commonJS({
       return trxClient;
     }
     function completedError(trx, obj) {
-      const sql10 = typeof obj === "string" ? obj : obj && obj.sql;
-      debug("%s: Transaction completed: %s", trx.txid, sql10);
+      const sql12 = typeof obj === "string" ? obj : obj && obj.sql;
+      debug("%s: Transaction completed: %s", trx.txid, sql12);
       throw new Error(
         "Transaction query already complete, run with DEBUG=knex:tx for more info"
       );
@@ -64036,12 +64036,12 @@ var require_query_executioner = __commonJS({
     "use strict";
     var _debugQuery = require_src3()("knex:query");
     var debugBindings = require_src3()("knex:bindings");
-    var debugQuery = (sql10, txId) => _debugQuery(sql10.replace(/%/g, "%%"), txId);
+    var debugQuery = (sql12, txId) => _debugQuery(sql12.replace(/%/g, "%%"), txId);
     var { isString: isString2 } = require_is();
-    function formatQuery(sql10, bindings, timeZone, client) {
+    function formatQuery(sql12, bindings, timeZone, client) {
       bindings = bindings == null ? [] : [].concat(bindings);
       let index = 0;
-      return sql10.replace(/\\?\?/g, (match) => {
+      return sql12.replace(/\\?\?/g, (match) => {
         if (match === "\\?") {
           return "?";
         }
@@ -65355,8 +65355,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Adds a raw `where` clause to the query.
-      whereRaw(sql10, bindings) {
-        const raw = sql10.isRawInstance ? sql10 : this.client.raw(sql10, bindings);
+      whereRaw(sql12, bindings) {
+        const raw = sql12.isRawInstance ? sql12 : this.client.raw(sql12, bindings);
         this._statements.push({
           grouping: "where",
           type: "whereRaw",
@@ -65366,8 +65366,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      orWhereRaw(sql10, bindings) {
-        return this._bool("or").whereRaw(sql10, bindings);
+      orWhereRaw(sql12, bindings) {
+        return this._bool("or").whereRaw(sql12, bindings);
       }
       // Helper for compiling any advanced `where` queries.
       whereWrapped(callback) {
@@ -65525,8 +65525,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Adds a raw `group by` clause to the query.
-      groupByRaw(sql10, bindings) {
-        const raw = sql10.isRawInstance ? sql10 : this.client.raw(sql10, bindings);
+      groupByRaw(sql12, bindings) {
+        const raw = sql12.isRawInstance ? sql12 : this.client.raw(sql12, bindings);
         this._statements.push({
           grouping: "group",
           type: "groupByRaw",
@@ -65571,8 +65571,8 @@ var require_querybuilder = __commonJS({
         return this;
       }
       // Add a raw `order by` clause to the query.
-      orderByRaw(sql10, bindings) {
-        const raw = sql10.isRawInstance ? sql10 : this.client.raw(sql10, bindings);
+      orderByRaw(sql12, bindings) {
+        const raw = sql12.isRawInstance ? sql12 : this.client.raw(sql12, bindings);
         this._statements.push({
           grouping: "order",
           type: "orderByRaw",
@@ -65754,8 +65754,8 @@ var require_querybuilder = __commonJS({
         return this._bool("or")._not(true).havingIn(column, values);
       }
       // Adds a raw `having` clause to the query.
-      havingRaw(sql10, bindings) {
-        const raw = sql10.isRawInstance ? sql10 : this.client.raw(sql10, bindings);
+      havingRaw(sql12, bindings) {
+        const raw = sql12.isRawInstance ? sql12 : this.client.raw(sql12, bindings);
         this._statements.push({
           grouping: "having",
           type: "havingRaw",
@@ -65765,8 +65765,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      orHavingRaw(sql10, bindings) {
-        return this._bool("or").havingRaw(sql10, bindings);
+      orHavingRaw(sql12, bindings) {
+        return this._bool("or").havingRaw(sql12, bindings);
       }
       // set the skip binding parameter (= insert the raw value in the query) for an attribute.
       _setSkipBinding(attribute, options) {
@@ -66086,8 +66086,8 @@ var require_querybuilder = __commonJS({
         });
         return this;
       }
-      fromRaw(sql10, bindings) {
-        const raw = sql10.isRawInstance ? sql10 : this.client.raw(sql10, bindings);
+      fromRaw(sql12, bindings) {
+        const raw = sql12.isRawInstance ? sql12 : this.client.raw(sql12, bindings);
         return this.from(raw);
       }
       // Passes query to provided callback function, useful for e.g. composing
@@ -66734,15 +66734,15 @@ var require_wrappingFormatter = __commonJS({
       return ret.join(", ");
     }
     function outputQuery(compiled, isParameter, builder, client) {
-      let sql10 = compiled.sql || "";
-      if (sql10) {
+      let sql12 = compiled.sql || "";
+      if (sql12) {
         if ((compiled.method === "select" || compiled.method === "first") && (isParameter || compiled.as)) {
-          sql10 = `(${sql10})`;
+          sql12 = `(${sql12})`;
           if (compiled.as)
-            return client.alias(sql10, wrapString(compiled.as, builder, client));
+            return client.alias(sql12, wrapString(compiled.as, builder, client));
         }
       }
-      return sql10;
+      return sql12;
     }
     function rawOrFn(value, method, builder, client, bindingHolder) {
       if (typeof value === "function") {
@@ -66786,7 +66786,7 @@ var require_rawFormatter = __commonJS({
       const expectedBindings = raw.bindings.length;
       const values = raw.bindings;
       let index = 0;
-      const sql10 = raw.sql.replace(/\\?\?\??/g, function(match) {
+      const sql12 = raw.sql.replace(/\\?\?\??/g, function(match) {
         if (match === "\\?") {
           return match;
         }
@@ -66801,7 +66801,7 @@ var require_rawFormatter = __commonJS({
       }
       return {
         method: "raw",
-        sql: sql10,
+        sql: sql12,
         bindings: bindingsHolder.bindings
       };
     }
@@ -66812,7 +66812,7 @@ var require_rawFormatter = __commonJS({
       const builder = raw;
       const values = raw.bindings;
       const regex = /\\?(:(\w+):(?=::)|:(\w+):(?!:)|:(\w+))/g;
-      const sql10 = raw.sql.replace(regex, function(match, p1, p22, p3, p4) {
+      const sql12 = raw.sql.replace(regex, function(match, p1, p22, p3, p4) {
         if (match !== p1) {
           return p1;
         }
@@ -66836,7 +66836,7 @@ var require_rawFormatter = __commonJS({
       });
       return {
         method: "raw",
-        sql: sql10,
+        sql: sql12,
         bindings: bindingsHolder.bindings
       };
     }
@@ -66907,8 +66907,8 @@ var require_raw2 = __commonJS({
           saveAsyncStack(this, 4);
         }
       }
-      set(sql10, bindings) {
-        this.sql = sql10;
+      set(sql12, bindings) {
+        this.sql = sql12;
         this.bindings = isObject5(bindings) && !bindings.toSQL || bindings === void 0 ? bindings : [bindings];
         return this;
       }
@@ -67351,7 +67351,7 @@ var require_querycompiler = __commonJS({
       // the component compilers, trimming out the empties, and returning a
       // generated query string.
       select() {
-        let sql10 = this.with();
+        let sql12 = this.with();
         let unionStatement = "";
         const firstStatements = [];
         const endStatements = [];
@@ -67377,13 +67377,13 @@ var require_querycompiler = __commonJS({
           const statements = compact(firstStatements.concat(endStatements)).join(
             " "
           );
-          sql10 += unionStatement + (statements ? " " + statements : "");
+          sql12 += unionStatement + (statements ? " " + statements : "");
         } else {
           const allStatements = (wrapMainQuery ? "(" : "") + compact(firstStatements).join(" ") + (wrapMainQuery ? ")" : "");
           const endStat = compact(endStatements).join(" ");
-          sql10 += allStatements + (unionStatement ? " " + unionStatement : "") + (endStat ? " " + endStat : endStat);
+          sql12 += allStatements + (unionStatement ? " " + unionStatement : "") + (endStat ? " " + endStat : endStat);
         }
-        return sql10;
+        return sql12;
       }
       pluck() {
         let toPluck = this.single.pluck;
@@ -67399,55 +67399,55 @@ var require_querycompiler = __commonJS({
       // inserts using a single query statement.
       insert() {
         const insertValues = this.single.insert || [];
-        const sql10 = this.with() + `insert into ${this.tableName} `;
+        const sql12 = this.with() + `insert into ${this.tableName} `;
         const body = this._insertBody(insertValues);
-        return body === "" ? "" : sql10 + body;
+        return body === "" ? "" : sql12 + body;
       }
       _onConflictClause(columns) {
         return columns instanceof Raw ? this.formatter.wrap(columns) : `(${this.formatter.columnize(columns)})`;
       }
       _buildInsertValues(insertData) {
-        let sql10 = "";
+        let sql12 = "";
         let i = -1;
         while (++i < insertData.values.length) {
-          if (i !== 0) sql10 += "), (";
-          sql10 += this.client.parameterize(
+          if (i !== 0) sql12 += "), (";
+          sql12 += this.client.parameterize(
             insertData.values[i],
             this.client.valueForUndefined,
             this.builder,
             this.bindingsHolder
           );
         }
-        return sql10;
+        return sql12;
       }
       _insertBody(insertValues) {
-        let sql10 = "";
+        let sql12 = "";
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
             return "";
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
-          return sql10 + this._emptyInsertValue;
+          return sql12 + this._emptyInsertValue;
         }
         const insertData = this._prepInsert(insertValues);
         if (typeof insertData === "string") {
-          sql10 += insertData;
+          sql12 += insertData;
         } else {
           if (insertData.columns.length) {
-            sql10 += `(${columnize_(
+            sql12 += `(${columnize_(
               insertData.columns,
               this.builder,
               this.client,
               this.bindingsHolder
             )}`;
-            sql10 += ") values (" + this._buildInsertValues(insertData) + ")";
+            sql12 += ") values (" + this._buildInsertValues(insertData) + ")";
           } else if (insertValues.length === 1 && insertValues[0]) {
-            sql10 += this._emptyInsertValue;
+            sql12 += this._emptyInsertValue;
           } else {
-            sql10 = "";
+            sql12 = "";
           }
         }
-        return sql10;
+        return sql12;
       }
       // Compiles the "update" query.
       update() {
@@ -67469,7 +67469,7 @@ var require_querycompiler = __commonJS({
         if (this.onlyUnions()) return "";
         const hints = this._hintComments();
         const columns = this.grouped.columns || [];
-        let i = -1, sql10 = [];
+        let i = -1, sql12 = [];
         if (columns) {
           while (++i < columns.length) {
             const stmt = columns[i];
@@ -67479,15 +67479,15 @@ var require_querycompiler = __commonJS({
               continue;
             }
             if (stmt.type === "aggregate") {
-              sql10.push(...this.aggregate(stmt));
+              sql12.push(...this.aggregate(stmt));
             } else if (stmt.type === "aggregateRaw") {
-              sql10.push(this.aggregateRaw(stmt));
+              sql12.push(this.aggregateRaw(stmt));
             } else if (stmt.type === "analytic") {
-              sql10.push(this.analytic(stmt));
+              sql12.push(this.analytic(stmt));
             } else if (stmt.type === "json") {
-              sql10.push(this.json(stmt));
+              sql12.push(this.json(stmt));
             } else if (stmt.value && stmt.value.length > 0) {
-              sql10.push(
+              sql12.push(
                 columnize_(
                   stmt.value,
                   this.builder,
@@ -67498,9 +67498,9 @@ var require_querycompiler = __commonJS({
             }
           }
         }
-        if (sql10.length === 0) sql10 = ["*"];
+        if (sql12.length === 0) sql12 = ["*"];
         const select = this.onlyJson() ? "" : "select ";
-        return `${select}${hints}${distinctClause}` + sql10.join(", ") + (this.tableName ? ` from ${this.single.only ? "only " : ""}${this.tableName}` : "");
+        return `${select}${hints}${distinctClause}` + sql12.join(", ") + (this.tableName ? ` from ${this.single.only ? "only " : ""}${this.tableName}` : "");
       }
       // Add comments to the query
       comments() {
@@ -67583,16 +67583,16 @@ var require_querycompiler = __commonJS({
       // Compiles all each of the `join` clauses on the query,
       // including any nested join queries.
       join() {
-        let sql10 = "";
+        let sql12 = "";
         let i = -1;
         const joins = this.grouped.join;
         if (!joins) return "";
         while (++i < joins.length) {
           const join2 = joins[i];
           const table = this._joinTable(join2);
-          if (i > 0) sql10 += " ";
+          if (i > 0) sql12 += " ";
           if (join2.joinType === "raw") {
-            sql10 += unwrapRaw_(
+            sql12 += unwrapRaw_(
               join2.table,
               void 0,
               this.builder,
@@ -67600,7 +67600,7 @@ var require_querycompiler = __commonJS({
               this.bindingsHolder
             );
           } else {
-            sql10 += join2.joinType + " join " + wrap_(
+            sql12 += join2.joinType + " join " + wrap_(
               table,
               void 0,
               this.builder,
@@ -67611,18 +67611,18 @@ var require_querycompiler = __commonJS({
             while (++ii < join2.clauses.length) {
               const clause = join2.clauses[ii];
               if (ii > 0) {
-                sql10 += ` ${clause.bool} `;
+                sql12 += ` ${clause.bool} `;
               } else {
-                sql10 += ` ${clause.type === "onUsing" ? "using" : "on"} `;
+                sql12 += ` ${clause.type === "onUsing" ? "using" : "on"} `;
               }
               const val = this[clause.type](clause);
               if (val) {
-                sql10 += val;
+                sql12 += val;
               }
             }
           }
         }
-        return sql10;
+        return sql12;
       }
       onBetween(statement) {
         return wrap_(
@@ -67679,29 +67679,29 @@ var require_querycompiler = __commonJS({
         ) + " " + this._not(statement, "in ") + this.wrap(values);
       }
       multiOnIn(statement) {
-        let i = -1, sql10 = `(${columnize_(
+        let i = -1, sql12 = `(${columnize_(
           statement.column,
           this.builder,
           this.client,
           this.bindingsHolder
         )}) `;
-        sql10 += this._not(statement, "in ") + "((";
+        sql12 += this._not(statement, "in ") + "((";
         while (++i < statement.value.length) {
-          if (i !== 0) sql10 += "),(";
-          sql10 += this.client.parameterize(
+          if (i !== 0) sql12 += "),(";
+          sql12 += this.client.parameterize(
             statement.value[i],
             void 0,
             this.builder,
             this.bindingsHolder
           );
         }
-        return sql10 + "))";
+        return sql12 + "))";
       }
       // Compiles all `where` statements on the query.
       where() {
         const wheres = this.grouped.where;
         if (!wheres) return;
-        const sql10 = [];
+        const sql12 = [];
         let i = -1;
         while (++i < wheres.length) {
           const stmt = wheres[i];
@@ -67711,15 +67711,15 @@ var require_querycompiler = __commonJS({
           }
           const val = this[stmt.type](stmt);
           if (val) {
-            if (sql10.length === 0) {
-              sql10[0] = "where";
+            if (sql12.length === 0) {
+              sql12[0] = "where";
             } else {
-              sql10.push(stmt.bool);
+              sql12.push(stmt.bool);
             }
-            sql10.push(val);
+            sql12.push(val);
           }
         }
-        return sql10.length > 1 ? sql10.join(" ") : "";
+        return sql12.length > 1 ? sql12.join(" ") : "";
       }
       group() {
         return this._groupsOrders("group");
@@ -67731,21 +67731,21 @@ var require_querycompiler = __commonJS({
       having() {
         const havings = this.grouped.having;
         if (!havings) return "";
-        const sql10 = ["having"];
+        const sql12 = ["having"];
         for (let i = 0, l = havings.length; i < l; i++) {
           const s = havings[i];
           const val = this[s.type](s);
           if (val) {
-            if (sql10.length === 0) {
-              sql10[0] = "where";
+            if (sql12.length === 0) {
+              sql12[0] = "where";
             }
-            if (sql10.length > 1 || sql10.length === 1 && sql10[0] !== "having") {
-              sql10.push(s.bool);
+            if (sql12.length > 1 || sql12.length === 1 && sql12[0] !== "having") {
+              sql12.push(s.bool);
             }
-            sql10.push(val);
+            sql12.push(val);
           }
         }
-        return sql10.length > 1 ? sql10.join(" ") : "";
+        return sql12.length > 1 ? sql12.join(" ") : "";
       }
       havingRaw(statement) {
         return this._not(statement, "") + unwrapRaw_(
@@ -67834,11 +67834,11 @@ var require_querycompiler = __commonJS({
         const onlyUnions = this.onlyUnions();
         const unions = this.grouped.union;
         if (!unions) return "";
-        let sql10 = "";
+        let sql12 = "";
         for (let i = 0, l = unions.length; i < l; i++) {
           const union3 = unions[i];
-          if (i > 0) sql10 += " ";
-          if (i > 0 || !onlyUnions) sql10 += union3.clause + " ";
+          if (i > 0) sql12 += " ";
+          if (i > 0 || !onlyUnions) sql12 += union3.clause + " ";
           const statement = rawOrFn_(
             union3.value,
             void 0,
@@ -67848,12 +67848,12 @@ var require_querycompiler = __commonJS({
           );
           if (statement) {
             const wrap = union3.wrap;
-            if (wrap) sql10 += "(";
-            sql10 += statement;
-            if (wrap) sql10 += ")";
+            if (wrap) sql12 += "(";
+            sql12 += statement;
+            if (wrap) sql12 += ")";
           }
         }
-        return sql10;
+        return sql12;
       }
       // If we haven't specified any columns or a `tableName`, we're assuming this
       // is only being used for unions.
@@ -67928,19 +67928,19 @@ var require_querycompiler = __commonJS({
         const self2 = this;
         const wrapJoin = new JoinClause();
         clause.value.call(wrapJoin, wrapJoin);
-        let sql10 = "";
+        let sql12 = "";
         for (let ii = 0; ii < wrapJoin.clauses.length; ii++) {
           const wrapClause = wrapJoin.clauses[ii];
           if (ii > 0) {
-            sql10 += ` ${wrapClause.bool} `;
+            sql12 += ` ${wrapClause.bool} `;
           }
           const val = self2[wrapClause.type](wrapClause);
           if (val) {
-            sql10 += val;
+            sql12 += val;
           }
         }
-        if (sql10.length) {
-          return `(${sql10})`;
+        if (sql12.length) {
+          return `(${sql12})`;
         }
         return "";
       }
@@ -68141,32 +68141,32 @@ var require_querycompiler = __commonJS({
         return this[stmt.method](stmt.params);
       }
       analytic(stmt) {
-        let sql10 = "";
+        let sql12 = "";
         const self2 = this;
-        sql10 += stmt.method + "() over (";
+        sql12 += stmt.method + "() over (";
         if (stmt.raw) {
-          sql10 += stmt.raw;
+          sql12 += stmt.raw;
         } else {
           if (stmt.partitions.length) {
-            sql10 += "partition by ";
-            sql10 += map3(stmt.partitions, function(partition) {
+            sql12 += "partition by ";
+            sql12 += map3(stmt.partitions, function(partition) {
               if (isString2(partition)) {
                 return self2.formatter.columnize(partition);
               } else return self2.formatter.columnize(partition.column) + (partition.order ? " " + partition.order : "");
             }).join(", ") + " ";
           }
-          sql10 += "order by ";
-          sql10 += map3(stmt.order, function(order) {
+          sql12 += "order by ";
+          sql12 += map3(stmt.order, function(order) {
             if (isString2(order)) {
               return self2.formatter.columnize(order);
             } else return self2.formatter.columnize(order.column) + (order.order ? " " + order.order : "");
           }).join(", ");
         }
-        sql10 += ")";
+        sql12 += ")";
         if (stmt.alias) {
-          sql10 += " as " + stmt.alias;
+          sql12 += " as " + stmt.alias;
         }
-        return sql10;
+        return sql12;
       }
       // Compiles all `with` statements on the query.
       with() {
@@ -68175,7 +68175,7 @@ var require_querycompiler = __commonJS({
         }
         const withs = this.grouped.with;
         if (!withs) return;
-        const sql10 = [];
+        const sql12 = [];
         let i = -1;
         let isRecursive = false;
         while (++i < withs.length) {
@@ -68184,9 +68184,9 @@ var require_querycompiler = __commonJS({
             isRecursive = true;
           }
           const val = this[stmt.type](stmt);
-          sql10.push(val);
+          sql12.push(val);
         }
-        return `with ${isRecursive ? "recursive " : ""}${sql10.join(", ")} `;
+        return `with ${isRecursive ? "recursive " : ""}${sql12.join(", ")} `;
       }
       withWrapped(statement) {
         const val = rawOrFn_(
@@ -68358,10 +68358,10 @@ var require_querycompiler = __commonJS({
       _groupsOrders(type) {
         const items = this.grouped[type];
         if (!items) return "";
-        const sql10 = items.map((item) => {
+        const sql12 = items.map((item) => {
           return this._groupOrder(item, type);
         });
-        return sql10.length ? type + " by " + sql10.join(", ") : "";
+        return sql12.length ? type + " by " + sql12.join(", ") : "";
       }
       // Get the table name, wrapping it if necessary.
       // Implemented as a property to prevent ordering issues as described in #704.
@@ -68699,8 +68699,8 @@ var require_compiler = __commonJS({
           (materialized ? this.dropMaterializedViewPrefix : this.dropViewPrefix) + (ifExists ? "if exists " : "") + this.formatter.wrap(prefixedTableName(this.schema, viewName))
         );
       }
-      raw(sql10, bindings) {
-        this.sequence.push(this.client.raw(sql10, bindings).toSQL());
+      raw(sql12, bindings) {
+        this.sequence.push(this.client.raw(sql12, bindings).toSQL());
       }
       toSQL() {
         const sequence = this.builder._sequence;
@@ -68743,9 +68743,9 @@ var require_compiler = __commonJS({
         builder.queryContext(queryContext);
       }
       builder.setSchema(this.schema);
-      const sql10 = builder.toSQL();
-      for (let i = 0, l = sql10.length; i < l; i++) {
-        this.sequence.push(sql10[i]);
+      const sql12 = builder.toSQL();
+      for (let i = 0, l = sql12.length; i < l; i++) {
+        this.sequence.push(sql12[i]);
       }
     }
     function buildTable(type) {
@@ -69404,8 +69404,8 @@ var require_tablecompiler = __commonJS({
               const nullableType2 = nullable3 ? "null" : "not null";
               const columnType = columnInfo.type + (columnInfo.maxLength ? `(${columnInfo.maxLength})` : "");
               const defaultValue = columnInfo.defaultValue !== null && columnInfo.defaultValue !== void 0 ? `default '${columnInfo.defaultValue}'` : "";
-              const sql10 = `alter table ${tableName} ${alterColumnPrefix} ${columnName} ${columnType} ${nullableType2} ${defaultValue}`;
-              return this.client.raw(sql10);
+              const sql12 = `alter table ${tableName} ${alterColumnPrefix} ${columnName} ${columnType} ${nullableType2} ${defaultValue}`;
+              return this.client.raw(sql12);
             });
           }
         });
@@ -69420,8 +69420,8 @@ var require_tablecompiler = __commonJS({
         if (checkConstraintNames === void 0) return "";
         checkConstraintNames = normalizeArr(checkConstraintNames);
         const tableName = this.tableName();
-        const sql10 = `alter table ${tableName} ${checkConstraintNames.map((constraint) => `drop constraint ${constraint}`).join(", ")}`;
-        this.pushQuery(sql10);
+        const sql12 = `alter table ${tableName} ${checkConstraintNames.map((constraint) => `drop constraint ${constraint}`).join(", ")}`;
+        this.pushQuery(sql12);
       }
       check(checkPredicate, bindings, constraintName) {
         const tableName = this.tableName();
@@ -69430,8 +69430,8 @@ var require_tablecompiler = __commonJS({
           this.checksCount++;
           checkConstraint = tableName + "_" + this.checksCount;
         }
-        const sql10 = `alter table ${tableName} add constraint ${checkConstraint} check(${checkPredicate})`;
-        this.pushQuery(sql10);
+        const sql12 = `alter table ${tableName} add constraint ${checkConstraint} check(${checkPredicate})`;
+        this.pushQuery(sql12);
       }
       _addChecks() {
         if (this.grouped.checks) {
@@ -69875,8 +69875,8 @@ var require_ref2 = __commonJS({
         const string5 = this._schema ? `${this._schema}.${this.ref}` : this.ref;
         const formatter = this.client.formatter(this);
         const ref = formatter.columnize(string5);
-        const sql10 = this._alias ? `${ref} as ${formatter.wrap(this._alias)}` : ref;
-        this.set(sql10, []);
+        const sql12 = this._alias ? `${ref} as ${formatter.wrap(this._alias)}` : ref;
+        this.set(sql12, []);
         return super.toSQL(...arguments);
       }
     };
@@ -70047,24 +70047,24 @@ var require_viewcompiler = __commonJS({
           this.client,
           this.bindingsHolder
         ) + ")" : "";
-        let sql10 = createStatement + this.viewName() + columnList;
-        sql10 += " as ";
-        sql10 += selectQuery.toString();
+        let sql12 = createStatement + this.viewName() + columnList;
+        sql12 += " as ";
+        sql12 += selectQuery.toString();
         switch (this.single.checkOption) {
           case "default_option":
-            sql10 += " with check option";
+            sql12 += " with check option";
             break;
           case "local":
-            sql10 += " with local check option";
+            sql12 += " with local check option";
             break;
           case "cascaded":
-            sql10 += " with cascaded check option";
+            sql12 += " with cascaded check option";
             break;
           default:
             break;
         }
         this.pushQuery({
-          sql: sql10
+          sql: sql12
         });
       }
       renameView(from, to) {
@@ -70250,8 +70250,8 @@ var require_client2 = __commonJS({
       prepBindings(bindings) {
         return bindings;
       }
-      positionBindings(sql10) {
-        return sql10;
+      positionBindings(sql12) {
+        return sql12;
       }
       postProcessResponse(resp, queryContext) {
         if (this.config.postProcessResponse) {
@@ -70935,24 +70935,24 @@ var require_sqlite_querycompiler = __commonJS({
       // then join them all together with select unions to complete the queries.
       insert() {
         const insertValues = this.single.insert || [];
-        let sql10 = this.with() + `insert into ${this.tableName} `;
+        let sql12 = this.with() + `insert into ${this.tableName} `;
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
             return "";
           } else if (insertValues.length === 1 && insertValues[0] && isEmpty(insertValues[0])) {
             return {
-              sql: sql10 + this._emptyInsertValue
+              sql: sql12 + this._emptyInsertValue
             };
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql10 + this._emptyInsertValue
+            sql: sql12 + this._emptyInsertValue
           };
         }
         const insertData = this._prepInsert(insertValues);
         if (isString2(insertData)) {
           return {
-            sql: sql10 + insertData
+            sql: sql12 + insertData
           };
         }
         if (insertData.columns.length === 0) {
@@ -70960,7 +70960,7 @@ var require_sqlite_querycompiler = __commonJS({
             sql: ""
           };
         }
-        sql10 += `(${this.formatter.columnize(insertData.columns)})`;
+        sql12 += `(${this.formatter.columnize(insertData.columns)})`;
         if (this.client.valueForUndefined !== null) {
           insertData.values.forEach((bindings) => {
             each(bindings, (binding) => {
@@ -70978,20 +70978,20 @@ var require_sqlite_querycompiler = __commonJS({
             this.builder,
             this.bindingsHolder
           );
-          sql10 += ` values (${parameters})`;
+          sql12 += ` values (${parameters})`;
           const { onConflict: onConflict2, ignore: ignore2, merge: merge5 } = this.single;
-          if (onConflict2 && ignore2) sql10 += this._ignore(onConflict2);
+          if (onConflict2 && ignore2) sql12 += this._ignore(onConflict2);
           else if (onConflict2 && merge5) {
-            sql10 += this._merge(merge5.updates, onConflict2, insertValues);
+            sql12 += this._merge(merge5.updates, onConflict2, insertValues);
             const wheres = this.where();
-            if (wheres) sql10 += ` ${wheres}`;
+            if (wheres) sql12 += ` ${wheres}`;
           }
           const { returning: returning2 } = this.single;
           if (returning2) {
-            sql10 += this._returning(returning2);
+            sql12 += this._returning(returning2);
           }
           return {
-            sql: sql10,
+            sql: sql12,
             returning: returning2
           };
         }
@@ -71016,16 +71016,16 @@ var require_sqlite_querycompiler = __commonJS({
           }
           blocks[i] = block.join(", ");
         }
-        sql10 += " select " + blocks.join(" union all select ");
+        sql12 += " select " + blocks.join(" union all select ");
         const { onConflict, ignore, merge: merge4 } = this.single;
-        if (onConflict && ignore) sql10 += " where true" + this._ignore(onConflict);
+        if (onConflict && ignore) sql12 += " where true" + this._ignore(onConflict);
         else if (onConflict && merge4) {
-          sql10 += " where true" + this._merge(merge4.updates, onConflict, insertValues);
+          sql12 += " where true" + this._merge(merge4.updates, onConflict, insertValues);
         }
         const { returning } = this.single;
-        if (returning) sql10 += this._returning(returning);
+        if (returning) sql12 += this._returning(returning);
         return {
-          sql: sql10,
+          sql: sql12,
           returning
         };
       }
@@ -71047,9 +71047,9 @@ var require_sqlite_querycompiler = __commonJS({
         return ` on conflict ${this._onConflictClause(columns)} do nothing`;
       }
       _merge(updates, columns, insert) {
-        let sql10 = ` on conflict ${this._onConflictClause(columns)} do update set `;
+        let sql12 = ` on conflict ${this._onConflictClause(columns)} do update set `;
         if (updates && Array.isArray(updates)) {
-          sql10 += updates.map(
+          sql12 += updates.map(
             (column) => wrapString(
               column.split(".").pop(),
               this.formatter.builder,
@@ -71057,15 +71057,15 @@ var require_sqlite_querycompiler = __commonJS({
               this.formatter
             )
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql10;
+          return sql12;
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
           if (typeof updateData === "string") {
-            sql10 += updateData;
+            sql12 += updateData;
           } else {
-            sql10 += updateData.join(",");
+            sql12 += updateData.join(",");
           }
-          return sql10;
+          return sql12;
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -71073,10 +71073,10 @@ var require_sqlite_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          sql10 += insertData.columns.map(
+          sql12 += insertData.columns.map(
             (column) => wrapString(column.split(".").pop(), this.builder, this.client)
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql10;
+          return sql12;
         }
       }
       _returning(value) {
@@ -71230,12 +71230,12 @@ var require_sqlite_compiler = __commonJS({
       }
       // Compile the query to determine if a table exists.
       hasTable(tableName) {
-        const sql10 = `select * from sqlite_master where type = 'table' and name = ${this.client.parameter(
+        const sql12 = `select * from sqlite_master where type = 'table' and name = ${this.client.parameter(
           this.formatter.wrap(tableName).replace(/`/g, ""),
           this.builder,
           this.bindingsHolder
         )}`;
-        this.pushQuery({ sql: sql10, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql12, output: (resp) => resp.length > 0 });
       }
       // Compile the query to determine if a column exists.
       hasColumn(tableName, column) {
@@ -71357,17 +71357,17 @@ var require_sqlite_tablecompiler = __commonJS({
       // Create a new table.
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
-        let sql10 = createStatement + this.tableName();
+        let sql12 = createStatement + this.tableName();
         if (like && this.tableNameLike()) {
-          sql10 += " as select * from " + this.tableNameLike() + " where 0=1";
+          sql12 += " as select * from " + this.tableNameLike() + " where 0=1";
         } else {
-          sql10 += " (" + columns.sql.join(", ");
-          sql10 += this.foreignKeys() || "";
-          sql10 += this.primaryKeys() || "";
-          sql10 += this._addChecks();
-          sql10 += ")";
+          sql12 += " (" + columns.sql.join(", ");
+          sql12 += this.foreignKeys() || "";
+          sql12 += this.primaryKeys() || "";
+          sql12 += this._addChecks();
+          sql12 += ")";
         }
-        this.pushQuery(sql10);
+        this.pushQuery(sql12);
         if (like) {
           this.addColumns(columns, this.addColumnsPrefix);
         }
@@ -71563,7 +71563,7 @@ var require_sqlite_tablecompiler = __commonJS({
         }
       }
       foreignKeys() {
-        let sql10 = "";
+        let sql12 = "";
         const foreignKeys = filter6(this.grouped.alterTable || [], {
           method: "foreign"
         });
@@ -71576,11 +71576,11 @@ var require_sqlite_tablecompiler = __commonJS({
           if (constraintName) {
             constraintName = " constraint " + this.formatter.wrap(constraintName);
           }
-          sql10 += `,${constraintName} foreign key(${column}) references ${foreignTable}(${references})`;
-          if (foreign.onDelete) sql10 += ` on delete ${foreign.onDelete}`;
-          if (foreign.onUpdate) sql10 += ` on update ${foreign.onUpdate}`;
+          sql12 += `,${constraintName} foreign key(${column}) references ${foreignTable}(${references})`;
+          if (foreign.onDelete) sql12 += ` on delete ${foreign.onDelete}`;
+          if (foreign.onUpdate) sql12 += ` on update ${foreign.onUpdate}`;
         }
-        return sql10;
+        return sql12;
       }
       createTableBlock() {
         return this.getColumns().concat().join(",");
@@ -71836,20 +71836,20 @@ var require_parser = __commonJS({
       operator: /-|\(|\)|;|\+|\*|\/|%|==|=|<=|<>|<<|<|>=|>>|>|!=|,|&|~|\|\||\||\./,
       _ws: /\s+/
     };
-    function parseCreateTable(sql10) {
-      const result = createTable({ input: tokenize(sql10, TOKENS) });
+    function parseCreateTable(sql12) {
+      const result = createTable({ input: tokenize(sql12, TOKENS) });
       if (!result.success) {
         throw new Error(
-          `Parsing CREATE TABLE failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql10}"`
+          `Parsing CREATE TABLE failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql12}"`
         );
       }
       return result.ast;
     }
-    function parseCreateIndex(sql10) {
-      const result = createIndex({ input: tokenize(sql10, TOKENS) });
+    function parseCreateIndex(sql12) {
+      const result = createIndex({ input: tokenize(sql12, TOKENS) });
       if (!result.success) {
         throw new Error(
-          `Parsing CREATE INDEX failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql10}"`
+          `Parsing CREATE INDEX failed at [${result.input.slice(result.index).map((t2) => t2.text).join(" ")}] of "${sql12}"`
         );
       }
       return result.ast;
@@ -72912,16 +72912,16 @@ var require_ddl = __commonJS({
         );
       }
       async generateAlterCommands(newSql, createIndices, columns) {
-        const sql10 = [];
+        const sql12 = [];
         const pre = [];
         const post = [];
         let check3 = null;
-        sql10.push(newSql);
-        sql10.push(copyData(this.tableName(), this.alteredName, columns));
-        sql10.push(dropOriginal(this.tableName()));
-        sql10.push(renameTable(this.alteredName, this.tableName()));
+        sql12.push(newSql);
+        sql12.push(copyData(this.tableName(), this.alteredName, columns));
+        sql12.push(dropOriginal(this.tableName()));
+        sql12.push(renameTable(this.alteredName, this.tableName()));
         for (const createIndex of createIndices) {
-          sql10.push(createIndex);
+          sql12.push(createIndex);
         }
         const isForeignCheckEnabled2 = await this.isForeignCheckEnabled();
         if (isForeignCheckEnabled2) {
@@ -72929,7 +72929,7 @@ var require_ddl = __commonJS({
           post.push(setForeignCheck(true));
           check3 = executeForeignCheck();
         }
-        return { pre, sql: sql10, check: check3, post };
+        return { pre, sql: sql12, check: check3, post };
       }
     };
     module2.exports = SQLite3_DDL;
@@ -73316,18 +73316,18 @@ var require_pg_querycompiler = __commonJS({
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        let sql10 = super.insert();
-        if (sql10 === "") return sql10;
+        let sql12 = super.insert();
+        if (sql12 === "") return sql12;
         const { returning, onConflict, ignore, merge: merge4, insert } = this.single;
-        if (onConflict && ignore) sql10 += this._ignore(onConflict);
+        if (onConflict && ignore) sql12 += this._ignore(onConflict);
         if (onConflict && merge4) {
-          sql10 += this._merge(merge4.updates, onConflict, insert);
+          sql12 += this._merge(merge4.updates, onConflict, insert);
           const wheres = this.where();
-          if (wheres) sql10 += ` ${wheres}`;
+          if (wheres) sql12 += ` ${wheres}`;
         }
-        if (returning) sql10 += this._returning(returning);
+        if (returning) sql12 += this._returning(returning);
         return {
-          sql: sql10,
+          sql: sql12,
           returning
         };
       }
@@ -73345,15 +73345,15 @@ var require_pg_querycompiler = __commonJS({
       using() {
         const usingTables = this.single.using;
         if (!usingTables) return;
-        let sql10 = "using ";
+        let sql12 = "using ";
         if (Array.isArray(usingTables)) {
-          sql10 += usingTables.map((table) => {
+          sql12 += usingTables.map((table) => {
             return this.formatter.wrap(table);
           }).join(",");
         } else {
-          sql10 += this.formatter.wrap(usingTables);
+          sql12 += this.formatter.wrap(usingTables);
         }
-        return sql10;
+        return sql12;
       }
       // Compiles an `delete` query, allowing for a return value.
       del() {
@@ -73393,10 +73393,10 @@ var require_pg_querycompiler = __commonJS({
             using += (using ? "," : "using ") + tableJoins.join(",");
           }
         }
-        const sql10 = withSQL + `delete from ${this.single.only ? "only " : ""}${tableName}` + (using ? ` ${using}` : "") + (wheres ? ` ${wheres}` : "");
+        const sql12 = withSQL + `delete from ${this.single.only ? "only " : ""}${tableName}` + (using ? ` ${using}` : "") + (wheres ? ` ${wheres}` : "");
         const { returning } = this.single;
         return {
-          sql: sql10 + this._returning(returning),
+          sql: sql12 + this._returning(returning),
           returning
         };
       }
@@ -73416,9 +73416,9 @@ var require_pg_querycompiler = __commonJS({
         return ` on conflict ${this._onConflictClause(columns)} do nothing`;
       }
       _merge(updates, columns, insert) {
-        let sql10 = ` on conflict ${this._onConflictClause(columns)} do update set `;
+        let sql12 = ` on conflict ${this._onConflictClause(columns)} do update set `;
         if (updates && Array.isArray(updates)) {
-          sql10 += updates.map(
+          sql12 += updates.map(
             (column) => wrapString(
               column.split(".").pop(),
               this.formatter.builder,
@@ -73426,15 +73426,15 @@ var require_pg_querycompiler = __commonJS({
               this.formatter
             )
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql10;
+          return sql12;
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
           if (typeof updateData === "string") {
-            sql10 += updateData;
+            sql12 += updateData;
           } else {
-            sql10 += updateData.join(",");
+            sql12 += updateData.join(",");
           }
-          return sql10;
+          return sql12;
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -73442,26 +73442,26 @@ var require_pg_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          sql10 += insertData.columns.map(
+          sql12 += insertData.columns.map(
             (column) => wrapString(column.split(".").pop(), this.builder, this.client)
           ).map((column) => `${column} = excluded.${column}`).join(", ");
-          return sql10;
+          return sql12;
         }
       }
       // Join array of table names and apply default schema.
       _tableNames(tables) {
         const schemaName = this.single.schema;
-        const sql10 = [];
+        const sql12 = [];
         for (let i = 0; i < tables.length; i++) {
           let tableName = tables[i];
           if (tableName) {
             if (schemaName) {
               tableName = `${schemaName}.${tableName}`;
             }
-            sql10.push(this.formatter.wrap(tableName));
+            sql12.push(this.formatter.wrap(tableName));
           }
         }
-        return sql10.join(", ");
+        return sql12.join(", ");
       }
       _lockingClause(lockMode) {
         const tables = this.single.lockTables || [];
@@ -73496,19 +73496,19 @@ var require_pg_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        const sql10 = "select * from information_schema.columns where table_name = ? and table_catalog = current_database()";
+        const sql12 = "select * from information_schema.columns where table_name = ? and table_catalog = current_database()";
         const bindings = [table];
-        return this._buildColumnInfoQuery(schema, sql10, bindings, column);
+        return this._buildColumnInfoQuery(schema, sql12, bindings, column);
       }
-      _buildColumnInfoQuery(schema, sql10, bindings, column) {
+      _buildColumnInfoQuery(schema, sql12, bindings, column) {
         if (schema) {
-          sql10 += " and table_schema = ?";
+          sql12 += " and table_schema = ?";
           bindings.push(schema);
         } else {
-          sql10 += " and table_schema = current_schema()";
+          sql12 += " and table_schema = current_schema()";
         }
         return {
-          sql: sql10,
+          sql: sql12,
           bindings,
           output(resp) {
             const out = reduce(
@@ -73798,11 +73798,11 @@ var require_pg_tablecompiler = __commonJS({
       }
       _setNullableState(column, isNullable) {
         const constraintAction = isNullable ? "drop not null" : "set not null";
-        const sql10 = `alter table ${this.tableName()} alter column ${this.formatter.wrap(
+        const sql12 = `alter table ${this.tableName()} alter column ${this.formatter.wrap(
           column
         )} ${constraintAction}`;
         return this.pushQuery({
-          sql: sql10
+          sql: sql12
         });
       }
       compileAdd(builder) {
@@ -73816,11 +73816,11 @@ var require_pg_tablecompiler = __commonJS({
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
         const columnsSql = ` (${columns.sql.join(", ")}${this.primaryKeys() || ""}${this._addChecks()})`;
-        let sql10 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + " including all" + (columns.sql.length ? ", " + columns.sql.join(", ") : "") + ")" : columnsSql);
+        let sql12 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + " including all" + (columns.sql.length ? ", " + columns.sql.join(", ") : "") + ")" : columnsSql);
         if (this.single.inherits)
-          sql10 += ` inherits (${this.formatter.wrap(this.single.inherits)})`;
+          sql12 += ` inherits (${this.formatter.wrap(this.single.inherits)})`;
         this.pushQuery({
-          sql: sql10,
+          sql: sql12,
           bindings: columns.bindings
         });
         const hasComment = has(this.single, "comment");
@@ -74080,16 +74080,16 @@ var require_pg_compiler = __commonJS({
       }
       // Check whether the current table
       hasTable(tableName) {
-        let sql10 = "select * from information_schema.tables where table_name = ?";
+        let sql12 = "select * from information_schema.tables where table_name = ?";
         const bindings = [tableName];
         if (this.schema) {
-          sql10 += " and table_schema = ?";
+          sql12 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql10 += " and table_schema = current_schema()";
+          sql12 += " and table_schema = current_schema()";
         }
         this.pushQuery({
-          sql: sql10,
+          sql: sql12,
           bindings,
           output(resp) {
             return resp.rows.length > 0;
@@ -74098,16 +74098,16 @@ var require_pg_compiler = __commonJS({
       }
       // Compile the query to determine if a column exists in a table.
       hasColumn(tableName, columnName) {
-        let sql10 = "select * from information_schema.columns where table_name = ? and column_name = ?";
+        let sql12 = "select * from information_schema.columns where table_name = ? and column_name = ?";
         const bindings = [tableName, columnName];
         if (this.schema) {
-          sql10 += " and table_schema = ?";
+          sql12 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql10 += " and table_schema = current_schema()";
+          sql12 += " and table_schema = current_schema()";
         }
         this.pushQuery({
-          sql: sql10,
+          sql: sql12,
           bindings,
           output(resp) {
             return resp.rows.length > 0;
@@ -74294,9 +74294,9 @@ var require_postgres = __commonJS({
       }
       // Position the bindings for the query. The escape sequence for question mark
       // is \? (e.g. knex.raw("\\?") since javascript requires '\' to be escaped too...)
-      positionBindings(sql10) {
+      positionBindings(sql12) {
         let questionCount = 0;
-        return sql10.replace(/(\\*)(\?)/g, function(match, escapes) {
+        return sql12.replace(/(\\*)(\?)/g, function(match, escapes) {
           if (escapes.length % 2) {
             return "?";
           } else {
@@ -74348,10 +74348,10 @@ var require_postgres = __commonJS({
             throw e;
           }
         }
-        const sql10 = obj.sql;
+        const sql12 = obj.sql;
         return new Promise(function(resolver, rejecter) {
           const queryStream = connection.query(
-            new PGQueryStream(sql10, obj.bindings, options)
+            new PGQueryStream(sql12, obj.bindings, options)
           );
           queryStream.on("error", function(error73) {
             rejecter(error73);
@@ -74509,20 +74509,20 @@ var require_crdb_querycompiler = __commonJS({
         return `truncate ${this.tableName}`;
       }
       upsert() {
-        let sql10 = this._upsert();
-        if (sql10 === "") return sql10;
+        let sql12 = this._upsert();
+        if (sql12 === "") return sql12;
         const { returning } = this.single;
-        if (returning) sql10 += this._returning(returning);
+        if (returning) sql12 += this._returning(returning);
         return {
-          sql: sql10,
+          sql: sql12,
           returning
         };
       }
       _upsert() {
         const upsertValues = this.single.upsert || [];
-        const sql10 = this.with() + `upsert into ${this.tableName} `;
+        const sql12 = this.with() + `upsert into ${this.tableName} `;
         const body = this._insertBody(upsertValues);
-        return body === "" ? "" : sql10 + body;
+        return body === "" ? "" : sql12 + body;
       }
       _groupOrder(item, type) {
         return this._basicGroupOrder(item, type);
@@ -75013,9 +75013,9 @@ var require_mssql_querycompiler = __commonJS({
         return result;
       }
       select() {
-        const sql10 = this.with();
+        const sql12 = this.with();
         const statements = components.map((component) => this[component](this));
-        return sql10 + compact(statements).join(" ");
+        return sql12 + compact(statements).join(" ");
       }
       //#region Insert
       // Compiles an "insert" query, allowing for multiple
@@ -75030,7 +75030,7 @@ var require_mssql_querycompiler = __commonJS({
       insertWithTriggers() {
         const insertValues = this.single.insert || [];
         const { returning } = this.single;
-        let sql10 = this.with() + `${this._buildTempTable(returning)}insert into ${this.tableName} `;
+        let sql12 = this.with() + `${this._buildTempTable(returning)}insert into ${this.tableName} `;
         const returningSql = returning ? this._returning("insert", returning, true) + " " : "";
         if (Array.isArray(insertValues)) {
           if (insertValues.length === 0) {
@@ -75038,39 +75038,39 @@ var require_mssql_querycompiler = __commonJS({
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql10 + returningSql + this._emptyInsertValue + this._buildReturningSelect(returning),
+            sql: sql12 + returningSql + this._emptyInsertValue + this._buildReturningSelect(returning),
             returning
           };
         }
-        sql10 += this._buildInsertData(insertValues, returningSql);
+        sql12 += this._buildInsertData(insertValues, returningSql);
         if (returning) {
-          sql10 += this._buildReturningSelect(returning);
+          sql12 += this._buildReturningSelect(returning);
         }
         return {
-          sql: sql10,
+          sql: sql12,
           returning
         };
       }
       _buildInsertData(insertValues, returningSql) {
-        let sql10 = "";
+        let sql12 = "";
         const insertData = this._prepInsert(insertValues);
         if (typeof insertData === "string") {
-          sql10 += insertData;
+          sql12 += insertData;
         } else {
           if (insertData.columns.length) {
-            sql10 += `(${this.formatter.columnize(insertData.columns)}`;
-            sql10 += `) ${returningSql}values (` + this._buildInsertValues(insertData) + ")";
+            sql12 += `(${this.formatter.columnize(insertData.columns)}`;
+            sql12 += `) ${returningSql}values (` + this._buildInsertValues(insertData) + ")";
           } else if (insertValues.length === 1 && insertValues[0]) {
-            sql10 += returningSql + this._emptyInsertValue;
+            sql12 += returningSql + this._emptyInsertValue;
           } else {
             return "";
           }
         }
-        return sql10;
+        return sql12;
       }
       standardInsert() {
         const insertValues = this.single.insert || [];
-        let sql10 = this.with() + `insert into ${this.tableName} `;
+        let sql12 = this.with() + `insert into ${this.tableName} `;
         const { returning } = this.single;
         const returningSql = returning ? this._returning("insert", returning) + " " : "";
         if (Array.isArray(insertValues)) {
@@ -75079,13 +75079,13 @@ var require_mssql_querycompiler = __commonJS({
           }
         } else if (typeof insertValues === "object" && isEmpty(insertValues)) {
           return {
-            sql: sql10 + returningSql + this._emptyInsertValue,
+            sql: sql12 + returningSql + this._emptyInsertValue,
             returning
           };
         }
-        sql10 += this._buildInsertData(insertValues, returningSql);
+        sql12 += this._buildInsertData(insertValues, returningSql);
         return {
-          sql: sql10,
+          sql: sql12,
           returning
         };
       }
@@ -75184,7 +75184,7 @@ var require_mssql_querycompiler = __commonJS({
         const top = this.top();
         const hints = this._hintComments();
         const columns = this.grouped.columns || [];
-        let i = -1, sql10 = [];
+        let i = -1, sql12 = [];
         if (columns) {
           while (++i < columns.length) {
             const stmt = columns[i];
@@ -75194,21 +75194,21 @@ var require_mssql_querycompiler = __commonJS({
               continue;
             }
             if (stmt.type === "aggregate") {
-              sql10.push(...this.aggregate(stmt));
+              sql12.push(...this.aggregate(stmt));
             } else if (stmt.type === "aggregateRaw") {
-              sql10.push(this.aggregateRaw(stmt));
+              sql12.push(this.aggregateRaw(stmt));
             } else if (stmt.type === "analytic") {
-              sql10.push(this.analytic(stmt));
+              sql12.push(this.analytic(stmt));
             } else if (stmt.type === "json") {
-              sql10.push(this.json(stmt));
+              sql12.push(this.json(stmt));
             } else if (stmt.value && stmt.value.length > 0) {
-              sql10.push(this.formatter.columnize(stmt.value));
+              sql12.push(this.formatter.columnize(stmt.value));
             }
           }
         }
-        if (sql10.length === 0) sql10 = ["*"];
+        if (sql12.length === 0) sql12 = ["*"];
         const select = this.onlyJson() ? "" : "select ";
-        return `${select}${hints}${distinctClause}` + (top ? top + " " : "") + sql10.join(", ") + (this.tableName ? ` from ${this.tableName}` : "");
+        return `${select}${hints}${distinctClause}` + (top ? top + " " : "") + sql12.join(", ") + (this.tableName ? ` from ${this.tableName}` : "");
       }
       _returning(method, value, withTrigger) {
         switch (method) {
@@ -75229,10 +75229,10 @@ var require_mssql_querycompiler = __commonJS({
           } else {
             selections = `[t].${this.formatter.columnize(values)}`;
           }
-          let sql10 = `select top(0) ${selections} into #out `;
-          sql10 += `from ${this.tableName} as t `;
-          sql10 += `left join ${this.tableName} on 0=1;`;
-          return sql10;
+          let sql12 = `select top(0) ${selections} into #out `;
+          sql12 += `from ${this.tableName} as t `;
+          sql12 += `left join ${this.tableName} on 0=1;`;
+          return sql12;
         }
         return "";
       }
@@ -75244,9 +75244,9 @@ var require_mssql_querycompiler = __commonJS({
           } else {
             selections = this.formatter.columnize(values);
           }
-          let sql10 = `; select ${selections} from #out; `;
-          sql10 += `drop table #out;`;
-          return sql10;
+          let sql12 = `; select ${selections} from #out; `;
+          sql12 += `drop table #out;`;
+          return sql12;
         }
         return "";
       }
@@ -75268,16 +75268,16 @@ var require_mssql_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        let sql10 = `select [COLUMN_NAME], [COLUMN_DEFAULT], [DATA_TYPE], [CHARACTER_MAXIMUM_LENGTH], [IS_NULLABLE] from INFORMATION_SCHEMA.COLUMNS where table_name = ? and table_catalog = ?`;
+        let sql12 = `select [COLUMN_NAME], [COLUMN_DEFAULT], [DATA_TYPE], [CHARACTER_MAXIMUM_LENGTH], [IS_NULLABLE] from INFORMATION_SCHEMA.COLUMNS where table_name = ? and table_catalog = ?`;
         const bindings = [table, this.client.database()];
         if (schema) {
-          sql10 += " and table_schema = ?";
+          sql12 += " and table_schema = ?";
           bindings.push(schema);
         } else {
-          sql10 += ` and table_schema = 'dbo'`;
+          sql12 += ` and table_schema = 'dbo'`;
         }
         return {
-          sql: sql10,
+          sql: sql12,
           bindings,
           output(resp) {
             const out = resp.reduce((columns, val) => {
@@ -75433,12 +75433,12 @@ var require_mssql_compiler = __commonJS({
           this.bindingsHolder
         );
         const bindings = [tableName];
-        let sql10 = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ${formattedTable}`;
+        let sql12 = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ${formattedTable}`;
         if (this.schema) {
-          sql10 += " AND TABLE_SCHEMA = ?";
+          sql12 += " AND TABLE_SCHEMA = ?";
           bindings.push(this.schema);
         }
-        this.pushQuery({ sql: sql10, bindings, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql12, bindings, output: (resp) => resp.length > 0 });
       }
       // Check whether a column exists on the schema.
       hasColumn(tableName, column) {
@@ -75452,8 +75452,8 @@ var require_mssql_compiler = __commonJS({
           this.builder,
           this.bindingsHolder
         );
-        const sql10 = `select object_id from sys.columns where name = ${formattedColumn} and object_id = object_id(${formattedTable})`;
-        this.pushQuery({ sql: sql10, output: (resp) => resp.length > 0 });
+        const sql12 = `select object_id from sys.columns where name = ${formattedColumn} and object_id = object_id(${formattedTable})`;
+        this.pushQuery({ sql: sql12, output: (resp) => resp.length > 0 });
       }
     };
     SchemaCompiler_MSSQL.prototype.dropTablePrefix = "DROP TABLE ";
@@ -75547,9 +75547,9 @@ ELSE
             this.pushQuery(baseQuery);
           }
         }
-        columns.sql.forEach((sql10) => {
+        columns.sql.forEach((sql12) => {
           this.pushQuery({
-            sql: (this.lowerCase ? "alter table " : "ALTER TABLE ") + this.tableName() + " " + (this.lowerCase ? this.alterColumnPrefix.toLowerCase() : this.alterColumnPrefix) + sql10,
+            sql: (this.lowerCase ? "alter table " : "ALTER TABLE ") + this.tableName() + " " + (this.lowerCase ? this.alterColumnPrefix.toLowerCase() : this.alterColumnPrefix) + sql12,
             bindings: columns.bindings
           });
         });
@@ -75769,18 +75769,18 @@ var require_mssql_viewcompiler = __commonJS({
       }
       createQuery(columns, selectQuery, materialized, replace) {
         const createStatement = "CREATE " + (replace ? "OR ALTER " : "") + "VIEW ";
-        let sql10 = createStatement + this.viewName();
+        let sql12 = createStatement + this.viewName();
         const columnList = columns ? " (" + columnize_(
           columns,
           this.viewBuilder,
           this.client,
           this.bindingsHolder
         ) + ")" : "";
-        sql10 += columnList;
-        sql10 += " AS ";
-        sql10 += selectQuery.toString();
+        sql12 += columnList;
+        sql12 += " AS ";
+        sql12 += selectQuery.toString();
         this.pushQuery({
-          sql: sql10
+          sql: sql12
         });
       }
       renameColumn(from, to) {
@@ -76103,9 +76103,9 @@ var require_mssql = __commonJS({
         });
       }
       // Position the bindings for the query.
-      positionBindings(sql10) {
+      positionBindings(sql12) {
         let questionCount = -1;
-        return sql10.replace(/\\?\?/g, (match) => {
+        return sql12.replace(/\\?\?/g, (match) => {
           if (match === "\\?") {
             return "?";
           }
@@ -76131,11 +76131,11 @@ var require_mssql = __commonJS({
       }
       _makeRequest(query, callback) {
         const Driver = this._driver();
-        const sql10 = typeof query === "string" ? query : query.sql;
+        const sql12 = typeof query === "string" ? query : query.sql;
         let rowCount = 0;
-        if (!sql10) throw new Error("The query is empty");
-        debug("request::request sql=%s", sql10);
-        const request = new Driver.Request(sql10, (err, remoteRowCount) => {
+        if (!sql12) throw new Error("The query is empty");
+        debug("request::request sql=%s", sql12);
+        const request = new Driver.Request(sql12, (err, remoteRowCount) => {
           if (err) {
             debug("request::error message=%s", err.message);
             return callback(err);
@@ -76392,9 +76392,9 @@ var require_transaction3 = __commonJS({
     var Debug = require_src3();
     var debug = Debug("knex:tx");
     var Transaction_MySQL = class extends Transaction {
-      query(conn, sql10, status, value) {
+      query(conn, sql12, status, value) {
         const t = this;
-        const q = this.trxClient.query(conn, sql10).catch((err) => {
+        const q = this.trxClient.query(conn, sql12).catch((err) => {
           if (err.errno === 1305) {
             this.trxClient.logger.warn(
               "Transaction was implicitly committed, do not mix transactions and DDL with MySQL (#805)"
@@ -76409,7 +76409,7 @@ var require_transaction3 = __commonJS({
           if (status === 1) t._resolver(value);
           if (status === 2) {
             if (value === void 0) {
-              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql10)) {
+              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql12)) {
                 t._resolver();
                 return;
               }
@@ -76476,22 +76476,22 @@ var require_mysql_querycompiler = __commonJS({
       }
       // Compiles an `delete` allowing comments
       del() {
-        const sql10 = super.del();
-        if (sql10 === "") return sql10;
+        const sql12 = super.del();
+        if (sql12 === "") return sql12;
         const comments = this.comments();
-        return (comments === "" ? "" : comments + " ") + sql10;
+        return (comments === "" ? "" : comments + " ") + sql12;
       }
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        let sql10 = super.insert();
-        if (sql10 === "") return sql10;
+        let sql12 = super.insert();
+        if (sql12 === "") return sql12;
         const comments = this.comments();
-        sql10 = (comments === "" ? "" : comments + " ") + sql10;
+        sql12 = (comments === "" ? "" : comments + " ") + sql12;
         const { ignore, merge: merge4, insert } = this.single;
-        if (ignore) sql10 = sql10.replace("insert into", "insert ignore into");
+        if (ignore) sql12 = sql12.replace("insert into", "insert ignore into");
         if (merge4) {
-          sql10 += this._merge(merge4.updates, insert);
+          sql12 += this._merge(merge4.updates, insert);
           const wheres = this.where();
           if (wheres) {
             throw new Error(
@@ -76499,24 +76499,24 @@ var require_mysql_querycompiler = __commonJS({
             );
           }
         }
-        return sql10;
+        return sql12;
       }
       upsert() {
         const upsertValues = this.single.upsert || [];
-        const sql10 = this.with() + `replace into ${this.tableName} `;
+        const sql12 = this.with() + `replace into ${this.tableName} `;
         const body = this._insertBody(upsertValues);
-        return body === "" ? "" : sql10 + body;
+        return body === "" ? "" : sql12 + body;
       }
       // Compiles merge for onConflict, allowing for different merge strategies
       _merge(updates, insert) {
-        const sql10 = " on duplicate key update ";
+        const sql12 = " on duplicate key update ";
         if (updates && Array.isArray(updates)) {
-          return sql10 + updates.map(
+          return sql12 + updates.map(
             (column) => wrapAsIdentifier(column, this.formatter.builder, this.client)
           ).map((column) => `${column} = values(${column})`).join(", ");
         } else if (updates && typeof updates === "object") {
           const updateData = this._prepUpdate(updates);
-          return sql10 + updateData.join(",");
+          return sql12 + updateData.join(",");
         } else {
           const insertData = this._prepInsert(insert);
           if (typeof insertData === "string") {
@@ -76524,7 +76524,7 @@ var require_mysql_querycompiler = __commonJS({
               "If using merge with a raw insert query, then updates must be provided"
             );
           }
-          return sql10 + insertData.columns.map((column) => wrapAsIdentifier(column, this.builder, this.client)).map((column) => `${column} = values(${column})`).join(", ");
+          return sql12 + insertData.columns.map((column) => wrapAsIdentifier(column, this.builder, this.client)).map((column) => `${column} = values(${column})`).join(", ");
         }
       }
       // Update method, including joins, wheres, order & limits.
@@ -76693,16 +76693,16 @@ var require_mysql_compiler = __commonJS({
       }
       // Check whether a table exists on the query.
       hasTable(tableName) {
-        let sql10 = "select * from information_schema.tables where table_name = ?";
+        let sql12 = "select * from information_schema.tables where table_name = ?";
         const bindings = [tableName];
         if (this.schema) {
-          sql10 += " and table_schema = ?";
+          sql12 += " and table_schema = ?";
           bindings.push(this.schema);
         } else {
-          sql10 += " and table_schema = database()";
+          sql12 += " and table_schema = database()";
         }
         this.pushQuery({
-          sql: sql10,
+          sql: sql12,
           bindings,
           output: function output(resp) {
             return resp.length > 0;
@@ -76743,16 +76743,16 @@ var require_mysql_tablecompiler = __commonJS({
         columnsSql += this.primaryKeys() || "";
         columnsSql += this._addChecks();
         columnsSql += ")";
-        let sql10 = createStatement + this.tableName() + (like && this.tableNameLike() ? " like " + this.tableNameLike() : columnsSql);
+        let sql12 = createStatement + this.tableName() + (like && this.tableNameLike() ? " like " + this.tableNameLike() : columnsSql);
         if (client.connectionSettings) {
           conn = client.connectionSettings;
         }
         const charset = this.single.charset || conn.charset || "";
         const collation = this.single.collate || conn.collate || "";
         const engine = this.single.engine || "";
-        if (charset && !like) sql10 += ` default character set ${charset}`;
-        if (collation) sql10 += ` collate ${collation}`;
-        if (engine) sql10 += ` engine = ${engine}`;
+        if (charset && !like) sql12 += ` default character set ${charset}`;
+        if (collation) sql12 += ` collate ${collation}`;
+        if (engine) sql12 += ` engine = ${engine}`;
         if (this.single.comment) {
           const comment = this.single.comment || "";
           const MAX_COMMENT_LENGTH = 1024;
@@ -76760,9 +76760,9 @@ var require_mysql_tablecompiler = __commonJS({
             this.client.logger.warn(
               `The max length for a table comment is ${MAX_COMMENT_LENGTH} characters`
             );
-          sql10 += ` comment = '${comment}'`;
+          sql12 += ` comment = '${comment}'`;
         }
-        this.pushQuery(sql10);
+        this.pushQuery(sql12);
         if (like) {
           this.addColumns(columns, this.addColumnsPrefix);
         }
@@ -76794,23 +76794,23 @@ var require_mysql_tablecompiler = __commonJS({
                   reject(e);
                 }
               }).then(function() {
-                let sql10 = `alter table ${table} change ${wrapped} ${column.Type}`;
+                let sql12 = `alter table ${table} change ${wrapped} ${column.Type}`;
                 if (String(column.Null).toUpperCase() !== "YES") {
-                  sql10 += ` NOT NULL`;
+                  sql12 += ` NOT NULL`;
                 } else {
-                  sql10 += ` NULL`;
+                  sql12 += ` NULL`;
                 }
                 if (column.Default !== void 0 && column.Default !== null) {
-                  sql10 += ` DEFAULT '${column.Default}'`;
+                  sql12 += ` DEFAULT '${column.Default}'`;
                 }
                 if (column.Collation !== void 0 && column.Collation !== null) {
-                  sql10 += ` COLLATE '${column.Collation}'`;
+                  sql12 += ` COLLATE '${column.Collation}'`;
                 }
                 if (column.Extra == "auto_increment") {
-                  sql10 += ` AUTO_INCREMENT`;
+                  sql12 += ` AUTO_INCREMENT`;
                 }
                 return runner.query({
-                  sql: sql10
+                  sql: sql12
                 });
               }).then(function() {
                 if (!refs.length) {
@@ -76872,7 +76872,7 @@ var require_mysql_tablecompiler = __commonJS({
         const bindingsHolder = {
           bindings: []
         };
-        const sql10 = "SELECT KCU.CONSTRAINT_NAME, KCU.TABLE_NAME, KCU.COLUMN_NAME,        KCU.REFERENCED_TABLE_NAME, KCU.REFERENCED_COLUMN_NAME,        RC.UPDATE_RULE, RC.DELETE_RULE FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC        USING(CONSTRAINT_NAME) WHERE KCU.REFERENCED_TABLE_NAME = " + this.client.parameter(
+        const sql12 = "SELECT KCU.CONSTRAINT_NAME, KCU.TABLE_NAME, KCU.COLUMN_NAME,        KCU.REFERENCED_TABLE_NAME, KCU.REFERENCED_COLUMN_NAME,        RC.UPDATE_RULE, RC.DELETE_RULE FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC        USING(CONSTRAINT_NAME) WHERE KCU.REFERENCED_TABLE_NAME = " + this.client.parameter(
           this.tableNameRaw,
           this.tableBuilder,
           bindingsHolder
@@ -76886,7 +76886,7 @@ var require_mysql_tablecompiler = __commonJS({
           bindingsHolder
         );
         return runner.query({
-          sql: sql10,
+          sql: sql12,
           bindings: bindingsHolder.bindings
         });
       }
@@ -77510,9 +77510,9 @@ var require_transaction4 = __commonJS({
     var Transaction = require_transaction();
     var debug = require_src3()("knex:tx");
     var Transaction_MySQL2 = class extends Transaction {
-      query(conn, sql10, status, value) {
+      query(conn, sql12, status, value) {
         const t = this;
-        const q = this.trxClient.query(conn, sql10).catch((err) => {
+        const q = this.trxClient.query(conn, sql12).catch((err) => {
           if (err.code === "ER_SP_DOES_NOT_EXIST") {
             this.trxClient.logger.warn(
               "Transaction was implicitly committed, do not mix transactions and DDL with MySQL (#805)"
@@ -77527,7 +77527,7 @@ var require_transaction4 = __commonJS({
           if (status === 1) t._resolver(value);
           if (status === 2) {
             if (value === void 0) {
-              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql10)) {
+              if (t.doNotRejectOnRollback && /^ROLLBACK\b/i.test(sql12)) {
                 t._resolver();
                 return;
               }
@@ -77622,8 +77622,8 @@ var require_utils10 = __commonJS({
         return result;
       }
     };
-    function wrapSqlWithCatch(sql10, errorNumberToCatch) {
-      return `begin execute immediate '${sql10.replace(/'/g, "''")}'; exception when others then if sqlcode != ${errorNumberToCatch} then raise; end if; end;`;
+    function wrapSqlWithCatch(sql12, errorNumberToCatch) {
+      return `begin execute immediate '${sql12.replace(/'/g, "''")}'; exception when others then if sqlcode != ${errorNumberToCatch} then raise; end if; end;`;
     }
     function ReturningHelper(columnName) {
       this.columnName = columnName;
@@ -77807,7 +77807,7 @@ var require_oracle_compiler = __commonJS({
       }
       // Check whether a column exists on the schema.
       hasColumn(tableName, column) {
-        const sql10 = `select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = ${this.client.parameter(
+        const sql12 = `select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = ${this.client.parameter(
           tableName,
           this.builder,
           this.bindingsHolder
@@ -77816,7 +77816,7 @@ var require_oracle_compiler = __commonJS({
           this.builder,
           this.bindingsHolder
         )}`;
-        this.pushQuery({ sql: sql10, output: (resp) => resp.length > 0 });
+        this.pushQuery({ sql: sql12, output: (resp) => resp.length > 0 });
       }
       dropSequenceIfExists(sequenceName) {
         const prefix = this.schema ? `"${this.schema}".` : "";
@@ -78127,14 +78127,14 @@ var require_oracle_tablecompiler = __commonJS({
           prefix = prefix || this.addColumnsPrefix;
           const columnSql = columns.sql;
           const alter = this.lowerCase ? "alter table " : "ALTER TABLE ";
-          let sql10 = `${alter}${this.tableName()} ${prefix}`;
+          let sql12 = `${alter}${this.tableName()} ${prefix}`;
           if (columns.sql.length > 1) {
-            sql10 += `(${columnSql.join(", ")})`;
+            sql12 += `(${columnSql.join(", ")})`;
           } else {
-            sql10 += columnSql.join(", ");
+            sql12 += columnSql.join(", ");
           }
           this.pushQuery({
-            sql: sql10,
+            sql: sql12,
             bindings: columns.bindings
           });
         }
@@ -78157,10 +78157,10 @@ var require_oracle_tablecompiler = __commonJS({
       // Adds the "create" query to the query sequence.
       createQuery(columns, ifNot, like) {
         const columnsSql = like && this.tableNameLike() ? " as (select * from " + this.tableNameLike() + " where 0=1)" : " (" + columns.sql.join(", ") + this._addChecks() + ")";
-        const sql10 = `create table ${this.tableName()}${columnsSql}`;
+        const sql12 = `create table ${this.tableName()}${columnsSql}`;
         this.pushQuery({
           // catch "name is already used by an existing object" for workaround for "if not exists"
-          sql: ifNot ? utils.wrapSqlWithCatch(sql10, -955) : sql10,
+          sql: ifNot ? utils.wrapSqlWithCatch(sql12, -955) : sql12,
           bindings: columns.bindings
         });
         if (this.single.comment) this.comment(this.single.comment);
@@ -78300,9 +78300,9 @@ var require_oracle = __commonJS({
         return this.connectionSettings.database;
       }
       // Position the bindings for the query.
-      positionBindings(sql10) {
+      positionBindings(sql12) {
         let questionCount = 0;
-        return sql10.replace(/\?/g, function() {
+        return sql12.replace(/\?/g, function() {
           questionCount += 1;
           return `:${questionCount}`;
         });
@@ -78406,7 +78406,7 @@ var require_oracle_querycompiler = __commonJS({
           return "";
         }
         const insertData = this._prepInsert(insertValues);
-        const sql10 = {};
+        const sql12 = {};
         if (isString2(insertData)) {
           return this._addReturningToSqlAndConvert(
             `insert into ${this.tableName} ${insertData}`,
@@ -78428,7 +78428,7 @@ var require_oracle_querycompiler = __commonJS({
           );
         }
         const insertDefaultsOnly = insertData.columns.length === 0;
-        sql10.sql = "begin " + insertData.values.map((value) => {
+        sql12.sql = "begin " + insertData.values.map((value) => {
           let returningHelper;
           const parameterizedValues = !insertDefaultsOnly ? this.client.parameterize(
             value,
@@ -78440,7 +78440,7 @@ var require_oracle_querycompiler = __commonJS({
           let subSql = `insert into ${this.tableName} `;
           if (returning) {
             returningHelper = new ReturningHelper(returningValues.join(":"));
-            sql10.outParams = (sql10.outParams || []).concat(returningHelper);
+            sql12.outParams = (sql12.outParams || []).concat(returningHelper);
           }
           if (insertDefaultsOnly) {
             subSql += `(${this.formatter.wrap(
@@ -78461,24 +78461,24 @@ var require_oracle_querycompiler = __commonJS({
           return `execute immediate '${subSql.replace(/'/g, "''")}` + (parameterizedValuesWithoutDefault || returning ? "' using " : "") + parameterizedValuesWithoutDefault + (parameterizedValuesWithoutDefault && returning ? ", " : "") + (returning ? "out ?" : "") + ";";
         }).join(" ") + "end;";
         if (returning) {
-          sql10.returning = returning;
-          sql10.returningSql = `select ${this.formatter.columnize(returning)} from ` + this.tableName + " where ROWID in (" + sql10.outParams.map((v, i) => `:${i + 1}`).join(", ") + ") order by case ROWID " + sql10.outParams.map((v, i) => `when CHARTOROWID(:${i + 1}) then ${i}`).join(" ") + " end";
+          sql12.returning = returning;
+          sql12.returningSql = `select ${this.formatter.columnize(returning)} from ` + this.tableName + " where ROWID in (" + sql12.outParams.map((v, i) => `:${i + 1}`).join(", ") + ") order by case ROWID " + sql12.outParams.map((v, i) => `when CHARTOROWID(:${i + 1}) then ${i}`).join(" ") + " end";
         }
-        return sql10;
+        return sql12;
       }
       // Update method, including joins, wheres, order & limits.
       update() {
         const updates = this._prepUpdate(this.single.update);
         const where = this.where();
         let { returning } = this.single;
-        const sql10 = `update ${this.tableName} set ` + updates.join(", ") + (where ? ` ${where}` : "");
+        const sql12 = `update ${this.tableName} set ` + updates.join(", ") + (where ? ` ${where}` : "");
         if (!returning) {
-          return sql10;
+          return sql12;
         }
         if (!Array.isArray(returning)) {
           returning = [returning];
         }
-        return this._addReturningToSqlAndConvert(sql10, returning, this.tableName);
+        return this._addReturningToSqlAndConvert(sql12, returning, this.tableName);
       }
       // Compiles a `truncate` query.
       truncate() {
@@ -78497,7 +78497,7 @@ var require_oracle_querycompiler = __commonJS({
       columnInfo() {
         const column = this.single.columnInfo;
         const table = this.client.customWrapIdentifier(this.single.table, identity2);
-        const sql10 = `select * from xmltable( '/ROWSET/ROW'
+        const sql12 = `select * from xmltable( '/ROWSET/ROW'
       passing dbms_xmlgen.getXMLType('
       select char_col_decl_length, column_name, data_type, data_default, nullable
       from all_tab_columns where table_name = ''${table}'' ')
@@ -78505,7 +78505,7 @@ var require_oracle_querycompiler = __commonJS({
       CHAR_COL_DECL_LENGTH number, COLUMN_NAME varchar2(200), DATA_TYPE varchar2(106),
       DATA_DEFAULT clob, NULLABLE varchar2(1))`;
         return {
-          sql: sql10,
+          sql: sql12,
           output(resp) {
             const out = reduce(
               resp,
@@ -78536,16 +78536,16 @@ var require_oracle_querycompiler = __commonJS({
         return this._aggregate(stmt, { aliasSeparator: " " });
       }
       // for single commands only
-      _addReturningToSqlAndConvert(sql10, returning, tableName) {
+      _addReturningToSqlAndConvert(sql12, returning, tableName) {
         const res = {
-          sql: sql10
+          sql: sql12
         };
         if (!returning) {
           return res;
         }
         const returningValues = Array.isArray(returning) ? returning : [returning];
         const returningHelper = new ReturningHelper(returningValues.join(":"));
-        res.sql = sql10 + " returning ROWID into " + this.client.parameter(returningHelper, this.builder, this.bindingsHolder);
+        res.sql = sql12 + " returning ROWID into " + this.client.parameter(returningHelper, this.builder, this.bindingsHolder);
         res.returningSql = `select ${this.formatter.columnize(
           returning
         )} from ${tableName} where ROWID = :1`;
@@ -78654,7 +78654,7 @@ var require_utils11 = __commonJS({
           });
         });
       };
-      const fetchAsync = promisify3(function(sql10, bindParams, options, cb) {
+      const fetchAsync = promisify3(function(sql12, bindParams, options, cb) {
         options = options || {};
         options.outFormat = client.driver.OUT_FORMAT_OBJECT || client.driver.OBJECT;
         if (!options.outFormat) {
@@ -78662,7 +78662,7 @@ var require_utils11 = __commonJS({
         }
         if (options.resultSet) {
           connection.execute(
-            sql10,
+            sql12,
             bindParams || [],
             options,
             function(err, result) {
@@ -78705,7 +78705,7 @@ var require_utils11 = __commonJS({
           );
         } else {
           connection.execute(
-            sql10,
+            sql12,
             bindParams || [],
             options,
             function(err, result) {
@@ -78722,8 +78722,8 @@ var require_utils11 = __commonJS({
           );
         }
       });
-      connection.executeAsync = function(sql10, bindParams, options) {
-        return fetchAsync(sql10, bindParams, options).then(async (results) => {
+      connection.executeAsync = function(sql12, bindParams, options) {
+        return fetchAsync(sql12, bindParams, options).then(async (results) => {
           const closeResultSet = () => {
             return results.resultSet ? promisify3(results.resultSet.close).call(results.resultSet) : Promise.resolve();
           };
@@ -78800,7 +78800,7 @@ var require_oracledb_querycompiler = __commonJS({
           return "";
         }
         const insertData = this._prepInsert(insertValues);
-        const sql10 = {};
+        const sql12 = {};
         if (isString2(insertData)) {
           return this._addReturningToSqlAndConvert(
             "insert into " + this.tableName + " " + insertData,
@@ -78823,8 +78823,8 @@ var require_oracledb_querycompiler = __commonJS({
           );
         }
         const insertDefaultsOnly = insertData.columns.length === 0;
-        sql10.returning = returning;
-        sql10.sql = "begin " + insertData.values.map(function(value, index) {
+        sql12.returning = returning;
+        sql12.sql = "begin " + insertData.values.map(function(value, index) {
           const parameterizedValues = !insertDefaultsOnly ? self2.client.parameterize(
             value,
             self2.client.valueForUndefined,
@@ -78867,9 +78867,9 @@ var require_oracledb_querycompiler = __commonJS({
           const parameterizedValuesWithoutDefaultAndBlob = parameterizedValues.replace(/DEFAULT, /g, "").replace(/, DEFAULT/g, "").replace("EMPTY_BLOB(), ", "").replace(", EMPTY_BLOB()", "");
           return "execute immediate '" + subSql.replace(/'/g, "''") + (parameterizedValuesWithoutDefaultAndBlob || value ? "' using " : "") + parameterizedValuesWithoutDefaultAndBlob + (parameterizedValuesWithoutDefaultAndBlob && outClause ? "," : "") + outClause + ";";
         }).join(" ") + "end;";
-        sql10.outBinding = outBinding;
+        sql12.outBinding = outBinding;
         if (returning[0] === "*") {
-          sql10.returningSql = function() {
+          sql12.returningSql = function() {
             return "select * from " + self2.tableName + " where ROWID in (" + this.outBinding.map(function(v, i) {
               return ":" + (i + 1);
             }).join(", ") + ") order by case ROWID " + this.outBinding.map(function(v, i) {
@@ -78877,7 +78877,7 @@ var require_oracledb_querycompiler = __commonJS({
             }).join(" ") + " end";
           };
         }
-        return sql10;
+        return sql12;
       }
       with() {
         const undoList = [];
@@ -78895,10 +78895,10 @@ var require_oracledb_querycompiler = __commonJS({
         }
         return result;
       }
-      _addReturningToSqlAndConvert(sql10, outBinding, tableName, returning) {
+      _addReturningToSqlAndConvert(sql12, outBinding, tableName, returning) {
         const self2 = this;
         const res = {
-          sql: sql10
+          sql: sql12
         };
         if (!outBinding) {
           return res;
@@ -78915,7 +78915,7 @@ var require_oracledb_querycompiler = __commonJS({
           }
           self2.formatter.bindings.push(new ReturningHelper(columnName));
         });
-        res.sql = sql10;
+        res.sql = sql12;
         returningClause = returningClause.slice(0, -1);
         intoClause = intoClause.slice(0, -1);
         if (returningClause && intoClause) {
@@ -78972,7 +78972,7 @@ var require_oracledb_querycompiler = __commonJS({
       }
       update() {
         const self2 = this;
-        const sql10 = {};
+        const sql12 = {};
         const outBindPrep = this._prepOutbindings(
           this.single.update || this.single.counter,
           this.single.returning
@@ -78999,15 +78999,15 @@ var require_oracledb_querycompiler = __commonJS({
         });
         returningClause = returningClause.slice(0, -1);
         intoClause = intoClause.slice(0, -1);
-        sql10.outBinding = outBinding;
-        sql10.returning = returning;
-        sql10.sql = "update " + this.tableName + " set " + updates.join(", ") + (where ? " " + where : "");
+        sql12.outBinding = outBinding;
+        sql12.returning = returning;
+        sql12.sql = "update " + this.tableName + " set " + updates.join(", ") + (where ? " " + where : "");
         if (outBinding.length && !isEmpty(outBinding[0])) {
-          sql10.sql += " returning " + returningClause + " into" + intoClause;
+          sql12.sql += " returning " + returningClause + " into" + intoClause;
         }
         if (returning[0] === "*") {
-          sql10.returningSql = function() {
-            let sql11 = "select * from " + self2.tableName;
+          sql12.returningSql = function() {
+            let sql13 = "select * from " + self2.tableName;
             const modifiedRowsCount = this.rowsAffected.length || this.rowsAffected;
             let returningSqlIn = " where ROWID in (";
             let returningSqlOrderBy = ") order by case ROWID ";
@@ -79022,10 +79022,10 @@ var require_oracledb_querycompiler = __commonJS({
               returningSqlIn = returningSqlIn.slice(0, -2);
               returningSqlOrderBy = returningSqlOrderBy.slice(0, -1);
             }
-            return sql11 += returningSqlIn + returningSqlOrderBy + " end";
+            return sql13 += returningSqlIn + returningSqlOrderBy + " end";
           };
         }
-        return sql10;
+        return sql12;
       }
       _jsonPathWrap(extraction) {
         return `'${extraction.path || extraction[1]}'`;
@@ -79114,11 +79114,11 @@ var require_oracledb_tablecompiler = __commonJS({
       }
       _setNullableState(column, isNullable) {
         const nullability = isNullable ? "NULL" : "NOT NULL";
-        const sql10 = `alter table ${this.tableName()} modify (${this.formatter.wrap(
+        const sql12 = `alter table ${this.tableName()} modify (${this.formatter.wrap(
           column
         )} ${nullability})`;
         return this.pushQuery({
-          sql: sql10
+          sql: sql12
         });
       }
     };
@@ -79715,27 +79715,27 @@ var require_redshift_querycompiler = __commonJS({
       // Compiles an `insert` query, allowing for multiple
       // inserts using a single query statement.
       insert() {
-        const sql10 = QueryCompiler.prototype.insert.apply(this, arguments);
-        if (sql10 === "") return sql10;
+        const sql12 = QueryCompiler.prototype.insert.apply(this, arguments);
+        if (sql12 === "") return sql12;
         this._slightReturn();
         return {
-          sql: sql10
+          sql: sql12
         };
       }
       // Compiles an `update` query, warning on unsupported returning
       update() {
-        const sql10 = QueryCompiler.prototype.update.apply(this, arguments);
+        const sql12 = QueryCompiler.prototype.update.apply(this, arguments);
         this._slightReturn();
         return {
-          sql: sql10
+          sql: sql12
         };
       }
       // Compiles an `delete` query, warning on unsupported returning
       del() {
-        const sql10 = QueryCompiler.prototype.del.apply(this, arguments);
+        const sql12 = QueryCompiler.prototype.del.apply(this, arguments);
         this._slightReturn();
         return {
-          sql: sql10
+          sql: sql12
         };
       }
       // simple: if trying to return, warn
@@ -79774,12 +79774,12 @@ var require_redshift_querycompiler = __commonJS({
         if (schema) {
           schema = this.client.customWrapIdentifier(schema, identity2);
         }
-        const sql10 = "select * from information_schema.columns where table_name = ? and table_catalog = ?";
+        const sql12 = "select * from information_schema.columns where table_name = ? and table_catalog = ?";
         const bindings = [
           table.toLowerCase(),
           this.client.database().toLowerCase()
         ];
-        return this._buildColumnInfoQuery(schema, sql10, bindings, column);
+        return this._buildColumnInfoQuery(schema, sql12, bindings, column);
       }
       jsonExtract(params) {
         let extractions;
@@ -79951,11 +79951,11 @@ var require_redshift_tablecompiler = __commonJS({
       createQuery(columns, ifNot, like) {
         const createStatement = ifNot ? "create table if not exists " : "create table ";
         const columnsSql = " (" + columns.sql.join(", ") + this._addChecks() + ")";
-        let sql10 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + ")" : columnsSql);
+        let sql12 = createStatement + this.tableName() + (like && this.tableNameLike() ? " (like " + this.tableNameLike() + ")" : columnsSql);
         if (this.single.inherits)
-          sql10 += ` like (${this.formatter.wrap(this.single.inherits)})`;
+          sql12 += ` like (${this.formatter.wrap(this.single.inherits)})`;
         this.pushQuery({
-          sql: sql10,
+          sql: sql12,
           bindings: columns.bindings
         });
         const hasComment = has(this.single, "comment");
@@ -106951,6 +106951,53 @@ var init_migrations = __esm({
             });
           }
         }
+      },
+      {
+        id: "20260808_007_budget_and_pricing",
+        up: async (db2) => {
+          if (!await db2.schema.hasTable("project_budget_controls")) {
+            await db2.schema.createTable("project_budget_controls", (table) => {
+              table.integer("project_id").primary();
+              table.float("budget_limit");
+              table.text("currency").notNullable().defaultTo("CNY");
+              table.integer("block_unknown_price").notNullable().defaultTo(0);
+              table.integer("updated_at").notNullable();
+            });
+          }
+          if (!await db2.schema.hasTable("pricing_rules")) {
+            await db2.schema.createTable("pricing_rules", (table) => {
+              table.text("id").primary();
+              table.text("provider").notNullable();
+              table.text("model").notNullable().defaultTo("*");
+              table.text("lane").notNullable();
+              table.text("unit_type").notNullable();
+              table.float("unit_price").notNullable();
+              table.text("currency").notNullable().defaultTo("CNY");
+              table.integer("updated_at").notNullable();
+              table.unique(["provider", "model", "lane"], "pricing_rules_identity_unique");
+            });
+          }
+        }
+      },
+      {
+        id: "20260808_008_composition_reviews",
+        up: async (db2) => {
+          if (!await db2.schema.hasTable("composition_reviews")) {
+            await db2.schema.createTable("composition_reviews", (table) => {
+              table.text("id").primary();
+              table.integer("project_id").notNullable();
+              table.integer("script_id").notNullable();
+              table.text("composition_job_id").notNullable();
+              table.text("output_checksum").notNullable();
+              table.text("status").notNullable();
+              table.text("note");
+              table.text("reviewer").notNullable();
+              table.integer("created_at").notNullable();
+              table.index(["project_id", "script_id", "created_at"], "composition_reviews_script_idx");
+              table.index(["composition_job_id", "created_at"], "composition_reviews_job_idx");
+            });
+          }
+        }
       }
     ];
   }
@@ -107148,7 +107195,7 @@ async function getAllEnums(db2, config3) {
   return await getTableEnums(db2, config3);
 }
 async function getAllTables(db2, schemas) {
-  const sql10 = `
+  const sql12 = `
     SELECT
       TABLE_NAME AS name,
       TABLE_SCHEMA AS 'schema',
@@ -107156,10 +107203,10 @@ async function getAllTables(db2, schemas) {
     FROM INFORMATION_SCHEMA.TABLES
     WHERE TABLE_SCHEMA NOT IN('mysql', 'information_schema', 'performance_schema', 'sys')
     ${schemas.length > 0 ? " AND TABLE_SCHEMA IN (:schemas)" : ""}`;
-  return (await db2.raw(sql10, { schemas }))[0];
+  return (await db2.raw(sql12, { schemas }))[0];
 }
 async function getAllColumns(db2, config3, table, schema) {
-  const sql10 = `
+  const sql12 = `
     SELECT
       column_name as name,
       is_nullable as isNullable,
@@ -107180,7 +107227,7 @@ async function getAllColumns(db2, config3, table, schema) {
       AND c.TABLE_SCHEMA = :schema
       ORDER BY ORDINAL_POSITION
     `;
-  return (await db2.raw(sql10, { table, schema }))[0].map((c) => ({
+  return (await db2.raw(sql12, { table, schema }))[0].map((c) => ({
     name: c.name,
     type: c.fullType == "tinyint(1)" ? c.fullType : c.type,
     // tinyint(1) typically aliased as a boolean
@@ -107224,7 +107271,7 @@ var init_mssql = __esm({
         return await getTableEnums(db2, config3);
       },
       async getAllTables(db2, schemas) {
-        const sql10 = `
+        const sql12 = `
       SELECT
         TABLE_NAME name,
         TABLE_SCHEMA [schema],
@@ -107236,10 +107283,10 @@ var init_mssql = __esm({
           SELECT TOP 1 value FROM fn_listextendedproperty (NULL, 'schema', TABLE_SCHEMA, 'view', TABLE_NAME, null, null) EP WHERE EP.name = 'MS_Description'
         ) EP 
       ${schemas.length > 0 ? `WHERE TABLE_SCHEMA IN (${schemas.map((_) => "?").join(",")})` : ""}`;
-        return await db2.raw(sql10, schemas);
+        return await db2.raw(sql12, schemas);
       },
       async getAllColumns(db2, config3, table, schema) {
-        const sql10 = `
+        const sql12 = `
       SELECT
 				COLUMN_NAME as name,
 				IS_NULLABLE AS isNullable,
@@ -107263,7 +107310,7 @@ var init_mssql = __esm({
         WHERE c.TABLE_NAME = :table
         AND c.TABLE_SCHEMA = :schema
       `;
-        return (await db2.raw(sql10, { table, schema })).map((c) => ({
+        return (await db2.raw(sql12, { table, schema })).map((c) => ({
           name: c.name,
           type: c.type,
           nullable: c.isNullable === "YES",
@@ -109683,7 +109730,7 @@ var init_postgres = __esm({
     init_SharedAdapterTasks();
     postgres_default = {
       async getAllEnums(db2, config3) {
-        const sql10 = `
+        const sql12 = `
     SELECT 
       pg_namespace.nspname AS schema, 
       pg_enum.enumsortorder AS order, 
@@ -109694,7 +109741,7 @@ var init_postgres = __esm({
     JOIN pg_namespace ON pg_namespace.oid = pg_type.typnamespace
     ${config3.schemas.length > 0 ? ` WHERE pg_namespace.nspname = ANY(:schemas)` : ""}
     `;
-        const ungroupedEnums = (await db2.raw(sql10, { schemas: config3.schemas })).rows;
+        const ungroupedEnums = (await db2.raw(sql12, { schemas: config3.schemas })).rows;
         const groupedEnums = uniqBy_default(ungroupedEnums, (e) => `${e.name}.${e.schema}`).map((row) => ({
           name: row.name,
           schema: row.schema,
@@ -109704,7 +109751,7 @@ var init_postgres = __esm({
         return groupedEnums.concat(tableEnums);
       },
       async getAllTables(db2, schemas) {
-        const sql10 = `
+        const sql12 = `
       WITH schemas AS (
         SELECT nspname AS name, oid AS oid
         FROM pg_namespace
@@ -109719,11 +109766,11 @@ var init_postgres = __esm({
         WHERE pg_class.relkind IN ('r', 'p', 'v', 'm')
         AND NOT pg_class.relispartition
     `;
-        const results = await db2.raw(sql10, { schemas });
+        const results = await db2.raw(sql12, { schemas });
         return results.rows;
       },
       async getAllColumns(db2, config3, table, schema) {
-        const sql10 = `
+        const sql12 = `
       SELECT
         typns.nspname typeschema,
         pg_type.typname,
@@ -109754,7 +109801,7 @@ var init_postgres = __esm({
       AND pg_class.relname = :table
       AND pg_namespace.nspname = :schema
     `;
-        return (await db2.raw(sql10, { table, schema })).rows.map((c) => ({
+        return (await db2.raw(sql12, { table, schema })).rows.map((c) => ({
           name: c.name,
           type: c.typname,
           nullable: !c.notnullable,
@@ -109781,12 +109828,12 @@ var init_sqlite = __esm({
         return await getTableEnums(db2, config3);
       },
       async getAllTables(db2, schemas) {
-        const sql10 = `
+        const sql12 = `
       SELECT tbl_name from sqlite_master
       WHERE tbl_name <> 'sqlite_sequence'
       AND type IN ('table', 'view')
     `;
-        return (await db2.raw(sql10)).map((t) => ({ name: t.tbl_name, schema: "main", comment: "" }));
+        return (await db2.raw(sql12)).map((t) => ({ name: t.tbl_name, schema: "main", comment: "" }));
       },
       async getAllColumns(db2, config3, table, schema) {
         return (await db2.raw(`pragma table_info(${table})`)).map((c) => ({
@@ -237884,6 +237931,20 @@ var init_repository = __esm({
         }
         const task = await this.get(id);
         if (!task) throw new Error(`\u4EFB\u52A1\u521B\u5EFA\u540E\u65E0\u6CD5\u8BFB\u53D6: ${id}`);
+        if (input.costReservation) {
+          await db("usage_ledger").insert({
+            id: v4_default(),
+            task_id: task.id,
+            provider: input.costReservation.provider,
+            model: input.costReservation.model,
+            units: input.costReservation.units,
+            estimated_cost: input.costReservation.estimatedCost,
+            actual_cost: null,
+            currency: input.costReservation.currency,
+            pricing_snapshot: JSON.stringify(input.costReservation.pricingSnapshot),
+            created_at: Date.now()
+          });
+        }
         await recordEvent(task, "enqueued", null, { status: task.status, type: task.type });
         return { task, deduped: false };
       }
@@ -241165,6 +241226,52 @@ var init_qaJobs = __esm({
   }
 });
 
+// src/services/composition/reviews.ts
+function mapRow3(row) {
+  return row ? {
+    id: row.id,
+    projectId: row.project_id,
+    scriptId: row.script_id,
+    compositionJobId: row.composition_job_id,
+    status: row.status,
+    note: row.note ?? null,
+    reviewer: row.reviewer,
+    createdAt: row.created_at
+  } : null;
+}
+async function getLatestCompositionReview(input) {
+  let query = sql9("composition_reviews").where({ project_id: input.projectId, script_id: input.scriptId });
+  if (input.compositionJobId) query = query.where("composition_job_id", input.compositionJobId);
+  return mapRow3(await query.orderBy("created_at", "desc").first());
+}
+async function recordCompositionReview(input) {
+  const job = await sql9("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
+  if (!job || job.status !== "succeeded") throw new Error("\u53EA\u80FD\u5BA1\u6838\u5DF2\u5B8C\u6210\u7684\u6210\u7247");
+  const row = {
+    id: v4_default(),
+    project_id: input.projectId,
+    script_id: input.scriptId,
+    composition_job_id: input.compositionJobId,
+    output_checksum: job.output_checksum,
+    status: input.status,
+    note: input.note?.trim() || null,
+    reviewer: input.reviewer,
+    created_at: Date.now()
+  };
+  await sql9("composition_reviews").insert(row);
+  return mapRow3(row);
+}
+var sql9, reviewStatuses;
+var init_reviews = __esm({
+  "src/services/composition/reviews.ts"() {
+    "use strict";
+    init_dist_node();
+    init_db();
+    sql9 = db;
+    reviewStatuses = ["approved", "rejected"];
+  }
+});
+
 // src/routes/composition/timeline.ts
 var import_express28, router28, filters, timeline_default;
 var init_timeline2 = __esm({
@@ -241179,6 +241286,7 @@ var init_timeline2 = __esm({
     init_renderer();
     init_audioClips();
     init_qaJobs();
+    init_reviews();
     router28 = import_express28.default.Router();
     filters = {
       projectId: external_exports.number().int().positive(),
@@ -241202,6 +241310,32 @@ var init_timeline2 = __esm({
     router28.post("/qa/latest", validateFields(filters), async (req, res) => {
       res.status(200).send(success3(await getLatestQaReport(req.body)));
     });
+    router28.post(
+      "/review/latest",
+      validateFields({ ...filters, compositionJobId: external_exports.string().uuid().optional() }),
+      async (req, res) => {
+        res.status(200).send(success3(await getLatestCompositionReview(req.body)));
+      }
+    );
+    router28.post(
+      "/review/record",
+      validateFields({
+        ...filters,
+        compositionJobId: external_exports.string().uuid(),
+        status: external_exports.enum(reviewStatuses),
+        note: external_exports.string().trim().max(1e3).optional()
+      }),
+      async (req, res) => {
+        try {
+          res.status(200).send(success3(await recordCompositionReview({
+            ...req.body,
+            reviewer: String(req.user?.username || req.user?.name || "local-user")
+          })));
+        } catch (cause) {
+          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
+        }
+      }
+    );
     router28.post(
       "/qa/run",
       validateFields({
@@ -241614,6 +241748,104 @@ var init_get2 = __esm({
   }
 });
 
+// src/services/task-engine/budget.ts
+async function getProjectBudget(projectId) {
+  const control = await sql10("project_budget_controls").where("project_id", projectId).first();
+  const usage = await sql10("usage_ledger").leftJoin("generation_tasks", "generation_tasks.id", "usage_ledger.task_id").where("generation_tasks.project_id", projectId).sum({ reserved: sql10.raw("coalesce(actual_cost, estimated_cost, 0)") }).first();
+  return {
+    projectId,
+    budgetLimit: control?.budget_limit ?? null,
+    currency: control?.currency ?? "CNY",
+    blockUnknownPrice: control?.block_unknown_price === 1,
+    reservedCost: Number(usage?.reserved ?? 0),
+    remaining: control?.budget_limit == null ? null : Math.max(0, Number(control.budget_limit) - Number(usage?.reserved ?? 0))
+  };
+}
+async function upsertProjectBudget(input) {
+  const project = await sql10("o_project").where("id", input.projectId).first();
+  if (!project) throw new Error("\u9879\u76EE\u4E0D\u5B58\u5728");
+  const row = {
+    project_id: input.projectId,
+    budget_limit: input.budgetLimit,
+    currency: input.currency,
+    block_unknown_price: input.blockUnknownPrice ? 1 : 0,
+    updated_at: Date.now()
+  };
+  await sql10("project_budget_controls").insert(row).onConflict("project_id").merge(row);
+  return getProjectBudget(input.projectId);
+}
+async function listPricingRules() {
+  return (await sql10("pricing_rules").orderBy(["provider", "model", "lane"])).map((row) => ({
+    id: row.id,
+    provider: row.provider,
+    model: row.model,
+    lane: row.lane,
+    unitType: row.unit_type,
+    unitPrice: row.unit_price,
+    currency: row.currency,
+    updatedAt: row.updated_at
+  }));
+}
+async function upsertPricingRule(input) {
+  const id = input.id ?? v4_default();
+  const row = {
+    id,
+    provider: input.provider,
+    model: input.model,
+    lane: input.lane,
+    unit_type: input.unitType,
+    unit_price: input.unitPrice,
+    currency: input.currency,
+    updated_at: Date.now()
+  };
+  if (input.id) {
+    const updated = await sql10("pricing_rules").where("id", input.id).update(row);
+    if (updated !== 1) throw new Error("\u4EF7\u683C\u89C4\u5219\u4E0D\u5B58\u5728");
+  } else {
+    await sql10("pricing_rules").insert(row);
+  }
+  return row;
+}
+async function deletePricingRule(id) {
+  await sql10("pricing_rules").where("id", id).delete();
+  return { id };
+}
+async function prepareCostReservation(input) {
+  const [provider, model] = input.model.split(/:(.+)/);
+  const exact = await sql10("pricing_rules").where({ provider, model, lane: input.lane }).first();
+  const rule = exact || await sql10("pricing_rules").where({ provider, model: "*", lane: input.lane }).first();
+  const budget = await getProjectBudget(input.projectId);
+  if (!rule) {
+    if (budget.blockUnknownPrice) throw new Error(`\u6A21\u578B ${provider}:${model} \u6CA1\u6709\u4EF7\u683C\u89C4\u5219\uFF0C\u9879\u76EE\u5DF2\u8BBE\u7F6E\u963B\u6B62\u672A\u77E5\u4EF7\u683C\u4EFB\u52A1`);
+    return null;
+  }
+  if (rule.currency !== budget.currency) throw new Error(`\u4EF7\u683C\u89C4\u5219\u4F7F\u7528 ${rule.currency}\uFF0C\u9879\u76EE\u9884\u7B97\u4F7F\u7528 ${budget.currency}\uFF0C\u8BF7\u7EDF\u4E00\u5E01\u79CD`);
+  const units = Number(input.metrics[rule.unit_type] ?? 0);
+  if (!Number.isFinite(units) || units <= 0) throw new Error(`\u4EF7\u683C\u89C4\u5219\u8981\u6C42 ${rule.unit_type} \u5355\u4F4D\uFF0C\u4F46\u4EFB\u52A1\u65E0\u6CD5\u63D0\u4F9B\u6709\u6548\u6570\u91CF`);
+  const estimatedCost = Number((units * Number(rule.unit_price)).toFixed(6));
+  if (budget.budgetLimit != null && budget.reservedCost + estimatedCost > budget.budgetLimit) {
+    throw new Error(`\u9884\u8BA1\u8D39\u7528 ${estimatedCost} ${budget.currency} \u5C06\u8D85\u8FC7\u9879\u76EE\u5269\u4F59\u9884\u7B97 ${budget.remaining} ${budget.currency}`);
+  }
+  return {
+    provider,
+    model,
+    units,
+    estimatedCost,
+    currency: rule.currency,
+    pricingSnapshot: { ruleId: rule.id, unitType: rule.unit_type, unitPrice: rule.unit_price, capturedAt: Date.now() }
+  };
+}
+var sql10, pricingUnitTypes;
+var init_budget = __esm({
+  "src/services/task-engine/budget.ts"() {
+    "use strict";
+    init_dist_node();
+    init_db();
+    sql10 = db;
+    pricingUnitTypes = ["request", "second", "character"];
+  }
+});
+
 // src/routes/generationTasks/limits.ts
 var import_express38, router38, limits_default;
 var init_limits = __esm({
@@ -241625,6 +241857,7 @@ var init_limits = __esm({
     init_responseFormat();
     init_generationTask();
     init_db();
+    init_budget();
     router38 = import_express38.default.Router();
     router38.post("/list", async (_req, res) => {
       const rows = await db("provider_limits").select("provider", "model", "lane", "max_concurrency as maxConcurrency", "rpm", "cooldown_ms as cooldownMs", "updated_at as updatedAt").orderBy(["provider", "model", "lane"]);
@@ -241655,6 +241888,42 @@ var init_limits = __esm({
         res.status(200).send(success3(row));
       }
     );
+    router38.post("/budget/get", validateFields({ projectId: external_exports.number().int().positive() }), async (req, res) => {
+      res.status(200).send(success3(await getProjectBudget(req.body.projectId)));
+    });
+    router38.post(
+      "/budget/upsert",
+      validateFields({
+        projectId: external_exports.number().int().positive(),
+        budgetLimit: external_exports.number().nonnegative().nullable(),
+        currency: external_exports.enum(["CNY", "USD"]),
+        blockUnknownPrice: external_exports.boolean()
+      }),
+      async (req, res) => {
+        res.status(200).send(success3(await upsertProjectBudget(req.body)));
+      }
+    );
+    router38.post("/pricing/list", async (_req, res) => {
+      res.status(200).send(success3(await listPricingRules()));
+    });
+    router38.post(
+      "/pricing/upsert",
+      validateFields({
+        id: external_exports.string().uuid().optional(),
+        provider: external_exports.string().trim().min(1),
+        model: external_exports.string().trim().min(1),
+        lane: external_exports.enum(generationTaskLanes),
+        unitType: external_exports.enum(pricingUnitTypes),
+        unitPrice: external_exports.number().nonnegative(),
+        currency: external_exports.enum(["CNY", "USD"])
+      }),
+      async (req, res) => {
+        res.status(200).send(success3(await upsertPricingRule(req.body)));
+      }
+    );
+    router38.post("/pricing/delete", validateFields({ id: external_exports.string().uuid() }), async (req, res) => {
+      res.status(200).send(success3(await deletePricingRule(req.body.id)));
+    });
     limits_default = router38;
   }
 });
@@ -242278,6 +242547,12 @@ async function enqueueAssetImageGeneration(input) {
   const resourceKey = `image:asset:${input.assetId}`;
   const existing = await activeTask(input.projectId, "asset.image.generate", resourceKey);
   if (existing) return { task: existing, payload: existing.payload, deduped: true };
+  const costReservation = await prepareCostReservation({
+    projectId: input.projectId,
+    lane: "image",
+    model: input.model,
+    metrics: { request: 1 }
+  });
   const savePath = `/${input.projectId}/assets/${input.scriptId}/${input.assetType}/${v4_default()}.jpg`;
   const [imageId] = await utils_default.db("o_image").insert({
     assetsId: input.assetId,
@@ -242319,7 +242594,8 @@ async function enqueueAssetImageGeneration(input) {
     payload,
     provider: input.model.split(/:(.+)/)[0],
     idempotencyKey: stableIdempotencyKey({ requestId: input.requestId, resourceKey, type: "asset.image.generate" }),
-    maxAttempts: 3
+    maxAttempts: 3,
+    costReservation
   });
   if (result.deduped) {
     await utils_default.db("o_image").where("id", imageId).delete();
@@ -242334,6 +242610,12 @@ async function enqueueStoryboardImageGeneration(input) {
   const resourceKey = `image:storyboard:${input.storyboardId}`;
   const existing = await activeTask(input.projectId, "storyboard.image.generate", resourceKey);
   if (existing) return { task: existing, payload: existing.payload, deduped: true };
+  const costReservation = await prepareCostReservation({
+    projectId: input.projectId,
+    lane: "image",
+    model: input.model,
+    metrics: { request: 1 }
+  });
   const [legacyTaskId] = await utils_default.db("o_tasks").insert({
     projectId: input.projectId,
     taskClass: "\u751F\u6210\u5206\u955C\u56FE\u7247",
@@ -242363,7 +242645,8 @@ async function enqueueStoryboardImageGeneration(input) {
     payload,
     provider: input.model.split(/:(.+)/)[0],
     idempotencyKey: stableIdempotencyKey({ requestId: input.requestId, resourceKey, type: "storyboard.image.generate" }),
-    maxAttempts: 3
+    maxAttempts: 3,
+    costReservation
   });
   if (result.deduped) await utils_default.db("o_tasks").where("id", legacyTaskId).delete();
   return { task: result.task, payload: result.task.payload, deduped: result.deduped };
@@ -242375,6 +242658,7 @@ var init_enqueueImage = __esm({
     init_dist_node();
     init_utils3();
     init_repository();
+    init_budget();
     terminal = /* @__PURE__ */ new Set(["cancelled", "succeeded", "failed"]);
   }
 });
@@ -243944,6 +244228,12 @@ async function enqueueVideoGeneration(input) {
     const payload2 = active.payload;
     return { task: active, videoId: payload2.videoId, deduped: true };
   }
+  const costReservation = await prepareCostReservation({
+    projectId: input.projectId,
+    lane: "video",
+    model: input.model,
+    metrics: { request: 1, second: input.duration }
+  });
   const ratio = await utils_default.db("o_project").select("videoRatio").where("id", input.projectId).first();
   const videoPath = `/${input.projectId}/video/${v4_default()}.mp4`;
   const [videoId] = await utils_default.db("o_video").insert({
@@ -243987,7 +244277,8 @@ async function enqueueVideoGeneration(input) {
     payload,
     provider: input.model.split(/:(.+)/)[0],
     idempotencyKey,
-    maxAttempts: 3
+    maxAttempts: 3,
+    costReservation
   });
   if (result.deduped) {
     await utils_default.db("o_video").where("id", videoId).delete();
@@ -244003,6 +244294,7 @@ var init_enqueueVideo = __esm({
     init_dist_node();
     init_utils3();
     init_repository();
+    init_budget();
   }
 });
 
@@ -245189,6 +245481,8 @@ var init_delProject = __esm({
         await utils_default.db("project_timelines").where("project_id", id).delete();
         await utils_default.db("project_audio_clips").where("project_id", id).delete();
         await utils_default.db("media_qa_reports").where("project_id", id).delete();
+        await utils_default.db("project_budget_controls").where("project_id", id).delete();
+        await utils_default.db("composition_reviews").where("project_id", id).delete();
         const storyboardData = await utils_default.db("o_storyboard").where("projectId", id).select("id");
         const storyboardIds = storyboardData.map((item) => item.id);
         if (storyboardIds.length > 0) {
@@ -258648,10 +258942,10 @@ var init_cues = __esm({
 
 // src/services/task-engine/enqueueUtteranceTts.ts
 async function enqueueUtteranceTts(input) {
-  const utterance = await sql9("utterances").where({ id: input.utteranceId, project_id: input.projectId }).first();
+  const utterance = await sql11("utterances").where({ id: input.utteranceId, project_id: input.projectId }).first();
   if (!utterance) throw new Error("\u53F0\u8BCD\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
   if (!utterance.voice_cast_id) throw new Error("\u8BF7\u5148\u4E3A\u8FD9\u53E5\u53F0\u8BCD\u5206\u914D\u89D2\u8272\u97F3\u8272");
-  const voiceCast = await sql9("voice_cast").where({ id: utterance.voice_cast_id, project_id: input.projectId }).first();
+  const voiceCast = await sql11("voice_cast").where({ id: utterance.voice_cast_id, project_id: input.projectId }).first();
   if (!voiceCast) throw new Error("\u53F0\u8BCD\u7ED1\u5B9A\u7684\u89D2\u8272\u97F3\u8272\u4E0D\u5B58\u5728");
   const model = `${voiceCast.provider}:${voiceCast.model}`;
   const cacheKey = stableIdempotencyKey({
@@ -258667,9 +258961,15 @@ async function enqueueUtteranceTts(input) {
   if (utterance.status === "succeeded" && utterance.audio_path && utterance.cache_key === cacheKey) {
     return { task: null, payload: null, deduped: true, cached: true, audioPath: utterance.audio_path };
   }
+  const costReservation = await prepareCostReservation({
+    projectId: input.projectId,
+    lane: "audio",
+    model,
+    metrics: { request: 1, character: Array.from(String(utterance.text)).length }
+  });
   let referenceAudioPath;
   if (voiceCast.preview_asset_id) {
-    const reference = await sql9("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", voiceCast.preview_asset_id).select("o_image.filePath").first();
+    const reference = await sql11("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where("o_assets.id", voiceCast.preview_asset_id).select("o_image.filePath").first();
     referenceAudioPath = reference?.filePath ?? void 0;
   }
   const resourceKey = `audio:utterance:${input.utteranceId}`;
@@ -258688,7 +258988,7 @@ async function enqueueUtteranceTts(input) {
     savePath,
     cacheKey
   };
-  const [legacyTaskId] = await sql9("o_tasks").insert({
+  const [legacyTaskId] = await sql11("o_tasks").insert({
     projectId: input.projectId,
     taskClass: "\u9010\u53E5\u914D\u97F3",
     relatedObjects: JSON.stringify({ utteranceId: input.utteranceId }),
@@ -258706,13 +259006,14 @@ async function enqueueUtteranceTts(input) {
     payload,
     provider: voiceCast.provider,
     idempotencyKey: stableIdempotencyKey({ type: "tts.utterance.generate", cacheKey, requestId: input.requestId }),
-    maxAttempts: 2
+    maxAttempts: 2,
+    costReservation
   });
   if (result.deduped) {
-    await sql9("o_tasks").where("id", legacyTaskId).delete();
+    await sql11("o_tasks").where("id", legacyTaskId).delete();
     const existingResult = result.task.result;
     if (result.task.status === "succeeded" && existingResult?.audioPath) {
-      await sql9("utterances").where("id", input.utteranceId).update({
+      await sql11("utterances").where("id", input.utteranceId).update({
         audio_path: existingResult.audioPath,
         cache_key: cacheKey,
         status: "succeeded",
@@ -258721,7 +259022,7 @@ async function enqueueUtteranceTts(input) {
       });
     }
   } else {
-    await sql9("utterances").where("id", input.utteranceId).update({
+    await sql11("utterances").where("id", input.utteranceId).update({
       status: "queued",
       cache_key: cacheKey,
       error_message: null,
@@ -258730,13 +259031,14 @@ async function enqueueUtteranceTts(input) {
   }
   return { task: result.task, payload: result.task.payload, deduped: result.deduped, cached: false };
 }
-var sql9;
+var sql11;
 var init_enqueueUtteranceTts = __esm({
   "src/services/task-engine/enqueueUtteranceTts.ts"() {
     "use strict";
     init_db();
     init_repository();
-    sql9 = db;
+    init_budget();
+    sql11 = db;
   }
 });
 

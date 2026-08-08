@@ -7,6 +7,7 @@ import {
   GenerationTaskStatus,
   isTerminalTaskStatus,
 } from "@/domain/generationTask";
+import type { CostReservation } from "@/services/task-engine/budget";
 
 interface EnqueueTaskInput {
   projectId: number;
@@ -19,6 +20,7 @@ interface EnqueueTaskInput {
   idempotencyKey: string;
   priority?: number;
   maxAttempts?: number;
+  costReservation?: CostReservation | null;
 }
 
 interface TaskFilters {
@@ -145,6 +147,20 @@ class GenerationTaskRepository {
     }
     const task = await this.get(id);
     if (!task) throw new Error(`任务创建后无法读取: ${id}`);
+    if (input.costReservation) {
+      await db("usage_ledger").insert({
+        id: uuid(),
+        task_id: task.id,
+        provider: input.costReservation.provider,
+        model: input.costReservation.model,
+        units: input.costReservation.units,
+        estimated_cost: input.costReservation.estimatedCost,
+        actual_cost: null,
+        currency: input.costReservation.currency,
+        pricing_snapshot: JSON.stringify(input.costReservation.pricingSnapshot),
+        created_at: Date.now(),
+      });
+    }
     await recordEvent(task, "enqueued", null, { status: task.status, type: task.type });
     return { task, deduped: false };
   }

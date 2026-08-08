@@ -4,6 +4,14 @@ import { validateFields } from "@/middleware/middleware";
 import { success } from "@/lib/responseFormat";
 import { generationTaskLanes } from "@/domain/generationTask";
 import { db } from "@/utils/db";
+import {
+  deletePricingRule,
+  getProjectBudget,
+  listPricingRules,
+  pricingUnitTypes,
+  upsertPricingRule,
+  upsertProjectBudget,
+} from "@/services/task-engine/budget";
 
 const router = express.Router();
 
@@ -39,5 +47,46 @@ router.post(
     res.status(200).send(success(row));
   },
 );
+
+router.post("/budget/get", validateFields({ projectId: z.number().int().positive() }), async (req, res) => {
+  res.status(200).send(success(await getProjectBudget(req.body.projectId)));
+});
+
+router.post(
+  "/budget/upsert",
+  validateFields({
+    projectId: z.number().int().positive(),
+    budgetLimit: z.number().nonnegative().nullable(),
+    currency: z.enum(["CNY", "USD"]),
+    blockUnknownPrice: z.boolean(),
+  }),
+  async (req, res) => {
+    res.status(200).send(success(await upsertProjectBudget(req.body)));
+  },
+);
+
+router.post("/pricing/list", async (_req, res) => {
+  res.status(200).send(success(await listPricingRules()));
+});
+
+router.post(
+  "/pricing/upsert",
+  validateFields({
+    id: z.string().uuid().optional(),
+    provider: z.string().trim().min(1),
+    model: z.string().trim().min(1),
+    lane: z.enum(generationTaskLanes),
+    unitType: z.enum(pricingUnitTypes),
+    unitPrice: z.number().nonnegative(),
+    currency: z.enum(["CNY", "USD"]),
+  }),
+  async (req, res) => {
+    res.status(200).send(success(await upsertPricingRule(req.body)));
+  },
+);
+
+router.post("/pricing/delete", validateFields({ id: z.string().uuid() }), async (req, res) => {
+  res.status(200).send(success(await deletePricingRule(req.body.id)));
+});
 
 export default router;

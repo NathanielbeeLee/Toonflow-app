@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 import u from "@/utils";
 import { generationTaskRepository, stableIdempotencyKey } from "@/services/task-engine/repository";
 import { VideoGenerationTaskPayload } from "@/services/task-engine/handlers/videoGeneration";
+import { prepareCostReservation } from "@/services/task-engine/budget";
 
 interface EnqueueVideoInput {
   projectId: number;
@@ -30,6 +31,12 @@ export async function enqueueVideoGeneration(input: EnqueueVideoInput) {
     const payload = active.payload as VideoGenerationTaskPayload;
     return { task: active, videoId: payload.videoId, deduped: true };
   }
+  const costReservation = await prepareCostReservation({
+    projectId: input.projectId,
+    lane: "video",
+    model: input.model,
+    metrics: { request: 1, second: input.duration },
+  });
 
   const ratio = await u.db("o_project").select("videoRatio").where("id", input.projectId).first();
   const videoPath = `/${input.projectId}/video/${uuid()}.mp4`;
@@ -75,6 +82,7 @@ export async function enqueueVideoGeneration(input: EnqueueVideoInput) {
     provider: input.model.split(/:(.+)/)[0],
     idempotencyKey,
     maxAttempts: 3,
+    costReservation,
   });
   if (result.deduped) {
     await u.db("o_video").where("id", videoId).delete();

@@ -49,6 +49,8 @@ export default router.post(
     await (u.db as any)("project_timelines").where("project_id", id).delete();
     await (u.db as any)("project_audio_clips").where("project_id", id).delete();
     await (u.db as any)("media_qa_reports").where("project_id", id).delete();
+    await (u.db as any)("project_budget_controls").where("project_id", id).delete();
+    await (u.db as any)("composition_reviews").where("project_id", id).delete();
     // 删除项目下的分镜
     const storyboardData = await u.db("o_storyboard").where("projectId", id).select("id");
     const storyboardIds = storyboardData.map((item: any) => item.id);
