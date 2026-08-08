@@ -171,11 +171,11 @@
       "id": "feature.ffmpeg-preview-render",
       "type": "feature",
       "name": "持久 FFmpeg 低清预览",
-      "summary": "把固定时间线版本中的多个镜头裁剪、统一横竖屏尺寸并串联，混入原声/对白/旁白后输出本地 H.264/AAC 预览",
+      "summary": "把固定时间线版本渲染为低清或高清 H.264/AAC，含六轨混音、对白 ducking、两遍响度和字幕烧录",
       "user_entry": { "page": "配音与字幕 / 规范化时间线", "action": "构建时间线后点击生成低清预览，等待后播放或下载" },
-      "source_paths": ["src/services/composition/renderer.ts", "src/services/composition/jobs.ts", "src/services/task-engine/handlers/compositionRender.ts", "frontend/src/views/voiceStudio/index.vue"],
+      "source_paths": ["src/services/composition/renderer.ts", "src/services/composition/audioClips.ts", "src/services/composition/jobs.ts", "src/services/task-engine/handlers/compositionRender.ts", "frontend/src/views/voiceStudio/index.vue"],
       "api": ["POST /api/composition/timeline/render", "POST /api/composition/timeline/jobs/latest"],
-      "tables": ["project_timelines", "composition_jobs", "generation_tasks"],
+      "tables": ["project_timelines", "project_audio_clips", "composition_jobs", "generation_tasks"],
       "config": ["FFMPEG_PATH", "FFPROBE_PATH"],
       "relations": [
         { "type": "reads", "target": "feature.normalized-timeline" },
@@ -184,7 +184,7 @@
         { "type": "documented_by", "target": "document.database-tasks" }
       ],
       "introduced_in": "toon-custom/2033240b",
-      "last_verified_commit": "toon-custom/ec1a4e6f"
+      "last_verified_commit": "toon-custom/f7d35bb3"
     },
     {
       "id": "feature.durable-task-center",

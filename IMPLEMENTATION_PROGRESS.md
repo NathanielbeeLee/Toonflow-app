@@ -188,12 +188,25 @@
 
 验证：本地两段带不同频率原声的视频和一段 44.1kHz 单声道逐句音频成功混合为 48kHz 立体声 AAC；缺失旁白被安全跳过；输出 2.000 秒，`volumedetect` 为 mean -28.6dB、max -20.4dB，证明不是静音占位。根 TypeScript、前端类型检查和完整构建通过；未调用付费 API，测试媒体已移入废纸篓。
 
+## 2026-08-08 第十五批：FFmpeg 成片母带链
+
+落地提交：`f7d35bb3`。
+
+- 低清 `preview-low` 之外新增 1920×1080/1080×1920 的 `final-high` 高清成片 preset；两个 preset 都固定绑定 timeline 版本、renderer v3 和输入 checksum。
+- native、dialogue、narration、SFX、ambience、BGM 分别建立总线；对白作为 sidechain，自动压低其他背景总线，避免整轨替换原声。
+- 混音先以 24-bit PCM 中间母带保存，再执行 FFmpeg loudnorm 两遍分析/标准化；本地 fixture 最终测得 -16.0 LUFS，true peak 低于 -1.5 dBTP 上限。
+- 成片加入全局淡入淡出。字幕不依赖本机 FFmpeg 的 drawtext/libass：用项目已有 Sharp 生成透明安全区图层，再按 cue 时间通过 overlay 烧录，跨平台依赖更可控。
+- 新增项目声音片段表和页面“声音素材”入口，可从已有声音资产添加/编辑/移除 SFX、环境声和 BGM，设置开始、入点、时长、增益和淡入淡出；时间线构建时正式纳入对应轨道。
+- 本机 FFmpeg 无 drawtext/subtitles filter 的失败已验证并转为 Sharp overlay 方案，没有隐藏系统依赖。
+
+验证：两段不同方向视频、两条原声、对白、旁白、SFX、环境声、BGM 和两条中文字幕同时渲染；低清 854×480 和高清 1920×1080 均成功，字幕画面人工检查位于安全区；最终响度 -16.0 LUFS。迁移连续执行两次只有一条记录；根 TypeScript、前端类型检查、完整构建通过。未调用付费 API，fixture 已移入废纸篓。
+
 ## 下一批优先级
 
-1. 为对白建立独立总线，用 sidechain compression 对原声/旁白做 dialogue ducking。
-2. 实现目标响度、true peak 和最终淡入淡出，再接 SFX、环境声和 BGM。
-3. 增加黑帧、冻结帧、静音、响度和字幕安全区媒体 QA。
-4. 将单张图片编辑/生成入口迁入持久任务，清理剩余页面级后台 Promise。
+1. 增加黑帧、冻结帧、静音、响度、编码、时长和字幕安全区持久媒体 QA。
+2. 增加项目预算、费用快照和人工审核基础关卡。
+3. 将单张图片编辑/生成入口迁入持久任务，清理剩余页面级后台 Promise。
+4. 补齐本地可完成的剧本导入预览、诊断包和安全检查；真实 novel 契约、付费试片继续等待明确输入/授权。
 5. 为火山等其余供应商逐个核对真实 TTS/远端任务/取消 API，不猜测未公开契约。
 
 继续工作前先读：`docs/knowledge-hub/AI_ASSISTANT_CONTEXT.md`、`docs/upstream-watch/sources.yaml` 和最新扫描报告。
