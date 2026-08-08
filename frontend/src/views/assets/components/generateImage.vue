@@ -238,8 +238,9 @@ async function handleGenerate() {
       model: selectValue.value,
       id: props.formData.id,
       resolution: resolution.value,
+      requestId: crypto.randomUUID(),
     });
-    window.$message.success($t("workbench.assets.gen.assetGenSuccess"));
+    window.$message.success("已进入持久图片队列，可关闭页面后在任务中心查看");
     await fetchGeneratedImages();
   } catch (e: any) {
     window.$message.error(e.message ?? $t("workbench.assets.gen.assetGenFail"));

@@ -5,6 +5,7 @@ export interface UploadNodeData {
 
 export interface GeneratedNodeData {
   generatedImage?: string;
+  generationTaskId?: string;
   references: { image: string }[];
   prompt: string;
   model?: string;
@@ -54,6 +55,7 @@ export const DEFAULT_EDGE_OPTIONS = {
 export function createGeneratedData(image = "", prompt = ""): GeneratedNodeData {
   return {
     generatedImage: image,
+    generationTaskId: undefined,
     references: [],
     prompt,
     model: "",
@@ -74,6 +76,7 @@ export function cleanNodes(nodes: NodeType[]): CleanNode[] {
         ? { image: n.data.image }
         : {
             generatedImage: n.data.generatedImage,
+            generationTaskId: n.data.generationTaskId,
             references: n.data.references?.map((r) => ({ image: r.image })) ?? [],
             prompt: n.data.prompt,
             model: n.data.model,

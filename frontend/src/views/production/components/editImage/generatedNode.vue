@@ -93,6 +93,7 @@ const { open, onChange, onCancel } = useFileDialog({ multiple: false, reset: tru
 
 const selected = ref(true);
 const generating = ref(false);
+let pollingStopped = false;
 const episodesId = inject<Ref<number>>("episodesId")!;
 
 const emit = defineEmits(["keep"]);
@@ -185,23 +186,53 @@ async function handleGenerate() {
       ratio: props.data.ratio,
       prompt: props.data.prompt,
       projectId: props.projectId,
+      nodeId: props.id,
+      requestId: crypto.randomUUID(),
     });
-    props.data.generatedImage = data.url;
+    props.data.generationTaskId = data.taskId;
+    window.$message.success("已进入持久图片队列，可关闭页面后在任务中心查看");
+    props.data.generatedImage = await waitForGeneratedImage(data.taskId);
   } catch (e) {
-    return window.$message.error((e as any)?.message || $t("workbench.production.editImage.generateFailed"));
+    if (!pollingStopped) return window.$message.error((e as any)?.message || $t("workbench.production.editImage.generateFailed"));
   } finally {
     generating.value = false;
   }
+}
+
+async function waitForGeneratedImage(taskId: string): Promise<string> {
+  for (let index = 0; index < 900; index++) {
+    if (pollingStopped) throw new Error("TASK_POLLING_STOPPED");
+    const { data } = await axios.post("/generationTasks/get", { taskId });
+    if (data.status === "succeeded" && data.result?.imageUrl) return data.result.imageUrl;
+    if (["failed", "cancelled", "manual_review"].includes(data.status)) {
+      throw new Error(data.errorMessage || "图片生成失败");
+    }
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  }
+  throw new Error("图片任务仍在运行，请稍后重新打开节点查看");
 }
 
 function handleKeep() {
   if (!props.data.generatedImage) return window.$message.error($t("workbench.production.editImage.generateFirst"));
   emit("keep", props.data.generatedImage);
 }
-onMounted(() => {
-  props.data.model = project.value?.imageModel ?? "";
-  props.data.quality = project.value?.imageQuality ?? "";
-  props.data.ratio = project.value?.videoRatio ?? "16:9";
+onMounted(async () => {
+  props.data.model ||= project.value?.imageModel ?? "";
+  props.data.quality ||= project.value?.imageQuality ?? "";
+  props.data.ratio ||= project.value?.videoRatio ?? "16:9";
+  if (props.data.generationTaskId && !props.data.generatedImage) {
+    generating.value = true;
+    try {
+      props.data.generatedImage = await waitForGeneratedImage(props.data.generationTaskId);
+    } catch (e) {
+      if (!pollingStopped) window.$message.error((e as any)?.message || $t("workbench.production.editImage.generateFailed"));
+    } finally {
+      generating.value = false;
+    }
+  }
+});
+onUnmounted(() => {
+  pollingStopped = true;
 });
 </script>
 

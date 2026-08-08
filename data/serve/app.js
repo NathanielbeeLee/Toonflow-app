@@ -238263,7 +238263,7 @@ var init_repository = __esm({
           }
         }
         const imageState = ["cancelled", "failed", "manual_review"].includes(task.status) ? "\u751F\u6210\u5931\u8D25" : task.status === "succeeded" ? "\u5DF2\u5B8C\u6210" : "\u751F\u6210\u4E2D";
-        if (task.type === "asset.image.generate") {
+        if (task.type === "asset.image.generate" || task.type === "asset.image.single.generate") {
           const payload = task.payload;
           if (payload?.imageId) {
             await db("o_image").where("id", payload.imageId).update({
@@ -240519,6 +240519,192 @@ var init_cancelGenerate = __esm({
   }
 });
 
+// src/services/task-engine/budget.ts
+async function getProjectBudget(projectId) {
+  const control = await sql5("project_budget_controls").where("project_id", projectId).first();
+  const usage = await sql5("usage_ledger").leftJoin("generation_tasks", "generation_tasks.id", "usage_ledger.task_id").where("generation_tasks.project_id", projectId).sum({ reserved: sql5.raw("coalesce(actual_cost, estimated_cost, 0)") }).first();
+  return {
+    projectId,
+    budgetLimit: control?.budget_limit ?? null,
+    currency: control?.currency ?? "CNY",
+    blockUnknownPrice: control?.block_unknown_price === 1,
+    reservedCost: Number(usage?.reserved ?? 0),
+    remaining: control?.budget_limit == null ? null : Math.max(0, Number(control.budget_limit) - Number(usage?.reserved ?? 0))
+  };
+}
+async function upsertProjectBudget(input) {
+  const project = await sql5("o_project").where("id", input.projectId).first();
+  if (!project) throw new Error("\u9879\u76EE\u4E0D\u5B58\u5728");
+  const row = {
+    project_id: input.projectId,
+    budget_limit: input.budgetLimit,
+    currency: input.currency,
+    block_unknown_price: input.blockUnknownPrice ? 1 : 0,
+    updated_at: Date.now()
+  };
+  await sql5("project_budget_controls").insert(row).onConflict("project_id").merge(row);
+  return getProjectBudget(input.projectId);
+}
+async function listPricingRules() {
+  return (await sql5("pricing_rules").orderBy(["provider", "model", "lane"])).map((row) => ({
+    id: row.id,
+    provider: row.provider,
+    model: row.model,
+    lane: row.lane,
+    unitType: row.unit_type,
+    unitPrice: row.unit_price,
+    currency: row.currency,
+    updatedAt: row.updated_at
+  }));
+}
+async function upsertPricingRule(input) {
+  const existing = input.id ? null : await sql5("pricing_rules").where({ provider: input.provider, model: input.model, lane: input.lane }).first();
+  const id = input.id ?? existing?.id ?? v4_default();
+  const row = {
+    id,
+    provider: input.provider,
+    model: input.model,
+    lane: input.lane,
+    unit_type: input.unitType,
+    unit_price: input.unitPrice,
+    currency: input.currency,
+    updated_at: Date.now()
+  };
+  if (input.id || existing) {
+    const updated = await sql5("pricing_rules").where("id", id).update(row);
+    if (updated !== 1) throw new Error("\u4EF7\u683C\u89C4\u5219\u4E0D\u5B58\u5728");
+  } else {
+    await sql5("pricing_rules").insert(row);
+  }
+  return row;
+}
+async function deletePricingRule(id) {
+  await sql5("pricing_rules").where("id", id).delete();
+  return { id };
+}
+async function prepareCostReservation(input) {
+  const [provider, model] = input.model.split(/:(.+)/);
+  const exact = await sql5("pricing_rules").where({ provider, model, lane: input.lane }).first();
+  const rule = exact || await sql5("pricing_rules").where({ provider, model: "*", lane: input.lane }).first();
+  const budget = await getProjectBudget(input.projectId);
+  if (!rule) {
+    if (budget.blockUnknownPrice) throw new Error(`\u6A21\u578B ${provider}:${model} \u6CA1\u6709\u4EF7\u683C\u89C4\u5219\uFF0C\u9879\u76EE\u5DF2\u8BBE\u7F6E\u963B\u6B62\u672A\u77E5\u4EF7\u683C\u4EFB\u52A1`);
+    return null;
+  }
+  if (rule.currency !== budget.currency) throw new Error(`\u4EF7\u683C\u89C4\u5219\u4F7F\u7528 ${rule.currency}\uFF0C\u9879\u76EE\u9884\u7B97\u4F7F\u7528 ${budget.currency}\uFF0C\u8BF7\u7EDF\u4E00\u5E01\u79CD`);
+  const units = Number(input.metrics[rule.unit_type] ?? 0);
+  if (!Number.isFinite(units) || units <= 0) throw new Error(`\u4EF7\u683C\u89C4\u5219\u8981\u6C42 ${rule.unit_type} \u5355\u4F4D\uFF0C\u4F46\u4EFB\u52A1\u65E0\u6CD5\u63D0\u4F9B\u6709\u6548\u6570\u91CF`);
+  const estimatedCost = Number((units * Number(rule.unit_price)).toFixed(6));
+  if (budget.budgetLimit != null && budget.reservedCost + estimatedCost > budget.budgetLimit) {
+    throw new Error(`\u9884\u8BA1\u8D39\u7528 ${estimatedCost} ${budget.currency} \u5C06\u8D85\u8FC7\u9879\u76EE\u5269\u4F59\u9884\u7B97 ${budget.remaining} ${budget.currency}`);
+  }
+  return {
+    provider,
+    model,
+    units,
+    estimatedCost,
+    currency: rule.currency,
+    pricingSnapshot: { ruleId: rule.id, unitType: rule.unit_type, unitPrice: rule.unit_price, capturedAt: Date.now() }
+  };
+}
+var sql5, pricingUnitTypes;
+var init_budget = __esm({
+  "src/services/task-engine/budget.ts"() {
+    "use strict";
+    init_dist_node();
+    init_db();
+    sql5 = db;
+    pricingUnitTypes = ["request", "second", "character"];
+  }
+});
+
+// src/services/task-engine/enqueueSingleAssetImage.ts
+async function enqueueSingleAssetImage(input) {
+  const resourceKey = `image:asset:${input.assetId}`;
+  const existing = await generationTaskRepository.list({ projectId: input.projectId, lane: "image", limit: 100 });
+  const active = existing.data.find((task) => task.resourceKey === resourceKey && !["cancelled", "succeeded", "failed"].includes(task.status));
+  if (active) return { task: active, payload: active.payload, deduped: true };
+  const asset = await utils_default.db("o_assets").where({ id: input.assetId, projectId: input.projectId }).first();
+  if (!asset) throw new Error("\u8D44\u4EA7\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
+  const costReservation = await prepareCostReservation({ projectId: input.projectId, lane: "image", model: input.model, metrics: { request: 1 } });
+  let referencePath;
+  if (input.referenceBase64) {
+    referencePath = `/${input.projectId}/task-inputs/${v4_default()}.png`;
+    await utils_default.oss.writeFile(referencePath, input.referenceBase64);
+  }
+  let imageId;
+  let legacyTaskId;
+  try {
+    [imageId] = await utils_default.db("o_image").insert({
+      type: input.assetType,
+      state: "\u751F\u6210\u4E2D",
+      assetsId: input.assetId,
+      model: input.model.split(/:(.+)/)[1] ?? input.model,
+      resolution: input.size
+    });
+    if (imageId == null) throw new Error("\u521B\u5EFA\u56FE\u7247\u5360\u4F4D\u8BB0\u5F55\u5931\u8D25");
+    await utils_default.db("o_assets").where("id", input.assetId).update({ imageId });
+    [legacyTaskId] = await utils_default.db("o_tasks").insert({
+      projectId: input.projectId,
+      taskClass: "\u5355\u5F20\u8D44\u4EA7\u56FE\u7247",
+      relatedObjects: JSON.stringify({ assetId: input.assetId, imageId }),
+      model: input.model.split(/:(.+)/)[1] ?? input.model,
+      describe: "\u6301\u4E45\u961F\u5217\uFF1A\u5355\u5F20\u8D44\u4EA7\u56FE\u7247\u751F\u6210",
+      state: "\u6392\u961F\u4E2D",
+      startTime: Date.now()
+    });
+    if (legacyTaskId == null) throw new Error("\u521B\u5EFA\u56FE\u7247\u4EFB\u52A1\u8BB0\u5F55\u5931\u8D25");
+    const payload = {
+      projectId: input.projectId,
+      assetId: input.assetId,
+      imageId,
+      assetType: input.assetType,
+      model: input.model,
+      prompt: input.prompt,
+      size: input.size,
+      aspectRatio: input.aspectRatio,
+      savePath: `/${input.projectId}/assets/single/${v4_default()}.jpg`,
+      referencePath
+    };
+    const queued = await generationTaskRepository.enqueue({
+      projectId: input.projectId,
+      legacyTaskId,
+      lane: "image",
+      type: "asset.image.single.generate",
+      resourceKey,
+      payload,
+      provider: input.model.split(/:(.+)/)[0],
+      idempotencyKey: stableIdempotencyKey({ type: "asset.image.single.generate", resourceKey, requestId: input.requestId }),
+      maxAttempts: 3,
+      costReservation
+    });
+    if (queued.deduped) {
+      await Promise.all([utils_default.db("o_image").where("id", imageId).delete(), utils_default.db("o_tasks").where("id", legacyTaskId).delete()]);
+      if (referencePath) await utils_default.oss.deleteFile(referencePath).catch(() => void 0);
+      const existingPayload = queued.task.payload;
+      await utils_default.db("o_assets").where("id", input.assetId).update({ imageId: existingPayload.imageId });
+      return { task: queued.task, payload: existingPayload, deduped: true };
+    }
+    return { task: queued.task, payload, deduped: false };
+  } catch (error73) {
+    const cleanup = [utils_default.db("o_assets").where("id", input.assetId).update({ imageId: asset.imageId ?? null })];
+    if (imageId) cleanup.push(utils_default.db("o_image").where("id", imageId).delete());
+    if (legacyTaskId) cleanup.push(utils_default.db("o_tasks").where("id", legacyTaskId).delete());
+    await Promise.all(cleanup);
+    if (referencePath) await utils_default.oss.deleteFile(referencePath).catch(() => void 0);
+    throw error73;
+  }
+}
+var init_enqueueSingleAssetImage = __esm({
+  "src/services/task-engine/enqueueSingleAssetImage.ts"() {
+    "use strict";
+    init_dist_node();
+    init_utils3();
+    init_repository();
+    init_budget();
+  }
+});
+
 // src/routes/assetsGenerate/generateAssets.ts
 function buildPrompt2(cfg, artStyle, name28, prompt) {
   return `
@@ -240541,9 +240727,9 @@ var init_generateAssets = __esm({
     import_express25 = __toESM(require_express2());
     init_utils3();
     init_zod();
-    init_dist_node();
     init_responseFormat();
     init_middleware();
+    init_enqueueSingleAssetImage();
     router25 = import_express25.default.Router();
     assetTypeConfig2 = {
       role: {
@@ -240571,12 +240757,13 @@ var init_generateAssets = __esm({
     requestSchema2 = {
       projectId: external_exports.number(),
       model: external_exports.string(),
-      resolution: external_exports.string(),
+      resolution: external_exports.enum(["1K", "2K", "4K"]),
       id: external_exports.number(),
-      type: external_exports.enum(["role", "scene", "tool", "storyboard"]),
+      type: external_exports.enum(["role", "scene", "tool"]),
       name: external_exports.string(),
       prompt: external_exports.string(),
-      base64: external_exports.string().optional().nullable()
+      base64: external_exports.string().optional().nullable(),
+      requestId: external_exports.string().trim().min(1).optional()
     };
     generateAssets_default = router25.post("/", validateFields(requestSchema2), async (req, res) => {
       const { projectId, model, resolution, id, type, name: name28, prompt, base64: base644 } = req.body;
@@ -240584,50 +240771,27 @@ var init_generateAssets = __esm({
       if (!project) return res.status(500).send(success3({ message: "\u9879\u76EE\u4E3A\u7A7A" }));
       const cfg = assetTypeConfig2[type];
       if (!cfg) return res.status(400).send(error50("\u4E0D\u652F\u6301\u7684\u7C7B\u578B"));
-      const [imageId] = await utils_default.db("o_image").insert({
-        type,
-        state: "\u751F\u6210\u4E2D",
-        assetsId: id,
-        model: model.split(/:(.+)/)[1],
-        resolution
-      });
-      await utils_default.db("o_assets").where("id", id).update({ imageId });
-      const imagePath = `/${projectId}/${cfg.dir}/${v4_default()}.jpg`;
       const userPrompt = buildPrompt2(cfg, project.artStyle, name28, prompt);
-      const describe4 = `\u751F\u6210${cfg.label}\u56FE\uFF0C\u540D\u79F0\uFF1A${name28}\uFF0C\u63D0\u793A\u8BCD\uFF1A${prompt}`;
-      const relatedObjects = { id, projectId, type: cfg.label };
       try {
-        const aiImage = utils_default.Ai.Image(model);
-        await aiImage.run(
-          {
-            prompt: userPrompt,
-            referenceList: base644 ? [{ type: "image", base64: base644 }] : [],
-            size: resolution,
-            aspectRatio: "16:9"
-          },
-          {
-            taskClass: cfg.taskClass,
-            describe: describe4,
-            projectId,
-            relatedObjects: JSON.stringify(relatedObjects)
-          }
-        );
-        aiImage.save(imagePath);
-        const imageData = await utils_default.db("o_image").where("id", imageId).select("*").first();
-        if (!imageData) return res.status(500).send("\u8D44\u4EA7\u5DF2\u88AB\u5220\u9664");
-        if (imageData.state === "\u751F\u6210\u5931\u8D25") return;
-        await utils_default.db("o_image").where("id", imageId).update({
-          state: "\u5DF2\u5B8C\u6210",
-          filePath: imagePath,
-          type,
-          model: model.split(/:(.+)/)[1],
-          resolution
+        const result = await enqueueSingleAssetImage({
+          projectId,
+          assetId: id,
+          assetType: type,
+          model,
+          prompt: userPrompt,
+          size: resolution,
+          aspectRatio: "16:9",
+          referenceBase64: base644 || void 0,
+          requestId: req.body.requestId || `${Date.now()}-${id}`
         });
-        const path35 = await utils_default.oss.getSmallImageUrl(imagePath);
-        await utils_default.db("o_assets").where("id", id).update({ imageId });
-        return res.status(200).send(success3({ path: path35, assetsId: id }));
+        return res.status(200).send(success3({
+          queued: true,
+          taskId: result.task.id,
+          imageId: result.payload.imageId,
+          assetsId: id,
+          deduped: result.deduped
+        }));
       } catch (e) {
-        await utils_default.db("o_image").where("id", imageId).update({ state: "\u751F\u6210\u5931\u8D25", errorReason: utils_default.error(e).message });
         return res.status(400).send(error50(utils_default.error(e).message || "\u56FE\u7247\u751F\u6210\u5931\u8D25"));
       }
     });
@@ -240767,16 +240931,16 @@ function safeStyle(value) {
 }
 async function buildNormalizedTimeline(input) {
   const [project, script] = await Promise.all([
-    sql5("o_project").where("id", input.projectId).first(),
-    sql5("o_script").where({ id: input.scriptId, projectId: input.projectId }).first()
+    sql6("o_project").where("id", input.projectId).first(),
+    sql6("o_script").where({ id: input.scriptId, projectId: input.projectId }).first()
   ]);
   if (!project || !script) throw new Error("\u9879\u76EE\u6216\u5267\u672C\u4E0D\u5B58\u5728");
   const [tracks, storyboards, utterances, cueRows, projectAudioRows] = await Promise.all([
-    sql5("o_videoTrack").where({ projectId: input.projectId, scriptId: input.scriptId }),
-    sql5("o_storyboard").where({ projectId: input.projectId, scriptId: input.scriptId }).orderBy("index", "asc"),
-    sql5("utterances").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("ordinal", "asc"),
-    sql5("subtitle_cues").leftJoin("utterances", "utterances.id", "subtitle_cues.utterance_id").where("subtitle_cues.project_id", input.projectId).where("utterances.script_id", input.scriptId).select("subtitle_cues.*").orderBy("subtitle_cues.start_ms", "asc"),
-    sql5("project_audio_clips").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("start_ms", "asc")
+    sql6("o_videoTrack").where({ projectId: input.projectId, scriptId: input.scriptId }),
+    sql6("o_storyboard").where({ projectId: input.projectId, scriptId: input.scriptId }).orderBy("index", "asc"),
+    sql6("utterances").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("ordinal", "asc"),
+    sql6("subtitle_cues").leftJoin("utterances", "utterances.id", "subtitle_cues.utterance_id").where("subtitle_cues.project_id", input.projectId).where("utterances.script_id", input.scriptId).select("subtitle_cues.*").orderBy("subtitle_cues.start_ms", "asc"),
+    sql6("project_audio_clips").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("start_ms", "asc")
   ]);
   const firstStoryboardIndex = /* @__PURE__ */ new Map();
   for (const storyboard of storyboards) {
@@ -240788,7 +240952,7 @@ async function buildNormalizedTimeline(input) {
     (a, b) => (firstStoryboardIndex.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (firstStoryboardIndex.get(b.id) ?? Number.MAX_SAFE_INTEGER)
   );
   const selectedIds = tracks.map((track) => track.videoId).filter((id2) => typeof id2 === "number");
-  const videos = selectedIds.length ? await sql5("o_video").whereIn("id", selectedIds) : [];
+  const videos = selectedIds.length ? await sql6("o_video").whereIn("id", selectedIds) : [];
   const videoById = new Map(videos.map((video) => [video.id, video]));
   const warnings = [];
   const videoClips = [];
@@ -240910,11 +241074,11 @@ async function buildNormalizedTimeline(input) {
   };
   const serialized = JSON.stringify(payload);
   const checksum = import_node_crypto7.default.createHash("sha256").update(serialized).digest("hex");
-  const latest = await sql5("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
+  const latest = await sql6("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
   if (latest?.checksum === checksum) return { timeline: mapTimelineRow(latest), deduped: true };
   const now2 = Date.now();
   const id = v4_default();
-  await sql5("project_timelines").insert({
+  await sql6("project_timelines").insert({
     id,
     project_id: input.projectId,
     script_id: input.scriptId,
@@ -240925,24 +241089,24 @@ async function buildNormalizedTimeline(input) {
     created_at: now2,
     updated_at: now2
   });
-  return { timeline: mapTimelineRow(await sql5("project_timelines").where("id", id).first()), deduped: false };
+  return { timeline: mapTimelineRow(await sql6("project_timelines").where("id", id).first()), deduped: false };
 }
 async function getLatestTimeline(input) {
-  const row = await sql5("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
+  const row = await sql6("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc").first();
   return row ? mapTimelineRow(row) : null;
 }
 async function listTimelines(input) {
-  const rows = await sql5("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc");
+  const rows = await sql6("project_timelines").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("version", "desc");
   return rows.map(mapTimelineRow);
 }
-var import_node_crypto7, sql5;
+var import_node_crypto7, sql6;
 var init_timeline = __esm({
   "src/services/composition/timeline.ts"() {
     "use strict";
     import_node_crypto7 = __toESM(require("node:crypto"));
     init_dist_node();
     init_db();
-    sql5 = db;
+    sql6 = db;
   }
 });
 
@@ -240970,11 +241134,11 @@ async function mapJob(row) {
   };
 }
 async function getLatestCompositionJob(input) {
-  const row = await sql6("composition_jobs").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first();
+  const row = await sql7("composition_jobs").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first();
   return mapJob(row);
 }
 async function enqueueCompositionRender(input) {
-  const timeline = await sql6("project_timelines").where({ id: input.timelineId, project_id: input.projectId, script_id: input.scriptId }).first();
+  const timeline = await sql7("project_timelines").where({ id: input.timelineId, project_id: input.projectId, script_id: input.scriptId }).first();
   if (!timeline) throw new Error("\u65F6\u95F4\u7EBF\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE\u5267\u672C");
   const payload = JSON.parse(timeline.payload);
   const clipCount = (payload.videoTracks || []).reduce((total, track) => total + (track.clips?.length || 0), 0);
@@ -240985,7 +241149,7 @@ async function enqueueCompositionRender(input) {
     preset: input.preset,
     timelineChecksum: timeline.checksum
   });
-  const previous = await sql6("composition_jobs").where({ timeline_id: timeline.id, preset: input.preset, input_checksum: inputChecksum }).orderBy("created_at", "desc").first();
+  const previous = await sql7("composition_jobs").where({ timeline_id: timeline.id, preset: input.preset, input_checksum: inputChecksum }).orderBy("created_at", "desc").first();
   if (previous?.status === "succeeded" && previous.output_path && await utils_default.oss.fileExists(previous.output_path)) {
     return { job: await mapJob(previous), task: previous.task_id ? await generationTaskRepository.get(previous.task_id) : null, cached: true, deduped: true };
   }
@@ -240998,7 +241162,7 @@ async function enqueueCompositionRender(input) {
   const jobId = v4_default();
   const outputPath = `/${input.projectId}/composition/${input.scriptId}/timeline-v${timeline.version}-${timeline.checksum.slice(0, 12)}-${input.preset}.mp4`;
   const now2 = Date.now();
-  await sql6("composition_jobs").insert({
+  await sql7("composition_jobs").insert({
     id: jobId,
     project_id: input.projectId,
     script_id: input.scriptId,
@@ -241014,7 +241178,7 @@ async function enqueueCompositionRender(input) {
     created_at: now2,
     updated_at: now2
   });
-  const [legacyTaskId] = await sql6("o_tasks").insert({
+  const [legacyTaskId] = await sql7("o_tasks").insert({
     projectId: input.projectId,
     taskClass: "\u89C6\u9891\u5408\u6210",
     relatedObjects: JSON.stringify({ compositionJobId: jobId, timelineId: timeline.id }),
@@ -241048,23 +241212,23 @@ async function enqueueCompositionRender(input) {
     });
     if (result.deduped) {
       await Promise.all([
-        sql6("composition_jobs").where("id", jobId).delete(),
-        sql6("o_tasks").where("id", legacyTaskId).delete()
+        sql7("composition_jobs").where("id", jobId).delete(),
+        sql7("o_tasks").where("id", legacyTaskId).delete()
       ]);
-      const existingJob = await sql6("composition_jobs").where("task_id", result.task.id).first();
+      const existingJob = await sql7("composition_jobs").where("task_id", result.task.id).first();
       return { job: await mapJob(existingJob), task: result.task, cached: false, deduped: true };
     }
-    await sql6("composition_jobs").where("id", jobId).update({ task_id: result.task.id, updated_at: Date.now() });
-    return { job: await mapJob(await sql6("composition_jobs").where("id", jobId).first()), task: result.task, cached: false, deduped: false };
+    await sql7("composition_jobs").where("id", jobId).update({ task_id: result.task.id, updated_at: Date.now() });
+    return { job: await mapJob(await sql7("composition_jobs").where("id", jobId).first()), task: result.task, cached: false, deduped: false };
   } catch (error73) {
     await Promise.all([
-      sql6("composition_jobs").where("id", jobId).delete(),
-      sql6("o_tasks").where("id", legacyTaskId).delete()
+      sql7("composition_jobs").where("id", jobId).delete(),
+      sql7("o_tasks").where("id", legacyTaskId).delete()
     ]);
     throw error73;
   }
 }
-var sql6;
+var sql7;
 var init_jobs = __esm({
   "src/services/composition/jobs.ts"() {
     "use strict";
@@ -241072,7 +241236,7 @@ var init_jobs = __esm({
     init_utils3();
     init_db();
     init_repository();
-    sql6 = db;
+    sql7 = db;
   }
 });
 
@@ -241097,13 +241261,13 @@ function mapRow2(row) {
   };
 }
 async function listProjectAudioClips(input) {
-  const rows = await sql7("project_audio_clips").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("start_ms", "asc");
+  const rows = await sql8("project_audio_clips").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("start_ms", "asc");
   return rows.map(mapRow2);
 }
 async function upsertProjectAudioClip(input) {
   const [script, asset] = await Promise.all([
-    sql7("o_script").where({ id: input.scriptId, projectId: input.projectId }).first(),
-    sql7("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where({ "o_assets.id": input.assetId, "o_assets.projectId": input.projectId, "o_assets.type": "audio" }).select("o_assets.id", "o_assets.name", "o_image.filePath").first()
+    sql8("o_script").where({ id: input.scriptId, projectId: input.projectId }).first(),
+    sql8("o_assets").leftJoin("o_image", "o_image.id", "o_assets.imageId").where({ "o_assets.id": input.assetId, "o_assets.projectId": input.projectId, "o_assets.type": "audio" }).select("o_assets.id", "o_assets.name", "o_image.filePath").first()
   ]);
   if (!script) throw new Error("\u5267\u672C\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
   if (!asset?.filePath) throw new Error("\u58F0\u97F3\u7D20\u6750\u4E0D\u5B58\u5728\u3001\u672A\u5B8C\u6210\u6216\u6CA1\u6709\u672C\u5730\u6587\u4EF6");
@@ -241131,26 +241295,26 @@ async function upsertProjectAudioClip(input) {
     updated_at: now2
   };
   if (input.id) {
-    const updated = await sql7("project_audio_clips").where({ id: input.id, project_id: input.projectId, script_id: input.scriptId }).update(values);
+    const updated = await sql8("project_audio_clips").where({ id: input.id, project_id: input.projectId, script_id: input.scriptId }).update(values);
     if (updated !== 1) throw new Error("\u58F0\u97F3\u7247\u6BB5\u4E0D\u5B58\u5728");
   } else {
-    await sql7("project_audio_clips").insert({ id, ...values, created_at: now2 });
+    await sql8("project_audio_clips").insert({ id, ...values, created_at: now2 });
   }
-  return mapRow2(await sql7("project_audio_clips").where("id", id).first());
+  return mapRow2(await sql8("project_audio_clips").where("id", id).first());
 }
 async function deleteProjectAudioClip(input) {
-  const deleted = await sql7("project_audio_clips").where({ id: input.id, project_id: input.projectId, script_id: input.scriptId }).delete();
+  const deleted = await sql8("project_audio_clips").where({ id: input.id, project_id: input.projectId, script_id: input.scriptId }).delete();
   if (deleted !== 1) throw new Error("\u58F0\u97F3\u7247\u6BB5\u4E0D\u5B58\u5728");
   return { id: input.id };
 }
-var sql7, projectAudioKinds;
+var sql8, projectAudioKinds;
 var init_audioClips = __esm({
   "src/services/composition/audioClips.ts"() {
     "use strict";
     init_dist_node();
     init_db();
     init_probe();
-    sql7 = db;
+    sql8 = db;
     projectAudioKinds = ["sfx", "ambience", "bgm"];
   }
 });
@@ -241182,23 +241346,23 @@ function mapReport(row) {
   };
 }
 async function getLatestQaReport(input) {
-  return mapReport(await sql8("media_qa_reports").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first());
+  return mapReport(await sql9("media_qa_reports").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("created_at", "desc").first());
 }
 async function enqueueCompositionQa(input) {
-  const job = await sql8("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
+  const job = await sql9("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
   if (!job || job.status !== "succeeded" || !job.output_path || !job.output_checksum) throw new Error("\u8BF7\u5148\u5B8C\u6210\u53EF\u7528\u7684\u6210\u7247\u6E32\u67D3");
   if (!await utils_default.oss.fileExists(job.output_path)) throw new Error("\u6210\u7247\u6587\u4EF6\u4E0D\u5B58\u5728\uFF0C\u8BF7\u91CD\u65B0\u6E32\u67D3");
-  const previous = await sql8("media_qa_reports").where({ composition_job_id: job.id, output_checksum: job.output_checksum }).orderBy("created_at", "desc").first();
+  const previous = await sql9("media_qa_reports").where({ composition_job_id: job.id, output_checksum: job.output_checksum }).orderBy("created_at", "desc").first();
   if (previous?.status === "succeeded") return { report: mapReport(previous), task: previous.task_id ? await generationTaskRepository.get(previous.task_id) : null, cached: true, deduped: true };
   if (previous && ["queued", "running"].includes(previous.status) && previous.task_id) {
     const task = await generationTaskRepository.get(previous.task_id);
     if (task && !["cancelled", "failed", "succeeded"].includes(task.status)) return { report: mapReport(previous), task, cached: false, deduped: true };
   }
-  const timeline = await sql8("project_timelines").where({ id: job.timeline_id, project_id: input.projectId, script_id: input.scriptId }).first();
+  const timeline = await sql9("project_timelines").where({ id: job.timeline_id, project_id: input.projectId, script_id: input.scriptId }).first();
   if (!timeline) throw new Error("\u6210\u7247\u5BF9\u5E94\u7684\u65F6\u95F4\u7EBF\u4E0D\u5B58\u5728");
   const reportId = v4_default();
   const now2 = Date.now();
-  await sql8("media_qa_reports").insert({
+  await sql9("media_qa_reports").insert({
     id: reportId,
     project_id: input.projectId,
     script_id: input.scriptId,
@@ -241212,7 +241376,7 @@ async function enqueueCompositionQa(input) {
     created_at: now2,
     updated_at: now2
   });
-  const [legacyTaskId] = await sql8("o_tasks").insert({
+  const [legacyTaskId] = await sql9("o_tasks").insert({
     projectId: input.projectId,
     taskClass: "\u5A92\u4F53 QA",
     relatedObjects: JSON.stringify({ reportId, compositionJobId: job.id }),
@@ -241246,18 +241410,18 @@ async function enqueueCompositionQa(input) {
       maxAttempts: 2
     });
     if (queued.deduped) {
-      await Promise.all([sql8("media_qa_reports").where("id", reportId).delete(), sql8("o_tasks").where("id", legacyTaskId).delete()]);
-      const existingReport = await sql8("media_qa_reports").where("task_id", queued.task.id).first();
+      await Promise.all([sql9("media_qa_reports").where("id", reportId).delete(), sql9("o_tasks").where("id", legacyTaskId).delete()]);
+      const existingReport = await sql9("media_qa_reports").where("task_id", queued.task.id).first();
       return { report: mapReport(existingReport), task: queued.task, cached: false, deduped: true };
     }
-    await sql8("media_qa_reports").where("id", reportId).update({ task_id: queued.task.id, updated_at: Date.now() });
-    return { report: mapReport(await sql8("media_qa_reports").where("id", reportId).first()), task: queued.task, cached: false, deduped: queued.deduped };
+    await sql9("media_qa_reports").where("id", reportId).update({ task_id: queued.task.id, updated_at: Date.now() });
+    return { report: mapReport(await sql9("media_qa_reports").where("id", reportId).first()), task: queued.task, cached: false, deduped: queued.deduped };
   } catch (error73) {
-    await Promise.all([sql8("media_qa_reports").where("id", reportId).delete(), sql8("o_tasks").where("id", legacyTaskId).delete()]);
+    await Promise.all([sql9("media_qa_reports").where("id", reportId).delete(), sql9("o_tasks").where("id", legacyTaskId).delete()]);
     throw error73;
   }
 }
-var sql8;
+var sql9;
 var init_qaJobs = __esm({
   "src/services/composition/qaJobs.ts"() {
     "use strict";
@@ -241265,7 +241429,7 @@ var init_qaJobs = __esm({
     init_db();
     init_utils3();
     init_repository();
-    sql8 = db;
+    sql9 = db;
   }
 });
 
@@ -241283,12 +241447,12 @@ function mapRow3(row) {
   } : null;
 }
 async function getLatestCompositionReview(input) {
-  let query = sql9("composition_reviews").where({ project_id: input.projectId, script_id: input.scriptId });
+  let query = sql10("composition_reviews").where({ project_id: input.projectId, script_id: input.scriptId });
   if (input.compositionJobId) query = query.where("composition_job_id", input.compositionJobId);
   return mapRow3(await query.orderBy("created_at", "desc").first());
 }
 async function recordCompositionReview(input) {
-  const job = await sql9("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
+  const job = await sql10("composition_jobs").where({ id: input.compositionJobId, project_id: input.projectId, script_id: input.scriptId }).first();
   if (!job || job.status !== "succeeded") throw new Error("\u53EA\u80FD\u5BA1\u6838\u5DF2\u5B8C\u6210\u7684\u6210\u7247");
   const row = {
     id: v4_default(),
@@ -241301,16 +241465,16 @@ async function recordCompositionReview(input) {
     reviewer: input.reviewer,
     created_at: Date.now()
   };
-  await sql9("composition_reviews").insert(row);
+  await sql10("composition_reviews").insert(row);
   return mapRow3(row);
 }
-var sql9, reviewStatuses;
+var sql10, reviewStatuses;
 var init_reviews = __esm({
   "src/services/composition/reviews.ts"() {
     "use strict";
     init_dist_node();
     init_db();
-    sql9 = db;
+    sql10 = db;
     reviewStatuses = ["approved", "rejected"];
   }
 });
@@ -241788,105 +241952,6 @@ var init_get2 = __esm({
       if (!task) return res.status(404).send({ message: "\u4EFB\u52A1\u4E0D\u5B58\u5728" });
       return res.status(200).send(success3(task));
     });
-  }
-});
-
-// src/services/task-engine/budget.ts
-async function getProjectBudget(projectId) {
-  const control = await sql10("project_budget_controls").where("project_id", projectId).first();
-  const usage = await sql10("usage_ledger").leftJoin("generation_tasks", "generation_tasks.id", "usage_ledger.task_id").where("generation_tasks.project_id", projectId).sum({ reserved: sql10.raw("coalesce(actual_cost, estimated_cost, 0)") }).first();
-  return {
-    projectId,
-    budgetLimit: control?.budget_limit ?? null,
-    currency: control?.currency ?? "CNY",
-    blockUnknownPrice: control?.block_unknown_price === 1,
-    reservedCost: Number(usage?.reserved ?? 0),
-    remaining: control?.budget_limit == null ? null : Math.max(0, Number(control.budget_limit) - Number(usage?.reserved ?? 0))
-  };
-}
-async function upsertProjectBudget(input) {
-  const project = await sql10("o_project").where("id", input.projectId).first();
-  if (!project) throw new Error("\u9879\u76EE\u4E0D\u5B58\u5728");
-  const row = {
-    project_id: input.projectId,
-    budget_limit: input.budgetLimit,
-    currency: input.currency,
-    block_unknown_price: input.blockUnknownPrice ? 1 : 0,
-    updated_at: Date.now()
-  };
-  await sql10("project_budget_controls").insert(row).onConflict("project_id").merge(row);
-  return getProjectBudget(input.projectId);
-}
-async function listPricingRules() {
-  return (await sql10("pricing_rules").orderBy(["provider", "model", "lane"])).map((row) => ({
-    id: row.id,
-    provider: row.provider,
-    model: row.model,
-    lane: row.lane,
-    unitType: row.unit_type,
-    unitPrice: row.unit_price,
-    currency: row.currency,
-    updatedAt: row.updated_at
-  }));
-}
-async function upsertPricingRule(input) {
-  const existing = input.id ? null : await sql10("pricing_rules").where({ provider: input.provider, model: input.model, lane: input.lane }).first();
-  const id = input.id ?? existing?.id ?? v4_default();
-  const row = {
-    id,
-    provider: input.provider,
-    model: input.model,
-    lane: input.lane,
-    unit_type: input.unitType,
-    unit_price: input.unitPrice,
-    currency: input.currency,
-    updated_at: Date.now()
-  };
-  if (input.id || existing) {
-    const updated = await sql10("pricing_rules").where("id", id).update(row);
-    if (updated !== 1) throw new Error("\u4EF7\u683C\u89C4\u5219\u4E0D\u5B58\u5728");
-  } else {
-    await sql10("pricing_rules").insert(row);
-  }
-  return row;
-}
-async function deletePricingRule(id) {
-  await sql10("pricing_rules").where("id", id).delete();
-  return { id };
-}
-async function prepareCostReservation(input) {
-  const [provider, model] = input.model.split(/:(.+)/);
-  const exact = await sql10("pricing_rules").where({ provider, model, lane: input.lane }).first();
-  const rule = exact || await sql10("pricing_rules").where({ provider, model: "*", lane: input.lane }).first();
-  const budget = await getProjectBudget(input.projectId);
-  if (!rule) {
-    if (budget.blockUnknownPrice) throw new Error(`\u6A21\u578B ${provider}:${model} \u6CA1\u6709\u4EF7\u683C\u89C4\u5219\uFF0C\u9879\u76EE\u5DF2\u8BBE\u7F6E\u963B\u6B62\u672A\u77E5\u4EF7\u683C\u4EFB\u52A1`);
-    return null;
-  }
-  if (rule.currency !== budget.currency) throw new Error(`\u4EF7\u683C\u89C4\u5219\u4F7F\u7528 ${rule.currency}\uFF0C\u9879\u76EE\u9884\u7B97\u4F7F\u7528 ${budget.currency}\uFF0C\u8BF7\u7EDF\u4E00\u5E01\u79CD`);
-  const units = Number(input.metrics[rule.unit_type] ?? 0);
-  if (!Number.isFinite(units) || units <= 0) throw new Error(`\u4EF7\u683C\u89C4\u5219\u8981\u6C42 ${rule.unit_type} \u5355\u4F4D\uFF0C\u4F46\u4EFB\u52A1\u65E0\u6CD5\u63D0\u4F9B\u6709\u6548\u6570\u91CF`);
-  const estimatedCost = Number((units * Number(rule.unit_price)).toFixed(6));
-  if (budget.budgetLimit != null && budget.reservedCost + estimatedCost > budget.budgetLimit) {
-    throw new Error(`\u9884\u8BA1\u8D39\u7528 ${estimatedCost} ${budget.currency} \u5C06\u8D85\u8FC7\u9879\u76EE\u5269\u4F59\u9884\u7B97 ${budget.remaining} ${budget.currency}`);
-  }
-  return {
-    provider,
-    model,
-    units,
-    estimatedCost,
-    currency: rule.currency,
-    pricingSnapshot: { ruleId: rule.id, unitType: rule.unit_type, unitPrice: rule.unit_price, capturedAt: Date.now() }
-  };
-}
-var sql10, pricingUnitTypes;
-var init_budget = __esm({
-  "src/services/task-engine/budget.ts"() {
-    "use strict";
-    init_dist_node();
-    init_db();
-    sql10 = db;
-    pricingUnitTypes = ["request", "second", "character"];
   }
 });
 
@@ -242868,17 +242933,64 @@ var init_updateAssetsUrl = __esm({
   }
 });
 
-// src/routes/production/editImage/generateFlowImage.ts
-async function urlToBase643(imageUrl) {
-  if (imageUrl.startsWith("/oss/")) {
-    return await utils_default.oss.getImageBase64(utils_default.replaceUrl(imageUrl).replace("/smallImage", ""));
+// src/services/task-engine/enqueueWorkflowImage.ts
+async function enqueueWorkflowImage(input) {
+  const project = await utils_default.db("o_project").where("id", input.projectId).first();
+  if (!project) throw new Error("\u9879\u76EE\u4E0D\u5B58\u5728");
+  for (const referencePath of input.referencePaths) {
+    if (!await utils_default.oss.fileExists(referencePath)) throw new Error(`\u53C2\u8003\u56FE\u7247\u4E0D\u5B58\u5728: ${referencePath}`);
   }
-  imageUrl = await utils_default.oss.getFileUrl(utils_default.replaceUrl(imageUrl));
-  const response = await axios_default.get(imageUrl, { responseType: "arraybuffer" });
-  const contentType = response.headers["content-type"] || "image/png";
-  const base644 = Buffer.from(response.data, "binary").toString("base64");
-  return `data:${contentType};base64,${base644}`;
+  const costReservation = await prepareCostReservation({ projectId: input.projectId, lane: "image", model: input.model, metrics: { request: 1 } });
+  const resourceKey = `image:workflow:${input.projectId}:${input.nodeId}`;
+  const payload = {
+    projectId: input.projectId,
+    model: input.model,
+    prompt: input.prompt,
+    size: input.size,
+    aspectRatio: input.aspectRatio,
+    referencePaths: input.referencePaths,
+    savePath: `/${input.projectId}/workFlow/${v4_default()}.jpg`
+  };
+  const [legacyTaskId] = await utils_default.db("o_tasks").insert({
+    projectId: input.projectId,
+    taskClass: "\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210",
+    relatedObjects: JSON.stringify({ nodeId: input.nodeId }),
+    model: input.model.split(/:(.+)/)[1] ?? input.model,
+    describe: "\u6301\u4E45\u961F\u5217\uFF1A\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210",
+    state: "\u6392\u961F\u4E2D",
+    startTime: Date.now()
+  });
+  try {
+    const queued = await generationTaskRepository.enqueue({
+      projectId: input.projectId,
+      legacyTaskId,
+      lane: "image",
+      type: "workflow.image.generate",
+      resourceKey,
+      payload,
+      provider: input.model.split(/:(.+)/)[0],
+      idempotencyKey: stableIdempotencyKey({ type: "workflow.image.generate", resourceKey, requestId: input.requestId }),
+      maxAttempts: 3,
+      costReservation
+    });
+    if (queued.deduped) await utils_default.db("o_tasks").where("id", legacyTaskId).delete();
+    return { task: queued.task, deduped: queued.deduped };
+  } catch (error73) {
+    await utils_default.db("o_tasks").where("id", legacyTaskId).delete();
+    throw error73;
+  }
 }
+var init_enqueueWorkflowImage = __esm({
+  "src/services/task-engine/enqueueWorkflowImage.ts"() {
+    "use strict";
+    init_dist_node();
+    init_repository();
+    init_budget();
+    init_utils3();
+  }
+});
+
+// src/routes/production/editImage/generateFlowImage.ts
 var import_express62, router62, generateFlowImage_default;
 var init_generateFlowImage = __esm({
   "src/routes/production/editImage/generateFlowImage.ts"() {
@@ -242888,45 +243000,34 @@ var init_generateFlowImage = __esm({
     init_zod();
     init_responseFormat();
     init_middleware();
-    init_axios2();
+    init_enqueueWorkflowImage();
     router62 = import_express62.default.Router();
     generateFlowImage_default = router62.post(
       "/",
       validateFields({
         model: external_exports.string(),
         references: external_exports.array(external_exports.string()).optional(),
-        quality: external_exports.string(),
-        ratio: external_exports.string(),
+        quality: external_exports.enum(["1K", "2K", "4K"]),
+        ratio: external_exports.string().regex(/^\d+:\d+$/),
         prompt: external_exports.string(),
-        projectId: external_exports.number()
+        projectId: external_exports.number(),
+        nodeId: external_exports.string().trim().min(1),
+        requestId: external_exports.string().trim().min(1)
       }),
       async (req, res) => {
         const { model, references = [], quality, ratio, prompt, projectId } = req.body;
         try {
-          const imageClass = await utils_default.Ai.Image(model).run(
-            {
-              prompt,
-              referenceList: await (async () => {
-                const list2 = [];
-                for (const url5 of references) {
-                  list2.push({ type: "image", base64: await urlToBase643(url5) });
-                }
-                return list2;
-              })(),
-              size: quality,
-              aspectRatio: ratio
-            },
-            {
-              taskClass: "\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210",
-              describe: "\u5DE5\u4F5C\u6D41\u56FE\u7247\u751F\u6210",
-              relatedObjects: JSON.stringify(req.body),
-              projectId
-            }
-          );
-          const savePath = `${projectId}/workFlow/${utils_default.uuid()}.jpg`;
-          await imageClass.save(savePath);
-          const url4 = await utils_default.oss.getSmallImageUrl(savePath);
-          return res.status(200).send(success3({ url: url4 }));
+          const result = await enqueueWorkflowImage({
+            projectId,
+            nodeId: req.body.nodeId,
+            model,
+            prompt,
+            size: quality,
+            aspectRatio: ratio,
+            referencePaths: references.map((url4) => utils_default.replaceUrl(url4)).filter(Boolean),
+            requestId: req.body.requestId
+          });
+          return res.status(200).send(success3({ taskId: result.task.id, deduped: result.deduped, queued: true }));
         } catch (e) {
           res.status(400).send(error50(utils_default.error(e).message));
         }
@@ -262601,6 +262702,66 @@ var compositionQaTaskHandler = {
   }
 };
 
+// src/services/task-engine/handlers/singleAssetImage.ts
+init_utils3();
+init_generationTask();
+var singleAssetImageTaskHandler = {
+  async execute(task, context2) {
+    const payload = task.payload;
+    const asset = await utils_default.db("o_assets").where({ id: payload.assetId, projectId: payload.projectId }).first();
+    if (!asset) throw new TaskExecutionError("\u8D44\u4EA7\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE", "ASSET_NOT_FOUND", false, true);
+    const references = payload.referencePath ? [{ type: "image", base64: await utils_default.oss.getImageBase64(payload.referencePath) }] : [];
+    await context2.throwIfCancelled();
+    await context2.transitionToSubmitting();
+    const image = await utils_default.Ai.Image(payload.model).run({
+      prompt: payload.prompt,
+      referenceList: references,
+      size: payload.size,
+      aspectRatio: payload.aspectRatio
+    });
+    await context2.transitionToFinalizing();
+    try {
+      await image.save(payload.savePath);
+    } catch (error73) {
+      throw new TaskExecutionError(utils_default.error(error73).message, "IMAGE_SAVE_FAILED", false, true);
+    }
+    await utils_default.db("o_image").where("id", payload.imageId).update({
+      state: "\u5DF2\u5B8C\u6210",
+      filePath: payload.savePath,
+      type: payload.assetType,
+      model: payload.model.split(/:(.+)/)[1] ?? payload.model,
+      resolution: payload.size,
+      errorReason: null
+    });
+    await utils_default.db("o_assets").where("id", payload.assetId).update({ imageId: payload.imageId });
+    if (payload.referencePath) await utils_default.oss.deleteFile(payload.referencePath).catch(() => void 0);
+    return { assetId: payload.assetId, imageId: payload.imageId, imagePath: payload.savePath };
+  }
+};
+
+// src/services/task-engine/handlers/workflowImage.ts
+init_utils3();
+init_generationTask();
+var workflowImageTaskHandler = {
+  async execute(task, context2) {
+    const payload = task.payload;
+    const references = await Promise.all(payload.referencePaths.map(async (filePath) => ({
+      type: "image",
+      base64: await utils_default.oss.getImageBase64(filePath)
+    })));
+    await context2.throwIfCancelled();
+    await context2.transitionToSubmitting();
+    const image = await utils_default.Ai.Image(payload.model).run({ prompt: payload.prompt, referenceList: references, size: payload.size, aspectRatio: payload.aspectRatio });
+    await context2.transitionToFinalizing();
+    try {
+      await image.save(payload.savePath);
+    } catch (error73) {
+      throw new TaskExecutionError(utils_default.error(error73).message, "IMAGE_SAVE_FAILED", false, true);
+    }
+    return { imagePath: payload.savePath, imageUrl: await utils_default.oss.getSmallImageUrl(payload.savePath) };
+  }
+};
+
 // src/services/task-engine/index.ts
 var initialized = false;
 async function startGenerationTaskEngine() {
@@ -262612,6 +262773,8 @@ async function startGenerationTaskEngine() {
     registerTaskHandler("tts.utterance.generate", utteranceTtsTaskHandler);
     registerTaskHandler("composition.render", compositionRenderTaskHandler);
     registerTaskHandler("composition.qa", compositionQaTaskHandler);
+    registerTaskHandler("asset.image.single.generate", singleAssetImageTaskHandler);
+    registerTaskHandler("workflow.image.generate", workflowImageTaskHandler);
     initialized = true;
   }
   await generationTaskWorker.start();

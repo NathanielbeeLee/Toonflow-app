@@ -1,9 +1,9 @@
 import express from "express";
 import u from "@/utils";
 import { z } from "zod";
-import { v4 as uuidv4 } from "uuid";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { enqueueSingleAssetImage } from "@/services/task-engine/enqueueSingleAssetImage";
 
 const router = express.Router();
 
@@ -63,12 +63,13 @@ function buildPrompt(cfg: AssetTypeConfig, artStyle: string, name: string, promp
 const requestSchema = {
   projectId: z.number(),
   model: z.string(),
-  resolution: z.string(),
+  resolution: z.enum(["1K", "2K", "4K"]),
   id: z.number(),
-  type: z.enum(["role", "scene", "tool", "storyboard"]),
+  type: z.enum(["role", "scene", "tool"]),
   name: z.string(),
   prompt: z.string(),
   base64: z.string().optional().nullable(),
+  requestId: z.string().trim().min(1).optional(),
 };
 
 export default router.post("/", validateFields(requestSchema), async (req, res) => {
@@ -81,63 +82,27 @@ export default router.post("/", validateFields(requestSchema), async (req, res) 
   const cfg = assetTypeConfig[type as AssetType];
   if (!cfg) return res.status(400).send(error("不支持的类型"));
 
-  // 2. 创建图片占位记录
-  const [imageId] = await u.db("o_image").insert({
-    type,
-    state: "生成中",
-    assetsId: id,
-    model: model.split(/:(.+)/)[1],
-    resolution,
-  });
-  await u.db("o_assets").where("id", id).update({ imageId });
-
-  // 3. 准备生成参数
-  const imagePath = `/${projectId}/${cfg.dir}/${uuidv4()}.jpg`;
   const userPrompt = buildPrompt(cfg, project.artStyle!, name, prompt);
-  const describe = `生成${cfg.label}图，名称：${name}，提示词：${prompt}`;
-  const relatedObjects = { id, projectId, type: cfg.label };
-
   try {
-    const aiImage = u.Ai.Image(model);
-    await aiImage.run(
-      {
-        prompt: userPrompt,
-        referenceList: base64 ? [{ type: "image", base64 }] : [],
-        size: resolution,
-        aspectRatio: "16:9",
-      },
-      {
-        taskClass: cfg.taskClass,
-        describe,
-        projectId,
-        relatedObjects: JSON.stringify(relatedObjects),
-      },
-    );
-    aiImage.save(imagePath);
-    // 5. 更新记录 & 返回结果
-    const imageData = await u.db("o_image").where("id", imageId).select("*").first();
-    if (!imageData) return res.status(500).send("资产已被删除");
-    if (imageData.state === "生成失败") return;
-    await u
-      .db("o_image")
-      .where("id", imageId)
-      .update({
-        state: "已完成",
-        filePath: imagePath,
-        type,
-        model: model.split(/:(.+)/)[1],
-        resolution,
-      });
-
-    const path = await u.oss.getSmallImageUrl(imagePath);
-    await u.db("o_assets").where("id", id).update({ imageId });
-
-    return res.status(200).send(success({ path, assetsId: id }));
+    const result = await enqueueSingleAssetImage({
+      projectId,
+      assetId: id,
+      assetType: type as AssetType,
+      model: model as `${string}:${string}`,
+      prompt: userPrompt,
+      size: resolution,
+      aspectRatio: "16:9",
+      referenceBase64: base64 || undefined,
+      requestId: req.body.requestId || `${Date.now()}-${id}`,
+    });
+    return res.status(200).send(success({
+      queued: true,
+      taskId: result.task.id,
+      imageId: (result.payload as any).imageId,
+      assetsId: id,
+      deduped: result.deduped,
+    }));
   } catch (e) {
-    await u
-      .db("o_image")
-      .where("id", imageId)
-      .update({ state: "生成失败", errorReason: u.error(e).message });
     return res.status(400).send(error(u.error(e).message || "图片生成失败"));
   }
 });

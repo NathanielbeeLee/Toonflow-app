@@ -484,7 +484,7 @@ class GenerationTaskRepository {
       }
     }
     const imageState = ["cancelled", "failed", "manual_review"].includes(task.status) ? "生成失败" : task.status === "succeeded" ? "已完成" : "生成中";
-    if (task.type === "asset.image.generate") {
+    if (task.type === "asset.image.generate" || task.type === "asset.image.single.generate") {
       const payload = task.payload as { imageId?: number } | null;
       if (payload?.imageId) {
         await db("o_image").where("id", payload.imageId).update({

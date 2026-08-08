@@ -551,11 +551,12 @@ function regenerateItem() {
         id: item.id,
         resolution: editForm.resolution,
         concurrentCount: 1,
+        requestId: crypto.randomUUID(),
       },
       { signal: controller.signal },
     )
     .then(async () => {
-      window.$message.success($t("workbench.cornerScape.msg.genSuccess", { name: item.name }));
+      window.$message.success(`“${item.name}”已进入持久图片队列`);
       await getFilteredData();
     })
     .catch((e: any) => {

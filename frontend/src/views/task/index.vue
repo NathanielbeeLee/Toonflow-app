@@ -654,6 +654,8 @@ function taskTypeLabel(type: string) {
   const labels: Record<string, string> = {
     "video.generate": $t("workbench.task.durable.videoGenerate"),
     "asset.image.generate": $t("workbench.task.durable.assetImageGenerate"),
+    "asset.image.single.generate": "单张资产图片",
+    "workflow.image.generate": "工作流图片生成",
     "storyboard.image.generate": $t("workbench.task.durable.storyboardImageGenerate"),
     "tts.utterance.generate": $t("workbench.task.durable.utteranceTtsGenerate"),
     "composition.render": "本地视频合成",

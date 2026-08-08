@@ -5,6 +5,8 @@ import { assetImageTaskHandler, storyboardImageTaskHandler } from "@/services/ta
 import { utteranceTtsTaskHandler } from "@/services/task-engine/handlers/utteranceTts";
 import { compositionRenderTaskHandler } from "@/services/task-engine/handlers/compositionRender";
 import { compositionQaTaskHandler } from "@/services/task-engine/handlers/compositionQa";
+import { singleAssetImageTaskHandler } from "@/services/task-engine/handlers/singleAssetImage";
+import { workflowImageTaskHandler } from "@/services/task-engine/handlers/workflowImage";
 
 let initialized = false;
 
@@ -17,6 +19,8 @@ export async function startGenerationTaskEngine(): Promise<void> {
     registerTaskHandler("tts.utterance.generate", utteranceTtsTaskHandler);
     registerTaskHandler("composition.render", compositionRenderTaskHandler);
     registerTaskHandler("composition.qa", compositionQaTaskHandler);
+    registerTaskHandler("asset.image.single.generate", singleAssetImageTaskHandler);
+    registerTaskHandler("workflow.image.generate", workflowImageTaskHandler);
     initialized = true;
   }
   await generationTaskWorker.start();
