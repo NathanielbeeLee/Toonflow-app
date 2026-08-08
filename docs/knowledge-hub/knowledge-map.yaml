@@ -225,6 +225,23 @@
       "last_verified_commit": "toon-custom/999df643"
     },
     {
+      "id": "feature.local-security-diagnostics",
+      "type": "feature",
+      "name": "本地认证与脱敏诊断",
+      "summary": "scrypt 密码、默认密码首次改密、本机监听边界和不含秘密/业务内容的诊断导出",
+      "user_entry": { "page": "登录页；任务中心", "action": "首次登录修改密码；需要排障时导出诊断" },
+      "source_paths": ["src/services/auth/password.ts", "src/services/diagnostics/report.ts", "src/app.ts", "frontend/src/pages/login/index.vue"],
+      "api": ["POST /api/login/login", "POST /api/setting/diagnostics/export"],
+      "tables": ["o_user", "schema_migrations", "generation_tasks"],
+      "config": ["TOONFLOW_HOST"],
+      "relations": [
+        { "type": "protects", "target": "api.generation-tasks" },
+        { "type": "documents", "target": "document.troubleshooting" }
+      ],
+      "introduced_in": "toon-custom/5cde4ab5",
+      "last_verified_commit": "toon-custom/5cde4ab5"
+    },
+    {
       "id": "feature.durable-task-center",
       "type": "feature",
       "name": "持久任务中心",
