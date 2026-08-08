@@ -44,7 +44,8 @@
     "upstream:check": "tsx scripts/upstream-watch.ts check",
     "verify:provider-adapter": "tsx scripts/verify-provider-adapter.ts",
     "verify:openai-provider": "tsx scripts/verify-openai-compatible-provider.ts",
-    "verify:minimax-provider": "tsx scripts/verify-minimax-provider.ts"
+    "verify:minimax-provider": "tsx scripts/verify-minimax-provider.ts",
+    "verify:kling-provider": "tsx scripts/verify-kling-provider.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.35",

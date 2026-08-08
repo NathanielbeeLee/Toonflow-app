@@ -95,6 +95,11 @@ interface PollResult {
   data?: string;
   error?: string;
 }
+interface VideoProviderPollResult {
+  status: "pending" | "succeeded" | "failed" | "cancelled";
+  data?: string;
+  error?: string;
+}
 
 // ============================================================
 // 全局声明
@@ -122,6 +127,8 @@ declare const exports: {
   textRequest: (m: TextModel, t: boolean, tl: 0 | 1 | 2 | 3) => any;
   imageRequest: (c: ImageConfig, m: ImageModel) => Promise<string>;
   videoRequest: (c: VideoConfig, m: VideoModel) => Promise<string>;
+  videoSubmit: (c: VideoConfig, m: VideoModel) => Promise<{ jobId: string }>;
+  videoPoll: (c: { jobId: string }, m: VideoModel) => Promise<VideoProviderPollResult>;
   ttsRequest: (c: TTSConfig, m: TTSModel) => Promise<string>;
   checkForUpdates?: () => Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }>;
   updateVendor?: () => Promise<string>;
@@ -133,7 +140,7 @@ declare const exports: {
 
 const vendor: VendorConfig = {
   id: "klingai",
-  version: "2.0",
+  version: "2.1",
   author: "Toonflow",
   name: "可灵AI",
   description:
@@ -362,12 +369,8 @@ const extractImageUrl = (ref: ReferenceList): string => {
   return ref.base64.startsWith("data:") ? ref.base64 : `data:image/jpeg;base64,${ref.base64}`;
 };
 
-/**
- * 提交任务并轮询获取结果的通用函数
- */
-const submitAndPoll = async (submitUrl: string, queryUrlBase: string, requestBody: any): Promise<string> => {
+const submitTask = async (submitUrl: string, requestBody: any): Promise<string> => {
   const token = generateAuthToken();
-
   logger(`开始提交可灵AI视频生成任务: ${submitUrl}`);
   logger(
     `请求参数: ${JSON.stringify({
@@ -388,48 +391,22 @@ const submitAndPoll = async (submitUrl: string, queryUrlBase: string, requestBod
   if (submitResp.data.code !== 0) {
     throw new Error(`提交任务失败: ${submitResp.data.message || JSON.stringify(submitResp.data)}`);
   }
-
   const taskId = submitResp.data.data.task_id;
+  if (!taskId) throw new Error("可灵AI任务提交成功但没有返回任务ID");
   logger(`任务已提交，任务ID: ${taskId}`);
+  return String(taskId);
+};
 
-  const result = await pollTask(
-    async () => {
-      const freshToken = generateAuthToken();
-      const queryResp = await axios.get(`${queryUrlBase}/${taskId}`, {
-        headers: {
-          Authorization: `Bearer ${freshToken}`,
-        },
-      });
+const allowedVideoPaths = new Set(["/v1/videos/omni-video", "/v1/videos/multi-image2video", "/v1/videos/text2video", "/v1/videos/image2video"]);
 
-      if (queryResp.data.code !== 0) {
-        return { completed: true, error: `查询任务失败: ${queryResp.data.message}` };
-      }
+const encodeJobId = (apiPath: string, taskId: string) => `${apiPath}|${taskId}`;
 
-      const taskData = queryResp.data.data;
-      const status = taskData.task_status;
-      logger(`轮询中... 任务状态: ${status}`);
-
-      if (status === "succeed") {
-        const videoUrl = taskData.task_result?.videos?.[0]?.url;
-        if (!videoUrl) {
-          return { completed: true, error: "任务完成但未获取到视频URL" };
-        }
-        return { completed: true, data: videoUrl };
-      }
-
-      if (status === "failed") {
-        return { completed: true, error: `视频生成失败: ${taskData.task_status_msg || "未知错误"}` };
-      }
-
-      return { completed: false };
-    },
-    5000,
-    600000,
-  );
-
-  if (result.error) throw new Error(result.error);
-  logger(`视频生成完成，正在转换为Base64...`);
-  return await urlToBase64(result.data!);
+const decodeJobId = (jobId: string): { apiPath: string; taskId: string } => {
+  const separator = jobId.indexOf("|");
+  const apiPath = separator > 0 ? jobId.slice(0, separator) : "";
+  const taskId = separator > 0 ? jobId.slice(separator + 1) : "";
+  if (!allowedVideoPaths.has(apiPath) || !taskId) throw new Error("可灵AI远端任务身份无效");
+  return { apiPath, taskId };
 };
 
 // ============================================================
@@ -444,11 +421,9 @@ const imageRequest = async (config: ImageConfig, model: ImageModel): Promise<str
   throw new Error("可灵AI不支持图片模型");
 };
 
-const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {
+const buildVideoSubmission = async (config: VideoConfig, model: VideoModel): Promise<{ apiPath: string; requestBody: any }> => {
   if (!vendor.inputValues.accessKey) throw new Error("缺少Access Key");
   if (!vendor.inputValues.secretKey) throw new Error("缺少Secret Key");
-
-  const baseUrl = getBaseUrl();
 
   // 解析 modelName，格式：kling-video-o1:pro => modelName=kling-video-o1, mode=pro
   const colonIdx = model.modelName.indexOf(":");
@@ -539,7 +514,7 @@ const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<str
     }
 
     const apiPath = "/v1/videos/omni-video";
-    return await submitAndPoll(`${baseUrl}${apiPath}`, `${baseUrl}${apiPath}`, requestBody);
+    return { apiPath, requestBody };
   }
 
   // =====================================================
@@ -564,7 +539,7 @@ const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<str
     };
 
     const apiPath = "/v1/videos/multi-image2video";
-    return await submitAndPoll(`${baseUrl}${apiPath}`, `${baseUrl}${apiPath}`, requestBody);
+    return { apiPath, requestBody };
   }
 
   // 文生视频模式 —— 使用 /v1/videos/text2video 接口
@@ -581,7 +556,7 @@ const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<str
     };
 
     const apiPath = "/v1/videos/text2video";
-    return await submitAndPoll(`${baseUrl}${apiPath}`, `${baseUrl}${apiPath}`, requestBody);
+    return { apiPath, requestBody };
   }
 
   // 图生视频模式（单图 / 首尾帧 / 尾帧可选等）—— 使用 /v1/videos/image2video 接口
@@ -614,10 +589,54 @@ const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<str
     }
 
     const apiPath = "/v1/videos/image2video";
-    return await submitAndPoll(`${baseUrl}${apiPath}`, `${baseUrl}${apiPath}`, requestBody);
+    return { apiPath, requestBody };
   }
 
   throw new Error("不支持的视频生成模式或缺少必要的输入参数");
+};
+
+const videoSubmit = async (config: VideoConfig, model: VideoModel): Promise<{ jobId: string }> => {
+  const { apiPath, requestBody } = await buildVideoSubmission(config, model);
+  const taskId = await submitTask(`${getBaseUrl()}${apiPath}`, requestBody);
+  return { jobId: encodeJobId(apiPath, taskId) };
+};
+
+const videoPoll = async ({ jobId }: { jobId: string }, _model: VideoModel): Promise<VideoProviderPollResult> => {
+  if (!vendor.inputValues.accessKey) throw new Error("缺少Access Key");
+  if (!vendor.inputValues.secretKey) throw new Error("缺少Secret Key");
+  const { apiPath, taskId } = decodeJobId(jobId);
+  const queryResp = await axios.get(`${getBaseUrl()}${apiPath}/${encodeURIComponent(taskId)}`, {
+    headers: { Authorization: `Bearer ${generateAuthToken()}` },
+  });
+  if (queryResp.data.code !== 0) {
+    return { status: "failed", error: `查询任务失败: ${queryResp.data.message || "未知错误"}` };
+  }
+  const taskData = queryResp.data.data;
+  const status = taskData?.task_status;
+  logger(`轮询中... 任务状态: ${status}`);
+  if (status === "succeed") {
+    const videoUrl = taskData.task_result?.videos?.[0]?.url;
+    return videoUrl ? { status: "succeeded", data: videoUrl } : { status: "failed", error: "任务完成但未获取到视频URL" };
+  }
+  if (status === "failed") return { status: "failed", error: `视频生成失败: ${taskData.task_status_msg || "未知错误"}` };
+  return { status: "pending" };
+};
+
+const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<string> => {
+  const { jobId } = await videoSubmit(config, model);
+  const result = await pollTask(
+    async () => {
+      const polled = await videoPoll({ jobId }, model);
+      if (polled.status === "succeeded") return { completed: true, data: polled.data };
+      if (polled.status === "failed" || polled.status === "cancelled") return { completed: true, error: polled.error || "可灵AI视频生成失败" };
+      return { completed: false };
+    },
+    5000,
+    600000,
+  );
+  if (result.error) throw new Error(result.error);
+  if (!result.data) throw new Error("可灵AI视频任务完成但没有返回视频URL");
+  return await urlToBase64(result.data);
 };
 
 const ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {
@@ -632,6 +651,8 @@ exports.vendor = vendor;
 exports.textRequest = textRequest;
 exports.imageRequest = imageRequest;
 exports.videoRequest = videoRequest;
+exports.videoSubmit = videoSubmit;
+exports.videoPoll = videoPoll;
 exports.ttsRequest = ttsRequest;
 
 // 这行代码用于确保当前文件被识别为模块，避免全局变量冲突
