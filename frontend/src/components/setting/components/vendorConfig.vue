@@ -92,11 +92,11 @@
                 <span class="modelCardName">{{ item.name }}</span>
               </div>
               <div class="actionBtns">
-                <t-button size="small" variant="text" @click="handleTestModel(item)">
+                <t-button v-if="item.type !== 'tts'" size="small" variant="text" @click="handleTestModel(item)">
                   <template #icon><i-lightning theme="outline" /></template>
                   {{ $t("settings.vendor.testModel") }}
                 </t-button>
-                <t-button variant="text" size="small" @click="handleEditModel(item)">
+                <t-button v-if="item.type !== 'tts'" variant="text" size="small" @click="handleEditModel(item)">
                   <template #icon><i-pencil theme="outline" /></template>
                   {{ $t("settings.vendor.edit") }}
                 </t-button>
@@ -383,7 +383,14 @@ interface VideoModel {
   durationResolutionMap: { duration: number[]; resolution: string[] }[];
 }
 
-type VendorModel = TextModel | ImageModel | VideoModel;
+interface TTSModel {
+  name: string;
+  modelName: string;
+  type: "tts";
+  voices: { title: string; voice: string }[];
+}
+
+type VendorModel = TextModel | ImageModel | VideoModel | TTSModel;
 
 interface VendorInput {
   key: string;
@@ -417,6 +424,7 @@ const TYPE_LABEL_MAP: Record<string, string> = {
   text: "settings.vendor.textModel",
   image: "settings.vendor.imageModel",
   video: "settings.vendor.videoModel",
+  tts: "TTS",
 };
 
 const MODE_LABEL_MAP: Record<string, string> = {

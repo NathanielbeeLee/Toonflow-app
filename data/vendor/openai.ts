@@ -76,6 +76,7 @@ interface TTSConfig {
   speechRate: number;
   pitchRate: number;
   volume: number;
+  emotion?: string;
 }
 interface PollResult {
   completed: boolean;
@@ -123,11 +124,11 @@ declare const exports: {
 // ============================================================
 const vendor: VendorConfig = {
   id: "openai",
-  version: "2.2",
+  version: "2.3",
   author: "Toonflow",
   name: "OpenAI标准接口",
   description:
-    "OpenAI标准格式接口，支持文本、GPT Image 与异步视频任务。CLIProxyAPI 用户可将请求地址设为 http://localhost:8317/v1；视频地址留空时会自动使用 /openai/v1。视频模型是否可用取决于代理侧已登录的 xAI/OpenAI 凭据。",
+    "OpenAI标准格式接口，支持文本、GPT Image、异步视频任务与 TTS。CLIProxyAPI 用户可将请求地址设为 http://localhost:8317/v1；视频地址留空时会自动使用 /openai/v1。视频和 TTS 模型是否可用取决于代理侧已登录的凭据与路由。",
   icon: "",
   inputs: [
     { key: "apiKey", label: "API密钥", type: "password", required: true },
@@ -153,6 +154,26 @@ const vendor: VendorConfig = {
     { name: "GPT-5.4", modelName: "gpt-5.4", type: "text", think: false },
     { name: "GPT Image 1.5", modelName: "gpt-image-1.5", type: "image", mode: ["text"] },
     { name: "GPT Image 2", modelName: "gpt-image-2", type: "image", mode: ["text"] },
+    {
+      name: "GPT-4o mini TTS",
+      modelName: "gpt-4o-mini-tts",
+      type: "tts",
+      voices: ["alloy", "ash", "ballad", "coral", "echo", "fable", "nova", "onyx", "sage", "shimmer", "verse", "marin", "cedar"].map(
+        (voice) => ({ title: voice, voice }),
+      ),
+    },
+    {
+      name: "TTS-1",
+      modelName: "tts-1",
+      type: "tts",
+      voices: ["alloy", "ash", "coral", "echo", "fable", "nova", "onyx", "sage", "shimmer"].map((voice) => ({ title: voice, voice })),
+    },
+    {
+      name: "TTS-1 HD",
+      modelName: "tts-1-hd",
+      type: "tts",
+      voices: ["alloy", "ash", "coral", "echo", "fable", "nova", "onyx", "sage", "shimmer"].map((voice) => ({ title: voice, voice })),
+    },
     {
       name: "Sora 2 / CLIProxyAPI Video",
       modelName: "sora-2",
@@ -278,7 +299,36 @@ const videoRequest = async (config: VideoConfig, model: VideoModel): Promise<str
   return result.data;
 };
 const ttsRequest = async (config: TTSConfig, model: TTSModel): Promise<string> => {
-  return "";
+  const text = config.text.trim();
+  if (!text) throw new Error("TTS 文本不能为空");
+  if (text.length > 4096) throw new Error("OpenAI 单次 TTS 文本不能超过 4096 个字符");
+  const voice = config.voice.trim();
+  if (!voice) throw new Error("OpenAI TTS 音色不能为空");
+  const speed = Math.max(0.25, Math.min(4, Number(config.speechRate) || 1));
+  const body: any = {
+    model: model.modelName,
+    input: text,
+    voice: voice.startsWith("voice_") ? { id: voice } : voice,
+    response_format: "mp3",
+    speed,
+  };
+  if (model.modelName.startsWith("gpt-4o-mini-tts")) {
+    const instructions = [
+      config.emotion ? `情绪与表演风格：${config.emotion}` : "",
+      config.pitchRate ? `音高相对自然音高调整 ${config.pitchRate} 个半音。` : "",
+      config.volume !== 1 ? `输出音量强度目标为 ${config.volume} 倍自然音量。` : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+    if (instructions) body.instructions = instructions;
+  }
+  const response = await axios.post(`${getBaseUrl()}/audio/speech`, body, {
+    headers: getHeaders(),
+    responseType: "arraybuffer",
+  });
+  if (!response.data) throw new Error("OpenAI TTS 成功响应中没有音频数据");
+  const mime = response.headers?.["content-type"] || "audio/mpeg";
+  return `data:${mime};base64,${response.data.toString("base64")}`;
 };
 const checkForUpdates = async (): Promise<{ hasUpdate: boolean; latestVersion: string; notice: string }> => {
   return { hasUpdate: false, latestVersion: "2.0", notice: "" };

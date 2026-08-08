@@ -14,6 +14,7 @@ const axios = {
     calls.push({ method: "POST", url, body });
     if (url.endsWith("/images/generations")) return { data: { data: [{ b64_json: "bW9jay1pbWFnZQ==" }] } };
     if (url.endsWith("/videos")) return { data: { id: "video_mock_001", status: "queued" } };
+    if (url.endsWith("/audio/speech")) return { data: Buffer.from("mock-audio"), headers: { "content-type": "audio/mpeg" } };
     throw new Error(`unexpected POST ${url}`);
   },
   async get(url: string) {
@@ -83,7 +84,19 @@ async function main() {
   const completed = await exportsObject.videoPoll({ jobId: submitted.jobId }, videoModel);
   assert.equal(completed.status, "succeeded");
   assert.equal(completed.data, `data:video/mp4;base64,${Buffer.from("mock-video").toString("base64")}`);
-  console.log("OpenAI/CLIProxyAPI 图片与可恢复视频适配器 Mock 验证通过");
+
+  const ttsModel = exportsObject.vendor.models.find((item: any) => item.modelName === "gpt-4o-mini-tts");
+  const audio = await exportsObject.ttsRequest(
+    { text: "你好，世界", voice: "coral", speechRate: 1.2, pitchRate: 1, volume: 1, emotion: "温暖" },
+    ttsModel,
+  );
+  assert.equal(audio, `data:audio/mpeg;base64,${Buffer.from("mock-audio").toString("base64")}`);
+  const ttsCall = calls.find((call) => call.url.endsWith("/audio/speech"));
+  assert.equal(ttsCall?.body.model, "gpt-4o-mini-tts");
+  assert.equal(ttsCall?.body.voice, "coral");
+  assert.equal(ttsCall?.body.speed, 1.2);
+  assert.match(ttsCall?.body.instructions, /温暖/);
+  console.log("OpenAI/CLIProxyAPI 图片、可恢复视频与 TTS 适配器 Mock 验证通过");
 }
 
 void main().catch((error) => {

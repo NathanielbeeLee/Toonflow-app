@@ -30,7 +30,7 @@
           clearable
           @change="() => loadWorkspace()" />
         <t-checkbox v-model="includeStoryboardDescriptions">同时导入分镜描述</t-checkbox>
-        <span class="boundary">当前供应商的 TTS 仍需配置真实适配器；空实现会明确失败，不会生成伪音频。</span>
+        <span class="boundary">OpenAI 标准供应商已支持真实 TTS；其他空实现会明确失败。生成语音由 AI 合成，并非真人录音。</span>
       </div>
 
       <t-tabs v-model="activeTab">
@@ -131,9 +131,15 @@
             </t-form-item>
             <t-form-item label="显示名称"><t-input v-model="castForm.name" placeholder="如：小明、旁白" /></t-form-item>
             <div class="threeColumns">
-              <t-form-item label="供应商"><t-input v-model="castForm.provider" placeholder="供应商 ID" /></t-form-item>
-              <t-form-item label="模型"><t-input v-model="castForm.model" placeholder="TTS 模型名" /></t-form-item>
-              <t-form-item label="音色"><t-input v-model="castForm.voice" placeholder="voice ID" /></t-form-item>
+              <t-form-item label="供应商">
+                <t-select v-model="castForm.provider" :options="providerOptions" filterable creatable placeholder="供应商 ID" @change="onProviderChange" />
+              </t-form-item>
+              <t-form-item label="模型">
+                <t-select v-model="castForm.model" :options="ttsModelOptions" filterable creatable placeholder="TTS 模型名" @change="onModelChange" />
+              </t-form-item>
+              <t-form-item label="音色">
+                <t-select v-model="castForm.voice" :options="voiceOptions" filterable creatable placeholder="voice ID" />
+              </t-form-item>
             </div>
             <t-form-item label="试听/参考音频">
               <t-select v-model="castForm.previewAssetId" :options="audioOptions" clearable placeholder="可选上传的音色资产" />
@@ -218,6 +224,13 @@ interface Cue {
   locked: boolean;
 }
 
+interface VendorItem {
+  id: string;
+  name: string;
+  enable: number | boolean;
+  models: Array<{ name: string; modelName: string; type: string; voices?: Array<{ title: string; voice: string }> }>;
+}
+
 const { project } = storeToRefs(projectStore());
 const projectId = computed(() => (project.value?.id ? Number(project.value.id) : 0));
 const activeTab = ref("utterances");
@@ -232,6 +245,7 @@ const scriptOptions = ref<Array<{ label: string; value: number }>>([]);
 const roleOptions = ref<Array<{ label: string; value: number }>>([]);
 const audioOptions = ref<Array<{ label: string; value: number }>>([]);
 const casts = ref<VoiceCast[]>([]);
+const vendors = ref<VendorItem[]>([]);
 const utterances = ref<Utterance[]>([]);
 const cues = ref<Cue[]>([]);
 const selectedUtteranceIds = ref<Array<string | number>>([]);
@@ -280,6 +294,21 @@ const castColumns: any[] = [
   { colKey: "operation", title: "操作", width: 65, cell: "operation" },
 ];
 const castOptions = computed(() => casts.value.map((item) => ({ label: `${item.name} · ${item.voice}`, value: item.id })));
+const providerOptions = computed(() =>
+  vendors.value
+    .filter((vendor) => vendor.models.some((model) => model.type === "tts"))
+    .map((vendor) => ({ label: vendor.name, value: vendor.id })),
+);
+const currentVendor = computed(() => vendors.value.find((vendor) => vendor.id === castForm.value.provider));
+const ttsModelOptions = computed(() =>
+  (currentVendor.value?.models || [])
+    .filter((model) => model.type === "tts")
+    .map((model) => ({ label: model.name, value: model.modelName })),
+);
+const currentTtsModel = computed(() => currentVendor.value?.models.find((model) => model.type === "tts" && model.modelName === castForm.value.model));
+const voiceOptions = computed(() =>
+  (currentTtsModel.value?.voices || []).map((item) => ({ label: item.title, value: item.voice })),
+);
 const kindOptions = [
   { label: "对白", value: "dialogue" },
   { label: "旁白", value: "narration" },
@@ -294,7 +323,7 @@ let refreshTimer: ReturnType<typeof setInterval> | undefined;
 
 onMounted(async () => {
   if (!projectId.value) return;
-  await Promise.all([loadScripts(), loadCasts(), loadAssets()]);
+  await Promise.all([loadScripts(), loadCasts(), loadAssets(), loadVendors()]);
   refreshTimer = setInterval(() => {
     if (selectedScriptId.value && document.visibilityState === "visible") void loadWorkspace(false);
   }, 5000);
@@ -336,6 +365,15 @@ async function loadAssets() {
 async function loadCasts() {
   const { data } = await axios.post("/voiceStudio/casts/list", { projectId: projectId.value });
   casts.value = data;
+}
+
+async function loadVendors() {
+  try {
+    const { data } = await axios.post("/setting/vendorConfig/getVendorList");
+    vendors.value = data;
+  } catch (error) {
+    showError(error, "获取 TTS 供应商失败");
+  }
 }
 
 async function loadWorkspace(showLoading = true) {
@@ -453,8 +491,17 @@ async function batchGenerate() {
 }
 
 async function openCastDialog() {
-  await Promise.all([loadCasts(), loadAssets()]);
+  await Promise.all([loadCasts(), loadAssets(), loadVendors()]);
   castDialogVisible.value = true;
+}
+
+function onProviderChange() {
+  castForm.value.model = "";
+  castForm.value.voice = "";
+}
+
+function onModelChange() {
+  castForm.value.voice = "";
 }
 
 function fillCastForm(row: VoiceCast) {

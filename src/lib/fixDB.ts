@@ -211,7 +211,7 @@ export default async (knex: Knex): Promise<void> => {
     u.vendor.writeCode("toonflow", vendorData["toonflow.ts"]);
   }
   const openaiVer = await u.vendor.getVendor("openai").version;
-  if (Number(openaiVer) < 2.2) {
+  if (Number(openaiVer) < 2.3) {
     u.vendor.writeCode("openai", vendorData["openai.ts"]);
   }
 };
