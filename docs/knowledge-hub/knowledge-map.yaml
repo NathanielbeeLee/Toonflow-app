@@ -14,7 +14,7 @@
         { "type": "uses", "target": "feature.durable-video-batch" }
       ],
       "introduced_in": "upstream/v1.1.8",
-      "last_verified_commit": "toon-custom/9282f95"
+      "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
       "id": "feature.agent-directing",
@@ -25,7 +25,7 @@
       "source_paths": ["src/agents/scriptAgent", "src/agents/productionAgent", "data/skills"],
       "relations": [{ "type": "documented_by", "target": "document.feature-catalog" }],
       "introduced_in": "upstream/v1.1.8",
-      "last_verified_commit": "toon-custom/9282f95"
+      "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
       "id": "feature.asset-consistency",
@@ -37,7 +37,7 @@
       "tables": ["o_assets", "o_storyboard"],
       "relations": [{ "type": "documented_by", "target": "document.feature-catalog" }],
       "introduced_in": "upstream/v1.1.8",
-      "last_verified_commit": "toon-custom/9282f95"
+      "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
       "id": "feature.durable-video-batch",
@@ -58,7 +58,7 @@
       ],
       "troubleshooting": ["docs/knowledge-hub/troubleshooting.md#任务显示需人工确认"],
       "introduced_in": "toon-custom/first-absorption-2026-08-08",
-      "last_verified_commit": "toon-custom/9282f95"
+      "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
       "id": "api.generation-tasks",
@@ -69,7 +69,7 @@
       "api": ["POST /api/generationTasks/get", "POST /api/generationTasks/list", "POST /api/generationTasks/cancel", "POST /api/generationTasks/retry"],
       "relations": [{ "type": "reads", "target": "table.generation-tasks" }],
       "introduced_in": "toon-custom/first-absorption-2026-08-08",
-      "last_verified_commit": "toon-custom/9282f95"
+      "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
       "id": "table.generation-tasks",
@@ -80,7 +80,7 @@
       "tables": ["generation_tasks"],
       "relations": [{ "type": "documented_by", "target": "document.database-tasks" }],
       "introduced_in": "toon-custom/first-absorption-2026-08-08",
-      "last_verified_commit": "toon-custom/9282f95"
+      "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
       "id": "concept.worker-lease",
@@ -90,7 +90,7 @@
       "source_paths": ["src/services/task-engine/worker.ts", "src/services/task-engine/repository.ts"],
       "relations": [{ "type": "writes", "target": "table.generation-tasks" }],
       "introduced_in": "toon-custom/first-absorption-2026-08-08",
-      "last_verified_commit": "toon-custom/9282f95"
+      "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
       "id": "feature.provider-job-resume",
@@ -106,7 +106,7 @@
         { "type": "depends_on", "target": "concept.worker-lease" }
       ],
       "introduced_in": "toon-custom/provider-resume-2026-08-08",
-      "last_verified_commit": "toon-custom/pending-provider-resume"
+      "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
       "id": "provider.volcengine",
@@ -116,7 +116,7 @@
       "source_paths": ["data/vendor/volcengine.ts"],
       "relations": [{ "type": "documented_by", "target": "document.database-tasks" }],
       "introduced_in": "upstream/v1.1.8",
-      "last_verified_commit": "toon-custom/pending-provider-resume"
+      "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
       "id": "troubleshooting.unknown-provider-state",
@@ -126,7 +126,7 @@
       "source_paths": ["src/services/task-engine/worker.ts"],
       "relations": [{ "type": "documented_by", "target": "document.troubleshooting" }],
       "introduced_in": "toon-custom/first-absorption-2026-08-08",
-      "last_verified_commit": "toon-custom/9282f95"
+      "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
       "id": "document.feature-catalog",
@@ -136,7 +136,7 @@
       "source_paths": ["docs/knowledge-hub/feature-catalog.md"],
       "relations": [],
       "introduced_in": "toon-custom/first-absorption-2026-08-08",
-      "last_verified_commit": "toon-custom/9282f95"
+      "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
       "id": "document.database-tasks",
@@ -146,7 +146,7 @@
       "source_paths": ["docs/knowledge-hub/database-and-tasks.md"],
       "relations": [],
       "introduced_in": "toon-custom/first-absorption-2026-08-08",
-      "last_verified_commit": "toon-custom/9282f95"
+      "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
       "id": "document.troubleshooting",
@@ -156,7 +156,7 @@
       "source_paths": ["docs/knowledge-hub/troubleshooting.md"],
       "relations": [],
       "introduced_in": "toon-custom/first-absorption-2026-08-08",
-      "last_verified_commit": "toon-custom/9282f95"
+      "last_verified_commit": "toon-custom/d5eca2c"
     },
     {
       "id": "document.upstream-watch",
@@ -166,7 +166,7 @@
       "source_paths": ["docs/upstream-watch/README.md", "docs/upstream-watch/sources.yaml"],
       "relations": [{ "type": "documented_by", "target": "document.feature-catalog" }],
       "introduced_in": "toon-custom/first-absorption-2026-08-08",
-      "last_verified_commit": "toon-custom/9282f95"
+      "last_verified_commit": "toon-custom/d5eca2c"
     }
   ]
 }

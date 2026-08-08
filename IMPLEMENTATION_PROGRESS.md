@@ -41,6 +41,8 @@
 
 目标：把第一批“付费边界后只能人工确认”推进为对支持供应商可自动恢复轮询。
 
+落地提交：`d5eca2c`（已推送 `origin/toon-custom`）。
+
 已实现：
 
 - 定义兼容旧 vendor 的可选 `videoSubmit/videoPoll/videoCancel` 契约。
