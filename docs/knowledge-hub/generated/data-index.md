@@ -12,6 +12,10 @@
 | o_image | 持久批量图片任务 | feature.durable-image-tasks |
 | o_storyboard | 持久批量图片任务 | feature.durable-image-tasks |
 | provider_limits | 供应商与模型限流 | feature.provider-limits |
+| voice_cast | 角色音色、逐句台词与字幕 cue | feature.voice-utterance-studio |
+| utterances | 角色音色、逐句台词与字幕 cue | feature.voice-utterance-studio |
+| subtitle_cues | 角色音色、逐句台词与字幕 cue | feature.voice-utterance-studio |
+| generation_tasks | 角色音色、逐句台词与字幕 cue | feature.voice-utterance-studio |
 | generation_tasks | 持久任务中心 | feature.durable-task-center |
 | generation_tasks | generation_tasks | table.generation-tasks |
 | generation_tasks | 供应商远端任务恢复 | feature.provider-job-resume |

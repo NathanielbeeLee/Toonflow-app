@@ -12,4 +12,8 @@ MiniMax 2.2 使用 `/v1/video_generation` 创建任务、`/v1/query/video_genera
 
 可灵 2.1 覆盖 `text2video`、`image2video`、`multi-image2video` 和 `omni-video`。持久身份以受控路径加 task ID 组成，恢复时只允许这四个路径，避免任务数据被用于任意请求；当前没有实现未经确认的远端取消。
 
+## TTS 当前边界
+
+供应商模板契约包含 `ttsRequest`，但当前火山引擎、MiniMax、OpenAI 等仓库内实现都只返回空字符串，不能视为真实 TTS 支持。逐句 TTS 已进入持久 `audio` 通道；在接入任一真实供应商前，空结果会明确失败，不会写出伪音频或把台词标记成功。
+
 当前限制：`volcengineSd2` 等其他 vendor 仍在一次调用中完成；它们尚不能自动恢复远端轮询。OpenAI 图片适配当前只开放文生图，参考图编辑需后续实现 multipart `/images/edits`。后续还需补齐参数预检、费用估算、取消和统一结果规范。

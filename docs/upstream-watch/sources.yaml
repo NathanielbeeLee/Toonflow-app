@@ -47,8 +47,8 @@
       "last_scanned_commit": "eb117853385be136035a519fdffe8ae68c73081b",
       "last_scanned_release": "v1.0.4",
       "last_scanned_at": "2026-08-08T16:00:00+08:00",
-      "last_adopted_commit": null,
-      "adopted_capabilities": []
+      "last_adopted_commit": "eb117853385be136035a519fdffe8ae68c73081b",
+      "adopted_capabilities": ["voice-cast-and-utterance-workflow", "subtitle-cue-workflow"]
     },
     {
       "id": "money-printer-turbo",

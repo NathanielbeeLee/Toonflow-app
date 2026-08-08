@@ -13,7 +13,8 @@
         { "type": "uses", "target": "feature.asset-consistency" },
         { "type": "uses", "target": "feature.infinite-canvas" },
         { "type": "uses", "target": "feature.durable-video-tasks" },
-        { "type": "uses", "target": "feature.durable-image-tasks" }
+        { "type": "uses", "target": "feature.durable-image-tasks" },
+        { "type": "uses", "target": "feature.voice-utterance-studio" }
       ],
       "introduced_in": "upstream/v1.1.8",
       "last_verified_commit": "toon-custom/d5eca2c"
@@ -115,6 +116,35 @@
       "relations": [{ "type": "protects", "target": "feature.durable-video-tasks" }],
       "introduced_in": "toon-custom/c4a5c5a0",
       "last_verified_commit": "toon-custom/c4a5c5a0"
+    },
+    {
+      "id": "feature.voice-utterance-studio",
+      "type": "feature",
+      "name": "角色音色、逐句台词与字幕 cue",
+      "summary": "把剧本确定性拆成可编辑、可锁定、可单句生成的台词，并保存独立字幕时间片",
+      "user_entry": { "page": "配音/字幕（页面待接入）", "action": "导入剧本台词、分配角色音色、逐句生成并校准字幕" },
+      "source_paths": ["src/services/voice-studio", "src/routes/voiceStudio", "src/services/task-engine/handlers/utteranceTts.ts"],
+      "api": ["POST /api/voiceStudio/casts/list", "POST /api/voiceStudio/utterances/import", "POST /api/voiceStudio/utterances/generate", "POST /api/voiceStudio/cues/export"],
+      "tables": ["voice_cast", "utterances", "subtitle_cues", "generation_tasks"],
+      "relations": [
+        { "type": "writes", "target": "table.generation-tasks" },
+        { "type": "uses", "target": "feature.provider-limits" },
+        { "type": "exposed_by", "target": "api.voice-studio" },
+        { "type": "documented_by", "target": "document.feature-catalog" }
+      ],
+      "introduced_in": "toon-custom/f6f5b0eb",
+      "last_verified_commit": "toon-custom/f6f5b0eb"
+    },
+    {
+      "id": "api.voice-studio",
+      "type": "api",
+      "name": "配音与字幕 API",
+      "summary": "维护角色音色、导入和编辑逐句台词、进入持久 TTS 队列并导出字幕",
+      "source_paths": ["src/routes/voiceStudio"],
+      "api": ["POST /api/voiceStudio/casts/upsert", "POST /api/voiceStudio/utterances/batchGenerate", "POST /api/voiceStudio/cues/rebuild", "POST /api/voiceStudio/cues/export"],
+      "relations": [{ "type": "uses", "target": "feature.voice-utterance-studio" }],
+      "introduced_in": "toon-custom/f6f5b0eb",
+      "last_verified_commit": "toon-custom/f6f5b0eb"
     },
     {
       "id": "feature.durable-task-center",
