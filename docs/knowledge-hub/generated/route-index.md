@@ -29,6 +29,8 @@
 | POST /api/generationTasks/limits/budget/get | 项目预算与成片审核 | feature.budget-review-gates |
 | POST /api/generationTasks/limits/pricing/upsert | 项目预算与成片审核 | feature.budget-review-gates |
 | POST /api/composition/timeline/review/record | 项目预算与成片审核 | feature.budget-review-gates |
+| POST /api/composition/timeline/publish/create | 审核门禁发布交付包 | feature.publish-package |
+| POST /api/composition/timeline/publish/latest | 审核门禁发布交付包 | feature.publish-package |
 | POST /api/login/login | 本地认证与脱敏诊断 | feature.local-security-diagnostics |
 | POST /api/setting/diagnostics/export | 本地认证与脱敏诊断 | feature.local-security-diagnostics |
 | POST /api/generationTasks/list | 持久任务中心 | feature.durable-task-center |

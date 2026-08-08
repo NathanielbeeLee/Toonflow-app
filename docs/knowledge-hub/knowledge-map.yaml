@@ -17,7 +17,10 @@
         { "type": "uses", "target": "feature.ai-novel-import" },
         { "type": "uses", "target": "feature.voice-utterance-studio" },
         { "type": "uses", "target": "feature.normalized-timeline" },
-        { "type": "uses", "target": "feature.ffmpeg-preview-render" }
+        { "type": "uses", "target": "feature.ffmpeg-preview-render" },
+        { "type": "uses", "target": "feature.media-qa" },
+        { "type": "uses", "target": "feature.budget-review-gates" },
+        { "type": "uses", "target": "feature.publish-package" }
       ],
       "introduced_in": "upstream/v1.1.8",
       "last_verified_commit": "toon-custom/d5eca2c"
@@ -37,13 +40,13 @@
       "id": "feature.asset-consistency",
       "type": "feature",
       "name": "资产与分镜一致性",
-      "summary": "角色、场景、道具资产复用并作为分镜和视频模型参考输入",
+      "summary": "角色、场景、道具资产复用并作为分镜和视频模型参考输入；角色/道具近名按类型唯一命中时复用",
       "user_entry": { "page": "资产 / 分镜", "action": "审核资产图并关联到分镜" },
-      "source_paths": ["src/routes/assets", "src/routes/production/storyboard"],
+      "source_paths": ["src/routes/assets", "src/routes/script/extractAssets.ts", "src/routes/production/storyboard"],
       "tables": ["o_assets", "o_storyboard"],
       "relations": [{ "type": "documented_by", "target": "document.feature-catalog" }],
       "introduced_in": "upstream/v1.1.8",
-      "last_verified_commit": "toon-custom/d5eca2c"
+      "last_verified_commit": "toon-custom/35e65591"
     },
     {
       "id": "feature.infinite-canvas",
@@ -242,6 +245,26 @@
       ],
       "introduced_in": "toon-custom/999df643",
       "last_verified_commit": "toon-custom/999df643"
+    },
+    {
+      "id": "feature.publish-package",
+      "type": "feature",
+      "name": "审核门禁发布交付包",
+      "summary": "把通过同一输出 QA 与审核关卡的高清成片持久打包为含字幕、证据、manifest 和校验和的 ZIP",
+      "user_entry": { "page": "配音与字幕 / 规范化时间线", "action": "高清成片通过 QA 和审核后点击创建发布包，完成后下载 ZIP" },
+      "source_paths": ["src/services/composition/publish.ts", "src/services/task-engine/handlers/compositionPublish.ts", "src/routes/composition/timeline.ts", "frontend/src/views/voiceStudio/index.vue"],
+      "api": ["POST /api/composition/timeline/publish/create", "POST /api/composition/timeline/publish/latest"],
+      "tables": ["publish_packages", "composition_jobs", "media_qa_reports", "composition_reviews", "generation_tasks"],
+      "relations": [
+        { "type": "reads", "target": "feature.ffmpeg-preview-render" },
+        { "type": "requires", "target": "feature.media-qa" },
+        { "type": "requires", "target": "feature.budget-review-gates" },
+        { "type": "writes", "target": "table.generation-tasks" },
+        { "type": "visualized_by", "target": "feature.durable-task-center" },
+        { "type": "documented_by", "target": "document.database-tasks" }
+      ],
+      "introduced_in": "toon-custom/d6bccc66",
+      "last_verified_commit": "toon-custom/d6bccc66"
     },
     {
       "id": "feature.local-security-diagnostics",

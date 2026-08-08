@@ -264,10 +264,32 @@
 
 验证：小说/短剧 fixture 解析、规范化校验和、同版本幂等、新版本仅更新变化章节、两次迁移幂等、本机两类 API 路径和远端主机阻断均通过；根 TypeScript、前端 Vue 类型检查、完整前后端构建和生产路由打包通过。未调用 LLM 或付费 API。
 
+## 2026-08-08 第二十一批：审核门禁发布交付包
+
+落地提交：`d6bccc66`。
+
+- 新增 `composition.publish` 本地持久任务和独立 `publish` 通道；只接受成功的 `final-high` 高清成片，并要求同一输出 checksum 对应的媒体 QA 已完成、没有阻断错误且最新审核为通过。
+- 发布包固定绑定 composition job、QA 报告和审核记录；相同关卡已有完整 ZIP 时复用，排队/运行任务去重，失败后可安全重新创建。
+- ZIP 包含 MP4、SRT/WebVTT、规范化时间线、QA 报告、审核记录、manifest 和 SHA-256 清单；先写任务专属 partial 文件，支持取消轮询并在完成时原子替换。
+- “配音与字幕”页面显示排队、打包、完成、失败、文件大小和下载入口；任务中心识别“发布交付包”。项目删除时同步清理发布包记录。
+
+验证：根 `yarn lint`、前端 `vue-tsc --build --force`、完整 `yarn build` 和生产 bundle 路由/任务检查通过；迁移重复执行安全，独立 ZIP fixture 可生成、解包并核对校验和。未调用付费 API。
+
+## 2026-08-08 第二十二批：huobao-drama 增量复核与安全补齐
+
+参考项目从 `eb117853385be136035a519fdffe8ae68c73081b` 增量扫描到 `7e821576f233c2283337099c5860883b5db30aff`，共 23 个提交。落地提交：`35e65591`。
+
+- 参考 `64f82aef` 暴露的近名重复问题，在 Toonflow 资产入库层独立实现确定性复用：角色/道具按类型忽略空白与括号定位词，只有唯一命中才复用；场景保留括号子地点差异。
+- 参考 `e51e1fe` 的缺失镜头可解释错误，在 Toonflow FFmpeg 渲染前汇总检查所有时间线视频输入，一次列出视频轨道和候选视频编号，引导重新生成或重新选片。
+- huobao 新增的任务抽屉、选择性拼接和流水线状态在 Toonflow 已由持久任务中心、选片驱动规范化时间线及 compose/QA/review/publish 状态链覆盖，不重复引入第二套实现。
+- MySQL/Nuxt 整体迁移、移除 MiniMax、供应商购 Key 快捷入口和内置大体积 FFmpeg 二进制不符合当前 SQLite/Vue/Electron 架构或需要独立发行决策，本批不采纳。参考仓库仍无许可证文件，未复制源码。
+
+验证：根 `yarn lint`、完整 `yarn build` 和 `git diff --check` 通过；未调用文本、图片、视频或 TTS API。
+
 ## 下一批优先级
 
-1. 继续从登记游标之后增量扫描参考项目；优先补齐发布打包体验和现有供应商已公开、可本地 Mock 的恢复能力。
+1. 继续从登记游标之后增量扫描参考项目；优先评估现有供应商已公开、可本地 Mock 的恢复能力，以及明确不依赖付费 API 的成片质量改进。
 2. 正式版本化 OpenAPI、独立 API Key 和 webhook 属于新的公网自动化安全边界，应单独设计权限、轮换、签名和重放保护后再实现。
-3. Remotion/HyperFrames 仍等待具体品牌模板或 FFmpeg 无法满足的明确需求；真实付费试片、actual cost 和未公开取消 API 继续等待授权/契约。
+3. Remotion/HyperFrames、内置 FFmpeg 二进制仍等待具体品牌模板或安装包体积/平台发行决策；真实付费试片、actual cost 和未公开取消 API 继续等待授权/契约。
 
 继续工作前先读：`docs/knowledge-hub/AI_ASSISTANT_CONTEXT.md`、`docs/upstream-watch/sources.yaml` 和最新扫描报告。

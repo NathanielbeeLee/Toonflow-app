@@ -43,12 +43,12 @@
       "tracking_mode": "reference-only",
       "license": "NO-LICENSE-FILE",
       "relevant_areas": ["voice-cast", "tts", "compose"],
-      "previous_scan_commit": "ad1cd7c",
-      "last_scanned_commit": "eb117853385be136035a519fdffe8ae68c73081b",
+      "previous_scan_commit": "eb117853385be136035a519fdffe8ae68c73081b",
+      "last_scanned_commit": "7e821576f233c2283337099c5860883b5db30aff",
       "last_scanned_release": "v1.0.4",
-      "last_scanned_at": "2026-08-08T16:00:00+08:00",
-      "last_adopted_commit": "eb117853385be136035a519fdffe8ae68c73081b",
-      "adopted_capabilities": ["voice-cast-and-utterance-workflow", "subtitle-cue-workflow"]
+      "last_scanned_at": "2026-08-08T18:14:13+08:00",
+      "last_adopted_commit": "e51e1fe62488776dc31b2f6b11b4ca7efbc242fa",
+      "adopted_capabilities": ["voice-cast-and-utterance-workflow", "subtitle-cue-workflow", "type-aware-near-name-asset-reuse", "pre-render-missing-clip-diagnostics"]
     },
     {
       "id": "money-printer-turbo",
@@ -63,8 +63,8 @@
       "last_scanned_commit": "e14dea5578bb2154480b6bc436009eaa9987f0e3",
       "last_scanned_release": "v1.3.3",
       "last_scanned_at": "2026-08-08T16:00:00+08:00",
-      "last_adopted_commit": null,
-      "adopted_capabilities": []
+      "last_adopted_commit": "e14dea5578bb2154480b6bc436009eaa9987f0e3",
+      "adopted_capabilities": ["publish-stage-artifact-manifest-principle"]
     },
     {
       "id": "toonflow-web",
@@ -87,7 +87,7 @@
       "repository": "https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant.git",
       "local_path": "/Users/jiulongpopengyuyan/Desktop/cloudstar/project/ohter2/AI-Novel-Writing-Assistant",
       "default_branch": "novel-custom",
-      "tracking_ref": "origin/novel-custom",
+      "tracking_ref": "novel-custom",
       "tracking_mode": "reference-only",
       "license": "AGPL-3.0-only",
       "relevant_areas": ["novel-export", "drama-export", "chapter-contract", "character-contract"],

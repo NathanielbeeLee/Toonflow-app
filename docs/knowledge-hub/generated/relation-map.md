@@ -11,6 +11,9 @@
 | workflow.novel-to-video | uses | feature.voice-utterance-studio |
 | workflow.novel-to-video | uses | feature.normalized-timeline |
 | workflow.novel-to-video | uses | feature.ffmpeg-preview-render |
+| workflow.novel-to-video | uses | feature.media-qa |
+| workflow.novel-to-video | uses | feature.budget-review-gates |
+| workflow.novel-to-video | uses | feature.publish-package |
 | feature.agent-directing | documented_by | document.feature-catalog |
 | feature.asset-consistency | documented_by | document.feature-catalog |
 | feature.infinite-canvas | implemented_by | component.frontend-source |
@@ -51,6 +54,12 @@
 | feature.budget-review-gates | reviews | feature.ffmpeg-preview-render |
 | feature.budget-review-gates | uses | feature.media-qa |
 | feature.budget-review-gates | documented_by | document.database-tasks |
+| feature.publish-package | reads | feature.ffmpeg-preview-render |
+| feature.publish-package | requires | feature.media-qa |
+| feature.publish-package | requires | feature.budget-review-gates |
+| feature.publish-package | writes | table.generation-tasks |
+| feature.publish-package | visualized_by | feature.durable-task-center |
+| feature.publish-package | documented_by | document.database-tasks |
 | feature.local-security-diagnostics | protects | api.generation-tasks |
 | feature.local-security-diagnostics | documents | document.troubleshooting |
 | feature.durable-task-center | reads | table.generation-tasks |

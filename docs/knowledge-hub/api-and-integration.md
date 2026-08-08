@@ -30,6 +30,8 @@
 | `POST /api/generationTasks/limits/budget/get` / `upsert` | 查询或维护项目预算与未知价格策略 |
 | `POST /api/generationTasks/limits/pricing/list` / `upsert` / `delete` | 维护用户提供的模型价格规则 |
 | `POST /api/composition/timeline/review/latest` / `record` | 查询或追加绑定成片 checksum 的审核记录 |
+| `POST /api/composition/timeline/publish/create` | 对通过 QA 和审核门禁的 `final-high` 成片创建持久交付包任务 |
+| `POST /api/composition/timeline/publish/latest` | 查询当前剧本最近一次发布包状态、清单和下载地址 |
 | `POST /api/setting/diagnostics/export` | 导出不含密钥和业务内容的本机脱敏诊断 JSON |
 
-正式版本化 OpenAPI、API Key、webhook 尚未实现。当前接口不应直接暴露到公网。时间线渲染只调用本机 FFmpeg，不调用付费生成 API；请求必须使用服务端保存的 timeline ID，不能传入任意本机输入或输出路径。
+正式版本化 OpenAPI、API Key、webhook 尚未实现。当前接口不应直接暴露到公网。时间线渲染和发布打包只调用本机工具，不调用付费生成 API；请求必须使用服务端保存的 timeline/composition ID，不能传入任意本机输入或输出路径。

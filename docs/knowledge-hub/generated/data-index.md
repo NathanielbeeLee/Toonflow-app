@@ -38,6 +38,11 @@
 | pricing_rules | 项目预算与成片审核 | feature.budget-review-gates |
 | usage_ledger | 项目预算与成片审核 | feature.budget-review-gates |
 | composition_reviews | 项目预算与成片审核 | feature.budget-review-gates |
+| publish_packages | 审核门禁发布交付包 | feature.publish-package |
+| composition_jobs | 审核门禁发布交付包 | feature.publish-package |
+| media_qa_reports | 审核门禁发布交付包 | feature.publish-package |
+| composition_reviews | 审核门禁发布交付包 | feature.publish-package |
+| generation_tasks | 审核门禁发布交付包 | feature.publish-package |
 | o_user | 本地认证与脱敏诊断 | feature.local-security-diagnostics |
 | schema_migrations | 本地认证与脱敏诊断 | feature.local-security-diagnostics |
 | generation_tasks | 本地认证与脱敏诊断 | feature.local-security-diagnostics |

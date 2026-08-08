@@ -35,6 +35,7 @@
 - `composition_jobs`：保存时间线版本、renderer、preset、输入/输出校验和、输出路径、媒体时长、结构化渲染日志、持久任务和错误归属。
 - `project_audio_clips`：保存剧本级 SFX、环境声和 BGM 片段，引用现有声音资产并记录开始/入点/时长/增益/淡入淡出。
 - `media_qa_reports`：保存成片 checksum 对应的 QA 状态、媒体摘要、问题代码/级别/时间段和任务归属。
+- `publish_packages`：保存同一高清成片、QA 报告和审核记录对应的交付包状态、ZIP 路径/校验和/大小、manifest 和任务归属。
 
 timeline schema v1 包含画幅、fps、BT.709、48kHz、响度/true peak 目标，以及视频、原生音频、对白、旁白、SFX、环境声、BGM 和字幕轨。
 
@@ -43,6 +44,8 @@ timeline schema v1 包含画幅、fps、BT.709、48kHz、响度/true peak 目标
 `preview-low` 和 `final-high` 支持视频裁剪/串联、横竖屏统一、H.264/AAC 和 faststart。六类声音按 `startMs` 对齐并统一为 48kHz 立体声；dialogue sidechain 压低背景总线，24-bit PCM 中间母带再执行 loudnorm 两遍标准化。字幕由 Sharp 生成透明图层后使用 FFmpeg overlay 按 cue 烧录，不要求 FFmpeg 编译 drawtext/libass。探测不到音轨或文件缺失时记录到结构化日志并跳过。媒体工具只通过参数数组启动，不拼接任意 shell 命令；可用 `FFPROBE_PATH`、`FFMPEG_PATH` 指定可执行文件。
 
 `composition.qa` 使用 `qa` 通道，固定绑定已成功 composition job 的输出 checksum；输出变化后旧报告不会被复用。任务执行成功只表示检查完成，业务结果仍可能是 `passed`、`warning` 或 `failed`。报告错误/取消/重试同步回 `media_qa_reports`，应用重启后本地任务可安全恢复。
+
+`composition.publish` 使用独立 `publish` 通道，只接受 `final-high`，并在入队和执行时两次核对同一 output checksum 的 QA 与审核关卡。ZIP 先写 `.partial-<taskId>`，取消或失败清理半成品，完成时原子替换；包内 manifest 列出时间线版本、质量摘要、审核与各文件 SHA-256。相同 composition/QA/review 组合有唯一约束，成功包可直接复用。
 
 ## 预算、价格与审核
 
