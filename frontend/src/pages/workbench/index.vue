@@ -93,6 +93,7 @@ const rightBtnList = ref([
   { type: "btn", path: "/scriptAgent", labelKey: "workbench.menu.scriptAgent", icon: "i-color-filter", nodelOnly: true },
   { type: "btn", path: "/script", labelKey: "workbench.menu.scriptManage", icon: "i-document-folder" },
   { type: "btn", path: "/cornerScape", labelKey: "workbench.menu.cornerScape", icon: "i-peoples-two" },
+  { type: "btn", path: "/voiceStudio", labelKey: "workbench.menu.voiceStudio", icon: "i-headset-one" },
   { type: "btn", path: "/production", labelKey: "workbench.menu.production", icon: "i-carousel-video" },
   { type: "divider" },
   { type: "btn", path: "/assets", labelKey: "workbench.menu.assetCenter", icon: "i-receive" },

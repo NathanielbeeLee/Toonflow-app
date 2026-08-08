@@ -1,9 +1,10 @@
 import express from "express";
 import { z } from "zod";
-import { success } from "@/lib/responseFormat";
+import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import { voiceStudioRepository } from "@/services/voice-studio/repository";
 import { enqueueUtteranceTts } from "@/services/task-engine/enqueueUtteranceTts";
+import { db } from "@/utils/db";
 
 const router = express.Router();
 const utteranceKinds = ["dialogue", "narration", "chorus"] as const;
@@ -58,7 +59,11 @@ router.post(
     requestId: z.string().trim().min(1),
   }),
   async (req, res) => {
-    res.status(200).send(success(await enqueueUtteranceTts(req.body)));
+    try {
+      res.status(200).send(success(await enqueueUtteranceTts(req.body)));
+    } catch (cause) {
+      res.status(400).send(error(cause instanceof Error ? cause.message : String(cause)));
+    }
   },
 );
 
@@ -70,15 +75,28 @@ router.post(
     requestId: z.string().trim().min(1),
   }),
   async (req, res) => {
-    const data = [];
-    for (const [index, utteranceId] of req.body.utteranceIds.entries()) {
-      data.push(await enqueueUtteranceTts({
-        projectId: req.body.projectId,
-        utteranceId,
-        requestId: `${req.body.requestId}:${index}`,
-      }));
+    try {
+      const rows = await (db as any)("utterances")
+        .where("project_id", req.body.projectId)
+        .whereIn("id", req.body.utteranceIds)
+        .select("id", "speaker", "voice_cast_id");
+      if (rows.length !== req.body.utteranceIds.length) throw new Error("部分台词不存在或不属于当前项目");
+      const missingCast = rows.filter((row: any) => !row.voice_cast_id);
+      if (missingCast.length) {
+        throw new Error(`请先为这些台词分配音色：${missingCast.map((row: any) => row.speaker).join("、")}`);
+      }
+      const data = [];
+      for (const [index, utteranceId] of req.body.utteranceIds.entries()) {
+        data.push(await enqueueUtteranceTts({
+          projectId: req.body.projectId,
+          utteranceId,
+          requestId: `${req.body.requestId}:${index}`,
+        }));
+      }
+      res.status(200).send(success(data));
+    } catch (cause) {
+      res.status(400).send(error(cause instanceof Error ? cause.message : String(cause)));
     }
-    res.status(200).send(success(data));
   },
 );
 

@@ -505,6 +505,7 @@ function taskTypeLabel(type: string) {
     "video.generate": $t("workbench.task.durable.videoGenerate"),
     "asset.image.generate": $t("workbench.task.durable.assetImageGenerate"),
     "storyboard.image.generate": $t("workbench.task.durable.storyboardImageGenerate"),
+    "tts.utterance.generate": $t("workbench.task.durable.utteranceTtsGenerate"),
   };
   return labels[type] || type;
 }

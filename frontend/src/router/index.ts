@@ -48,6 +48,10 @@ const router = createRouter({
           component: () => import("@/views/cornerScape/index.vue"),
         },
         {
+          path: "/voiceStudio",
+          component: () => import("@/views/voiceStudio/index.vue"),
+        },
+        {
           path: "/production",
           component: () => import("@/views/production/index.vue"),
         },

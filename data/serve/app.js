@@ -257523,6 +257523,7 @@ var init_utterances = __esm({
     init_middleware();
     init_repository2();
     init_enqueueUtteranceTts();
+    init_db();
     router177 = import_express177.default.Router();
     utteranceKinds = ["dialogue", "narration", "chorus"];
     router177.post(
@@ -257572,7 +257573,11 @@ var init_utterances = __esm({
         requestId: external_exports.string().trim().min(1)
       }),
       async (req, res) => {
-        res.status(200).send(success3(await enqueueUtteranceTts(req.body)));
+        try {
+          res.status(200).send(success3(await enqueueUtteranceTts(req.body)));
+        } catch (cause) {
+          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
+        }
       }
     );
     router177.post(
@@ -257583,15 +257588,25 @@ var init_utterances = __esm({
         requestId: external_exports.string().trim().min(1)
       }),
       async (req, res) => {
-        const data = [];
-        for (const [index, utteranceId] of req.body.utteranceIds.entries()) {
-          data.push(await enqueueUtteranceTts({
-            projectId: req.body.projectId,
-            utteranceId,
-            requestId: `${req.body.requestId}:${index}`
-          }));
+        try {
+          const rows = await db("utterances").where("project_id", req.body.projectId).whereIn("id", req.body.utteranceIds).select("id", "speaker", "voice_cast_id");
+          if (rows.length !== req.body.utteranceIds.length) throw new Error("\u90E8\u5206\u53F0\u8BCD\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE");
+          const missingCast = rows.filter((row) => !row.voice_cast_id);
+          if (missingCast.length) {
+            throw new Error(`\u8BF7\u5148\u4E3A\u8FD9\u4E9B\u53F0\u8BCD\u5206\u914D\u97F3\u8272\uFF1A${missingCast.map((row) => row.speaker).join("\u3001")}`);
+          }
+          const data = [];
+          for (const [index, utteranceId] of req.body.utteranceIds.entries()) {
+            data.push(await enqueueUtteranceTts({
+              projectId: req.body.projectId,
+              utteranceId,
+              requestId: `${req.body.requestId}:${index}`
+            }));
+          }
+          res.status(200).send(success3(data));
+        } catch (cause) {
+          res.status(400).send(error50(cause instanceof Error ? cause.message : String(cause)));
         }
-        res.status(200).send(success3(data));
       }
     );
     utterances_default = router177;
