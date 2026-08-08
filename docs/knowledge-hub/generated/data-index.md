@@ -7,6 +7,11 @@
 | generation_tasks | 持久视频任务 | feature.durable-video-tasks |
 | task_dependencies | 持久视频任务 | feature.durable-video-tasks |
 | project_events | 持久视频任务 | feature.durable-video-tasks |
+| generation_tasks | 持久批量图片任务 | feature.durable-image-tasks |
+| provider_limits | 持久批量图片任务 | feature.durable-image-tasks |
+| o_image | 持久批量图片任务 | feature.durable-image-tasks |
+| o_storyboard | 持久批量图片任务 | feature.durable-image-tasks |
+| provider_limits | 供应商与模型限流 | feature.provider-limits |
 | generation_tasks | 持久任务中心 | feature.durable-task-center |
 | generation_tasks | generation_tasks | table.generation-tasks |
 | generation_tasks | 供应商远端任务恢复 | feature.provider-job-resume |

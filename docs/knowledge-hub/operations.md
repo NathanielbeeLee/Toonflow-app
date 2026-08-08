@@ -30,6 +30,8 @@ yarn frontend:sync
 
 数据库升级由 `schema_migrations` 记录。操作真实数据库前先停止应用并复制 `db2.sqlite` 作为可恢复备份；不要在任务运行时删除数据库或媒体目录。
 
+任务默认对同一供应商/模型/通道限制并发 2、RPM 10。可在“任务中心 → 供应商限流”写入 `provider_limits` 覆盖默认值；模型填 `*` 表示供应商在该通道的通用规则。环境变量 `TOONFLOW_PROVIDER_CONCURRENCY`、`TOONFLOW_PROVIDER_RPM` 只作为没有数据库规则时的默认值。
+
 ## 上游升级
 
 GitHub Sync fork 只更新用户 fork 的 master，不会自动更新本地或 `toon-custom`。同步后 fetch，再把 `origin/master` merge 到 `toon-custom`；共享分支不要破坏性 rebase。

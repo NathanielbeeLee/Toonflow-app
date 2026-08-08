@@ -6,6 +6,7 @@
 | workflow.novel-to-video | uses | feature.asset-consistency |
 | workflow.novel-to-video | uses | feature.infinite-canvas |
 | workflow.novel-to-video | uses | feature.durable-video-tasks |
+| workflow.novel-to-video | uses | feature.durable-image-tasks |
 | feature.agent-directing | documented_by | document.feature-catalog |
 | feature.asset-consistency | documented_by | document.feature-catalog |
 | feature.infinite-canvas | implemented_by | component.frontend-source |
@@ -17,6 +18,10 @@
 | feature.durable-video-tasks | uses | concept.worker-lease |
 | feature.durable-video-tasks | uses | feature.provider-job-resume |
 | feature.durable-video-tasks | troubleshoots | troubleshooting.unknown-provider-state |
+| feature.durable-image-tasks | writes | table.generation-tasks |
+| feature.durable-image-tasks | uses | feature.provider-limits |
+| feature.durable-image-tasks | visualized_by | feature.durable-task-center |
+| feature.provider-limits | protects | feature.durable-video-tasks |
 | feature.durable-task-center | reads | table.generation-tasks |
 | feature.durable-task-center | uses | api.generation-tasks |
 | feature.durable-task-center | troubleshoots | troubleshooting.unknown-provider-state |
@@ -27,6 +32,8 @@
 | feature.provider-job-resume | uses | provider.volcengine |
 | feature.provider-job-resume | depends_on | concept.worker-lease |
 | provider.volcengine | documented_by | document.database-tasks |
+| provider.openai-compatible | uses | feature.provider-job-resume |
+| provider.openai-compatible | documented_by | document.providers-models |
 | troubleshooting.unknown-provider-state | documented_by | document.troubleshooting |
 | document.upstream-watch | documented_by | document.feature-catalog |
 | document.frontend-upstream | documented_by | document.upstream-watch |

@@ -86,10 +86,22 @@
 - 支持取消、失败/取消后重新入队，以及 `manual_review` 人工确认后重试；界面明确提示远端取消能力不确定和重复扣费风险。
 - 前端完整构建、同步和根后端 `tsc --noEmit` 通过；未调用付费 API。
 
+## 2026-08-08 第六批：OpenAI/CLIProxyAPI 与持久图片任务
+
+落地提交：`c4a5c5a0`；限流表行标识修订：`1c0f9c11`。
+
+- 只读探测本机 CLIProxyAPI 7.2.120：`/v1/models` 返回 10 个文本/Codex/GPT Image 模型，没有视频模型；无效模型探针确认 `/openai/v1/videos` 与 `/v1/videos` 路由存在，未发起真实生成。
+- 参考源码已继续增量扫描到 `31a4e9b4` / v7.2.123；图片/视频 handler 未变化，新提交无需追加吸收，下次从该游标之后继续。
+- OpenAI 标准供应商升级到 2.2，新增 GPT Image 文生图、官方 Sora 异步 submit/poll/content 流程，以及 CLIProxyAPI 的 `/openai/v1` 自动视频路由；支持首帧图片、job ID 持久化与鉴权下载。
+- 当前本机 CLIProxyAPI 没有暴露 xAI/Sora 视频凭据，适配代码已就绪但不能宣称本机真实视频生成可用；需先完成代理侧 xAI 登录或配置真正支持 Videos API 的上游。
+- 批量资产图和分镜图改为逐项持久任务，包含资源去重、幂等、lease、取消、重启恢复和付费边界后的人工确认保护。
+- 启用 `provider_limits`：按供应商、模型和任务通道控制最大并发、RPM 与冷却时间；任务中心提供可编辑界面，默认并发 2、RPM 10。
+- 本地 OpenAI/CLIProxyAPI Mock、前后端类型检查和完整 `yarn build` 通过；未调用任何真实图片或视频生成 API。
+
 ## 下一批优先级
 
-1. 把批量图片迁入同一任务引擎，并增加按供应商/模型的并发和 RPM 限流。
-2. 为更多视频供应商实现 `submit/poll/resume/cancel`，不支持远端取消的供应商继续保留本地取消边界。
+1. 为 Minimax、可灵等更多视频供应商拆分 `submit/poll/resume`；无远端取消 API 时继续只做本地取消。
+2. 将单张图片编辑/生成入口和 TTS 迁入持久任务，避免仍存在的页面级后台 Promise。
 3. 吸收 Huobao 的逐句 TTS/角色音色流程。
 4. 吸收 OpenMontage 的规范化时间线、多轨混音与媒体 QA。
 
