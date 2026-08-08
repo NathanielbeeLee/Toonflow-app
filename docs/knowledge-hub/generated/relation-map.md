@@ -30,10 +30,14 @@
 | concept.worker-lease | writes | table.generation-tasks |
 | feature.provider-job-resume | writes | table.generation-tasks |
 | feature.provider-job-resume | uses | provider.volcengine |
+| feature.provider-job-resume | uses | provider.openai-compatible |
+| feature.provider-job-resume | uses | provider.minimax |
 | feature.provider-job-resume | depends_on | concept.worker-lease |
 | provider.volcengine | documented_by | document.database-tasks |
 | provider.openai-compatible | uses | feature.provider-job-resume |
 | provider.openai-compatible | documented_by | document.providers-models |
+| provider.minimax | uses | feature.provider-job-resume |
+| provider.minimax | documented_by | document.providers-models |
 | troubleshooting.unknown-provider-state | documented_by | document.troubleshooting |
 | document.upstream-watch | documented_by | document.feature-catalog |
 | document.frontend-upstream | documented_by | document.upstream-watch |

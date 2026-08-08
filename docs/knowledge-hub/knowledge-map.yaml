@@ -170,16 +170,18 @@
       "type": "feature",
       "name": "供应商远端任务恢复",
       "summary": "保存视频供应商 job ID，重启或轮询失败后继续查询原任务",
-      "user_entry": { "page": "制作工作台", "action": "使用普通火山引擎批量生成视频" },
-      "source_paths": ["src/utils/ai.ts", "src/services/task-engine/handlers/videoGeneration.ts", "data/vendor/volcengine.ts"],
+      "user_entry": { "page": "制作工作台", "action": "使用支持远端任务恢复的视频供应商生成视频" },
+      "source_paths": ["src/utils/ai.ts", "src/services/task-engine/handlers/videoGeneration.ts", "data/vendor/volcengine.ts", "data/vendor/openai.ts", "data/vendor/minimax.ts"],
       "tables": ["generation_tasks"],
       "relations": [
         { "type": "writes", "target": "table.generation-tasks" },
         { "type": "uses", "target": "provider.volcengine" },
+        { "type": "uses", "target": "provider.openai-compatible" },
+        { "type": "uses", "target": "provider.minimax" },
         { "type": "depends_on", "target": "concept.worker-lease" }
       ],
       "introduced_in": "toon-custom/provider-resume-2026-08-08",
-      "last_verified_commit": "toon-custom/d5eca2c"
+      "last_verified_commit": "toon-custom/6acff39d"
     },
     {
       "id": "provider.volcengine",
@@ -203,6 +205,19 @@
       ],
       "introduced_in": "toon-custom/c4a5c5a0",
       "last_verified_commit": "toon-custom/c4a5c5a0"
+    },
+    {
+      "id": "provider.minimax",
+      "type": "provider",
+      "name": "MiniMax 海螺视频供应商",
+      "summary": "保存海螺 task ID，并在重启或轮询失败后继续查询原任务",
+      "source_paths": ["data/vendor/minimax.ts", "scripts/verify-minimax-provider.ts"],
+      "relations": [
+        { "type": "uses", "target": "feature.provider-job-resume" },
+        { "type": "documented_by", "target": "document.providers-models" }
+      ],
+      "introduced_in": "toon-custom/6acff39d",
+      "last_verified_commit": "toon-custom/6acff39d"
     },
     {
       "id": "troubleshooting.unknown-provider-state",

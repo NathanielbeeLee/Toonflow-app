@@ -98,9 +98,19 @@
 - 启用 `provider_limits`：按供应商、模型和任务通道控制最大并发、RPM 与冷却时间；任务中心提供可编辑界面，默认并发 2、RPM 10。
 - 本地 OpenAI/CLIProxyAPI Mock、前后端类型检查和完整 `yarn build` 通过；未调用任何真实图片或视频生成 API。
 
+## 2026-08-08 第七批：MiniMax 海螺任务恢复
+
+落地提交：`6acff39d`。
+
+- MiniMax 供应商升级到 2.2，把原有 `/v1/video_generation` 提交、`/v1/query/video_generation` 查询和文件下载拆成 `videoSubmit/videoPoll`。
+- 海螺远端 task ID 会在提交后立即写入 `generation_tasks.provider_job_id`；应用重启、查询网络错误和本地保存失败后继续查询原任务。
+- 首帧和首尾帧预处理保持原逻辑；旧 `videoRequest` 继续兼容非持久调用。
+- 当前模板没有已确认的 MiniMax 远端取消接口，因此取消只停止 Toonflow 后续处理，不宣称取消供应商端任务。
+- 本地 Mock、根 TypeScript 检查和后端构建通过；未调用真实 MiniMax API。
+
 ## 下一批优先级
 
-1. 为 Minimax、可灵等更多视频供应商拆分 `submit/poll/resume`；无远端取消 API 时继续只做本地取消。
+1. 为可灵等更多视频供应商拆分 `submit/poll/resume`；无远端取消 API 时继续只做本地取消。
 2. 将单张图片编辑/生成入口和 TTS 迁入持久任务，避免仍存在的页面级后台 Promise。
 3. 吸收 Huobao 的逐句 TTS/角色音色流程。
 4. 吸收 OpenMontage 的规范化时间线、多轨混音与媒体 QA。
