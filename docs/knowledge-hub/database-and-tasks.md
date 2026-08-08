@@ -31,4 +31,4 @@ timeline schema v1 包含画幅、fps、BT.709、48kHz、响度/true peak 目标
 
 `composition.render` 使用 `compose` 通道，由本地 FFmpeg worker 执行。任务固定绑定 timeline ID、版本和校验和；输入变化必须产生新时间线版本，不能在后台悄悄替换。渲染先写 `.partial` 临时文件，成功后原子移动到本地 OSS，并计算 SHA-256；失败或取消会清理半成品。本地任务在 lease 过期后可安全重新排队，不进入付费供应商的人工确认态。
 
-当前 `preview-low` 支持视频裁剪、按时间线顺序串联、横竖屏统一、H.264/AAC MP4 和 faststart。AAC 为静音占位，尚未混入原生声音、逐句配音、BGM 或字幕。媒体工具只通过参数数组启动 `ffprobe`/`ffmpeg`，不拼接任意 shell 命令；可用 `FFPROBE_PATH`、`FFMPEG_PATH` 指定可执行文件。
+当前 `preview-low` 支持视频裁剪、按时间线顺序串联、横竖屏统一、H.264/AAC MP4 和 faststart。native、dialogue 和 narration 片段按 `startMs` 对齐混合，统一重采样为 48kHz 立体声并应用 gain/fade；探测不到音轨或文件缺失时记录到结构化日志并跳过。尚未实现 dialogue ducking、目标响度/true peak、SFX、环境声、BGM 或字幕烧录。媒体工具只通过参数数组启动 `ffprobe`/`ffmpeg`，不拼接任意 shell 命令；可用 `FFPROBE_PATH`、`FFMPEG_PATH` 指定可执行文件。
