@@ -148,7 +148,7 @@
         <t-input-number v-model="limitForm.rpm" label="RPM" :min="1" :max="10000" />
         <t-input-number v-model="limitForm.cooldownMs" :label="$t('workbench.task.durable.limits.cooldown')" :min="0" :max="60000" />
       </div>
-      <t-table :data="limitRows" :columns="limitColumns" row-key="provider" size="small" :loading="limitsLoading">
+      <t-table :data="limitRows" :columns="limitColumns" row-key="key" size="small" :loading="limitsLoading">
         <template #operation="{ row }">
           <t-button size="small" variant="text" @click="editLimit(row)">{{ $t("workbench.task.durable.limits.edit") }}</t-button>
         </template>
@@ -211,6 +211,7 @@ interface LegacyTask {
 }
 
 interface ProviderLimit {
+  key?: string;
   provider: string;
   model: string;
   lane: DurableLane;
@@ -397,7 +398,7 @@ async function openLimits() {
   limitsLoading.value = true;
   try {
     const { data } = await axios.post("/generationTasks/limits/list");
-    limitRows.value = data;
+    limitRows.value = data.map((row: ProviderLimit) => ({ ...row, key: `${row.provider}:${row.model}:${row.lane}` }));
   } catch (error) {
     window.$message.error(errorText(error, $t("workbench.task.durable.limits.loadFailed")));
   } finally {
