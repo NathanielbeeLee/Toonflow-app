@@ -238145,12 +238145,17 @@ async function probeMedia(userPath) {
   try {
     const { stdout } = await execFileAsync(
       executable,
-      ["-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", absolutePath],
+      ["-v", "error", "-show_entries", "format=duration:stream=codec_type", "-of", "json", absolutePath],
       { timeout: 15e3, maxBuffer: 64 * 1024 }
     );
-    const seconds2 = Number(stdout.trim());
+    const data = JSON.parse(stdout);
+    const seconds2 = Number(data.format?.duration);
     if (!Number.isFinite(seconds2) || seconds2 <= 0) return null;
-    return { durationMs: Math.max(1, Math.round(seconds2 * 1e3)) };
+    return {
+      durationMs: Math.max(1, Math.round(seconds2 * 1e3)),
+      hasAudio: Boolean(data.streams?.some((stream4) => stream4.codec_type === "audio")),
+      hasVideo: Boolean(data.streams?.some((stream4) => stream4.codec_type === "video"))
+    };
   } catch (error73) {
     console.warn("[\u5A92\u4F53\u63A2\u6D4B] ffprobe \u4E0D\u53EF\u7528\u6216\u6587\u4EF6\u65E0\u6CD5\u63A2\u6D4B:", error73 instanceof Error ? error73.message : String(error73));
     return null;
@@ -238561,11 +238566,13 @@ async function renderTimelinePreview(input) {
   const clips = input.timeline.videoTracks.flatMap((track) => track.clips).sort((a, b) => a.startMs - b.startMs);
   if (clips.length === 0) throw new Error("\u65F6\u95F4\u7EBF\u6CA1\u6709\u53EF\u6E32\u67D3\u7684\u89C6\u9891\u7247\u6BB5\uFF0C\u8BF7\u5148\u5728\u5236\u4F5C\u5DE5\u4F5C\u53F0\u5B8C\u6210\u9009\u7247\u5E76\u91CD\u65B0\u6784\u5EFA\u65F6\u95F4\u7EBF");
   const absoluteInputs = [];
+  const videoMedia = [];
   for (const clip of clips) {
     const absolutePath = await utils_default.oss.getAbsolutePath(clip.path);
     const stat = await import_promises5.default.stat(absolutePath).catch(() => null);
     if (!stat?.isFile()) throw new Error(`\u89C6\u9891\u7247\u6BB5\u4E0D\u5B58\u5728: ${clip.path}`);
     absoluteInputs.push(absolutePath);
+    videoMedia.push(await probeMedia(clip.path));
   }
   const absoluteOutput = await utils_default.oss.getAbsolutePath(input.outputPath);
   await import_promises5.default.mkdir(import_node_path6.default.dirname(absoluteOutput), { recursive: true });
@@ -238581,7 +238588,46 @@ async function renderTimelinePreview(input) {
     args.push("-ss", seconds(clip.inMs), "-t", seconds(clip.durationMs), "-i", absoluteInputs[index]);
   });
   const durationMs = clips.reduce((total, clip) => total + clip.durationMs, 0);
-  const silentAudioIndex = clips.length;
+  const audioFilters = [];
+  const audioLabels = [];
+  const skippedAudio = [];
+  const nativeTrack = input.timeline.audioTracks.find((track) => track.kind === "native");
+  for (const nativeClip of nativeTrack?.clips || []) {
+    const videoInputIndex = clips.findIndex((clip) => clip.sourceId === nativeClip.sourceId);
+    if (videoInputIndex < 0 || !videoMedia[videoInputIndex]?.hasAudio) {
+      skippedAudio.push({ id: nativeClip.id, reason: "\u6E90\u89C6\u9891\u6CA1\u6709\u53EF\u7528\u97F3\u8F68" });
+      continue;
+    }
+    const label = `audio${audioLabels.length}`;
+    audioFilters.push(buildAudioFilter(`${videoInputIndex}:a:0`, nativeClip, label));
+    audioLabels.push(`[${label}]`);
+  }
+  const voiceClips = input.timeline.audioTracks.filter((track) => track.kind === "dialogue" || track.kind === "narration").flatMap((track) => track.clips.map((clip) => ({ trackKind: track.kind, clip })));
+  let nextInputIndex = clips.length;
+  for (const { trackKind, clip } of voiceClips) {
+    const absolutePath = await utils_default.oss.getAbsolutePath(clip.path);
+    const stat = await import_promises5.default.stat(absolutePath).catch(() => null);
+    const media = stat?.isFile() ? await probeMedia(clip.path) : null;
+    if (!stat?.isFile() || !media?.hasAudio) {
+      skippedAudio.push({ id: clip.id, reason: `${trackKind === "dialogue" ? "\u5BF9\u767D" : "\u65C1\u767D"}\u97F3\u9891\u7F3A\u5931\u6216\u4E0D\u53EF\u8BFB\u53D6` });
+      continue;
+    }
+    const inputIndex = nextInputIndex++;
+    args.push("-ss", seconds(clip.inMs), "-t", seconds(clip.durationMs), "-i", absolutePath);
+    const label = `audio-input-${inputIndex}`;
+    audioFilters.push(buildAudioFilter(`${inputIndex}:a:0`, clip, label));
+    audioLabels.push(`[${label}]`);
+  }
+  const silentAudioIndex = nextInputIndex;
+  const silentLabel = `audio-silent`;
+  audioFilters.push(
+    `[${silentAudioIndex}:a:0]atrim=duration=${seconds(durationMs)},asetpts=PTS-STARTPTS,aformat=sample_fmts=fltp:sample_rates=${input.timeline.settings.audioSampleRate}:channel_layouts=stereo[${silentLabel}]`
+  );
+  audioLabels.unshift(`[${silentLabel}]`);
+  filterParts.push(...audioFilters);
+  filterParts.push(
+    `${audioLabels.join("")}amix=inputs=${audioLabels.length}:duration=longest:normalize=0,atrim=duration=${seconds(durationMs)},alimiter=limit=0.95:attack=5:release=50[aout]`
+  );
   args.push(
     "-f",
     "lavfi",
@@ -238594,7 +238640,7 @@ async function renderTimelinePreview(input) {
     "-map",
     "[vout]",
     "-map",
-    `${silentAudioIndex}:a:0`,
+    "[aout]",
     "-c:v",
     "libx264",
     "-preset",
@@ -238620,6 +238666,8 @@ async function renderTimelinePreview(input) {
     taskId: input.taskId,
     preset: input.preset,
     clipCount: clips.length,
+    audioClipCount: audioLabels.length - 1,
+    skippedAudioCount: skippedAudio.length,
     durationMs,
     width: dimensions.width,
     height: dimensions.height
@@ -238642,11 +238690,15 @@ async function renderTimelinePreview(input) {
       width: dimensions.width,
       height: dimensions.height,
       clipCount: clips.length,
+      audioClipCount: audioLabels.length - 1,
+      skippedAudio,
       renderLog: {
         renderer: "ffmpeg",
         executable,
         preset: input.preset,
         clipCount: clips.length,
+        audioClipCount: audioLabels.length - 1,
+        skippedAudio,
         stderrTail: processResult.stderrTail.slice(-4e3)
       }
     };
@@ -238654,6 +238706,21 @@ async function renderTimelinePreview(input) {
     await import_promises5.default.rm(partialOutput, { force: true }).catch(() => void 0);
     throw error73;
   }
+}
+function buildAudioFilter(inputLabel, clip, outputLabel) {
+  const filters3 = [
+    `[${inputLabel}]atrim=duration=${seconds(clip.durationMs)}`,
+    "asetpts=PTS-STARTPTS",
+    "aresample=48000",
+    "aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo"
+  ];
+  if (clip.gainDb !== 0) filters3.push(`volume=${clip.gainDb}dB`);
+  if (clip.fadeInMs > 0) filters3.push(`afade=t=in:st=0:d=${seconds(clip.fadeInMs)}`);
+  if (clip.fadeOutMs > 0 && clip.durationMs > clip.fadeOutMs) {
+    filters3.push(`afade=t=out:st=${seconds(clip.durationMs - clip.fadeOutMs)}:d=${seconds(clip.fadeOutMs)}`);
+  }
+  if (clip.startMs > 0) filters3.push(`adelay=${clip.startMs}:all=1`);
+  return `${filters3.join(",")}[${outputLabel}]`;
 }
 var import_node_crypto5, import_node_fs2, import_promises5, import_node_path6, import_node_child_process2, compositionRenderPresets;
 var init_renderer = __esm({
@@ -240542,7 +240609,7 @@ async function enqueueCompositionRender(input) {
   if (clipCount === 0) throw new Error("\u65F6\u95F4\u7EBF\u6CA1\u6709\u5DF2\u9009\u89C6\u9891\uFF0C\u8BF7\u5148\u5B8C\u6210\u9009\u7247\u5E76\u91CD\u65B0\u6784\u5EFA\u65F6\u95F4\u7EBF");
   const inputChecksum = stableIdempotencyKey({
     renderer: "ffmpeg",
-    rendererVersion: 1,
+    rendererVersion: 2,
     preset: input.preset,
     timelineChecksum: timeline.checksum
   });

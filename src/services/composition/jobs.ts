@@ -55,7 +55,7 @@ export async function enqueueCompositionRender(input: {
 
   const inputChecksum = stableIdempotencyKey({
     renderer: "ffmpeg",
-    rendererVersion: 1,
+    rendererVersion: 2,
     preset: input.preset,
     timelineChecksum: timeline.checksum,
   });

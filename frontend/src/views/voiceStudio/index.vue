@@ -112,7 +112,7 @@
           <div class="timelineHeader">
             <t-alert
               theme="info"
-              message="时间线按版本保存。低清预览在本机用 FFmpeg 渲染，不调用付费 API；当前先串联画面并生成静音 AAC，分轨混音将在下一阶段接入。" />
+              message="时间线按版本保存。低清预览在本机用 FFmpeg 渲染，不调用付费 API；会串联画面并混入可用的视频原声、对白和旁白，缺失音轨会安全跳过。" />
             <t-space>
               <t-button variant="outline" :disabled="!selectedScriptId" :loading="buildingTimeline" @click="buildTimeline">构建新版本</t-button>
               <t-button

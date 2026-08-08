@@ -10,6 +10,8 @@ import { probeMedia } from "@/services/media/probe";
 export const compositionRenderPresets = ["preview-low"] as const;
 export type CompositionRenderPreset = (typeof compositionRenderPresets)[number];
 
+type TimelineAudioClip = NormalizedTimeline["audioTracks"][number]["clips"][number];
+
 interface RenderInput {
   taskId: string;
   timeline: NormalizedTimeline;
@@ -88,11 +90,13 @@ export async function renderTimelinePreview(input: RenderInput) {
   if (clips.length === 0) throw new Error("时间线没有可渲染的视频片段，请先在制作工作台完成选片并重新构建时间线");
 
   const absoluteInputs: string[] = [];
+  const videoMedia = [];
   for (const clip of clips) {
     const absolutePath = await u.oss.getAbsolutePath(clip.path);
     const stat = await fs.stat(absolutePath).catch(() => null);
     if (!stat?.isFile()) throw new Error(`视频片段不存在: ${clip.path}`);
     absoluteInputs.push(absolutePath);
+    videoMedia.push(await probeMedia(clip.path));
   }
 
   const absoluteOutput = await u.oss.getAbsolutePath(input.outputPath);
@@ -112,14 +116,59 @@ export async function renderTimelinePreview(input: RenderInput) {
     args.push("-ss", seconds(clip.inMs), "-t", seconds(clip.durationMs), "-i", absoluteInputs[index]);
   });
   const durationMs = clips.reduce((total, clip) => total + clip.durationMs, 0);
-  const silentAudioIndex = clips.length;
+  const audioFilters: string[] = [];
+  const audioLabels: string[] = [];
+  const skippedAudio: Array<{ id: string; reason: string }> = [];
+  const nativeTrack = input.timeline.audioTracks.find((track) => track.kind === "native");
+  for (const nativeClip of nativeTrack?.clips || []) {
+    const videoInputIndex = clips.findIndex(
+      (clip) => clip.sourceId === nativeClip.sourceId && clip.startMs === nativeClip.startMs,
+    );
+    if (videoInputIndex < 0 || !videoMedia[videoInputIndex]?.hasAudio) {
+      skippedAudio.push({ id: nativeClip.id, reason: "源视频没有可用音轨" });
+      continue;
+    }
+    const label = `audio${audioLabels.length}`;
+    audioFilters.push(buildAudioFilter(`${videoInputIndex}:a:0`, nativeClip, label));
+    audioLabels.push(`[${label}]`);
+  }
+  const voiceClips = input.timeline.audioTracks
+    .filter((track) => track.kind === "dialogue" || track.kind === "narration")
+    .flatMap((track) => track.clips.map((clip) => ({ trackKind: track.kind, clip })));
+  let nextInputIndex = clips.length;
+  for (const { trackKind, clip } of voiceClips) {
+    const absolutePath = await u.oss.getAbsolutePath(clip.path);
+    const stat = await fs.stat(absolutePath).catch(() => null);
+    const media = stat?.isFile() ? await probeMedia(clip.path) : null;
+    if (!stat?.isFile() || !media?.hasAudio) {
+      skippedAudio.push({ id: clip.id, reason: `${trackKind === "dialogue" ? "对白" : "旁白"}音频缺失或不可读取` });
+      continue;
+    }
+    const inputIndex = nextInputIndex++;
+    args.push("-ss", seconds(clip.inMs), "-t", seconds(clip.durationMs), "-i", absolutePath);
+    const label = `audio-input-${inputIndex}`;
+    audioFilters.push(buildAudioFilter(`${inputIndex}:a:0`, clip, label));
+    audioLabels.push(`[${label}]`);
+  }
+  const silentAudioIndex = nextInputIndex;
+  const silentLabel = `audio-silent`;
+  audioFilters.push(
+    `[${silentAudioIndex}:a:0]atrim=duration=${seconds(durationMs)},` +
+      `asetpts=PTS-STARTPTS,aformat=sample_fmts=fltp:sample_rates=${input.timeline.settings.audioSampleRate}:channel_layouts=stereo[${silentLabel}]`,
+  );
+  audioLabels.unshift(`[${silentLabel}]`);
+  filterParts.push(...audioFilters);
+  filterParts.push(
+    `${audioLabels.join("")}amix=inputs=${audioLabels.length}:duration=longest:normalize=0,` +
+      `atrim=duration=${seconds(durationMs)},alimiter=limit=0.95:attack=5:release=50[aout]`,
+  );
   args.push(
     "-f", "lavfi",
     "-t", seconds(durationMs),
     "-i", `anullsrc=channel_layout=stereo:sample_rate=${input.timeline.settings.audioSampleRate}`,
     "-filter_complex", filterParts.join(";"),
     "-map", "[vout]",
-    "-map", `${silentAudioIndex}:a:0`,
+    "-map", "[aout]",
     "-c:v", "libx264",
     "-preset", "veryfast",
     "-crf", "30",
@@ -138,6 +187,8 @@ export async function renderTimelinePreview(input: RenderInput) {
     taskId: input.taskId,
     preset: input.preset,
     clipCount: clips.length,
+    audioClipCount: audioLabels.length - 1,
+    skippedAudioCount: skippedAudio.length,
     durationMs,
     width: dimensions.width,
     height: dimensions.height,
@@ -160,11 +211,15 @@ export async function renderTimelinePreview(input: RenderInput) {
       width: dimensions.width,
       height: dimensions.height,
       clipCount: clips.length,
+      audioClipCount: audioLabels.length - 1,
+      skippedAudio,
       renderLog: {
         renderer: "ffmpeg",
         executable,
         preset: input.preset,
         clipCount: clips.length,
+        audioClipCount: audioLabels.length - 1,
+        skippedAudio,
         stderrTail: processResult.stderrTail.slice(-4_000),
       },
     };
@@ -172,4 +227,20 @@ export async function renderTimelinePreview(input: RenderInput) {
     await fs.rm(partialOutput, { force: true }).catch(() => undefined);
     throw error;
   }
+}
+
+function buildAudioFilter(inputLabel: string, clip: TimelineAudioClip, outputLabel: string): string {
+  const filters = [
+    `[${inputLabel}]atrim=duration=${seconds(clip.durationMs)}`,
+    "asetpts=PTS-STARTPTS",
+    "aresample=48000",
+    "aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo",
+  ];
+  if (clip.gainDb !== 0) filters.push(`volume=${clip.gainDb}dB`);
+  if (clip.fadeInMs > 0) filters.push(`afade=t=in:st=0:d=${seconds(clip.fadeInMs)}`);
+  if (clip.fadeOutMs > 0 && clip.durationMs > clip.fadeOutMs) {
+    filters.push(`afade=t=out:st=${seconds(clip.durationMs - clip.fadeOutMs)}:d=${seconds(clip.fadeOutMs)}`);
+  }
+  if (clip.startMs > 0) filters.push(`adelay=${clip.startMs}:all=1`);
+  return `${filters.join(",")}[${outputLabel}]`;
 }
