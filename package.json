@@ -42,7 +42,8 @@
     "knowledge:check": "tsx scripts/knowledge.ts check",
     "upstream:scan": "tsx scripts/upstream-watch.ts scan",
     "upstream:check": "tsx scripts/upstream-watch.ts check",
-    "verify:provider-adapter": "tsx scripts/verify-provider-adapter.ts"
+    "verify:provider-adapter": "tsx scripts/verify-provider-adapter.ts",
+    "verify:openai-provider": "tsx scripts/verify-openai-compatible-provider.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.35",

@@ -422,6 +422,25 @@ class GenerationTaskRepository {
         });
       }
     }
+    const imageState = ["cancelled", "failed", "manual_review"].includes(task.status) ? "生成失败" : task.status === "succeeded" ? "已完成" : "生成中";
+    if (task.type === "asset.image.generate") {
+      const payload = task.payload as { imageId?: number } | null;
+      if (payload?.imageId) {
+        await db("o_image").where("id", payload.imageId).update({
+          state: imageState,
+          errorReason: task.errorMessage,
+        });
+      }
+    }
+    if (task.type === "storyboard.image.generate") {
+      const payload = task.payload as { storyboardId?: number } | null;
+      if (payload?.storyboardId) {
+        await db("o_storyboard").where("id", payload.storyboardId).update({
+          state: imageState,
+          reason: task.errorMessage,
+        });
+      }
+    }
   }
 }
 

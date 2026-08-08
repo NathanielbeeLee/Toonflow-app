@@ -44,30 +44,35 @@ export default async (knex: Knex): Promise<void> => {
     promptState: "生成失败",
     promptErrorReason: "软件退出导致失败",
   });
-  await db("o_image").where("state", "生成中").update({
+  let durableVideoIds: number[] = [];
+  let durableImageIds: number[] = [];
+  let durableStoryboardIds: number[] = [];
+  if (await knex.schema.hasTable("generation_tasks")) {
+    const activeDurableTasks = await knex("generation_tasks")
+      .whereIn("type", ["video.generate", "asset.image.generate", "storyboard.image.generate"])
+      .whereIn("status", ["queued", "claimed", "submitting", "submitted", "polling", "finalizing", "retry_wait", "blocked", "cancelling", "manual_review"])
+      .select("type", "payload");
+    for (const row of activeDurableTasks as Array<{ type: string; payload?: string }>) {
+      try {
+        const payload = JSON.parse(row.payload ?? "{}");
+        if (row.type === "video.generate" && typeof payload.videoId === "number") durableVideoIds.push(payload.videoId);
+        if (row.type === "asset.image.generate" && typeof payload.imageId === "number") durableImageIds.push(payload.imageId);
+        if (row.type === "storyboard.image.generate" && typeof payload.storyboardId === "number") durableStoryboardIds.push(payload.storyboardId);
+      } catch {}
+    }
+  }
+  const interruptedImages = db("o_image").where("state", "生成中");
+  if (durableImageIds.length > 0) interruptedImages.whereNotIn("id", durableImageIds);
+  await interruptedImages.update({
     state: "生成失败",
     errorReason: "软件退出导致失败",
   });
-  await db("o_storyboard").where("state", "生成中").update({
+  const interruptedStoryboards = db("o_storyboard").where("state", "生成中");
+  if (durableStoryboardIds.length > 0) interruptedStoryboards.whereNotIn("id", durableStoryboardIds);
+  await interruptedStoryboards.update({
     state: "生成失败",
     reason: "软件退出导致失败",
   });
-  let durableVideoIds: number[] = [];
-  if (await knex.schema.hasTable("generation_tasks")) {
-    const activeDurableTasks = await knex("generation_tasks")
-      .where("type", "video.generate")
-      .whereIn("status", ["queued", "claimed", "submitting", "submitted", "polling", "finalizing", "retry_wait", "blocked", "cancelling"])
-      .select("payload");
-    durableVideoIds = activeDurableTasks
-      .map((row: { payload?: string }) => {
-        try {
-          return JSON.parse(row.payload ?? "{}").videoId;
-        } catch {
-          return null;
-        }
-      })
-      .filter((id: unknown): id is number => typeof id === "number");
-  }
   const interruptedVideos = db("o_video").where("state", "生成中");
   if (durableVideoIds.length > 0) interruptedVideos.whereNotIn("id", durableVideoIds);
   await interruptedVideos.update({ state: "生成失败", errorReason: "软件退出导致失败" });
@@ -204,6 +209,10 @@ export default async (knex: Knex): Promise<void> => {
   const toonflowVer = await u.vendor.getVendor("toonflow").version;
   if (Number(toonflowVer) < 3.2) {
     u.vendor.writeCode("toonflow", vendorData["toonflow.ts"]);
+  }
+  const openaiVer = await u.vendor.getVendor("openai").version;
+  if (Number(openaiVer) < 2.2) {
+    u.vendor.writeCode("openai", vendorData["openai.ts"]);
   }
 };
 

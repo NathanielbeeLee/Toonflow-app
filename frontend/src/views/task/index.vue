@@ -7,6 +7,7 @@
       </div>
       <div class="headerActions f ac">
         <span v-if="activeTab === 'durable'" class="autoRefreshHint">{{ $t("workbench.task.durable.autoRefresh") }}</span>
+        <t-button v-if="activeTab === 'durable'" variant="outline" @click="openLimits">{{ $t("workbench.task.durable.limits.button") }}</t-button>
         <t-button @click="refreshActiveTab">
           <template #icon><i-redo :size="20" /></template>
           {{ $t("workbench.task.refresh") }}
@@ -130,6 +131,29 @@
           @current-change="getLegacyTasks" />
       </t-tab-panel>
     </t-tabs>
+
+    <t-dialog
+      v-model:visible="limitDialogVisible"
+      :header="$t('workbench.task.durable.limits.title')"
+      width="760px"
+      :confirm-btn="$t('workbench.task.durable.limits.save')"
+      :cancel-btn="$t('workbench.task.durable.close')"
+      :on-confirm="saveLimit">
+      <t-alert theme="info" :message="$t('workbench.task.durable.limits.hint')" class="limitHint" />
+      <div class="limitForm">
+        <t-input v-model="limitForm.provider" :label="$t('workbench.task.durable.limits.provider')" placeholder="openai" />
+        <t-input v-model="limitForm.model" :label="$t('workbench.task.durable.limits.model')" placeholder="*" />
+        <t-select v-model="limitForm.lane" :label="$t('workbench.task.durable.limits.lane')" :options="laneOptions.slice(1)" />
+        <t-input-number v-model="limitForm.maxConcurrency" :label="$t('workbench.task.durable.limits.concurrency')" :min="1" :max="32" />
+        <t-input-number v-model="limitForm.rpm" label="RPM" :min="1" :max="10000" />
+        <t-input-number v-model="limitForm.cooldownMs" :label="$t('workbench.task.durable.limits.cooldown')" :min="0" :max="60000" />
+      </div>
+      <t-table :data="limitRows" :columns="limitColumns" row-key="provider" size="small" :loading="limitsLoading">
+        <template #operation="{ row }">
+          <t-button size="small" variant="text" @click="editLimit(row)">{{ $t("workbench.task.durable.limits.edit") }}</t-button>
+        </template>
+      </t-table>
+    </t-dialog>
   </div>
 </template>
 
@@ -186,6 +210,15 @@ interface LegacyTask {
   reason?: string;
 }
 
+interface ProviderLimit {
+  provider: string;
+  model: string;
+  lane: DurableLane;
+  maxConcurrency: number;
+  rpm: number;
+  cooldownMs: number;
+}
+
 const { project } = storeToRefs(projectStore());
 const activeTab = ref<"durable" | "legacy">("durable");
 const selectedProjectId = ref<number | "">(project.value?.id ? Number(project.value.id) : "");
@@ -196,6 +229,10 @@ const durableStatus = ref<DurableStatus | "">("");
 const durableLane = ref<DurableLane | "">("");
 const durablePagination = ref({ page: 1, limit: 10, total: 0, loading: false });
 const actionTaskId = ref("");
+const limitDialogVisible = ref(false);
+const limitsLoading = ref(false);
+const limitRows = ref<ProviderLimit[]>([]);
+const limitForm = ref<ProviderLimit>({ provider: "", model: "*", lane: "video", maxConcurrency: 2, rpm: 10, cooldownMs: 0 });
 
 const legacyTaskList = ref<LegacyTask[]>([]);
 const taskClass = ref("");
@@ -213,6 +250,16 @@ const durableColumns: TableProps["columns"] = [
   { colKey: "errorMessage", title: $t("workbench.task.durable.col.message"), ellipsis: true, cell: "errorMessage" },
   { colKey: "createdAt", title: $t("workbench.task.col.startTime"), width: 170, cell: "createdAt" },
   { colKey: "operation", title: $t("workbench.task.durable.col.operation"), width: 180, fixed: "right", cell: "operation" },
+];
+
+const limitColumns: TableProps["columns"] = [
+  { colKey: "provider", title: $t("workbench.task.durable.limits.provider"), width: 100 },
+  { colKey: "model", title: $t("workbench.task.durable.limits.model"), width: 150, ellipsis: true },
+  { colKey: "lane", title: $t("workbench.task.durable.limits.lane"), width: 80 },
+  { colKey: "maxConcurrency", title: $t("workbench.task.durable.limits.concurrency"), width: 80 },
+  { colKey: "rpm", title: "RPM", width: 70 },
+  { colKey: "cooldownMs", title: $t("workbench.task.durable.limits.cooldown"), width: 100 },
+  { colKey: "operation", title: $t("workbench.task.durable.col.operation"), width: 70, cell: "operation" },
 ];
 
 const legacyColumns: TableProps["columns"] = [
@@ -345,6 +392,43 @@ async function getLegacyTasks() {
   }
 }
 
+async function openLimits() {
+  limitDialogVisible.value = true;
+  limitsLoading.value = true;
+  try {
+    const { data } = await axios.post("/generationTasks/limits/list");
+    limitRows.value = data;
+  } catch (error) {
+    window.$message.error(errorText(error, $t("workbench.task.durable.limits.loadFailed")));
+  } finally {
+    limitsLoading.value = false;
+  }
+}
+
+function editLimit(row: ProviderLimit) {
+  limitForm.value = { ...row };
+}
+
+async function saveLimit() {
+  if (!limitForm.value.provider.trim()) {
+    window.$message.warning($t("workbench.task.durable.limits.providerRequired"));
+    return false;
+  }
+  try {
+    await axios.post("/generationTasks/limits/upsert", {
+      ...limitForm.value,
+      provider: limitForm.value.provider.trim(),
+      model: limitForm.value.model.trim() || "*",
+    });
+    window.$message.success($t("workbench.task.durable.limits.saved"));
+    await openLimits();
+    return true;
+  } catch (error) {
+    window.$message.error(errorText(error, $t("workbench.task.durable.limits.saveFailed")));
+    return false;
+  }
+}
+
 function confirmCancel(task: DurableTask) {
   const dialog = DialogPlugin.confirm({
     header: $t("workbench.task.durable.cancelTitle"),
@@ -416,7 +500,12 @@ function canRetry(status: DurableStatus) {
 }
 
 function taskTypeLabel(type: string) {
-  return type === "video.generate" ? $t("workbench.task.durable.videoGenerate") : type;
+  const labels: Record<string, string> = {
+    "video.generate": $t("workbench.task.durable.videoGenerate"),
+    "asset.image.generate": $t("workbench.task.durable.assetImageGenerate"),
+    "storyboard.image.generate": $t("workbench.task.durable.storyboardImageGenerate"),
+  };
+  return labels[type] || type;
 }
 
 function shortId(id: string) {
@@ -472,6 +561,17 @@ function errorText(error: unknown, fallback: string) {
   }
 
   .safetyHint {
+    margin-bottom: 16px;
+  }
+
+  .limitHint {
+    margin-bottom: 16px;
+  }
+
+  .limitForm {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
     margin-bottom: 16px;
   }
 

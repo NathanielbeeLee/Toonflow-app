@@ -1,5 +1,6 @@
 import { GenerationTask, GenerationTaskLane, GenerationTaskStatus, TaskCancelledError, TaskExecutionError } from "@/domain/generationTask";
 import { generationTaskRepository } from "@/services/task-engine/repository";
+import { withProviderLimit } from "@/services/task-engine/limiter";
 
 export interface TaskHandlerContext {
   workerId: string;
@@ -112,7 +113,7 @@ class GenerationTaskWorker {
         },
         throwIfCancelled: async () => this.throwIfCancelled(initialTask.id),
       };
-      const result = await handler.execute(initialTask, context);
+      const result = await withProviderLimit(initialTask, () => handler.execute(initialTask, context));
       await context.throwIfCancelled();
       await generationTaskRepository.finish(initialTask.id, "succeeded", { result });
     } catch (error) {
