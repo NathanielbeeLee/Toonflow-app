@@ -114,12 +114,20 @@
               theme="info"
               message="时间线按版本保存。低清预览在本机用 FFmpeg 渲染，不调用付费 API；会串联画面并混入可用的视频原声、对白和旁白，缺失音轨会安全跳过。" />
             <t-space>
+              <t-button variant="outline" :disabled="!selectedScriptId" @click="openAudioClipDialog">声音素材</t-button>
               <t-button variant="outline" :disabled="!selectedScriptId" :loading="buildingTimeline" @click="buildTimeline">构建新版本</t-button>
               <t-button
                 :disabled="!canRenderPreview"
                 :loading="renderingPreview || compositionJobActive"
-                @click="generatePreview">
+                @click="generatePreview('preview-low')">
                 生成低清预览
+              </t-button>
+              <t-button
+                theme="success"
+                :disabled="!canRenderPreview"
+                :loading="renderingPreview || compositionJobActive"
+                @click="generatePreview('final-high')">
+                生成高清成片
               </t-button>
             </t-space>
           </div>
@@ -143,8 +151,8 @@
             <div v-if="compositionJob" class="renderResult">
               <div class="renderResultHeader">
                 <div>
-                  <strong>低清预览 · 时间线 v{{ compositionJob.timelineVersion }}</strong>
-                  <span>FFmpeg / H.264 + AAC</span>
+                  <strong>{{ compositionJob.preset === 'final-high' ? '高清成片' : '低清预览' }} · 时间线 v{{ compositionJob.timelineVersion }}</strong>
+                  <span>FFmpeg / H.264 + AAC / 字幕烧录</span>
                 </div>
                 <t-tag :theme="compositionStatusTheme(compositionJob.status)" variant="light">
                   {{ compositionStatusLabel(compositionJob.status) }}
@@ -239,6 +247,49 @@
         <t-form-item label="锁定人工时间"><t-switch v-model="cueForm.locked" /></t-form-item>
       </t-form>
     </t-dialog>
+
+    <t-dialog v-model:visible="audioClipDialogVisible" header="音效、环境声与背景音乐" width="900px" :footer="false">
+      <div class="dialogGrid audioDialogGrid">
+        <div>
+          <div class="sectionTitle">已加入时间线的声音</div>
+          <t-empty v-if="audioClips.length === 0" description="还没有声音素材" />
+          <t-table v-else row-key="id" :columns="audioClipColumns" :data="audioClips" size="small" max-height="430px">
+            <template #kind="{ row }">{{ audioKindLabel(row.kind) }}</template>
+            <template #time="{ row }">{{ formatMilliseconds(row.startMs) }} / {{ formatMilliseconds(row.durationMs) }}</template>
+            <template #operation="{ row }">
+              <t-space :size="4">
+                <t-button size="small" variant="text" @click="editAudioClip(row)">编辑</t-button>
+                <t-button size="small" variant="text" theme="danger" @click="removeAudioClip(row)">删除</t-button>
+              </t-space>
+            </template>
+          </t-table>
+        </div>
+        <div class="castForm">
+          <div class="sectionTitle">{{ audioClipForm.id ? "编辑声音片段" : "新增声音片段" }}</div>
+          <t-form label-align="top">
+            <t-form-item label="轨道类型"><t-select v-model="audioClipForm.kind" :options="audioKindOptions" /></t-form-item>
+            <t-form-item label="声音资产"><t-select v-model="audioClipForm.assetId" :options="audioOptions" filterable placeholder="先在资产中心上传声音" /></t-form-item>
+            <div class="twoColumns">
+              <t-form-item label="时间线开始（毫秒）"><t-input-number v-model="audioClipForm.startMs" :min="0" /></t-form-item>
+              <t-form-item label="素材入点（毫秒）"><t-input-number v-model="audioClipForm.inMs" :min="0" /></t-form-item>
+            </div>
+            <t-form-item label="片段时长（毫秒，留空使用剩余全长）">
+              <t-input-number v-model="audioClipForm.durationMs" :min="1" clearable />
+            </t-form-item>
+            <div class="threeColumns">
+              <t-form-item label="增益 dB"><t-input-number v-model="audioClipForm.gainDb" :min="-60" :max="24" /></t-form-item>
+              <t-form-item label="淡入 ms"><t-input-number v-model="audioClipForm.fadeInMs" :min="0" :max="60000" /></t-form-item>
+              <t-form-item label="淡出 ms"><t-input-number v-model="audioClipForm.fadeOutMs" :min="0" :max="60000" /></t-form-item>
+            </div>
+            <t-alert theme="info" message="对白出现时，这些背景轨会自动降低音量；修改后请重新构建时间线。" />
+            <t-space class="audioFormActions">
+              <t-button :loading="savingAudioClip" @click="saveAudioClip">保存</t-button>
+              <t-button variant="outline" @click="resetAudioClipForm">新建</t-button>
+            </t-space>
+          </t-form>
+        </div>
+      </div>
+    </t-dialog>
   </div>
 </template>
 
@@ -306,12 +357,26 @@ interface CompositionJob {
   id: string;
   timelineId: string;
   timelineVersion: number;
+  preset: "preview-low" | "final-high";
   status: string;
   outputUrl: string | null;
   outputChecksum: string | null;
   durationMs: number | null;
   taskId: string | null;
   errorMessage: string | null;
+}
+
+interface ProjectAudioClip {
+  id: string;
+  kind: "sfx" | "ambience" | "bgm";
+  assetId: number;
+  name: string;
+  startMs: number;
+  inMs: number;
+  durationMs: number;
+  gainDb: number;
+  fadeInMs: number;
+  fadeOutMs: number;
 }
 
 const { project } = storeToRefs(projectStore());
@@ -324,6 +389,7 @@ const generating = ref(false);
 const savingCast = ref(false);
 const buildingTimeline = ref(false);
 const renderingPreview = ref(false);
+const savingAudioClip = ref(false);
 const selectedScriptId = ref<number>();
 const includeStoryboardDescriptions = ref(false);
 const scriptOptions = ref<Array<{ label: string; value: number }>>([]);
@@ -335,10 +401,12 @@ const utterances = ref<Utterance[]>([]);
 const cues = ref<Cue[]>([]);
 const timeline = ref<TimelineRecord | null>(null);
 const compositionJob = ref<CompositionJob | null>(null);
+const audioClips = ref<ProjectAudioClip[]>([]);
 const selectedUtteranceIds = ref<Array<string | number>>([]);
 const castDialogVisible = ref(false);
 const utteranceDialogVisible = ref(false);
 const cueDialogVisible = ref(false);
+const audioClipDialogVisible = ref(false);
 
 const emptyCastForm = () => ({
   id: undefined as string | undefined,
@@ -357,6 +425,18 @@ const emptyCastForm = () => ({
 const castForm = ref(emptyCastForm());
 const utteranceForm = ref({ id: "", kind: "dialogue" as Utterance["kind"], speaker: "", text: "", durationMs: undefined as number | undefined, locked: false });
 const cueForm = ref({ id: "", startMs: 0, endMs: 1, text: "", locked: false });
+const emptyAudioClipForm = () => ({
+  id: undefined as string | undefined,
+  kind: "bgm" as ProjectAudioClip["kind"],
+  assetId: undefined as number | undefined,
+  startMs: 0,
+  inMs: 0,
+  durationMs: undefined as number | undefined,
+  gainDb: -18,
+  fadeInMs: 500,
+  fadeOutMs: 800,
+});
+const audioClipForm = ref(emptyAudioClipForm());
 
 const utteranceColumns: any[] = [
   { colKey: "row-select", type: "multiple", width: 48, fixed: "left" },
@@ -384,6 +464,18 @@ const timelineColumns: any[] = [
   { colKey: "name", title: "轨道" },
   { colKey: "kind", title: "类型", width: 140 },
   { colKey: "count", title: "片段/cue 数", width: 140 },
+];
+const audioClipColumns: any[] = [
+  { colKey: "kind", title: "轨道", width: 90, cell: "kind" },
+  { colKey: "name", title: "素材", ellipsis: true },
+  { colKey: "time", title: "开始 / 时长", width: 180, cell: "time" },
+  { colKey: "gainDb", title: "增益 dB", width: 90 },
+  { colKey: "operation", title: "操作", width: 120, cell: "operation" },
+];
+const audioKindOptions = [
+  { label: "音效 SFX", value: "sfx" },
+  { label: "环境声", value: "ambience" },
+  { label: "背景音乐", value: "bgm" },
 ];
 const castOptions = computed(() => casts.value.map((item) => ({ label: `${item.name} · ${item.voice}`, value: item.id })));
 const providerOptions = computed(() =>
@@ -488,20 +580,23 @@ async function loadWorkspace(showLoading = true) {
     cues.value = [];
     timeline.value = null;
     compositionJob.value = null;
+    audioClips.value = [];
     return;
   }
   if (showLoading) loading.value = true;
   try {
-    const [{ data: utteranceData }, { data: cueData }, { data: timelineData }, { data: jobData }] = await Promise.all([
+    const [{ data: utteranceData }, { data: cueData }, { data: timelineData }, { data: jobData }, { data: audioClipData }] = await Promise.all([
       axios.post("/voiceStudio/utterances/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/voiceStudio/cues/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/composition/timeline/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
       axios.post("/composition/timeline/jobs/latest", { projectId: projectId.value, scriptId: selectedScriptId.value }),
+      axios.post("/composition/timeline/audio/list", { projectId: projectId.value, scriptId: selectedScriptId.value }),
     ]);
     utterances.value = utteranceData;
     cues.value = cueData;
     timeline.value = timelineData;
     compositionJob.value = jobData;
+    audioClips.value = audioClipData;
   } catch (error) {
     showError(error, "获取配音工作区失败");
   } finally {
@@ -527,7 +622,7 @@ async function buildTimeline() {
   }
 }
 
-async function generatePreview() {
+async function generatePreview(preset: CompositionJob["preset"]) {
   if (!timeline.value || !selectedScriptId.value) return;
   renderingPreview.value = true;
   try {
@@ -535,11 +630,12 @@ async function generatePreview() {
       projectId: projectId.value,
       scriptId: selectedScriptId.value,
       timelineId: timeline.value.id,
-      preset: "preview-low",
+      preset,
       requestId: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`,
     });
     compositionJob.value = data.job;
-    window.$message.success(data.cached ? "已复用相同时间线的预览文件" : data.deduped ? "预览已经在队列中" : "低清预览已进入本地渲染队列");
+    const label = preset === "final-high" ? "高清成片" : "低清预览";
+    window.$message.success(data.cached ? `已复用相同时间线的${label}` : data.deduped ? `${label}已经在队列中` : `${label}已进入本地渲染队列`);
   } catch (error) {
     showError(error, "创建低清预览失败");
   } finally {
@@ -553,6 +649,78 @@ function compositionStatusLabel(status: string) {
 
 function compositionStatusTheme(status: string) {
   return ({ queued: "warning", rendering: "primary", succeeded: "success", failed: "danger", cancelled: "default" } as Record<string, any>)[status] || "default";
+}
+
+function audioKindLabel(kind: ProjectAudioClip["kind"]) {
+  return audioKindOptions.find((item) => item.value === kind)?.label || kind;
+}
+
+function openAudioClipDialog() {
+  resetAudioClipForm();
+  audioClipDialogVisible.value = true;
+}
+
+function resetAudioClipForm() {
+  audioClipForm.value = emptyAudioClipForm();
+}
+
+function editAudioClip(row: ProjectAudioClip) {
+  audioClipForm.value = {
+    id: row.id,
+    kind: row.kind,
+    assetId: row.assetId,
+    startMs: row.startMs,
+    inMs: row.inMs,
+    durationMs: row.durationMs,
+    gainDb: row.gainDb,
+    fadeInMs: row.fadeInMs,
+    fadeOutMs: row.fadeOutMs,
+  };
+}
+
+async function saveAudioClip() {
+  if (!selectedScriptId.value || !audioClipForm.value.assetId) {
+    window.$message.warning("请选择声音资产");
+    return;
+  }
+  savingAudioClip.value = true;
+  try {
+    await axios.post("/composition/timeline/audio/upsert", {
+      projectId: projectId.value,
+      scriptId: selectedScriptId.value,
+      ...audioClipForm.value,
+    });
+    window.$message.success("声音片段已保存，请重新构建时间线");
+    resetAudioClipForm();
+    await loadWorkspace(false);
+  } catch (error) {
+    showError(error, "保存声音片段失败");
+  } finally {
+    savingAudioClip.value = false;
+  }
+}
+
+async function removeAudioClip(row: ProjectAudioClip) {
+  if (!selectedScriptId.value) return;
+  const dialog = DialogPlugin.confirm({
+    header: "删除声音片段",
+    body: `确定从时间线移除“${row.name}”吗？原始声音资产不会删除。`,
+    onConfirm: async () => {
+      try {
+        await axios.post("/composition/timeline/audio/delete", {
+          id: row.id,
+          projectId: projectId.value,
+          scriptId: selectedScriptId.value,
+        });
+        dialog.destroy();
+        window.$message.success("声音片段已移除，请重新构建时间线");
+        resetAudioClipForm();
+        await loadWorkspace(false);
+      } catch (error) {
+        showError(error, "删除声音片段失败");
+      }
+    },
+  });
 }
 
 async function importUtterances() {
@@ -885,6 +1053,8 @@ function showError(error: any, fallback: string) {
 .previewVideo { display: block; width: min(100%, 854px); max-height: 520px; margin-top: 12px; border-radius: 8px; background: #000; }
 .previewMeta { display: flex; gap: 16px; margin-top: 10px; }
 .previewMeta a { color: var(--td-brand-color); }
+.audioDialogGrid { grid-template-columns: minmax(0, 1fr) 390px; }
+.audioFormActions { margin-top: 14px; }
 .dialogGrid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;

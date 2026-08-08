@@ -40,7 +40,7 @@ export interface NormalizedTimeline {
     kind: AudioTrackKind;
     clips: Array<{
       id: string;
-      sourceType: "embedded_video_audio" | "utterance_audio";
+      sourceType: "embedded_video_audio" | "utterance_audio" | "project_audio_asset";
       sourceId: number | string;
       path: string;
       startMs: number;
@@ -88,7 +88,7 @@ export async function buildNormalizedTimeline(input: { projectId: number; script
   ]);
   if (!project || !script) throw new Error("项目或剧本不存在");
 
-  const [tracks, storyboards, utterances, cueRows] = await Promise.all([
+  const [tracks, storyboards, utterances, cueRows, projectAudioRows] = await Promise.all([
     sql("o_videoTrack").where({ projectId: input.projectId, scriptId: input.scriptId }),
     sql("o_storyboard").where({ projectId: input.projectId, scriptId: input.scriptId }).orderBy("index", "asc"),
     sql("utterances").where({ project_id: input.projectId, script_id: input.scriptId }).orderBy("ordinal", "asc"),
@@ -98,6 +98,9 @@ export async function buildNormalizedTimeline(input: { projectId: number; script
       .where("utterances.script_id", input.scriptId)
       .select("subtitle_cues.*")
       .orderBy("subtitle_cues.start_ms", "asc"),
+    sql("project_audio_clips")
+      .where({ project_id: input.projectId, script_id: input.scriptId })
+      .orderBy("start_ms", "asc"),
   ]);
   const firstStoryboardIndex = new Map<number, number>();
   for (const storyboard of storyboards) {
@@ -171,6 +174,25 @@ export async function buildNormalizedTimeline(input: { projectId: number; script
   if (cueRows.some((cue: any) => cue.end_ms > cursor) && cursor > 0) {
     warnings.push("部分字幕或配音超出已选视频总时长");
   }
+  const projectAudioByKind = new Map<AudioTrackKind, NormalizedTimeline["audioTracks"][number]["clips"]>();
+  for (const row of projectAudioRows) {
+    const kind = row.kind as AudioTrackKind;
+    const target = projectAudioByKind.get(kind) || [];
+    target.push({
+      id: row.id,
+      sourceType: "project_audio_asset",
+      sourceId: row.asset_id,
+      path: row.path,
+      startMs: row.start_ms,
+      inMs: row.in_ms,
+      durationMs: row.duration_ms,
+      gainDb: row.gain_db,
+      fadeInMs: row.fade_in_ms,
+      fadeOutMs: row.fade_out_ms,
+    });
+    projectAudioByKind.set(kind, target);
+    if (cursor > 0 && row.start_ms + row.duration_ms > cursor) warnings.push(`${row.name} 音频超出视频总时长`);
+  }
   const ratio = project.videoRatio === "9:16" ? "9:16" : "16:9";
   const payload: NormalizedTimeline = {
     schemaVersion: 1,
@@ -191,9 +213,9 @@ export async function buildNormalizedTimeline(input: { projectId: number; script
       { id: "audio-native", kind: "native", clips: nativeClips },
       { id: "audio-dialogue", kind: "dialogue", clips: dialogueClips },
       { id: "audio-narration", kind: "narration", clips: narrationClips },
-      { id: "audio-sfx", kind: "sfx", clips: [] },
-      { id: "audio-ambience", kind: "ambience", clips: [] },
-      { id: "audio-bgm", kind: "bgm", clips: [] },
+      { id: "audio-sfx", kind: "sfx", clips: projectAudioByKind.get("sfx") || [] },
+      { id: "audio-ambience", kind: "ambience", clips: projectAudioByKind.get("ambience") || [] },
+      { id: "audio-bgm", kind: "bgm", clips: projectAudioByKind.get("bgm") || [] },
     ],
     subtitleTracks: [
       {

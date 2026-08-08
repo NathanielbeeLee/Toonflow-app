@@ -224,6 +224,31 @@ const migrations: Migration[] = [
       }
     },
   },
+  {
+    id: "20260808_005_project_audio_clips",
+    up: async (db) => {
+      if (!(await db.schema.hasTable("project_audio_clips"))) {
+        await db.schema.createTable("project_audio_clips", (table) => {
+          table.text("id").primary();
+          table.integer("project_id").notNullable();
+          table.integer("script_id").notNullable();
+          table.text("kind").notNullable();
+          table.integer("asset_id").notNullable();
+          table.text("name").notNullable();
+          table.text("path").notNullable();
+          table.integer("start_ms").notNullable().defaultTo(0);
+          table.integer("in_ms").notNullable().defaultTo(0);
+          table.integer("duration_ms").notNullable();
+          table.float("gain_db").notNullable().defaultTo(0);
+          table.integer("fade_in_ms").notNullable().defaultTo(0);
+          table.integer("fade_out_ms").notNullable().defaultTo(0);
+          table.integer("created_at").notNullable();
+          table.integer("updated_at").notNullable();
+          table.index(["project_id", "script_id", "kind", "start_ms"], "project_audio_clips_timeline_idx");
+        });
+      }
+    },
+  },
 ];
 
 export default async function runMigrations(db: Knex): Promise<void> {

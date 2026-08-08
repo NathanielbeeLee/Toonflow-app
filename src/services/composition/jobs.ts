@@ -55,7 +55,7 @@ export async function enqueueCompositionRender(input: {
 
   const inputChecksum = stableIdempotencyKey({
     renderer: "ffmpeg",
-    rendererVersion: 2,
+    rendererVersion: 3,
     preset: input.preset,
     timelineChecksum: timeline.checksum,
   });
@@ -97,7 +97,7 @@ export async function enqueueCompositionRender(input: {
     taskClass: "视频合成",
     relatedObjects: JSON.stringify({ compositionJobId: jobId, timelineId: timeline.id }),
     model: "ffmpeg",
-    describe: `本地低清预览：时间线 v${timeline.version}，${clipCount} 个片段`,
+    describe: `${input.preset === "final-high" ? "本地高清成片" : "本地低清预览"}：时间线 v${timeline.version}，${clipCount} 个片段`,
     state: "排队中",
     startTime: now,
   });
