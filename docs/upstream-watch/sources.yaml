@@ -47,8 +47,8 @@
       "last_scanned_commit": "a1b8220f21d554e52976cf4cfe4674f4b7b591cb",
       "last_scanned_release": "v1.0.4",
       "last_scanned_at": "2026-08-09T18:31:39+08:00",
-      "last_adopted_commit": "e51e1fe62488776dc31b2f6b11b4ca7efbc242fa",
-      "adopted_capabilities": ["voice-cast-and-utterance-workflow", "subtitle-cue-workflow", "type-aware-near-name-asset-reuse", "pre-render-missing-clip-diagnostics"]
+      "last_adopted_commit": "a1b8220f21d554e52976cf4cfe4674f4b7b591cb",
+      "adopted_capabilities": ["voice-cast-and-utterance-workflow", "subtitle-cue-workflow", "type-aware-near-name-asset-reuse", "pre-render-missing-clip-diagnostics", "video-poster-frame-cache"]
     },
     {
       "id": "money-printer-turbo",
@@ -128,7 +128,7 @@
       "last_scanned_release": null,
       "last_scanned_at": "2026-08-09T18:31:39+08:00",
       "last_adopted_commit": "a9678194ddf2d9be3ccbe78d4287d87d5089e123",
-      "adopted_capabilities": ["pre-generation-video-readiness-gate"]
+      "adopted_capabilities": ["pre-generation-video-readiness-gate", "confirmed-storyboard-action-beats"]
     },
     {
       "id": "wind-comic",

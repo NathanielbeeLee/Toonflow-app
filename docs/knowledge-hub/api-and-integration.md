@@ -7,6 +7,9 @@
 | `POST /api/production/workbench/batchGenerateVideo` | 批量视频任务入队；可选 `requestId`，返回 `durableTaskId` |
 | `POST /api/production/workbench/generateVideo` | 单条视频任务入队；保持返回原 `videoId`，可选 `requestId` |
 | `POST /api/production/workbench/checkVideoReadiness` | 批量只读检查镜头的视频生成前置条件，不调用供应商 |
+| `POST /api/production/storyboard/editStoryboardInfo` | 编辑分镜描述、动作拍点和人工确认状态；旧客户端不传拍点字段时保留原值 |
+| `POST /api/production/workbench/generateVideoPrompt` / `batchGeneratePrompt` | 生成单条/批量轨道视频提示词；只编译已经人工确认的动作拍点 |
+| `POST /api/production/workbench/getVideoList` / `getGenerateData` / `checkVideoStateList` | 查询视频候选和状态；有本地海报时额外返回 `posterSrc`，缺失时后台补齐 |
 | `POST /api/assetsGenerate/generateAssets` | 单张角色、场景或道具图片入队，返回持久任务与图片占位记录 |
 | `POST /api/production/editImage/generateFlowImage` | 图片编辑画布节点入队，返回节点应保存的持久任务 ID |
 | `POST /api/script/importNovel/preview` | 校验 AI Novel 小说/短剧 JSON 或本机 API，仅返回预览和计划动作 |

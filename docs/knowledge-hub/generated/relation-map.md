@@ -7,6 +7,8 @@
 | workflow.novel-to-video | uses | feature.infinite-canvas |
 | workflow.novel-to-video | uses | feature.durable-video-tasks |
 | workflow.novel-to-video | uses | feature.video-readiness-gate |
+| workflow.novel-to-video | uses | feature.storyboard-action-beats |
+| workflow.novel-to-video | uses | feature.video-poster-frames |
 | workflow.novel-to-video | uses | feature.durable-image-tasks |
 | workflow.novel-to-video | uses | feature.durable-script-asset-extraction |
 | workflow.novel-to-video | uses | feature.ai-novel-import |
@@ -34,6 +36,12 @@
 | feature.video-readiness-gate | protects | feature.durable-video-tasks |
 | feature.video-readiness-gate | documented_by | document.feature-catalog |
 | feature.video-readiness-gate | inspired_by | document.upstream-watch |
+| feature.storyboard-action-beats | feeds | feature.durable-video-tasks |
+| feature.storyboard-action-beats | documented_by | document.feature-catalog |
+| feature.storyboard-action-beats | inspired_by | document.upstream-watch |
+| feature.video-poster-frames | enhances | feature.durable-video-tasks |
+| feature.video-poster-frames | documented_by | document.feature-catalog |
+| feature.video-poster-frames | inspired_by | document.upstream-watch |
 | feature.durable-script-asset-extraction | writes | table.generation-tasks |
 | feature.durable-script-asset-extraction | uses | feature.asset-consistency |
 | feature.durable-script-asset-extraction | visualized_by | feature.durable-task-center |

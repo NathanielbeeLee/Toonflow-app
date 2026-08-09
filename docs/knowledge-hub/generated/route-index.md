@@ -10,6 +10,12 @@
 | POST /api/production/workbench/checkVideoReadiness | 视频生成准备度门禁 | feature.video-readiness-gate |
 | POST /api/production/workbench/generateVideo | 视频生成准备度门禁 | feature.video-readiness-gate |
 | POST /api/production/workbench/batchGenerateVideo | 视频生成准备度门禁 | feature.video-readiness-gate |
+| POST /api/production/storyboard/editStoryboardInfo | 分镜动作拍点与人工确认 | feature.storyboard-action-beats |
+| POST /api/production/workbench/generateVideoPrompt | 分镜动作拍点与人工确认 | feature.storyboard-action-beats |
+| POST /api/production/workbench/batchGeneratePrompt | 分镜动作拍点与人工确认 | feature.storyboard-action-beats |
+| POST /api/production/workbench/getVideoList | 视频海报帧与轻量列表 | feature.video-poster-frames |
+| POST /api/production/workbench/getGenerateData | 视频海报帧与轻量列表 | feature.video-poster-frames |
+| POST /api/production/workbench/checkVideoStateList | 视频海报帧与轻量列表 | feature.video-poster-frames |
 | POST /api/script/extractAssets | 持久剧本资产提取 | feature.durable-script-asset-extraction |
 | POST /api/generationTasks/list | 持久剧本资产提取 | feature.durable-script-asset-extraction |
 | POST /api/script/importNovel/preview | AI Novel 成品版本化导入 | feature.ai-novel-import |

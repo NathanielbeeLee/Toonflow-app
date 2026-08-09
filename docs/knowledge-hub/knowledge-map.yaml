@@ -14,6 +14,8 @@
         { "type": "uses", "target": "feature.infinite-canvas" },
         { "type": "uses", "target": "feature.durable-video-tasks" },
         { "type": "uses", "target": "feature.video-readiness-gate" },
+        { "type": "uses", "target": "feature.storyboard-action-beats" },
+        { "type": "uses", "target": "feature.video-poster-frames" },
         { "type": "uses", "target": "feature.durable-image-tasks" },
         { "type": "uses", "target": "feature.durable-script-asset-extraction" },
         { "type": "uses", "target": "feature.ai-novel-import" },
@@ -130,6 +132,41 @@
       ],
       "introduced_in": "toon-custom/80c728d4",
       "last_verified_commit": "toon-custom/80c728d4"
+    },
+    {
+      "id": "feature.storyboard-action-beats",
+      "type": "feature",
+      "name": "分镜动作拍点与人工确认",
+      "summary": "Agent 生成有序动作候选，用户编辑确认后才把阶段约束编译进视频提示词，旧分镜保持兼容",
+      "user_entry": { "page": "生产 Agent / 分镜面板", "action": "点击分镜卡编辑按钮，逐行核对动作拍点并勾选人工确认" },
+      "source_paths": ["src/services/storyboard/actionBeats.ts", "src/agents/productionAgent/tools.ts", "src/routes/production/storyboard/editStoryboardInfo.ts", "src/routes/production/workbench/generateVideoPrompt.ts", "src/routes/production/workbench/batchGeneratePrompt.ts", "frontend/src/views/production/node/storyboard.vue", "data/modelPrompt/video"],
+      "api": ["POST /api/production/storyboard/editStoryboardInfo", "POST /api/production/workbench/generateVideoPrompt", "POST /api/production/workbench/batchGeneratePrompt"],
+      "tables": ["o_storyboard"],
+      "relations": [
+        { "type": "feeds", "target": "feature.durable-video-tasks" },
+        { "type": "documented_by", "target": "document.feature-catalog" },
+        { "type": "inspired_by", "target": "document.upstream-watch" }
+      ],
+      "introduced_in": "toon-custom/action-beats-2026-08-09",
+      "last_verified_commit": "toon-custom/action-beats-2026-08-09"
+    },
+    {
+      "id": "feature.video-poster-frames",
+      "type": "feature",
+      "name": "视频海报帧与轻量列表",
+      "summary": "视频保存后异步生成本地 JPEG 海报，历史视频按需回填，列表优先加载图片且失败不影响视频成功",
+      "user_entry": { "page": "制作工作台 / 视频候选", "action": "打开视频列表即可查看海报帧；缺失海报会在后台补齐" },
+      "source_paths": ["src/services/media/videoPoster.ts", "src/services/task-engine/handlers/videoGeneration.ts", "src/routes/production/workbench/getVideoList.ts", "src/routes/production/workbench/getGenerateData.ts", "src/routes/production/workbench/checkVideoStateList.ts", "frontend/src/views/production/components/workbench/generate"],
+      "api": ["POST /api/production/workbench/getVideoList", "POST /api/production/workbench/getGenerateData", "POST /api/production/workbench/checkVideoStateList"],
+      "tables": ["o_video"],
+      "config": ["FFMPEG_PATH"],
+      "relations": [
+        { "type": "enhances", "target": "feature.durable-video-tasks" },
+        { "type": "documented_by", "target": "document.feature-catalog" },
+        { "type": "inspired_by", "target": "document.upstream-watch" }
+      ],
+      "introduced_in": "toon-custom/video-poster-frames-2026-08-09",
+      "last_verified_commit": "toon-custom/video-poster-frames-2026-08-09"
     },
     {
       "id": "feature.durable-script-asset-extraction",

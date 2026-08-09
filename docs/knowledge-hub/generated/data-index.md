@@ -19,6 +19,8 @@
 | o_assets | 视频生成准备度门禁 | feature.video-readiness-gate |
 | o_vendorConfig | 视频生成准备度门禁 | feature.video-readiness-gate |
 | generation_tasks | 视频生成准备度门禁 | feature.video-readiness-gate |
+| o_storyboard | 分镜动作拍点与人工确认 | feature.storyboard-action-beats |
+| o_video | 视频海报帧与轻量列表 | feature.video-poster-frames |
 | generation_tasks | 持久剧本资产提取 | feature.durable-script-asset-extraction |
 | o_script | 持久剧本资产提取 | feature.durable-script-asset-extraction |
 | o_assets | 持久剧本资产提取 | feature.durable-script-asset-extraction |
