@@ -32,6 +32,7 @@ description: >-
 | 参数 | 类型 | 说明 |
 |------|------|------|
 | `videoDesc` | `string` | 画面描述、场景、关联资产名称、时长、景别、运镜、角色动作、情绪、光影氛围、台词、音效、关联资产ID（**故事板辅助多参模式**为固定文本） |
+| `actionBeats` | `string[]` | 按时间顺序排列的 2–4 条动作拍点候选；每条只描述一个主要动作或状态变化 |
 | `prompt` | `string \| null` | 分镜图片提示词；本模式无 prompt 时传 `null` |
 | `track` | `string` | 分组 |
 | `duration` | `number` | 视频推荐时长（秒） |
@@ -68,6 +69,7 @@ description: >-
 **第 3 步 · 逐组调用 `add_flowData_storyboard` 写入**
 以「组」为单位**逐条调用** `add_flowData_storyboard`（每组一次，排除场标题、组标题与表头/分隔行），参数取值：
 - `videoDesc`：第 2 步整理的该组视频描述
+- `actionBeats`：严格依据该组分镜行提取 2–4 条有序动作/状态变化，不添加原分镜表没有的剧情
 - `prompt`：`null`（本模式不生成提示词）
 - `track`：**按顺序累加**，跨场连续递增（第 1 个组 track="1"、第 2 个组 track="2"…，换场不重置）
 - `duration`：**直接取该组标注时长**数值（如「第1组（约10s）」→ `10`）
@@ -75,7 +77,7 @@ description: >-
 - `shouldGenerateImage`：`"false"`
 
 ```
-add_flowData_storyboard({ videoDesc: "该组视频描述", prompt: null, track: "顺序累加的组序号", duration: 该组时长, associateAssetsIds: [该场引用资产ID列表], shouldGenerateImage: "false" })
+add_flowData_storyboard({ videoDesc: "该组视频描述", actionBeats: ["动作或状态变化1", "动作或状态变化2"], prompt: null, track: "顺序累加的组序号", duration: 该组时长, associateAssetsIds: [该场引用资产ID列表], shouldGenerateImage: "false" })
 ```
 
 **第 4 步 · 结束**
@@ -123,6 +125,7 @@ add_flowData_storyboard({ videoDesc: "该组视频描述", prompt: null, track: 
 **第 7 步 · 逐行调用 `add_flowData_storyboard` 写入**
 严格按 `storyboardTable` 的分镜数据行**逐行调用** `add_flowData_storyboard`（每行一次，排除表头与分隔行），参数取值：
 - `videoDesc`：第 5 步生成的该行视频描述
+- `actionBeats`：严格依据该行内容提取 2–4 条有序动作/状态变化，不添加原分镜表没有的剧情
 - `prompt`：第 6 步生成并校验通过的该行提示词
 - `track`：按顺序递增的独立分组（字符串）
 - `duration`：**直接取该行时长**数值
@@ -130,7 +133,7 @@ add_flowData_storyboard({ videoDesc: "该组视频描述", prompt: null, track: 
 - `shouldGenerateImage`：`"true"`
 
 ```
-add_flowData_storyboard({ videoDesc: "视频描述", prompt: "提示词内容", track: "按顺序递增的独立分组", duration: 视频推荐时间, associateAssetsIds: [该分镜所需的资产ID列表], shouldGenerateImage: "true" })
+add_flowData_storyboard({ videoDesc: "视频描述", actionBeats: ["动作或状态变化1", "动作或状态变化2"], prompt: "提示词内容", track: "按顺序递增的独立分组", duration: 视频推荐时间, associateAssetsIds: [该分镜所需的资产ID列表], shouldGenerateImage: "true" })
 ```
 
 **第 8 步 · 结束**
@@ -144,6 +147,7 @@ add_flowData_storyboard({ videoDesc: "视频描述", prompt: "提示词内容", 
 
 - **前置条件**：分镜表已构建完成且用户已确认
 - **videoDesc 必填**：每条分镜的 `videoDesc` 必须根据 `storyboardTable` 对应行的分镜数据生成，包含画面描述、场景、关联资产名称、时长、景别、运镜、角色动作、朝向、空间关系、情绪、台词、音效、关联资产ID 等完整信息（**故事板辅助多参模式例外**——`videoDesc` 为固定文本 `参考故事板内容进行视频生成`，画面信息由故事板图承载）
+- **动作拍点候选**：每个写入单位必须生成 2–4 条按时间排序的 `actionBeats`；每条只含一个主要动作或状态变化，严格取自对应分镜表，不新增人物、道具、台词或剧情。Agent 写入后一律为“待人工确认”，不得自行标记确认
 - **光影/色调排除**：`videoDesc` 与 `prompt` 中均**禁止包含任何光影方向/色温/明暗/色调描述**——这些视觉参数由视频模型从场景图参考自动推导，agent 显式描述会与场景图原生光影冲突
 - **音乐排除**：`videoDesc` 与 `prompt` 中均**禁止包含任何音乐/配乐描述**，仅可承载「音效」列对应的环境音/动作音
 - **逐条写入**：必须调用 `add_flowData_storyboard` 写入工作区分镜面板，**每个写入单位调用一次**（不再输出 `<storyboardItem>` XML）；逐条写入，不遗漏、不重复、不合并多个写入单位

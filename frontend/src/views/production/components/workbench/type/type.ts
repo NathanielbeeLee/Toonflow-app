@@ -58,6 +58,7 @@ interface TrackItem {
 interface VideoItem {
   id: number;
   src: string;
+  posterSrc?: string;
   state: "未生成" | "生成中" | "已完成" | "生成失败";
   errorReason?: string | null;
 }
@@ -88,6 +89,7 @@ type TrackMedia = TrackMediaStoryboard | TrackMediaAssets | TrackMediaUnknown;
 interface HistoryVideoItem {
   errorReason?: string | null;
   src: string;
+  posterSrc?: string;
   id: number;
   duration?: number | string | null;
   projectId?: number | null;

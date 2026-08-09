@@ -169,6 +169,8 @@ export interface o_skillList {
   'updateTime': number;
 }
 export interface o_storyboard {
+  'actionBeats'?: string | null;
+  'actionBeatsConfirmed'?: number;
   'createTime'?: number | null;
   'duration'?: string | null;
   'filePath'?: string | null;

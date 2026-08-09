@@ -3,6 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { getVideoPresentation } from "@/services/media/videoPoster";
 const router = express.Router();
 
 interface VideoItem {
@@ -200,8 +201,15 @@ export default router.post(
             .filter((v) => v.videoTrackId === trackId)
             .map(async (v) => ({
               id: v.id!,
-              src: v.filePath ? await u.oss.getFileUrl(v.filePath) : "",
-              state: v.state === "已完成" ? "已完成" : v.state === "生成中" ? "生成中" : v.state === "生成失败" ? "生成失败" : "未生成",
+              ...(v.filePath ? await getVideoPresentation(v.filePath) : { src: "", posterSrc: "" }),
+              state:
+                v.state === "已完成" || v.state === "生成成功"
+                  ? "已完成"
+                  : v.state === "生成中"
+                    ? "生成中"
+                    : v.state === "生成失败"
+                      ? "生成失败"
+                      : "未生成",
               errorReason: v?.errorReason ?? "",
             })),
         ),

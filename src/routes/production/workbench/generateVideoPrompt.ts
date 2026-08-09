@@ -5,6 +5,7 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 import fs from "fs/promises";
 import path from "path";
+import { CONFIRMED_ACTION_BEATS_PROMPT_CONTRACT, escapeXmlAttribute, formatConfirmedActionBeats } from "@/services/storyboard/actionBeats";
 const router = express.Router();
 
 export default router.post(
@@ -34,7 +35,7 @@ export default router.post(
           const storyboard = await u
             .db("o_storyboard")
             .where("o_storyboard.id", item.id)
-            .select("videoDesc", "prompt", "track", "duration", "shouldGenerateImage")
+            .select("videoDesc", "prompt", "track", "duration", "shouldGenerateImage", "actionBeats", "actionBeatsConfirmed")
             .first();
           // 查询分镜关联的资产ID
           const assetRows = await u.db("o_assets2Storyboard").where("storyboardId", item.id).orderBy("rowid").select("assetId");
@@ -81,6 +82,7 @@ export default router.post(
           duration: item.duration,
           associateAssetsIds: item.associateAssetsIds,
           shouldGenerateImage: item.shouldGenerateImage,
+          actionBeats: formatConfirmedActionBeats(item.actionBeats, item.actionBeatsConfirmed),
         });
     }
     const assetsNotAudioIds = assets.filter((i) => i.type == "audio").map((i) => i.id);
@@ -164,15 +166,17 @@ export default router.post(
             .join("，")},
           **分镜信息**：${storyboard.map(
             (i) => `<storyboardItem
-  videoDesc='${i.videoDesc}'
-  duration='${i.duration}'
+  videoDesc='${escapeXmlAttribute(i.videoDesc)}'
+  actionBeats='${escapeXmlAttribute(i.actionBeats)}'
+  duration='${escapeXmlAttribute(i.duration)}'
 ></storyboardItem>`,
           )},
           `;
 
     try {
+      const systemPrompt = `${videoPromptGeneration ?? ""}${storyboard.some((item) => item.actionBeats) ? CONFIRMED_ACTION_BEATS_PROMPT_CONTRACT : ""}`;
       const { text } = await u.Ai.Text("universalAi").invoke({
-        system: videoPromptGeneration,
+        system: systemPrompt,
         messages: [
           {
             role: "assistant",

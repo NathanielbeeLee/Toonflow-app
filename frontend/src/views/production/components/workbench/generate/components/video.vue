@@ -15,10 +15,10 @@
           v-for="v in currentTrack?.videoList"
           :key="v.id"
           @click="previewVideo(v)">
-          <template v-if="videoCoverMap[v.src]">
-            <img :src="videoCoverMap[v.src]" class="videoCover" />
+          <template v-if="v.posterSrc || videoCoverMap[v.src]">
+            <img :src="v.posterSrc || videoCoverMap[v.src]" class="videoCover" />
           </template>
-          <template v-else-if="v.state !== '生成中'">
+          <template v-else-if="v.state !== '生成中' && v.src">
             <video
               :key="v.src"
               :src="v.src"

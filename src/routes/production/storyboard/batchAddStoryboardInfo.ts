@@ -3,6 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { normalizeActionBeats, serializeActionBeats } from "@/services/storyboard/actionBeats";
 const router = express.Router();
 export default router.post(
   "/",
@@ -15,6 +16,8 @@ export default router.post(
         state: z.string(),
         src: z.string().nullable(),
         videoDesc: z.string(),
+        actionBeats: z.array(z.string()).optional(),
+        actionBeatsConfirmed: z.union([z.boolean(), z.literal(0), z.literal(1)]).optional(),
         shouldGenerateImage: z.number(),
         associateAssetsIds: z.array(z.number()),
       }),
@@ -26,6 +29,7 @@ export default router.post(
     const { data, scriptId, projectId } = req.body;
     if (!data.length) return res.status(400).send({ success: false, message: "数据不能为空" });
     for (const item of data) {
+      const normalizedActionBeats = normalizeActionBeats(item.actionBeats);
       const [id] = await u.db("o_storyboard").insert({
         prompt: item.prompt,
         duration: String(item.duration),
@@ -34,6 +38,8 @@ export default router.post(
         projectId,
         track: item.track,
         videoDesc: item.videoDesc,
+        actionBeats: serializeActionBeats(normalizedActionBeats),
+        actionBeatsConfirmed: item.actionBeatsConfirmed && normalizedActionBeats.length ? 1 : 0,
         shouldGenerateImage: item.shouldGenerateImage,
         createTime: Date.now(),
       });
@@ -102,7 +108,9 @@ export default router.post(
           state: i.state,
           scriptId: i.scriptId,
           reason: i.reason,
-          videoDesc: i.videoDesc
+          videoDesc: i.videoDesc,
+          actionBeats: normalizeActionBeats(i.actionBeats),
+          actionBeatsConfirmed: Boolean(i.actionBeatsConfirmed),
         };
       }),
     );

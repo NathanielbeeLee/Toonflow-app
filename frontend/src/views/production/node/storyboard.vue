@@ -65,6 +65,16 @@
                     </div>
                   </t-tooltip>
                 </div>
+                <div class="actionBeatSummary">
+                  <span>{{ $t("workbench.production.node.storyboard.actionBeatCount", { count: item.actionBeats?.length ?? 0 }) }}</span>
+                  <t-tag size="small" :theme="item.actionBeatsConfirmed ? 'success' : 'warning'" variant="light">
+                    {{
+                      item.actionBeatsConfirmed
+                        ? $t("workbench.production.node.storyboard.actionBeatsConfirmed")
+                        : $t("workbench.production.node.storyboard.actionBeatsPending")
+                    }}
+                  </t-tag>
+                </div>
               </div>
               <div class="addBetween addBetween--right" :class="{ expanded: hoveredIndex === index }">
                 <t-button
@@ -332,6 +342,8 @@ async function save({ imageUrl, flowId }: { imageUrl: string; flowId: number }) 
       prompt: "",
       src: imageUrl,
       videoDesc: "",
+      actionBeats: [],
+      actionBeatsConfirmed: false,
       shouldGenerateImage: 1,
       state: "已完成",
     };
@@ -399,6 +411,8 @@ function editInfo(item: Storyboard) {
   const formData = reactive({
     prompt: item.prompt ?? "",
     videoDesc: item?.videoDesc ?? "",
+    actionBeatsText: (item.actionBeats ?? []).join("\n"),
+    actionBeatsConfirmed: Boolean(item.actionBeatsConfirmed),
   });
 
   const bodyVNode = () =>
@@ -421,6 +435,20 @@ function editInfo(item: Storyboard) {
           "onUpdate:value": (v: string) => (formData.videoDesc = v),
         }),
       ]),
+      h("div", { class: "editInfoField" }, [
+        h("label", { class: "editInfoLabel" }, $t("workbench.production.node.storyboard.actionBeats")),
+        h(resolveComponent("t-textarea"), {
+          value: formData.actionBeatsText,
+          placeholder: $t("workbench.production.node.storyboard.actionBeatsPlaceholder"),
+          autosize: { minRows: 3, maxRows: 6 },
+          "onUpdate:value": (v: string) => (formData.actionBeatsText = v),
+        }),
+      ]),
+      h(resolveComponent("t-checkbox"), {
+        checked: formData.actionBeatsConfirmed,
+        label: $t("workbench.production.node.storyboard.confirmActionBeats"),
+        onChange: (v: boolean) => (formData.actionBeatsConfirmed = Boolean(v)),
+      }),
     ]);
 
   const confirmDialog = DialogPlugin.confirm({
@@ -433,15 +461,32 @@ function editInfo(item: Storyboard) {
       loading: false,
     },
     onConfirm: async () => {
+      const actionBeats = Array.from(
+        new Set(
+          formData.actionBeatsText
+            .split(/\r?\n/)
+            .map((beat) => beat.trim().slice(0, 160))
+            .filter(Boolean),
+        ),
+      ).slice(0, 4);
+      if (formData.actionBeatsConfirmed && actionBeats.length === 0) {
+        window.$message.warning($t("workbench.production.node.storyboard.actionBeatsRequired"));
+        return;
+      }
+
       confirmDialog.update({ confirmBtn: { content: $t("common.submitting"), loading: true } });
       try {
         await axios.post("/production/storyboard/editStoryboardInfo", {
           id: item.id,
           prompt: formData.prompt,
           videoDesc: formData.videoDesc,
+          actionBeats,
+          actionBeatsConfirmed: formData.actionBeatsConfirmed,
         });
         item.prompt = formData.prompt;
         item.videoDesc = formData.videoDesc;
+        item.actionBeats = actionBeats;
+        item.actionBeatsConfirmed = formData.actionBeatsConfirmed;
         window.$message.success($t("common.editSuccess"));
       } catch (e) {
         window.$message.error((e as any)?.message || $t("common.editFailed"));
@@ -656,6 +701,17 @@ function editInfo(item: Storyboard) {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .actionBeatSummary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-top: 6px;
+    max-width: 200px;
+    font-size: 12px;
+    color: var(--td-text-color-secondary);
   }
 }
 :deep(.t-image__wrapper) {

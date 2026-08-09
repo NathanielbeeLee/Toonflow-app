@@ -1839,6 +1839,13 @@
   "workbench.script.msg.exportFailed": "导出失败",
   "workbench.production.node.storyboard.videoDescPlaceholder": "请输入视频描述",
   "workbench.production.node.storyboard.videoDesc": "视频描述",
+  "workbench.production.node.storyboard.actionBeats": "动作拍点",
+  "workbench.production.node.storyboard.actionBeatsPlaceholder": "每行一条，按发生顺序填写，最多 4 条",
+  "workbench.production.node.storyboard.actionBeatCount": "动作拍点 {count} 条",
+  "workbench.production.node.storyboard.actionBeatsPending": "待确认",
+  "workbench.production.node.storyboard.actionBeatsConfirmed": "已确认",
+  "workbench.production.node.storyboard.confirmActionBeats": "我已人工核对，允许用于视频提示词",
+  "workbench.production.node.storyboard.actionBeatsRequired": "确认前请至少填写一条动作拍点",
   "workbench.production.node.assets.confirmDeleteBody": "确认是否删除该资产",
   "workbench.production.node.assets.removeFailed": "删除资产失败",
   "version": {

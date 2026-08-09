@@ -200,6 +200,8 @@ function makeProductionAgentStore(projectId: string) {
               state: "未生成" as "未生成" | "生成中" | "已完成" | "生成失败",
               src: null,
               videoDesc: data.videoDesc,
+              actionBeats: Array.isArray(data.actionBeats) ? data.actionBeats : [],
+              actionBeatsConfirmed: false,
               shouldGenerateImage:
                 (typeof data.shouldGenerateImage == "boolean" && data.shouldGenerateImage) || String(data.shouldGenerateImage).toLowerCase() == "true"
                   ? 1
@@ -465,6 +467,8 @@ function makeProductionAgentStore(projectId: string) {
           item.src = updated.src;
           item.state = updated.state;
           item.associateAssetsIds = updated.associateAssetsIds;
+          item.actionBeats = updated.actionBeats;
+          item.actionBeatsConfirmed = updated.actionBeatsConfirmed;
         }
       });
     }

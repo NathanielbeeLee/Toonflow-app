@@ -3,6 +3,7 @@ import { z } from "zod";
 import _ from "lodash";
 import ResTool from "@/socket/resTool";
 import u from "@/utils";
+import { normalizeActionBeats } from "@/services/storyboard/actionBeats";
 
 const deriveAssetSchema = z.object({
   id: z.number().describe("衍生资产ID,如果新增则为空"),
@@ -26,6 +27,8 @@ const storyboardSchema = z.object({
   id: z.number().describe("分镜ID，必须为真实id"),
   duration: z.number().describe("持续时长(秒)"),
   prompt: z.string().describe("生成提示词"),
+  actionBeats: z.array(z.string()).optional().describe("按时间顺序排列的动作拍点候选"),
+  actionBeatsConfirmed: z.boolean().optional().describe("动作拍点是否已由人工确认"),
   associateAssetsIds: z.array(z.number()).describe("关联资产ID列表"),
   src: z.string().nullable().describe("分镜资源路径"),
   index: z.number().nullable().optional().describe("分镜排序字段"),
@@ -244,6 +247,7 @@ export default (toolCpnfig: ToolConfig) => {
       description: "新增分镜面板到工作区",
       inputSchema: jsonSchema<{
         videoDesc: string;
+        actionBeats?: string[];
         prompt: string | null;
         track: string;
         duration: number;
@@ -253,6 +257,7 @@ export default (toolCpnfig: ToolConfig) => {
         z
           .object({
             videoDesc: z.string().describe("画面描述、场景、关联资产名称、时长、景别、运镜、角色动作、情绪、光影氛围、台词、音效、关联资产ID"),
+            actionBeats: z.array(z.string()).min(2).max(4).optional().describe("按时间顺序排列的2至4条动作或状态变化，每条只含一个主要变化"),
             prompt: z.string().nullable().describe("分镜图片提示词"),
             track: z.string().describe("分组"),
             duration: z.number().describe("视频推荐时间"),
@@ -265,6 +270,8 @@ export default (toolCpnfig: ToolConfig) => {
         const thinking = msg.thinking("正在新增 分镜面板 数据...");
         const data = {
           videoDesc: raw.videoDesc,
+          actionBeats: normalizeActionBeats(raw.actionBeats),
+          actionBeatsConfirmed: 0,
           prompt: raw.prompt,
           track: raw.track,
           duration: raw.duration,

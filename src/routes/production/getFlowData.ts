@@ -5,6 +5,7 @@ import { success, error } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
 const router = express.Router();
 import { FlowData } from "@/agents/productionAgent/tools";
+import { normalizeActionBeats } from "@/services/storyboard/actionBeats";
 
 export default router.post(
   "/",
@@ -148,6 +149,8 @@ export default router.post(
             src: i.filePath,
             state: i.state,
             videoDesc: i.videoDesc,
+            actionBeats: normalizeActionBeats(i.actionBeats),
+            actionBeatsConfirmed: Boolean(i.actionBeatsConfirmed),
             shouldGenerateImage: i.shouldGenerateImage,
             reason: i?.reason ?? "",
             flowId: i.flowId,

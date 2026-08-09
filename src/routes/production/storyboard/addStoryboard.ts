@@ -3,6 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { error, success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { normalizeActionBeats, serializeActionBeats } from "@/services/storyboard/actionBeats";
 const router = express.Router();
 interface Storyboard {
   id: number;
@@ -19,13 +20,16 @@ export default router.post(
     duration: z.number(),
     state: z.string(),
     videoDesc: z.string(),
+    actionBeats: z.array(z.string()).optional(),
+    actionBeatsConfirmed: z.union([z.boolean(), z.literal(0), z.literal(1)]).optional(),
     shouldGenerateImage: z.number(),
     src: z.string().nullable(),
     scriptId: z.number(),
     projectId: z.number(),
   }),
   async (req, res) => {
-    const { prompt, duration, state, src, scriptId, projectId, videoDesc, shouldGenerateImage } = req.body;
+    const { prompt, duration, state, src, scriptId, projectId, videoDesc, actionBeats, actionBeatsConfirmed } = req.body;
+    const normalizedActionBeats = normalizeActionBeats(actionBeats);
     const trackId = Date.now()
     await u.db("o_videoTrack").insert({
       id: trackId,
@@ -39,6 +43,8 @@ export default router.post(
       filePath: u.replaceUrl(src),
       trackId,
       videoDesc,
+      actionBeats: serializeActionBeats(normalizedActionBeats),
+      actionBeatsConfirmed: actionBeatsConfirmed && normalizedActionBeats.length ? 1 : 0,
       shouldGenerateImage: src ? 1 : 0,
       scriptId: scriptId,
       projectId: projectId,

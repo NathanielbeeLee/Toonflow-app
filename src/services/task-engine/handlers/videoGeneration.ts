@@ -2,6 +2,7 @@ import u from "@/utils";
 import { GenerationTask, TaskCancelledError, TaskExecutionError } from "@/domain/generationTask";
 import { ReferenceList } from "@/utils/ai";
 import { TaskHandler, TaskHandlerContext } from "@/services/task-engine/worker";
+import { ensureVideoPoster } from "@/services/media/videoPoster";
 
 export interface VideoGenerationTaskPayload {
   projectId: number;
@@ -113,6 +114,7 @@ export const videoGenerationTaskHandler: TaskHandler = {
         throw new TaskExecutionError(u.error(error).message, "VIDEO_SAVE_FAILED", Boolean(providerJobId), Boolean(providerJobId));
       }
       await u.db("o_video").where("id", payload.videoId).update({ state: "生成成功", errorReason: null });
+      void ensureVideoPoster(payload.videoPath);
       return { videoId: payload.videoId, videoPath: payload.videoPath, providerJobId };
     } catch (error) {
       if (error instanceof TaskCancelledError && providerJobId) {

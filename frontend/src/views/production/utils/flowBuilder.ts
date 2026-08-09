@@ -52,6 +52,8 @@ export interface Storyboard {
   flowId?: number;
   reason?: string;
   videoDesc: string;
+  actionBeats?: string[];
+  actionBeatsConfirmed?: boolean;
   shouldGenerateImage: number;
 }
 

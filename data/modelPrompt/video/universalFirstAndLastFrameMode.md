@@ -22,6 +22,7 @@
 ```xml
 <storyboardItem
   videoDesc='（画面描述、场景、关联资产名称、时长、景别、运镜、角色动作、情绪、光影氛围、台词、音效、关联资产ID）'
+  actionBeats='setup: ... | trigger: ... | peak: ... | aftermath: ...'
   prompt='待生成'
   track='分组'
   duration='视频推荐时间'
@@ -31,6 +32,8 @@
 ```
 
 ### 3. videoDesc 解析规则
+
+`actionBeats` 是可选的、已经人工确认的有序动作状态变化。非空时，必须在 `[Motion]` 中按输入顺序消费全部拍点，并按总 `duration` 从头到尾分配连续时间段；不得跳过、交换或编造 `videoDesc` 之外的剧情。为空时完全沿用原 `videoDesc` 路径。
 
 从 `videoDesc` 括号内按顿号分隔提取以下12个字段：
 

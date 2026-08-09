@@ -34,9 +34,9 @@
           <!-- 优先展示选中视频的首帧 -->
           <div class="thumbGroup" v-if="track.selectVideoId && getSelectedVideoSrc(track)">
             <img
-              v-if="videoCoverMap[getSelectedVideoSrc(track)!]"
+              v-if="getSelectedVideoPoster(track) || videoCoverMap[getSelectedVideoSrc(track)!]"
               class="thumb selectedVideoThumb"
-              :src="videoCoverMap[getSelectedVideoSrc(track)!]"
+              :src="getSelectedVideoPoster(track) || videoCoverMap[getSelectedVideoSrc(track)!]"
               draggable="false" />
             <div v-else class="thumb placeholder c">
               <i-video size="24" />
@@ -107,6 +107,11 @@ function getSelectedVideoSrc(track: TrackItem): string | null {
   if (!track.selectVideoId) return null;
   const video = track.videoList?.find((v) => v.id === track.selectVideoId);
   return video?.src || null;
+}
+
+function getSelectedVideoPoster(track: TrackItem): string {
+  if (!track.selectVideoId) return "";
+  return track.videoList?.find((video) => video.id === track.selectVideoId)?.posterSrc || "";
 }
 
 /** 截取视频首帧封面 */
@@ -404,7 +409,7 @@ watch(
   () => {
     trackList.value.forEach((track) => {
       const src = getSelectedVideoSrc(track);
-      if (src) captureVideoCover(src);
+      if (src && !getSelectedVideoPoster(track)) captureVideoCover(src);
     });
   },
   { deep: true, immediate: true },

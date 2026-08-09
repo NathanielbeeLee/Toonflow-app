@@ -3,6 +3,7 @@ import u from "@/utils";
 import { z } from "zod";
 import { success } from "@/lib/responseFormat";
 import { validateFields } from "@/middleware/middleware";
+import { getVideoPresentation } from "@/services/media/videoPoster";
 const router = express.Router();
 
 export default router.post(
@@ -24,7 +25,8 @@ export default router.post(
         await Promise.all(
           videoList.map(async (s) => ({
             ...s,
-            src: s.filePath ? await u.oss.getFileUrl(s.filePath) : "",
+            state: s.state === "生成成功" || s.state === "已完成" ? "已完成" : s.state,
+            ...(s.filePath ? await getVideoPresentation(s.filePath) : { src: "", posterSrc: "" }),
           })),
         ),
       ),

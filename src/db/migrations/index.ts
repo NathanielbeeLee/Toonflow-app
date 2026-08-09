@@ -397,6 +397,17 @@ const migrations: Migration[] = [
       }
     },
   },
+  {
+    id: "20260809_012_storyboard_action_beats",
+    up: async (db) => {
+      if (!(await db.schema.hasColumn("o_storyboard", "actionBeats"))) {
+        await db.schema.alterTable("o_storyboard", (table) => table.text("actionBeats"));
+      }
+      if (!(await db.schema.hasColumn("o_storyboard", "actionBeatsConfirmed"))) {
+        await db.schema.alterTable("o_storyboard", (table) => table.integer("actionBeatsConfirmed").notNullable().defaultTo(0));
+      }
+    },
+  },
 ];
 
 export default async function runMigrations(db: Knex): Promise<void> {

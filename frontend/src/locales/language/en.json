@@ -1760,5 +1760,12 @@
   "settings.memory.modelMap.editRefeshWord": "rebind",
   "settings.memory.modelMap.delPrompt": "delete",
   "settings.vendor.testModel": "test",
-  "storyboard.assets.addStoryboardFailed": "Failed to add storyboard"
+  "storyboard.assets.addStoryboardFailed": "Failed to add storyboard",
+  "workbench.production.node.storyboard.actionBeats": "Action beats",
+  "workbench.production.node.storyboard.actionBeatsPlaceholder": "One ordered beat per line, up to 4",
+  "workbench.production.node.storyboard.actionBeatCount": "{count} action beats",
+  "workbench.production.node.storyboard.actionBeatsPending": "Pending review",
+  "workbench.production.node.storyboard.actionBeatsConfirmed": "Confirmed",
+  "workbench.production.node.storyboard.confirmActionBeats": "I reviewed these beats; use them in the video prompt",
+  "workbench.production.node.storyboard.actionBeatsRequired": "Add at least one action beat before confirming"
 }
