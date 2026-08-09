@@ -6,6 +6,7 @@
 | workflow.novel-to-video | uses | feature.asset-consistency |
 | workflow.novel-to-video | uses | feature.infinite-canvas |
 | workflow.novel-to-video | uses | feature.durable-video-tasks |
+| workflow.novel-to-video | uses | feature.video-readiness-gate |
 | workflow.novel-to-video | uses | feature.durable-image-tasks |
 | workflow.novel-to-video | uses | feature.durable-script-asset-extraction |
 | workflow.novel-to-video | uses | feature.ai-novel-import |
@@ -30,6 +31,9 @@
 | feature.durable-image-tasks | uses | feature.provider-limits |
 | feature.durable-image-tasks | uses | provider.openai-compatible |
 | feature.durable-image-tasks | visualized_by | feature.durable-task-center |
+| feature.video-readiness-gate | protects | feature.durable-video-tasks |
+| feature.video-readiness-gate | documented_by | document.feature-catalog |
+| feature.video-readiness-gate | inspired_by | document.upstream-watch |
 | feature.durable-script-asset-extraction | writes | table.generation-tasks |
 | feature.durable-script-asset-extraction | uses | feature.asset-consistency |
 | feature.durable-script-asset-extraction | visualized_by | feature.durable-task-center |

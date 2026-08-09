@@ -27,6 +27,7 @@
         <videoCard
           v-if="currentTrack"
           :active-track-index="activeTrackIndex"
+          :generating="videoReadinessLoading"
           v-model:current-track="currentTrack"
           @refresh="getGenerateData"
           @generate="generateVideo" />
@@ -84,6 +85,7 @@ const modelParmas = ref<ModelSetting>({
 });
 
 const storyboardList = ref<StoryboardItem[]>([]); // 分镜列表
+const videoReadinessLoading = ref(false);
 
 /** 排序优先级：assets有图=0，storyboard有图=1，无图=2 */
 function getImageItemPriority(item: UploadItem): number {
@@ -385,40 +387,57 @@ onMounted(() => {
 });
 /** 单个轨道生成视频 */
 async function generateVideo() {
+  const frameMode = ["startEndRequired", "endFrameOptional", "startFrameOptional"];
+  const preSliced = frameMode.includes(modelParmas.value.mode)
+    ? imageList.value.slice(0, 2)
+    : modelParmas.value.mode === "singleImage"
+      ? imageList.value.slice(0, 1)
+      : imageList.value;
+  const uploadData =
+    modelParmas.value.mode === "text"
+      ? []
+      : preSliced
+          .filter((item) => Boolean(item.src) && typeof item.id === "number" && !isNaN(item.id))
+          .map(({ id, sources }) => ({ id, sources }));
+  const requestData = {
+    projectId: project.value?.id,
+    scriptId: episodesId.value,
+    uploadData,
+    prompt: currentTrack.value.prompt,
+    model: modelParmas.value.model,
+    mode: modelParmas.value.mode,
+    resolution: modelParmas.value.resolution,
+    duration: modelParmas.value.duration,
+    audio: modelParmas.value.audio,
+    trackId: currentTrack.value.id,
+  };
+
+  videoReadinessLoading.value = true;
+  try {
+    const { data } = await axios.post("/production/workbench/checkVideoReadiness", {
+      ...requestData,
+      trackData: [{ uploadData, trackId: requestData.trackId, prompt: requestData.prompt, duration: requestData.duration }],
+    });
+    if (!data.ready) {
+      const failures = (data.tracks?.[0]?.checks ?? []).filter((item: any) => !item.ok).map((item: any) => item.message);
+      window.$message.warning(`生成前检查未通过：${failures.slice(0, 4).join("；")}`);
+      return;
+    }
+  } catch (error) {
+    window.$message.error((error as any)?.message ?? "视频生成准备度检查失败");
+    return;
+  } finally {
+    videoReadinessLoading.value = false;
+  }
+
   const dlg = DialogPlugin.confirm({
     header: $t("workbench.generate.generateConfirm"),
     body: $t("workbench.generate.generateConfirmBody"),
     onConfirm: async () => {
       dlg.destroy();
       try {
-        const { data } = await axios.post("/production/workbench/generateVideo", {
-          projectId: project.value?.id,
-          scriptId: episodesId.value,
-          uploadData:
-            modelParmas.value.mode === "text"
-              ? []
-              : (() => {
-                  const frameMode = ["startEndRequired", "endFrameOptional", "startFrameOptional"];
-                  const preSliced = frameMode.includes(modelParmas.value.mode)
-                    ? imageList.value.slice(0, 2)
-                    : modelParmas.value.mode === "singleImage"
-                      ? imageList.value.slice(0, 1)
-                      : imageList.value;
-                  const filtered = preSliced
-                    .filter((item) => Boolean(item.src) && typeof item.id === "number" && !isNaN(item.id))
-                    .map(({ id, sources }) => ({ id, sources }));
-                  if (frameMode.includes(modelParmas.value.mode)) return filtered.slice(0, 2);
-                  if (modelParmas.value.mode === "singleImage") return filtered.slice(0, 1);
-                  return filtered;
-                })(),
-          prompt: currentTrack.value.prompt,
-          model: modelParmas.value.model,
-          mode: modelParmas.value.mode,
-          resolution: modelParmas.value.resolution,
-          duration: modelParmas.value.duration,
-          audio: modelParmas.value.audio,
-          trackId: currentTrack.value.id,
-        });
+        videoReadinessLoading.value = true;
+        const { data } = await axios.post("/production/workbench/generateVideo", requestData);
         window.$message.success($t("workbench.generate.generateStarted"));
         currentTrack.value.videoList.push({
           id: data,
@@ -428,6 +447,7 @@ async function generateVideo() {
       } catch (e) {
         window.$message.error((e as any)?.message ?? "视频发起生成请求失败");
       } finally {
+        videoReadinessLoading.value = false;
       }
     },
     onCancel: () => dlg.destroy(),

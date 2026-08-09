@@ -12,6 +12,13 @@
 | o_image | 持久图片任务 | feature.durable-image-tasks |
 | o_storyboard | 持久图片任务 | feature.durable-image-tasks |
 | o_imageFlow | 持久图片任务 | feature.durable-image-tasks |
+| o_project | 视频生成准备度门禁 | feature.video-readiness-gate |
+| o_script | 视频生成准备度门禁 | feature.video-readiness-gate |
+| o_videoTrack | 视频生成准备度门禁 | feature.video-readiness-gate |
+| o_storyboard | 视频生成准备度门禁 | feature.video-readiness-gate |
+| o_assets | 视频生成准备度门禁 | feature.video-readiness-gate |
+| o_vendorConfig | 视频生成准备度门禁 | feature.video-readiness-gate |
+| generation_tasks | 视频生成准备度门禁 | feature.video-readiness-gate |
 | generation_tasks | 持久剧本资产提取 | feature.durable-script-asset-extraction |
 | o_script | 持久剧本资产提取 | feature.durable-script-asset-extraction |
 | o_assets | 持久剧本资产提取 | feature.durable-script-asset-extraction |

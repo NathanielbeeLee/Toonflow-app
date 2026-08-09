@@ -3,6 +3,7 @@ import u from "@/utils";
 import { generationTaskRepository, stableIdempotencyKey } from "@/services/task-engine/repository";
 import { VideoGenerationTaskPayload } from "@/services/task-engine/handlers/videoGeneration";
 import { prepareCostReservation } from "@/services/task-engine/budget";
+import { inspectVideoGenerationReadiness, readinessFailureMessage } from "@/services/video-readiness";
 
 interface EnqueueVideoInput {
   projectId: number;
@@ -30,6 +31,11 @@ export async function enqueueVideoGeneration(input: EnqueueVideoInput) {
   if (active) {
     const payload = active.payload as VideoGenerationTaskPayload;
     return { task: active, videoId: payload.videoId, deduped: true };
+  }
+  const readiness = await inspectVideoGenerationReadiness(input);
+  if (!readiness.ready) {
+    const message = readinessFailureMessage(readiness);
+    throw new Error(message || "当前镜头已有进行中的视频任务");
   }
   const costReservation = await prepareCostReservation({
     projectId: input.projectId,

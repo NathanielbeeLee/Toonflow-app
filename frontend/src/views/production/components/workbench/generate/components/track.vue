@@ -301,37 +301,60 @@ function getTrackUploadInfo(track: TrackItem, filterEmpty = false) {
 }
 const generateVideoLoad = ref(false);
 /** 批量为已勾选轨道生成视频 */
-function batchGenVideo() {
+async function batchGenVideo() {
+  const checkedTrackData = trackList.value.filter((track) => checkedTrackIds.value.includes(track.id));
+  if (!checkedTrackData.length) return window.$message.warning("请先勾选需要生成视频的镜头");
+  const notHasPrompt = checkedTrackData.filter((i) => !i.prompt?.trim());
+  if (notHasPrompt.length) return window.$message.warning($t("workbench.generate.skipDataWithEmptyVideoPromptWords"));
+
+  const trackData = checkedTrackData.map((track) => {
+    const uploadData = props.modelParmas.mode === "text" ? [] : getTrackUploadInfo(track, true);
+    return {
+      duration: props.clampDuration(track.duration || props.modelParmas.duration),
+      prompt: track.prompt,
+      uploadData,
+      trackId: track.id,
+    };
+  });
+  const requestData = {
+    projectId: project.value?.id,
+    scriptId: episodesId.value,
+    model: props.modelParmas.model,
+    mode: props.modelParmas.mode,
+    resolution: props.modelParmas.resolution,
+    audio: Boolean(props.modelParmas.audio),
+    trackData,
+  };
+
+  generateVideoLoad.value = true;
+  try {
+    const { data } = await axios.post("/production/workbench/checkVideoReadiness", requestData);
+    if (!data.ready) {
+      const failures = (data.tracks ?? [])
+        .filter((track: any) => !track.ready)
+        .slice(0, 4)
+        .map((track: any) => {
+          const index = trackList.value.findIndex((item) => item.id === track.trackId);
+          const reasons = (track.checks ?? []).filter((item: any) => !item.ok).map((item: any) => item.message);
+          return `#${index + 1} ${reasons.slice(0, 2).join("、")}`;
+        });
+      window.$message.warning(`批量生成前检查未通过：${failures.join("；")}`);
+      return;
+    }
+  } catch (error) {
+    window.$message.error((error as any)?.message ?? "视频生成准备度检查失败");
+    return;
+  } finally {
+    generateVideoLoad.value = false;
+  }
+
   const dlg = DialogPlugin.confirm({
     header: $t("workbench.generate.generateConfirm"),
     body: $t("workbench.generate.generateVideosInBatches"),
     onConfirm: async () => {
       dlg.destroy();
-
-      const checkedTrackData = trackList.value.filter((track) => checkedTrackIds.value.includes(track.id));
-      const notHasPrompt = checkedTrackData.filter((i) => !i.prompt);
-      if (notHasPrompt.length) return window.$message.warning($t("workbench.generate.skipDataWithEmptyVideoPromptWords"));
-
-      const trackData = checkedTrackData.map((track) => {
-        const trackId = track.id;
-        const uploadData = props.modelParmas.mode === "text" ? [] : getTrackUploadInfo(track, true);
-        return {
-          duration: props.clampDuration(track.duration || props.modelParmas.duration),
-          prompt: track.prompt,
-          uploadData,
-          trackId,
-        };
-      });
-      const requestData = {
-        projectId: project.value?.id,
-        scriptId: episodesId.value,
-        model: props.modelParmas.model,
-        mode: props.modelParmas.mode,
-        resolution: props.modelParmas.resolution,
-        audio: Boolean(props.modelParmas.audio),
-        trackData,
-      };
       try {
+        generateVideoLoad.value = true;
         const { data } = await axios.post("/production/workbench/batchGenerateVideo", requestData);
         const videoRecordId: Record<number, number> = {};
         data.forEach((item: { videoId: number; trackId: number }) => {

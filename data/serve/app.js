@@ -20936,16 +20936,16 @@ var require_router = __commonJS({
         return new Router(options);
       }
       const opts = options || {};
-      function router181(req, res, next) {
-        router181.handle(req, res, next);
+      function router182(req, res, next) {
+        router182.handle(req, res, next);
       }
-      Object.setPrototypeOf(router181, this);
-      router181.caseSensitive = opts.caseSensitive;
-      router181.mergeParams = opts.mergeParams;
-      router181.params = {};
-      router181.strict = opts.strict;
-      router181.stack = [];
-      return router181;
+      Object.setPrototypeOf(router182, this);
+      router182.caseSensitive = opts.caseSensitive;
+      router182.mergeParams = opts.mergeParams;
+      router182.params = {};
+      router182.strict = opts.strict;
+      router182.stack = [];
+      return router182;
     }
     Router.prototype = function() {
     };
@@ -21333,7 +21333,7 @@ var require_application = __commonJS({
     var app2 = exports2 = module2.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router181 = null;
+      var router182 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -21342,13 +21342,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router181 === null) {
-            router181 = new Router({
+          if (router182 === null) {
+            router182 = new Router({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router181;
+          return router182;
         }
       });
     };
@@ -21419,15 +21419,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router181 = this.router;
+      var router182 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router181.use(path36, fn2);
+          return router182.use(path36, fn2);
         }
         debug(".use app under %s", path36);
         fn2.mountpath = path36;
         fn2.parent = this;
-        router181.use(path36, function mounted_app(req, res, next) {
+        router182.use(path36, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -34861,7 +34861,7 @@ var require_socket = __commonJS({
             transport.send([{ type: "pong", data: "probe" }]);
             this.emit("upgrading", transport);
             clearInterval(checkIntervalTimer);
-            checkIntervalTimer = setInterval(check3, 100);
+            checkIntervalTimer = setInterval(check4, 100);
           } else if ("upgrade" === packet.type && this.readyState !== "closed") {
             debug("got upgrade packet - upgrading");
             cleanup();
@@ -34881,7 +34881,7 @@ var require_socket = __commonJS({
             transport.close();
           }
         };
-        const check3 = () => {
+        const check4 = () => {
           if ("polling" === this.transport.name && this.transport.writable) {
             debug("writing a noop packet to polling for fast upgrade");
             this.transport.send([{ type: "noop" }]);
@@ -39568,7 +39568,7 @@ var require_server = __commonJS({
       attach(server2, options = {}) {
         const path36 = this._computePath(options);
         const destroyUpgradeTimeout = options.destroyUpgradeTimeout || 1e3;
-        function check3(req) {
+        function check4(req) {
           return path36 === req.url.slice(0, path36.length);
         }
         const listeners = server2.listeners("request").slice(0);
@@ -39576,7 +39576,7 @@ var require_server = __commonJS({
         server2.on("close", this.close.bind(this));
         server2.on("listening", this.init.bind(this));
         server2.on("request", (req, res) => {
-          if (check3(req)) {
+          if (check4(req)) {
             debug('intercepting request for path "%s"', path36);
             this.handleRequest(req, res);
           } else {
@@ -39589,7 +39589,7 @@ var require_server = __commonJS({
         });
         if (~this.opts.transports.indexOf("websocket")) {
           server2.on("upgrade", (req, socket, head) => {
-            if (check3(req)) {
+            if (check4(req)) {
               this.handleUpgrade(req, socket, head);
             } else if (false !== options.destroyUpgrade) {
               setTimeout(function() {
@@ -48834,8 +48834,8 @@ var require_lib4 = __commonJS({
         getWss: function getWss() {
           return wsServer;
         },
-        applyTo: function applyTo(router181) {
-          (0, _addWsMethod2.default)(router181);
+        applyTo: function applyTo(router182) {
+          (0, _addWsMethod2.default)(router182);
         }
       };
     }
@@ -50052,11 +50052,11 @@ var require_is_glob = __commonJS({
       if (isExtglob(str)) {
         return true;
       }
-      var check3 = strictCheck;
+      var check4 = strictCheck;
       if (options && options.strict === false) {
-        check3 = relaxedCheck;
+        check4 = relaxedCheck;
       }
-      return check3(str);
+      return check4(str);
     };
   }
 });
@@ -72915,7 +72915,7 @@ var require_ddl = __commonJS({
         const sql16 = [];
         const pre = [];
         const post = [];
-        let check3 = null;
+        let check4 = null;
         sql16.push(newSql);
         sql16.push(copyData(this.tableName(), this.alteredName, columns));
         sql16.push(dropOriginal(this.tableName()));
@@ -72927,9 +72927,9 @@ var require_ddl = __commonJS({
         if (isForeignCheckEnabled2) {
           pre.push(setForeignCheck(false));
           post.push(setForeignCheck(true));
-          check3 = executeForeignCheck();
+          check4 = executeForeignCheck();
         }
-        return { pre, sql: sql16, check: check3, post };
+        return { pre, sql: sql16, check: check4, post };
       }
     };
     module2.exports = SQLite3_DDL;
@@ -144649,7 +144649,7 @@ var init_schemas2 = __esm({
       inst.safeDecode = (data, params) => safeDecode2(inst, data, params);
       inst.safeEncodeAsync = async (data, params) => safeEncodeAsync2(inst, data, params);
       inst.safeDecodeAsync = async (data, params) => safeDecodeAsync2(inst, data, params);
-      inst.refine = (check3, params) => inst.check(refine(check3, params));
+      inst.refine = (check4, params) => inst.check(refine(check4, params));
       inst.superRefine = (refinement) => inst.check(superRefine(refinement));
       inst.overwrite = (fn) => inst.check(_overwrite(fn));
       inst.optional = () => optional(inst);
@@ -146915,7 +146915,7 @@ var init_types = __esm({
         const result = await (isAsync(maybeAsyncResult) ? maybeAsyncResult : Promise.resolve(maybeAsyncResult));
         return handleResult(ctx, result);
       }
-      refine(check3, message) {
+      refine(check4, message) {
         const getIssueProperties = (val) => {
           if (typeof message === "string" || typeof message === "undefined") {
             return { message };
@@ -146926,7 +146926,7 @@ var init_types = __esm({
           }
         };
         return this._refinement((val, ctx) => {
-          const result = check3(val);
+          const result = check4(val);
           const setError = () => ctx.addIssue({
             code: ZodIssueCode2.custom,
             ...getIssueProperties(val)
@@ -146949,9 +146949,9 @@ var init_types = __esm({
           }
         });
       }
-      refinement(check3, refinementData) {
+      refinement(check4, refinementData) {
         return this._refinement((val, ctx) => {
-          if (!check3(val)) {
+          if (!check4(val)) {
             ctx.addIssue(typeof refinementData === "function" ? refinementData(val, ctx) : refinementData);
             return false;
           } else {
@@ -147110,70 +147110,70 @@ var init_types = __esm({
         }
         const status = new ParseStatus();
         let ctx = void 0;
-        for (const check3 of this._def.checks) {
-          if (check3.kind === "min") {
-            if (input.data.length < check3.value) {
+        for (const check4 of this._def.checks) {
+          if (check4.kind === "min") {
+            if (input.data.length < check4.value) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.too_small,
-                minimum: check3.value,
+                minimum: check4.value,
                 type: "string",
                 inclusive: true,
                 exact: false,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "max") {
-            if (input.data.length > check3.value) {
+          } else if (check4.kind === "max") {
+            if (input.data.length > check4.value) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.too_big,
-                maximum: check3.value,
+                maximum: check4.value,
                 type: "string",
                 inclusive: true,
                 exact: false,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "length") {
-            const tooBig = input.data.length > check3.value;
-            const tooSmall = input.data.length < check3.value;
+          } else if (check4.kind === "length") {
+            const tooBig = input.data.length > check4.value;
+            const tooSmall = input.data.length < check4.value;
             if (tooBig || tooSmall) {
               ctx = this._getOrReturnCtx(input, ctx);
               if (tooBig) {
                 addIssueToContext(ctx, {
                   code: ZodIssueCode2.too_big,
-                  maximum: check3.value,
+                  maximum: check4.value,
                   type: "string",
                   inclusive: true,
                   exact: true,
-                  message: check3.message
+                  message: check4.message
                 });
               } else if (tooSmall) {
                 addIssueToContext(ctx, {
                   code: ZodIssueCode2.too_small,
-                  minimum: check3.value,
+                  minimum: check4.value,
                   type: "string",
                   inclusive: true,
                   exact: true,
-                  message: check3.message
+                  message: check4.message
                 });
               }
               status.dirty();
             }
-          } else if (check3.kind === "email") {
+          } else if (check4.kind === "email") {
             if (!emailRegex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 validation: "email",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "emoji") {
+          } else if (check4.kind === "emoji") {
             if (!emojiRegex) {
               emojiRegex = new RegExp(_emojiRegex, "u");
             }
@@ -147182,61 +147182,61 @@ var init_types = __esm({
               addIssueToContext(ctx, {
                 validation: "emoji",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "uuid") {
+          } else if (check4.kind === "uuid") {
             if (!uuidRegex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 validation: "uuid",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "nanoid") {
+          } else if (check4.kind === "nanoid") {
             if (!nanoidRegex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 validation: "nanoid",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "cuid") {
+          } else if (check4.kind === "cuid") {
             if (!cuidRegex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 validation: "cuid",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "cuid2") {
+          } else if (check4.kind === "cuid2") {
             if (!cuid2Regex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 validation: "cuid2",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "ulid") {
+          } else if (check4.kind === "ulid") {
             if (!ulidRegex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 validation: "ulid",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "url") {
+          } else if (check4.kind === "url") {
             try {
               new URL(input.data);
             } catch {
@@ -147244,153 +147244,153 @@ var init_types = __esm({
               addIssueToContext(ctx, {
                 validation: "url",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "regex") {
-            check3.regex.lastIndex = 0;
-            const testResult = check3.regex.test(input.data);
+          } else if (check4.kind === "regex") {
+            check4.regex.lastIndex = 0;
+            const testResult = check4.regex.test(input.data);
             if (!testResult) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 validation: "regex",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "trim") {
+          } else if (check4.kind === "trim") {
             input.data = input.data.trim();
-          } else if (check3.kind === "includes") {
-            if (!input.data.includes(check3.value, check3.position)) {
+          } else if (check4.kind === "includes") {
+            if (!input.data.includes(check4.value, check4.position)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.invalid_string,
-                validation: { includes: check3.value, position: check3.position },
-                message: check3.message
+                validation: { includes: check4.value, position: check4.position },
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "toLowerCase") {
+          } else if (check4.kind === "toLowerCase") {
             input.data = input.data.toLowerCase();
-          } else if (check3.kind === "toUpperCase") {
+          } else if (check4.kind === "toUpperCase") {
             input.data = input.data.toUpperCase();
-          } else if (check3.kind === "startsWith") {
-            if (!input.data.startsWith(check3.value)) {
+          } else if (check4.kind === "startsWith") {
+            if (!input.data.startsWith(check4.value)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.invalid_string,
-                validation: { startsWith: check3.value },
-                message: check3.message
+                validation: { startsWith: check4.value },
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "endsWith") {
-            if (!input.data.endsWith(check3.value)) {
+          } else if (check4.kind === "endsWith") {
+            if (!input.data.endsWith(check4.value)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.invalid_string,
-                validation: { endsWith: check3.value },
-                message: check3.message
+                validation: { endsWith: check4.value },
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "datetime") {
-            const regex = datetimeRegex(check3);
+          } else if (check4.kind === "datetime") {
+            const regex = datetimeRegex(check4);
             if (!regex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.invalid_string,
                 validation: "datetime",
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "date") {
+          } else if (check4.kind === "date") {
             const regex = dateRegex;
             if (!regex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.invalid_string,
                 validation: "date",
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "time") {
-            const regex = timeRegex(check3);
+          } else if (check4.kind === "time") {
+            const regex = timeRegex(check4);
             if (!regex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.invalid_string,
                 validation: "time",
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "duration") {
+          } else if (check4.kind === "duration") {
             if (!durationRegex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 validation: "duration",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "ip") {
-            if (!isValidIP(input.data, check3.version)) {
+          } else if (check4.kind === "ip") {
+            if (!isValidIP(input.data, check4.version)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 validation: "ip",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "jwt") {
-            if (!isValidJWT2(input.data, check3.alg)) {
+          } else if (check4.kind === "jwt") {
+            if (!isValidJWT2(input.data, check4.alg)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 validation: "jwt",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "cidr") {
-            if (!isValidCidr(input.data, check3.version)) {
+          } else if (check4.kind === "cidr") {
+            if (!isValidCidr(input.data, check4.version)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 validation: "cidr",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "base64") {
+          } else if (check4.kind === "base64") {
             if (!base64Regex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 validation: "base64",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "base64url") {
+          } else if (check4.kind === "base64url") {
             if (!base64urlRegex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 validation: "base64url",
                 code: ZodIssueCode2.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
           } else {
-            util3.assertNever(check3);
+            util3.assertNever(check4);
           }
         }
         return { status: status.value, value: input.data };
@@ -147402,10 +147402,10 @@ var init_types = __esm({
           ...errorUtil.errToObj(message)
         });
       }
-      _addCheck(check3) {
+      _addCheck(check4) {
         return new _ZodString3({
           ...this._def,
-          checks: [...this._def.checks, check3]
+          checks: [...this._def.checks, check4]
         });
       }
       email(message) {
@@ -147662,67 +147662,67 @@ var init_types = __esm({
         }
         let ctx = void 0;
         const status = new ParseStatus();
-        for (const check3 of this._def.checks) {
-          if (check3.kind === "int") {
+        for (const check4 of this._def.checks) {
+          if (check4.kind === "int") {
             if (!util3.isInteger(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.invalid_type,
                 expected: "integer",
                 received: "float",
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "min") {
-            const tooSmall = check3.inclusive ? input.data < check3.value : input.data <= check3.value;
+          } else if (check4.kind === "min") {
+            const tooSmall = check4.inclusive ? input.data < check4.value : input.data <= check4.value;
             if (tooSmall) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.too_small,
-                minimum: check3.value,
+                minimum: check4.value,
                 type: "number",
-                inclusive: check3.inclusive,
+                inclusive: check4.inclusive,
                 exact: false,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "max") {
-            const tooBig = check3.inclusive ? input.data > check3.value : input.data >= check3.value;
+          } else if (check4.kind === "max") {
+            const tooBig = check4.inclusive ? input.data > check4.value : input.data >= check4.value;
             if (tooBig) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.too_big,
-                maximum: check3.value,
+                maximum: check4.value,
                 type: "number",
-                inclusive: check3.inclusive,
+                inclusive: check4.inclusive,
                 exact: false,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "multipleOf") {
-            if (floatSafeRemainder2(input.data, check3.value) !== 0) {
+          } else if (check4.kind === "multipleOf") {
+            if (floatSafeRemainder2(input.data, check4.value) !== 0) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.not_multiple_of,
-                multipleOf: check3.value,
-                message: check3.message
+                multipleOf: check4.value,
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "finite") {
+          } else if (check4.kind === "finite") {
             if (!Number.isFinite(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.not_finite,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
           } else {
-            util3.assertNever(check3);
+            util3.assertNever(check4);
           }
         }
         return { status: status.value, value: input.data };
@@ -147753,10 +147753,10 @@ var init_types = __esm({
           ]
         });
       }
-      _addCheck(check3) {
+      _addCheck(check4) {
         return new _ZodNumber({
           ...this._def,
-          checks: [...this._def.checks, check3]
+          checks: [...this._def.checks, check4]
         });
       }
       int(message) {
@@ -147891,45 +147891,45 @@ var init_types = __esm({
         }
         let ctx = void 0;
         const status = new ParseStatus();
-        for (const check3 of this._def.checks) {
-          if (check3.kind === "min") {
-            const tooSmall = check3.inclusive ? input.data < check3.value : input.data <= check3.value;
+        for (const check4 of this._def.checks) {
+          if (check4.kind === "min") {
+            const tooSmall = check4.inclusive ? input.data < check4.value : input.data <= check4.value;
             if (tooSmall) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.too_small,
                 type: "bigint",
-                minimum: check3.value,
-                inclusive: check3.inclusive,
-                message: check3.message
+                minimum: check4.value,
+                inclusive: check4.inclusive,
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "max") {
-            const tooBig = check3.inclusive ? input.data > check3.value : input.data >= check3.value;
+          } else if (check4.kind === "max") {
+            const tooBig = check4.inclusive ? input.data > check4.value : input.data >= check4.value;
             if (tooBig) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.too_big,
                 type: "bigint",
-                maximum: check3.value,
-                inclusive: check3.inclusive,
-                message: check3.message
+                maximum: check4.value,
+                inclusive: check4.inclusive,
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "multipleOf") {
-            if (input.data % check3.value !== BigInt(0)) {
+          } else if (check4.kind === "multipleOf") {
+            if (input.data % check4.value !== BigInt(0)) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.not_multiple_of,
-                multipleOf: check3.value,
-                message: check3.message
+                multipleOf: check4.value,
+                message: check4.message
               });
               status.dirty();
             }
           } else {
-            util3.assertNever(check3);
+            util3.assertNever(check4);
           }
         }
         return { status: status.value, value: input.data };
@@ -147969,10 +147969,10 @@ var init_types = __esm({
           ]
         });
       }
-      _addCheck(check3) {
+      _addCheck(check4) {
         return new _ZodBigInt({
           ...this._def,
-          checks: [...this._def.checks, check3]
+          checks: [...this._def.checks, check4]
         });
       }
       positive(message) {
@@ -148092,35 +148092,35 @@ var init_types = __esm({
         }
         const status = new ParseStatus();
         let ctx = void 0;
-        for (const check3 of this._def.checks) {
-          if (check3.kind === "min") {
-            if (input.data.getTime() < check3.value) {
+        for (const check4 of this._def.checks) {
+          if (check4.kind === "min") {
+            if (input.data.getTime() < check4.value) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.too_small,
-                message: check3.message,
+                message: check4.message,
                 inclusive: true,
                 exact: false,
-                minimum: check3.value,
+                minimum: check4.value,
                 type: "date"
               });
               status.dirty();
             }
-          } else if (check3.kind === "max") {
-            if (input.data.getTime() > check3.value) {
+          } else if (check4.kind === "max") {
+            if (input.data.getTime() > check4.value) {
               ctx = this._getOrReturnCtx(input, ctx);
               addIssueToContext(ctx, {
                 code: ZodIssueCode2.too_big,
-                message: check3.message,
+                message: check4.message,
                 inclusive: true,
                 exact: false,
-                maximum: check3.value,
+                maximum: check4.value,
                 type: "date"
               });
               status.dirty();
             }
           } else {
-            util3.assertNever(check3);
+            util3.assertNever(check4);
           }
         }
         return {
@@ -148128,10 +148128,10 @@ var init_types = __esm({
           value: new Date(input.data.getTime())
         };
       }
-      _addCheck(check3) {
+      _addCheck(check4) {
         return new _ZodDate({
           ...this._def,
-          checks: [...this._def.checks, check3]
+          checks: [...this._def.checks, check4]
         });
       }
       min(minDate, message) {
@@ -150732,24 +150732,24 @@ function parseBigintDef(def) {
     format: "int64"
   };
   if (!def.checks) return res;
-  for (const check3 of def.checks) {
-    switch (check3.kind) {
+  for (const check4 of def.checks) {
+    switch (check4.kind) {
       case "min":
-        if (check3.inclusive) {
-          res.minimum = check3.value;
+        if (check4.inclusive) {
+          res.minimum = check4.value;
         } else {
-          res.exclusiveMinimum = check3.value;
+          res.exclusiveMinimum = check4.value;
         }
         break;
       case "max":
-        if (check3.inclusive) {
-          res.maximum = check3.value;
+        if (check4.inclusive) {
+          res.maximum = check4.value;
         } else {
-          res.exclusiveMaximum = check3.value;
+          res.exclusiveMaximum = check4.value;
         }
         break;
       case "multipleOf":
-        res.multipleOf = check3.value;
+        res.multipleOf = check4.value;
         break;
     }
   }
@@ -150842,118 +150842,118 @@ function parseStringDef(def, refs) {
     type: "string"
   };
   if (def.checks) {
-    for (const check3 of def.checks) {
-      switch (check3.kind) {
+    for (const check4 of def.checks) {
+      switch (check4.kind) {
         case "min":
-          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check3.value) : check3.value;
+          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check4.value) : check4.value;
           break;
         case "max":
-          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check3.value) : check3.value;
+          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check4.value) : check4.value;
           break;
         case "email":
           switch (refs.emailStrategy) {
             case "format:email":
-              addFormat(res, "email", check3.message, refs);
+              addFormat(res, "email", check4.message, refs);
               break;
             case "format:idn-email":
-              addFormat(res, "idn-email", check3.message, refs);
+              addFormat(res, "idn-email", check4.message, refs);
               break;
             case "pattern:zod":
-              addPattern(res, zodPatterns.email, check3.message, refs);
+              addPattern(res, zodPatterns.email, check4.message, refs);
               break;
           }
           break;
         case "url":
-          addFormat(res, "uri", check3.message, refs);
+          addFormat(res, "uri", check4.message, refs);
           break;
         case "uuid":
-          addFormat(res, "uuid", check3.message, refs);
+          addFormat(res, "uuid", check4.message, refs);
           break;
         case "regex":
-          addPattern(res, check3.regex, check3.message, refs);
+          addPattern(res, check4.regex, check4.message, refs);
           break;
         case "cuid":
-          addPattern(res, zodPatterns.cuid, check3.message, refs);
+          addPattern(res, zodPatterns.cuid, check4.message, refs);
           break;
         case "cuid2":
-          addPattern(res, zodPatterns.cuid2, check3.message, refs);
+          addPattern(res, zodPatterns.cuid2, check4.message, refs);
           break;
         case "startsWith":
           addPattern(
             res,
-            RegExp(`^${escapeLiteralCheckValue(check3.value, refs)}`),
-            check3.message,
+            RegExp(`^${escapeLiteralCheckValue(check4.value, refs)}`),
+            check4.message,
             refs
           );
           break;
         case "endsWith":
           addPattern(
             res,
-            RegExp(`${escapeLiteralCheckValue(check3.value, refs)}$`),
-            check3.message,
+            RegExp(`${escapeLiteralCheckValue(check4.value, refs)}$`),
+            check4.message,
             refs
           );
           break;
         case "datetime":
-          addFormat(res, "date-time", check3.message, refs);
+          addFormat(res, "date-time", check4.message, refs);
           break;
         case "date":
-          addFormat(res, "date", check3.message, refs);
+          addFormat(res, "date", check4.message, refs);
           break;
         case "time":
-          addFormat(res, "time", check3.message, refs);
+          addFormat(res, "time", check4.message, refs);
           break;
         case "duration":
-          addFormat(res, "duration", check3.message, refs);
+          addFormat(res, "duration", check4.message, refs);
           break;
         case "length":
-          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check3.value) : check3.value;
-          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check3.value) : check3.value;
+          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check4.value) : check4.value;
+          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check4.value) : check4.value;
           break;
         case "includes": {
           addPattern(
             res,
-            RegExp(escapeLiteralCheckValue(check3.value, refs)),
-            check3.message,
+            RegExp(escapeLiteralCheckValue(check4.value, refs)),
+            check4.message,
             refs
           );
           break;
         }
         case "ip": {
-          if (check3.version !== "v6") {
-            addFormat(res, "ipv4", check3.message, refs);
+          if (check4.version !== "v6") {
+            addFormat(res, "ipv4", check4.message, refs);
           }
-          if (check3.version !== "v4") {
-            addFormat(res, "ipv6", check3.message, refs);
+          if (check4.version !== "v4") {
+            addFormat(res, "ipv6", check4.message, refs);
           }
           break;
         }
         case "base64url":
-          addPattern(res, zodPatterns.base64url, check3.message, refs);
+          addPattern(res, zodPatterns.base64url, check4.message, refs);
           break;
         case "jwt":
-          addPattern(res, zodPatterns.jwt, check3.message, refs);
+          addPattern(res, zodPatterns.jwt, check4.message, refs);
           break;
         case "cidr": {
-          if (check3.version !== "v6") {
-            addPattern(res, zodPatterns.ipv4Cidr, check3.message, refs);
+          if (check4.version !== "v6") {
+            addPattern(res, zodPatterns.ipv4Cidr, check4.message, refs);
           }
-          if (check3.version !== "v4") {
-            addPattern(res, zodPatterns.ipv6Cidr, check3.message, refs);
+          if (check4.version !== "v4") {
+            addPattern(res, zodPatterns.ipv6Cidr, check4.message, refs);
           }
           break;
         }
         case "emoji":
-          addPattern(res, zodPatterns.emoji(), check3.message, refs);
+          addPattern(res, zodPatterns.emoji(), check4.message, refs);
           break;
         case "ulid": {
-          addPattern(res, zodPatterns.ulid, check3.message, refs);
+          addPattern(res, zodPatterns.ulid, check4.message, refs);
           break;
         }
         case "base64": {
           switch (refs.base64Strategy) {
             case "format:binary": {
-              addFormat(res, "binary", check3.message, refs);
+              addFormat(res, "binary", check4.message, refs);
               break;
             }
             case "contentEncoding:base64": {
@@ -150961,14 +150961,14 @@ function parseStringDef(def, refs) {
               break;
             }
             case "pattern:zod": {
-              addPattern(res, zodPatterns.base64, check3.message, refs);
+              addPattern(res, zodPatterns.base64, check4.message, refs);
               break;
             }
           }
           break;
         }
         case "nanoid": {
-          addPattern(res, zodPatterns.nanoid, check3.message, refs);
+          addPattern(res, zodPatterns.nanoid, check4.message, refs);
         }
         case "toLowerCase":
         case "toUpperCase":
@@ -150976,7 +150976,7 @@ function parseStringDef(def, refs) {
           break;
         default:
           /* @__PURE__ */ ((_) => {
-          })(check3);
+          })(check4);
       }
     }
   }
@@ -151278,27 +151278,27 @@ function parseNumberDef(def) {
     type: "number"
   };
   if (!def.checks) return res;
-  for (const check3 of def.checks) {
-    switch (check3.kind) {
+  for (const check4 of def.checks) {
+    switch (check4.kind) {
       case "int":
         res.type = "integer";
         break;
       case "min":
-        if (check3.inclusive) {
-          res.minimum = check3.value;
+        if (check4.inclusive) {
+          res.minimum = check4.value;
         } else {
-          res.exclusiveMinimum = check3.value;
+          res.exclusiveMinimum = check4.value;
         }
         break;
       case "max":
-        if (check3.inclusive) {
-          res.maximum = check3.value;
+        if (check4.inclusive) {
+          res.maximum = check4.value;
         } else {
-          res.exclusiveMaximum = check3.value;
+          res.exclusiveMaximum = check4.value;
         }
         break;
       case "multipleOf":
-        res.multipleOf = check3.value;
+        res.multipleOf = check4.value;
         break;
     }
   }
@@ -152000,13 +152000,13 @@ var init_dist5 = __esm({
         type: "integer",
         format: "unix-time"
       };
-      for (const check3 of def.checks) {
-        switch (check3.kind) {
+      for (const check4 of def.checks) {
+        switch (check4.kind) {
           case "min":
-            res.minimum = check3.value;
+            res.minimum = check4.value;
             break;
           case "max":
-            res.maximum = check3.value;
+            res.maximum = check4.value;
             break;
         }
       }
@@ -190087,7 +190087,7 @@ var require_schemas2 = __commonJS({
     exports2.function = _function3;
     exports2._function = _function3;
     exports2.function = _function3;
-    exports2.check = check3;
+    exports2.check = check4;
     exports2.custom = custom3;
     exports2.refine = refine3;
     exports2.superRefine = superRefine3;
@@ -190143,7 +190143,7 @@ var require_schemas2 = __commonJS({
       inst.safeDecode = (data, params) => parse4.safeDecode(inst, data, params);
       inst.safeEncodeAsync = async (data, params) => parse4.safeEncodeAsync(inst, data, params);
       inst.safeDecodeAsync = async (data, params) => parse4.safeDecodeAsync(inst, data, params);
-      inst.refine = (check4, params) => inst.check(refine3(check4, params));
+      inst.refine = (check5, params) => inst.check(refine3(check5, params));
       inst.superRefine = (refinement) => inst.check(superRefine3(refinement));
       inst.overwrite = (fn) => inst.check(checks.overwrite(fn));
       inst.optional = () => optional3(inst);
@@ -191123,7 +191123,7 @@ var require_schemas2 = __commonJS({
       exports2.ZodType.init(inst, def);
       inst._zod.processJSONSchema = (ctx, json5, params) => processors.customProcessor(inst, ctx, json5, params);
     });
-    function check3(fn) {
+    function check4(fn) {
       const ch = new core.$ZodCheck({
         check: "custom"
         // ...util.normalizeParams(params),
@@ -192770,7 +192770,7 @@ var require_types4 = __commonJS({
         const result = await ((0, parseUtil_js_1.isAsync)(maybeAsyncResult) ? maybeAsyncResult : Promise.resolve(maybeAsyncResult));
         return handleResult2(ctx, result);
       }
-      refine(check3, message) {
+      refine(check4, message) {
         const getIssueProperties = (val) => {
           if (typeof message === "string" || typeof message === "undefined") {
             return { message };
@@ -192781,7 +192781,7 @@ var require_types4 = __commonJS({
           }
         };
         return this._refinement((val, ctx) => {
-          const result = check3(val);
+          const result = check4(val);
           const setError = () => ctx.addIssue({
             code: ZodError_js_1.ZodIssueCode.custom,
             ...getIssueProperties(val)
@@ -192804,9 +192804,9 @@ var require_types4 = __commonJS({
           }
         });
       }
-      refinement(check3, refinementData) {
+      refinement(check4, refinementData) {
         return this._refinement((val, ctx) => {
-          if (!check3(val)) {
+          if (!check4(val)) {
             ctx.addIssue(typeof refinementData === "function" ? refinementData(val, ctx) : refinementData);
             return false;
           } else {
@@ -193031,70 +193031,70 @@ var require_types4 = __commonJS({
         }
         const status = new parseUtil_js_1.ParseStatus();
         let ctx = void 0;
-        for (const check3 of this._def.checks) {
-          if (check3.kind === "min") {
-            if (input.data.length < check3.value) {
+        for (const check4 of this._def.checks) {
+          if (check4.kind === "min") {
+            if (input.data.length < check4.value) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.too_small,
-                minimum: check3.value,
+                minimum: check4.value,
                 type: "string",
                 inclusive: true,
                 exact: false,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "max") {
-            if (input.data.length > check3.value) {
+          } else if (check4.kind === "max") {
+            if (input.data.length > check4.value) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.too_big,
-                maximum: check3.value,
+                maximum: check4.value,
                 type: "string",
                 inclusive: true,
                 exact: false,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "length") {
-            const tooBig = input.data.length > check3.value;
-            const tooSmall = input.data.length < check3.value;
+          } else if (check4.kind === "length") {
+            const tooBig = input.data.length > check4.value;
+            const tooSmall = input.data.length < check4.value;
             if (tooBig || tooSmall) {
               ctx = this._getOrReturnCtx(input, ctx);
               if (tooBig) {
                 (0, parseUtil_js_1.addIssueToContext)(ctx, {
                   code: ZodError_js_1.ZodIssueCode.too_big,
-                  maximum: check3.value,
+                  maximum: check4.value,
                   type: "string",
                   inclusive: true,
                   exact: true,
-                  message: check3.message
+                  message: check4.message
                 });
               } else if (tooSmall) {
                 (0, parseUtil_js_1.addIssueToContext)(ctx, {
                   code: ZodError_js_1.ZodIssueCode.too_small,
-                  minimum: check3.value,
+                  minimum: check4.value,
                   type: "string",
                   inclusive: true,
                   exact: true,
-                  message: check3.message
+                  message: check4.message
                 });
               }
               status.dirty();
             }
-          } else if (check3.kind === "email") {
+          } else if (check4.kind === "email") {
             if (!emailRegex2.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "email",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "emoji") {
+          } else if (check4.kind === "emoji") {
             if (!emojiRegex5) {
               emojiRegex5 = new RegExp(_emojiRegex2, "u");
             }
@@ -193103,61 +193103,61 @@ var require_types4 = __commonJS({
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "emoji",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "uuid") {
+          } else if (check4.kind === "uuid") {
             if (!uuidRegex2.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "uuid",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "nanoid") {
+          } else if (check4.kind === "nanoid") {
             if (!nanoidRegex2.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "nanoid",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "cuid") {
+          } else if (check4.kind === "cuid") {
             if (!cuidRegex2.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "cuid",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "cuid2") {
+          } else if (check4.kind === "cuid2") {
             if (!cuid2Regex2.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "cuid2",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "ulid") {
+          } else if (check4.kind === "ulid") {
             if (!ulidRegex2.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "ulid",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "url") {
+          } else if (check4.kind === "url") {
             try {
               new URL(input.data);
             } catch {
@@ -193165,153 +193165,153 @@ var require_types4 = __commonJS({
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "url",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "regex") {
-            check3.regex.lastIndex = 0;
-            const testResult = check3.regex.test(input.data);
+          } else if (check4.kind === "regex") {
+            check4.regex.lastIndex = 0;
+            const testResult = check4.regex.test(input.data);
             if (!testResult) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "regex",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "trim") {
+          } else if (check4.kind === "trim") {
             input.data = input.data.trim();
-          } else if (check3.kind === "includes") {
-            if (!input.data.includes(check3.value, check3.position)) {
+          } else if (check4.kind === "includes") {
+            if (!input.data.includes(check4.value, check4.position)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                validation: { includes: check3.value, position: check3.position },
-                message: check3.message
+                validation: { includes: check4.value, position: check4.position },
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "toLowerCase") {
+          } else if (check4.kind === "toLowerCase") {
             input.data = input.data.toLowerCase();
-          } else if (check3.kind === "toUpperCase") {
+          } else if (check4.kind === "toUpperCase") {
             input.data = input.data.toUpperCase();
-          } else if (check3.kind === "startsWith") {
-            if (!input.data.startsWith(check3.value)) {
+          } else if (check4.kind === "startsWith") {
+            if (!input.data.startsWith(check4.value)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                validation: { startsWith: check3.value },
-                message: check3.message
+                validation: { startsWith: check4.value },
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "endsWith") {
-            if (!input.data.endsWith(check3.value)) {
+          } else if (check4.kind === "endsWith") {
+            if (!input.data.endsWith(check4.value)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                validation: { endsWith: check3.value },
-                message: check3.message
+                validation: { endsWith: check4.value },
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "datetime") {
-            const regex = datetimeRegex2(check3);
+          } else if (check4.kind === "datetime") {
+            const regex = datetimeRegex2(check4);
             if (!regex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
                 validation: "datetime",
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "date") {
+          } else if (check4.kind === "date") {
             const regex = dateRegex2;
             if (!regex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
                 validation: "date",
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "time") {
-            const regex = timeRegex2(check3);
+          } else if (check4.kind === "time") {
+            const regex = timeRegex2(check4);
             if (!regex.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
                 validation: "time",
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "duration") {
+          } else if (check4.kind === "duration") {
             if (!durationRegex2.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "duration",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "ip") {
-            if (!isValidIP2(input.data, check3.version)) {
+          } else if (check4.kind === "ip") {
+            if (!isValidIP2(input.data, check4.version)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "ip",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "jwt") {
-            if (!isValidJWT4(input.data, check3.alg)) {
+          } else if (check4.kind === "jwt") {
+            if (!isValidJWT4(input.data, check4.alg)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "jwt",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "cidr") {
-            if (!isValidCidr2(input.data, check3.version)) {
+          } else if (check4.kind === "cidr") {
+            if (!isValidCidr2(input.data, check4.version)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "cidr",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "base64") {
+          } else if (check4.kind === "base64") {
             if (!base64Regex2.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "base64",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "base64url") {
+          } else if (check4.kind === "base64url") {
             if (!base64urlRegex2.test(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 validation: "base64url",
                 code: ZodError_js_1.ZodIssueCode.invalid_string,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
           } else {
-            util_js_1.util.assertNever(check3);
+            util_js_1.util.assertNever(check4);
           }
         }
         return { status: status.value, value: input.data };
@@ -193323,10 +193323,10 @@ var require_types4 = __commonJS({
           ...errorUtil_js_1.errorUtil.errToObj(message)
         });
       }
-      _addCheck(check3) {
+      _addCheck(check4) {
         return new _ZodString3({
           ...this._def,
-          checks: [...this._def.checks, check3]
+          checks: [...this._def.checks, check4]
         });
       }
       email(message) {
@@ -193592,67 +193592,67 @@ var require_types4 = __commonJS({
         }
         let ctx = void 0;
         const status = new parseUtil_js_1.ParseStatus();
-        for (const check3 of this._def.checks) {
-          if (check3.kind === "int") {
+        for (const check4 of this._def.checks) {
+          if (check4.kind === "int") {
             if (!util_js_1.util.isInteger(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.invalid_type,
                 expected: "integer",
                 received: "float",
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "min") {
-            const tooSmall = check3.inclusive ? input.data < check3.value : input.data <= check3.value;
+          } else if (check4.kind === "min") {
+            const tooSmall = check4.inclusive ? input.data < check4.value : input.data <= check4.value;
             if (tooSmall) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.too_small,
-                minimum: check3.value,
+                minimum: check4.value,
                 type: "number",
-                inclusive: check3.inclusive,
+                inclusive: check4.inclusive,
                 exact: false,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "max") {
-            const tooBig = check3.inclusive ? input.data > check3.value : input.data >= check3.value;
+          } else if (check4.kind === "max") {
+            const tooBig = check4.inclusive ? input.data > check4.value : input.data >= check4.value;
             if (tooBig) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.too_big,
-                maximum: check3.value,
+                maximum: check4.value,
                 type: "number",
-                inclusive: check3.inclusive,
+                inclusive: check4.inclusive,
                 exact: false,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "multipleOf") {
-            if (floatSafeRemainder4(input.data, check3.value) !== 0) {
+          } else if (check4.kind === "multipleOf") {
+            if (floatSafeRemainder4(input.data, check4.value) !== 0) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.not_multiple_of,
-                multipleOf: check3.value,
-                message: check3.message
+                multipleOf: check4.value,
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "finite") {
+          } else if (check4.kind === "finite") {
             if (!Number.isFinite(input.data)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.not_finite,
-                message: check3.message
+                message: check4.message
               });
               status.dirty();
             }
           } else {
-            util_js_1.util.assertNever(check3);
+            util_js_1.util.assertNever(check4);
           }
         }
         return { status: status.value, value: input.data };
@@ -193683,10 +193683,10 @@ var require_types4 = __commonJS({
           ]
         });
       }
-      _addCheck(check3) {
+      _addCheck(check4) {
         return new _ZodNumber({
           ...this._def,
-          checks: [...this._def.checks, check3]
+          checks: [...this._def.checks, check4]
         });
       }
       int(message) {
@@ -193822,45 +193822,45 @@ var require_types4 = __commonJS({
         }
         let ctx = void 0;
         const status = new parseUtil_js_1.ParseStatus();
-        for (const check3 of this._def.checks) {
-          if (check3.kind === "min") {
-            const tooSmall = check3.inclusive ? input.data < check3.value : input.data <= check3.value;
+        for (const check4 of this._def.checks) {
+          if (check4.kind === "min") {
+            const tooSmall = check4.inclusive ? input.data < check4.value : input.data <= check4.value;
             if (tooSmall) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.too_small,
                 type: "bigint",
-                minimum: check3.value,
-                inclusive: check3.inclusive,
-                message: check3.message
+                minimum: check4.value,
+                inclusive: check4.inclusive,
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "max") {
-            const tooBig = check3.inclusive ? input.data > check3.value : input.data >= check3.value;
+          } else if (check4.kind === "max") {
+            const tooBig = check4.inclusive ? input.data > check4.value : input.data >= check4.value;
             if (tooBig) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.too_big,
                 type: "bigint",
-                maximum: check3.value,
-                inclusive: check3.inclusive,
-                message: check3.message
+                maximum: check4.value,
+                inclusive: check4.inclusive,
+                message: check4.message
               });
               status.dirty();
             }
-          } else if (check3.kind === "multipleOf") {
-            if (input.data % check3.value !== BigInt(0)) {
+          } else if (check4.kind === "multipleOf") {
+            if (input.data % check4.value !== BigInt(0)) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.not_multiple_of,
-                multipleOf: check3.value,
-                message: check3.message
+                multipleOf: check4.value,
+                message: check4.message
               });
               status.dirty();
             }
           } else {
-            util_js_1.util.assertNever(check3);
+            util_js_1.util.assertNever(check4);
           }
         }
         return { status: status.value, value: input.data };
@@ -193900,10 +193900,10 @@ var require_types4 = __commonJS({
           ]
         });
       }
-      _addCheck(check3) {
+      _addCheck(check4) {
         return new _ZodBigInt({
           ...this._def,
-          checks: [...this._def.checks, check3]
+          checks: [...this._def.checks, check4]
         });
       }
       positive(message) {
@@ -194025,35 +194025,35 @@ var require_types4 = __commonJS({
         }
         const status = new parseUtil_js_1.ParseStatus();
         let ctx = void 0;
-        for (const check3 of this._def.checks) {
-          if (check3.kind === "min") {
-            if (input.data.getTime() < check3.value) {
+        for (const check4 of this._def.checks) {
+          if (check4.kind === "min") {
+            if (input.data.getTime() < check4.value) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.too_small,
-                message: check3.message,
+                message: check4.message,
                 inclusive: true,
                 exact: false,
-                minimum: check3.value,
+                minimum: check4.value,
                 type: "date"
               });
               status.dirty();
             }
-          } else if (check3.kind === "max") {
-            if (input.data.getTime() > check3.value) {
+          } else if (check4.kind === "max") {
+            if (input.data.getTime() > check4.value) {
               ctx = this._getOrReturnCtx(input, ctx);
               (0, parseUtil_js_1.addIssueToContext)(ctx, {
                 code: ZodError_js_1.ZodIssueCode.too_big,
-                message: check3.message,
+                message: check4.message,
                 inclusive: true,
                 exact: false,
-                maximum: check3.value,
+                maximum: check4.value,
                 type: "date"
               });
               status.dirty();
             }
           } else {
-            util_js_1.util.assertNever(check3);
+            util_js_1.util.assertNever(check4);
           }
         }
         return {
@@ -194061,10 +194061,10 @@ var require_types4 = __commonJS({
           value: new Date(input.data.getTime())
         };
       }
-      _addCheck(check3) {
+      _addCheck(check4) {
         return new _ZodDate({
           ...this._def,
-          checks: [...this._def.checks, check3]
+          checks: [...this._def.checks, check4]
         });
       }
       min(minDate, message) {
@@ -195958,10 +195958,10 @@ var require_types4 = __commonJS({
       const p22 = typeof p3 === "string" ? { message: p3 } : p3;
       return p22;
     }
-    function custom3(check3, _params = {}, fatal) {
-      if (check3)
+    function custom3(check4, _params = {}, fatal) {
+      if (check4)
         return ZodAny4.create().superRefine((data, ctx) => {
-          const r = check3(data);
+          const r = check4(data);
           if (r instanceof Promise) {
             return r.then((r2) => {
               if (!r2) {
@@ -197329,24 +197329,24 @@ var require_dist8 = __commonJS({
         format: "int64"
       };
       if (!def.checks) return res;
-      for (const check3 of def.checks) {
-        switch (check3.kind) {
+      for (const check4 of def.checks) {
+        switch (check4.kind) {
           case "min":
-            if (check3.inclusive) {
-              res.minimum = check3.value;
+            if (check4.inclusive) {
+              res.minimum = check4.value;
             } else {
-              res.exclusiveMinimum = check3.value;
+              res.exclusiveMinimum = check4.value;
             }
             break;
           case "max":
-            if (check3.inclusive) {
-              res.maximum = check3.value;
+            if (check4.inclusive) {
+              res.maximum = check4.value;
             } else {
-              res.exclusiveMaximum = check3.value;
+              res.exclusiveMaximum = check4.value;
             }
             break;
           case "multipleOf":
-            res.multipleOf = check3.value;
+            res.multipleOf = check4.value;
             break;
         }
       }
@@ -197389,13 +197389,13 @@ var require_dist8 = __commonJS({
         type: "integer",
         format: "unix-time"
       };
-      for (const check3 of def.checks) {
-        switch (check3.kind) {
+      for (const check4 of def.checks) {
+        switch (check4.kind) {
           case "min":
-            res.minimum = check3.value;
+            res.minimum = check4.value;
             break;
           case "max":
-            res.maximum = check3.value;
+            res.maximum = check4.value;
             break;
         }
       }
@@ -197515,118 +197515,118 @@ var require_dist8 = __commonJS({
         type: "string"
       };
       if (def.checks) {
-        for (const check3 of def.checks) {
-          switch (check3.kind) {
+        for (const check4 of def.checks) {
+          switch (check4.kind) {
             case "min":
-              res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check3.value) : check3.value;
+              res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check4.value) : check4.value;
               break;
             case "max":
-              res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check3.value) : check3.value;
+              res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check4.value) : check4.value;
               break;
             case "email":
               switch (refs.emailStrategy) {
                 case "format:email":
-                  addFormat4(res, "email", check3.message, refs);
+                  addFormat4(res, "email", check4.message, refs);
                   break;
                 case "format:idn-email":
-                  addFormat4(res, "idn-email", check3.message, refs);
+                  addFormat4(res, "idn-email", check4.message, refs);
                   break;
                 case "pattern:zod":
-                  addPattern4(res, zodPatterns4.email, check3.message, refs);
+                  addPattern4(res, zodPatterns4.email, check4.message, refs);
                   break;
               }
               break;
             case "url":
-              addFormat4(res, "uri", check3.message, refs);
+              addFormat4(res, "uri", check4.message, refs);
               break;
             case "uuid":
-              addFormat4(res, "uuid", check3.message, refs);
+              addFormat4(res, "uuid", check4.message, refs);
               break;
             case "regex":
-              addPattern4(res, check3.regex, check3.message, refs);
+              addPattern4(res, check4.regex, check4.message, refs);
               break;
             case "cuid":
-              addPattern4(res, zodPatterns4.cuid, check3.message, refs);
+              addPattern4(res, zodPatterns4.cuid, check4.message, refs);
               break;
             case "cuid2":
-              addPattern4(res, zodPatterns4.cuid2, check3.message, refs);
+              addPattern4(res, zodPatterns4.cuid2, check4.message, refs);
               break;
             case "startsWith":
               addPattern4(
                 res,
-                RegExp(`^${escapeLiteralCheckValue4(check3.value, refs)}`),
-                check3.message,
+                RegExp(`^${escapeLiteralCheckValue4(check4.value, refs)}`),
+                check4.message,
                 refs
               );
               break;
             case "endsWith":
               addPattern4(
                 res,
-                RegExp(`${escapeLiteralCheckValue4(check3.value, refs)}$`),
-                check3.message,
+                RegExp(`${escapeLiteralCheckValue4(check4.value, refs)}$`),
+                check4.message,
                 refs
               );
               break;
             case "datetime":
-              addFormat4(res, "date-time", check3.message, refs);
+              addFormat4(res, "date-time", check4.message, refs);
               break;
             case "date":
-              addFormat4(res, "date", check3.message, refs);
+              addFormat4(res, "date", check4.message, refs);
               break;
             case "time":
-              addFormat4(res, "time", check3.message, refs);
+              addFormat4(res, "time", check4.message, refs);
               break;
             case "duration":
-              addFormat4(res, "duration", check3.message, refs);
+              addFormat4(res, "duration", check4.message, refs);
               break;
             case "length":
-              res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check3.value) : check3.value;
-              res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check3.value) : check3.value;
+              res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check4.value) : check4.value;
+              res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check4.value) : check4.value;
               break;
             case "includes": {
               addPattern4(
                 res,
-                RegExp(escapeLiteralCheckValue4(check3.value, refs)),
-                check3.message,
+                RegExp(escapeLiteralCheckValue4(check4.value, refs)),
+                check4.message,
                 refs
               );
               break;
             }
             case "ip": {
-              if (check3.version !== "v6") {
-                addFormat4(res, "ipv4", check3.message, refs);
+              if (check4.version !== "v6") {
+                addFormat4(res, "ipv4", check4.message, refs);
               }
-              if (check3.version !== "v4") {
-                addFormat4(res, "ipv6", check3.message, refs);
+              if (check4.version !== "v4") {
+                addFormat4(res, "ipv6", check4.message, refs);
               }
               break;
             }
             case "base64url":
-              addPattern4(res, zodPatterns4.base64url, check3.message, refs);
+              addPattern4(res, zodPatterns4.base64url, check4.message, refs);
               break;
             case "jwt":
-              addPattern4(res, zodPatterns4.jwt, check3.message, refs);
+              addPattern4(res, zodPatterns4.jwt, check4.message, refs);
               break;
             case "cidr": {
-              if (check3.version !== "v6") {
-                addPattern4(res, zodPatterns4.ipv4Cidr, check3.message, refs);
+              if (check4.version !== "v6") {
+                addPattern4(res, zodPatterns4.ipv4Cidr, check4.message, refs);
               }
-              if (check3.version !== "v4") {
-                addPattern4(res, zodPatterns4.ipv6Cidr, check3.message, refs);
+              if (check4.version !== "v4") {
+                addPattern4(res, zodPatterns4.ipv6Cidr, check4.message, refs);
               }
               break;
             }
             case "emoji":
-              addPattern4(res, zodPatterns4.emoji(), check3.message, refs);
+              addPattern4(res, zodPatterns4.emoji(), check4.message, refs);
               break;
             case "ulid": {
-              addPattern4(res, zodPatterns4.ulid, check3.message, refs);
+              addPattern4(res, zodPatterns4.ulid, check4.message, refs);
               break;
             }
             case "base64": {
               switch (refs.base64Strategy) {
                 case "format:binary": {
-                  addFormat4(res, "binary", check3.message, refs);
+                  addFormat4(res, "binary", check4.message, refs);
                   break;
                 }
                 case "contentEncoding:base64": {
@@ -197634,14 +197634,14 @@ var require_dist8 = __commonJS({
                   break;
                 }
                 case "pattern:zod": {
-                  addPattern4(res, zodPatterns4.base64, check3.message, refs);
+                  addPattern4(res, zodPatterns4.base64, check4.message, refs);
                   break;
                 }
               }
               break;
             }
             case "nanoid": {
-              addPattern4(res, zodPatterns4.nanoid, check3.message, refs);
+              addPattern4(res, zodPatterns4.nanoid, check4.message, refs);
             }
             case "toLowerCase":
             case "toUpperCase":
@@ -197649,7 +197649,7 @@ var require_dist8 = __commonJS({
               break;
             default:
               /* @__PURE__ */ ((_) => {
-              })(check3);
+              })(check4);
           }
         }
       }
@@ -197972,27 +197972,27 @@ var require_dist8 = __commonJS({
         type: "number"
       };
       if (!def.checks) return res;
-      for (const check3 of def.checks) {
-        switch (check3.kind) {
+      for (const check4 of def.checks) {
+        switch (check4.kind) {
           case "int":
             res.type = "integer";
             break;
           case "min":
-            if (check3.inclusive) {
-              res.minimum = check3.value;
+            if (check4.inclusive) {
+              res.minimum = check4.value;
             } else {
-              res.exclusiveMinimum = check3.value;
+              res.exclusiveMinimum = check4.value;
             }
             break;
           case "max":
-            if (check3.inclusive) {
-              res.maximum = check3.value;
+            if (check4.inclusive) {
+              res.maximum = check4.value;
             } else {
-              res.exclusiveMaximum = check3.value;
+              res.exclusiveMaximum = check4.value;
             }
             break;
           case "multipleOf":
-            res.multipleOf = check3.value;
+            res.multipleOf = check4.value;
             break;
         }
       }
@@ -199212,13 +199212,13 @@ var require_dist9 = __commonJS({
       };
     }
     var import_provider_utils210 = require_dist8();
-    var import_zod163 = require_zod();
-    var qwenErrorDataSchema = import_zod163.z.object({
-      object: import_zod163.z.literal("error"),
-      message: import_zod163.z.string(),
-      type: import_zod163.z.string(),
-      param: import_zod163.z.string().nullable(),
-      code: import_zod163.z.string().nullable()
+    var import_zod164 = require_zod();
+    var qwenErrorDataSchema = import_zod164.z.object({
+      object: import_zod164.z.literal("error"),
+      message: import_zod164.z.string(),
+      type: import_zod164.z.string(),
+      param: import_zod164.z.string().nullable(),
+      code: import_zod164.z.string().nullable()
     });
     var qwenFailedResponseHandler = (0, import_provider_utils210.createJsonErrorResponseHandler)({
       errorSchema: qwenErrorDataSchema,
@@ -213301,24 +213301,24 @@ function parseBigintDef2(def) {
     format: "int64"
   };
   if (!def.checks) return res;
-  for (const check3 of def.checks) {
-    switch (check3.kind) {
+  for (const check4 of def.checks) {
+    switch (check4.kind) {
       case "min":
-        if (check3.inclusive) {
-          res.minimum = check3.value;
+        if (check4.inclusive) {
+          res.minimum = check4.value;
         } else {
-          res.exclusiveMinimum = check3.value;
+          res.exclusiveMinimum = check4.value;
         }
         break;
       case "max":
-        if (check3.inclusive) {
-          res.maximum = check3.value;
+        if (check4.inclusive) {
+          res.maximum = check4.value;
         } else {
-          res.exclusiveMaximum = check3.value;
+          res.exclusiveMaximum = check4.value;
         }
         break;
       case "multipleOf":
-        res.multipleOf = check3.value;
+        res.multipleOf = check4.value;
         break;
     }
   }
@@ -213411,118 +213411,118 @@ function parseStringDef2(def, refs) {
     type: "string"
   };
   if (def.checks) {
-    for (const check3 of def.checks) {
-      switch (check3.kind) {
+    for (const check4 of def.checks) {
+      switch (check4.kind) {
         case "min":
-          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check3.value) : check3.value;
+          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check4.value) : check4.value;
           break;
         case "max":
-          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check3.value) : check3.value;
+          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check4.value) : check4.value;
           break;
         case "email":
           switch (refs.emailStrategy) {
             case "format:email":
-              addFormat2(res, "email", check3.message, refs);
+              addFormat2(res, "email", check4.message, refs);
               break;
             case "format:idn-email":
-              addFormat2(res, "idn-email", check3.message, refs);
+              addFormat2(res, "idn-email", check4.message, refs);
               break;
             case "pattern:zod":
-              addPattern2(res, zodPatterns2.email, check3.message, refs);
+              addPattern2(res, zodPatterns2.email, check4.message, refs);
               break;
           }
           break;
         case "url":
-          addFormat2(res, "uri", check3.message, refs);
+          addFormat2(res, "uri", check4.message, refs);
           break;
         case "uuid":
-          addFormat2(res, "uuid", check3.message, refs);
+          addFormat2(res, "uuid", check4.message, refs);
           break;
         case "regex":
-          addPattern2(res, check3.regex, check3.message, refs);
+          addPattern2(res, check4.regex, check4.message, refs);
           break;
         case "cuid":
-          addPattern2(res, zodPatterns2.cuid, check3.message, refs);
+          addPattern2(res, zodPatterns2.cuid, check4.message, refs);
           break;
         case "cuid2":
-          addPattern2(res, zodPatterns2.cuid2, check3.message, refs);
+          addPattern2(res, zodPatterns2.cuid2, check4.message, refs);
           break;
         case "startsWith":
           addPattern2(
             res,
-            RegExp(`^${escapeLiteralCheckValue2(check3.value, refs)}`),
-            check3.message,
+            RegExp(`^${escapeLiteralCheckValue2(check4.value, refs)}`),
+            check4.message,
             refs
           );
           break;
         case "endsWith":
           addPattern2(
             res,
-            RegExp(`${escapeLiteralCheckValue2(check3.value, refs)}$`),
-            check3.message,
+            RegExp(`${escapeLiteralCheckValue2(check4.value, refs)}$`),
+            check4.message,
             refs
           );
           break;
         case "datetime":
-          addFormat2(res, "date-time", check3.message, refs);
+          addFormat2(res, "date-time", check4.message, refs);
           break;
         case "date":
-          addFormat2(res, "date", check3.message, refs);
+          addFormat2(res, "date", check4.message, refs);
           break;
         case "time":
-          addFormat2(res, "time", check3.message, refs);
+          addFormat2(res, "time", check4.message, refs);
           break;
         case "duration":
-          addFormat2(res, "duration", check3.message, refs);
+          addFormat2(res, "duration", check4.message, refs);
           break;
         case "length":
-          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check3.value) : check3.value;
-          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check3.value) : check3.value;
+          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check4.value) : check4.value;
+          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check4.value) : check4.value;
           break;
         case "includes": {
           addPattern2(
             res,
-            RegExp(escapeLiteralCheckValue2(check3.value, refs)),
-            check3.message,
+            RegExp(escapeLiteralCheckValue2(check4.value, refs)),
+            check4.message,
             refs
           );
           break;
         }
         case "ip": {
-          if (check3.version !== "v6") {
-            addFormat2(res, "ipv4", check3.message, refs);
+          if (check4.version !== "v6") {
+            addFormat2(res, "ipv4", check4.message, refs);
           }
-          if (check3.version !== "v4") {
-            addFormat2(res, "ipv6", check3.message, refs);
+          if (check4.version !== "v4") {
+            addFormat2(res, "ipv6", check4.message, refs);
           }
           break;
         }
         case "base64url":
-          addPattern2(res, zodPatterns2.base64url, check3.message, refs);
+          addPattern2(res, zodPatterns2.base64url, check4.message, refs);
           break;
         case "jwt":
-          addPattern2(res, zodPatterns2.jwt, check3.message, refs);
+          addPattern2(res, zodPatterns2.jwt, check4.message, refs);
           break;
         case "cidr": {
-          if (check3.version !== "v6") {
-            addPattern2(res, zodPatterns2.ipv4Cidr, check3.message, refs);
+          if (check4.version !== "v6") {
+            addPattern2(res, zodPatterns2.ipv4Cidr, check4.message, refs);
           }
-          if (check3.version !== "v4") {
-            addPattern2(res, zodPatterns2.ipv6Cidr, check3.message, refs);
+          if (check4.version !== "v4") {
+            addPattern2(res, zodPatterns2.ipv6Cidr, check4.message, refs);
           }
           break;
         }
         case "emoji":
-          addPattern2(res, zodPatterns2.emoji(), check3.message, refs);
+          addPattern2(res, zodPatterns2.emoji(), check4.message, refs);
           break;
         case "ulid": {
-          addPattern2(res, zodPatterns2.ulid, check3.message, refs);
+          addPattern2(res, zodPatterns2.ulid, check4.message, refs);
           break;
         }
         case "base64": {
           switch (refs.base64Strategy) {
             case "format:binary": {
-              addFormat2(res, "binary", check3.message, refs);
+              addFormat2(res, "binary", check4.message, refs);
               break;
             }
             case "contentEncoding:base64": {
@@ -213530,14 +213530,14 @@ function parseStringDef2(def, refs) {
               break;
             }
             case "pattern:zod": {
-              addPattern2(res, zodPatterns2.base64, check3.message, refs);
+              addPattern2(res, zodPatterns2.base64, check4.message, refs);
               break;
             }
           }
           break;
         }
         case "nanoid": {
-          addPattern2(res, zodPatterns2.nanoid, check3.message, refs);
+          addPattern2(res, zodPatterns2.nanoid, check4.message, refs);
         }
         case "toLowerCase":
         case "toUpperCase":
@@ -213545,7 +213545,7 @@ function parseStringDef2(def, refs) {
           break;
         default:
           /* @__PURE__ */ ((_) => {
-          })(check3);
+          })(check4);
       }
     }
   }
@@ -213847,27 +213847,27 @@ function parseNumberDef2(def) {
     type: "number"
   };
   if (!def.checks) return res;
-  for (const check3 of def.checks) {
-    switch (check3.kind) {
+  for (const check4 of def.checks) {
+    switch (check4.kind) {
       case "int":
         res.type = "integer";
         break;
       case "min":
-        if (check3.inclusive) {
-          res.minimum = check3.value;
+        if (check4.inclusive) {
+          res.minimum = check4.value;
         } else {
-          res.exclusiveMinimum = check3.value;
+          res.exclusiveMinimum = check4.value;
         }
         break;
       case "max":
-        if (check3.inclusive) {
-          res.maximum = check3.value;
+        if (check4.inclusive) {
+          res.maximum = check4.value;
         } else {
-          res.exclusiveMaximum = check3.value;
+          res.exclusiveMaximum = check4.value;
         }
         break;
       case "multipleOf":
-        res.multipleOf = check3.value;
+        res.multipleOf = check4.value;
         break;
     }
   }
@@ -214410,13 +214410,13 @@ var init_dist17 = __esm({
         type: "integer",
         format: "unix-time"
       };
-      for (const check3 of def.checks) {
-        switch (check3.kind) {
+      for (const check4 of def.checks) {
+        switch (check4.kind) {
           case "min":
-            res.minimum = check3.value;
+            res.minimum = check4.value;
             break;
           case "max":
-            res.maximum = check3.value;
+            res.maximum = check4.value;
             break;
         }
       }
@@ -219395,24 +219395,24 @@ function parseBigintDef3(def) {
     format: "int64"
   };
   if (!def.checks) return res;
-  for (const check3 of def.checks) {
-    switch (check3.kind) {
+  for (const check4 of def.checks) {
+    switch (check4.kind) {
       case "min":
-        if (check3.inclusive) {
-          res.minimum = check3.value;
+        if (check4.inclusive) {
+          res.minimum = check4.value;
         } else {
-          res.exclusiveMinimum = check3.value;
+          res.exclusiveMinimum = check4.value;
         }
         break;
       case "max":
-        if (check3.inclusive) {
-          res.maximum = check3.value;
+        if (check4.inclusive) {
+          res.maximum = check4.value;
         } else {
-          res.exclusiveMaximum = check3.value;
+          res.exclusiveMaximum = check4.value;
         }
         break;
       case "multipleOf":
-        res.multipleOf = check3.value;
+        res.multipleOf = check4.value;
         break;
     }
   }
@@ -219505,118 +219505,118 @@ function parseStringDef3(def, refs) {
     type: "string"
   };
   if (def.checks) {
-    for (const check3 of def.checks) {
-      switch (check3.kind) {
+    for (const check4 of def.checks) {
+      switch (check4.kind) {
         case "min":
-          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check3.value) : check3.value;
+          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check4.value) : check4.value;
           break;
         case "max":
-          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check3.value) : check3.value;
+          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check4.value) : check4.value;
           break;
         case "email":
           switch (refs.emailStrategy) {
             case "format:email":
-              addFormat3(res, "email", check3.message, refs);
+              addFormat3(res, "email", check4.message, refs);
               break;
             case "format:idn-email":
-              addFormat3(res, "idn-email", check3.message, refs);
+              addFormat3(res, "idn-email", check4.message, refs);
               break;
             case "pattern:zod":
-              addPattern3(res, zodPatterns3.email, check3.message, refs);
+              addPattern3(res, zodPatterns3.email, check4.message, refs);
               break;
           }
           break;
         case "url":
-          addFormat3(res, "uri", check3.message, refs);
+          addFormat3(res, "uri", check4.message, refs);
           break;
         case "uuid":
-          addFormat3(res, "uuid", check3.message, refs);
+          addFormat3(res, "uuid", check4.message, refs);
           break;
         case "regex":
-          addPattern3(res, check3.regex, check3.message, refs);
+          addPattern3(res, check4.regex, check4.message, refs);
           break;
         case "cuid":
-          addPattern3(res, zodPatterns3.cuid, check3.message, refs);
+          addPattern3(res, zodPatterns3.cuid, check4.message, refs);
           break;
         case "cuid2":
-          addPattern3(res, zodPatterns3.cuid2, check3.message, refs);
+          addPattern3(res, zodPatterns3.cuid2, check4.message, refs);
           break;
         case "startsWith":
           addPattern3(
             res,
-            RegExp(`^${escapeLiteralCheckValue3(check3.value, refs)}`),
-            check3.message,
+            RegExp(`^${escapeLiteralCheckValue3(check4.value, refs)}`),
+            check4.message,
             refs
           );
           break;
         case "endsWith":
           addPattern3(
             res,
-            RegExp(`${escapeLiteralCheckValue3(check3.value, refs)}$`),
-            check3.message,
+            RegExp(`${escapeLiteralCheckValue3(check4.value, refs)}$`),
+            check4.message,
             refs
           );
           break;
         case "datetime":
-          addFormat3(res, "date-time", check3.message, refs);
+          addFormat3(res, "date-time", check4.message, refs);
           break;
         case "date":
-          addFormat3(res, "date", check3.message, refs);
+          addFormat3(res, "date", check4.message, refs);
           break;
         case "time":
-          addFormat3(res, "time", check3.message, refs);
+          addFormat3(res, "time", check4.message, refs);
           break;
         case "duration":
-          addFormat3(res, "duration", check3.message, refs);
+          addFormat3(res, "duration", check4.message, refs);
           break;
         case "length":
-          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check3.value) : check3.value;
-          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check3.value) : check3.value;
+          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check4.value) : check4.value;
+          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check4.value) : check4.value;
           break;
         case "includes": {
           addPattern3(
             res,
-            RegExp(escapeLiteralCheckValue3(check3.value, refs)),
-            check3.message,
+            RegExp(escapeLiteralCheckValue3(check4.value, refs)),
+            check4.message,
             refs
           );
           break;
         }
         case "ip": {
-          if (check3.version !== "v6") {
-            addFormat3(res, "ipv4", check3.message, refs);
+          if (check4.version !== "v6") {
+            addFormat3(res, "ipv4", check4.message, refs);
           }
-          if (check3.version !== "v4") {
-            addFormat3(res, "ipv6", check3.message, refs);
+          if (check4.version !== "v4") {
+            addFormat3(res, "ipv6", check4.message, refs);
           }
           break;
         }
         case "base64url":
-          addPattern3(res, zodPatterns3.base64url, check3.message, refs);
+          addPattern3(res, zodPatterns3.base64url, check4.message, refs);
           break;
         case "jwt":
-          addPattern3(res, zodPatterns3.jwt, check3.message, refs);
+          addPattern3(res, zodPatterns3.jwt, check4.message, refs);
           break;
         case "cidr": {
-          if (check3.version !== "v6") {
-            addPattern3(res, zodPatterns3.ipv4Cidr, check3.message, refs);
+          if (check4.version !== "v6") {
+            addPattern3(res, zodPatterns3.ipv4Cidr, check4.message, refs);
           }
-          if (check3.version !== "v4") {
-            addPattern3(res, zodPatterns3.ipv6Cidr, check3.message, refs);
+          if (check4.version !== "v4") {
+            addPattern3(res, zodPatterns3.ipv6Cidr, check4.message, refs);
           }
           break;
         }
         case "emoji":
-          addPattern3(res, zodPatterns3.emoji(), check3.message, refs);
+          addPattern3(res, zodPatterns3.emoji(), check4.message, refs);
           break;
         case "ulid": {
-          addPattern3(res, zodPatterns3.ulid, check3.message, refs);
+          addPattern3(res, zodPatterns3.ulid, check4.message, refs);
           break;
         }
         case "base64": {
           switch (refs.base64Strategy) {
             case "format:binary": {
-              addFormat3(res, "binary", check3.message, refs);
+              addFormat3(res, "binary", check4.message, refs);
               break;
             }
             case "contentEncoding:base64": {
@@ -219624,14 +219624,14 @@ function parseStringDef3(def, refs) {
               break;
             }
             case "pattern:zod": {
-              addPattern3(res, zodPatterns3.base64, check3.message, refs);
+              addPattern3(res, zodPatterns3.base64, check4.message, refs);
               break;
             }
           }
           break;
         }
         case "nanoid": {
-          addPattern3(res, zodPatterns3.nanoid, check3.message, refs);
+          addPattern3(res, zodPatterns3.nanoid, check4.message, refs);
         }
         case "toLowerCase":
         case "toUpperCase":
@@ -219639,7 +219639,7 @@ function parseStringDef3(def, refs) {
           break;
         default:
           /* @__PURE__ */ ((_) => {
-          })(check3);
+          })(check4);
       }
     }
   }
@@ -219941,27 +219941,27 @@ function parseNumberDef3(def) {
     type: "number"
   };
   if (!def.checks) return res;
-  for (const check3 of def.checks) {
-    switch (check3.kind) {
+  for (const check4 of def.checks) {
+    switch (check4.kind) {
       case "int":
         res.type = "integer";
         break;
       case "min":
-        if (check3.inclusive) {
-          res.minimum = check3.value;
+        if (check4.inclusive) {
+          res.minimum = check4.value;
         } else {
-          res.exclusiveMinimum = check3.value;
+          res.exclusiveMinimum = check4.value;
         }
         break;
       case "max":
-        if (check3.inclusive) {
-          res.maximum = check3.value;
+        if (check4.inclusive) {
+          res.maximum = check4.value;
         } else {
-          res.exclusiveMaximum = check3.value;
+          res.exclusiveMaximum = check4.value;
         }
         break;
       case "multipleOf":
-        res.multipleOf = check3.value;
+        res.multipleOf = check4.value;
         break;
     }
   }
@@ -220442,13 +220442,13 @@ var init_dist19 = __esm({
         type: "integer",
         format: "unix-time"
       };
-      for (const check3 of def.checks) {
-        switch (check3.kind) {
+      for (const check4 of def.checks) {
+        switch (check4.kind) {
           case "min":
-            res.minimum = check3.value;
+            res.minimum = check4.value;
             break;
           case "max":
-            res.maximum = check3.value;
+            res.maximum = check4.value;
             break;
         }
       }
@@ -248258,7 +248258,7 @@ var require_dbcs_data2 = __commonJS({
       // == Japanese/ShiftJIS ====================================================
       // All japanese encodings are based on JIS X set of standards:
       // JIS X 0201 - Single-byte encoding of ASCII + ¥ + Kana chars at 0xA1-0xDF.
-      // JIS X 0208 - Main set of 6879 characters, placed in 94x94 plane, to be encoded by 2 bytes.
+      // JIS X 0208 - Main set of 6879 characters, placed in 94x94 plane, to be encoded by 2 bytes. 
       //              Has several variations in 1978, 1983, 1990 and 1997.
       // JIS X 0212 - Supplementary plane of 6067 chars in 94x94 plane. 1990. Effectively dead.
       // JIS X 0213 - Extension and modern replacement of 0208 and 0212. Total chars: 11233.
@@ -248275,7 +248275,7 @@ var require_dbcs_data2 = __commonJS({
       //               0x8F, (0xA1-0xFE)x2 - 0212 plane (94x94).
       //  * JIS X 208: 7-bit, direct encoding of 0208. Byte ranges: 0x21-0x7E (94 values). Uncommon.
       //               Used as-is in ISO2022 family.
-      //  * ISO2022-JP: Stateful encoding, with escape sequences to switch between ASCII,
+      //  * ISO2022-JP: Stateful encoding, with escape sequences to switch between ASCII, 
       //                0201-1976 Roman, 0208-1978, 0208-1983.
       //  * ISO2022-JP-1: Adds esc seq for 0212-1990.
       //  * ISO2022-JP-2: Adds esc seq for GB2313-1980, KSX1001-1992, ISO8859-1, ISO8859-7.
@@ -248386,7 +248386,7 @@ var require_dbcs_data2 = __commonJS({
       //  * Windows CP 951: Microsoft variant of Big5-HKSCS-2001. Seems to be never public. http://me.abelcheung.org/articles/research/what-is-cp951/
       //  * Big5-2003 (Taiwan standard) almost superset of cp950.
       //  * Unicode-at-on (UAO) / Mozilla 1.8. Falling out of use on the Web. Not supported by other browsers.
-      //  * Big5-HKSCS (-2001, -2004, -2008). Hong Kong standard.
+      //  * Big5-HKSCS (-2001, -2004, -2008). Hong Kong standard. 
       //    many unicode code points moved from PUA to Supplementary plane (U+2XXXX) over the years.
       //    Plus, it has 4 combining sequences.
       //    Seems that Mozilla refused to support it for 10 yrs. https://bugzilla.mozilla.org/show_bug.cgi?id=162431 https://bugzilla.mozilla.org/show_bug.cgi?id=310299
@@ -248397,7 +248397,7 @@ var require_dbcs_data2 = __commonJS({
       //    In the encoder, it might make sense to support encoding old PUA mappings to Big5 bytes seq-s.
       //    Official spec: http://www.ogcio.gov.hk/en/business/tech_promotion/ccli/terms/doc/2003cmp_2008.txt
       //                   http://www.ogcio.gov.hk/tc/business/tech_promotion/ccli/terms/doc/hkscs-2008-big5-iso.txt
-      //
+      // 
       // Current understanding of how to deal with Big5(-HKSCS) is in the Encoding Standard, http://encoding.spec.whatwg.org/#big5-encoder
       // Unicode mapping (http://www.unicode.org/Public/MAPPINGS/OBSOLETE/EASTASIA/OTHER/BIG5.TXT) is said to be wrong.
       "windows950": "cp950",
@@ -255046,6 +255046,186 @@ var init_batchGeneratePrompt = __esm({
   }
 });
 
+// src/services/video-readiness.ts
+function createInspectionContext() {
+  return { activeTasksByProject: /* @__PURE__ */ new Map(), videoModels: /* @__PURE__ */ new Map() };
+}
+function check3(key, ok, message) {
+  return { key, ok, message };
+}
+function parseMode(mode) {
+  if (Array.isArray(mode)) return mode;
+  try {
+    const parsed = JSON.parse(mode);
+    return Array.isArray(parsed) ? parsed.map(String) : mode;
+  } catch {
+    return mode;
+  }
+}
+function modeMatches(left, right) {
+  if (Array.isArray(left) && Array.isArray(right)) return JSON.stringify(left) === JSON.stringify(right);
+  return left === right;
+}
+function requiredReferenceCount(mode) {
+  if (Array.isArray(mode)) return mode.length > 0 ? 1 : 0;
+  if (mode === "text") return 0;
+  if (mode === "startEndRequired") return 2;
+  if (["singleImage", "endFrameOptional", "startFrameOptional"].includes(mode)) return 1;
+  return 0;
+}
+async function inspectScope(input) {
+  const [project, script, track] = await Promise.all([
+    utils_default.db("o_project").where("id", input.projectId).select("id").first(),
+    utils_default.db("o_script").where({ id: input.scriptId, projectId: input.projectId }).select("id").first(),
+    utils_default.db("o_videoTrack").where({ id: input.trackId, projectId: input.projectId, scriptId: input.scriptId }).select("id").first()
+  ]);
+  return [
+    check3("project_ready", Boolean(project), project ? "\u9879\u76EE\u5B58\u5728" : "\u9879\u76EE\u4E0D\u5B58\u5728"),
+    check3("script_ready", Boolean(script), script ? "\u5267\u672C\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE" : "\u5267\u672C\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE"),
+    check3("track_ready", Boolean(track), track ? "\u955C\u5934\u8F68\u9053\u5C5E\u4E8E\u5F53\u524D\u5267\u672C" : "\u955C\u5934\u8F68\u9053\u4E0D\u5B58\u5728\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u5267\u672C")
+  ];
+}
+async function loadVideoModel(model, context2) {
+  const cached3 = context2.videoModels.get(model);
+  if (cached3) return cached3;
+  const loading = (async () => {
+    const [vendorId, modelName] = model.split(/:(.+)/);
+    const vendorConfig = vendorId ? await utils_default.db("o_vendorConfig").where("id", vendorId).first() : null;
+    let selectedModel = null;
+    let vendor = null;
+    let modelError = "";
+    if (vendorId && modelName) {
+      try {
+        const models = await utils_default.vendor.getModelList(vendorId);
+        selectedModel = models.find((item) => item.modelName === modelName && item.type === "video") ?? null;
+        vendor = utils_default.vendor.getVendor(vendorId);
+      } catch (error73) {
+        modelError = utils_default.error(error73).message;
+      }
+    }
+    return { vendorConfig, selectedModel, vendor, modelError };
+  })();
+  context2.videoModels.set(model, loading);
+  return loading;
+}
+async function inspectModel(input, mode, context2) {
+  const [vendorId, modelName] = input.model.split(/:(.+)/);
+  if (!vendorId || !modelName) {
+    return [
+      check3("video_model_ready", false, "\u672A\u9009\u62E9\u6709\u6548\u7684\u89C6\u9891\u6A21\u578B"),
+      check3("provider_ready", false, "\u65E0\u6CD5\u786E\u5B9A\u89C6\u9891\u6A21\u578B\u4F9B\u5E94\u5546"),
+      check3("mode_ready", false, "\u65E0\u6CD5\u68C0\u67E5\u89C6\u9891\u751F\u6210\u6A21\u5F0F"),
+      check3("duration_resolution_ready", false, "\u65E0\u6CD5\u68C0\u67E5\u65F6\u957F\u548C\u5206\u8FA8\u7387")
+    ];
+  }
+  const { vendorConfig, selectedModel, vendor, modelError } = await loadVideoModel(input.model, context2);
+  const modelReady = Boolean(vendorConfig && selectedModel);
+  const modelMessage = !vendorConfig ? "\u89C6\u9891\u6A21\u578B\u4F9B\u5E94\u5546\u914D\u7F6E\u4E0D\u5B58\u5728" : !selectedModel ? modelError || `\u4F9B\u5E94\u5546\u4E2D\u4E0D\u5B58\u5728\u89C6\u9891\u6A21\u578B ${modelName}` : "\u89C6\u9891\u6A21\u578B\u53EF\u7528";
+  let missingInputs = [];
+  if (vendorConfig && vendor) {
+    let storedValues = {};
+    try {
+      storedValues = JSON.parse(vendorConfig.inputValues || "{}");
+    } catch {
+      storedValues = {};
+    }
+    const values = { ...vendor.inputValues ?? {}, ...storedValues };
+    missingInputs = (vendor.inputs ?? []).filter((item) => item.required && !String(values[item.key] ?? "").trim()).map((item) => item.label || item.key);
+  }
+  const providerReady = Boolean(vendorConfig?.enable) && missingInputs.length === 0 && !modelError;
+  const providerMessage = !vendorConfig ? "\u4F9B\u5E94\u5546\u914D\u7F6E\u4E0D\u5B58\u5728" : !vendorConfig.enable ? "\u4F9B\u5E94\u5546\u5C1A\u672A\u542F\u7528" : missingInputs.length ? `\u4F9B\u5E94\u5546\u7F3A\u5C11\u5FC5\u586B\u914D\u7F6E\uFF1A${missingInputs.join("\u3001")}` : modelError || "\u4F9B\u5E94\u5546\u914D\u7F6E\u53EF\u7528";
+  const modeReady = Boolean(selectedModel?.mode?.some((item) => modeMatches(item, mode)));
+  const modeMessage = modeReady ? "\u5F53\u524D\u751F\u6210\u6A21\u5F0F\u53D7\u6A21\u578B\u652F\u6301" : "\u5F53\u524D\u751F\u6210\u6A21\u5F0F\u4E0D\u5728\u6A21\u578B\u652F\u6301\u8303\u56F4\u5185";
+  const durationResolutionReady = Boolean(
+    selectedModel?.durationResolutionMap?.some(
+      (item) => item.duration?.includes(input.duration) && item.resolution?.includes(input.resolution)
+    )
+  );
+  const durationResolutionMessage = durationResolutionReady ? "\u65F6\u957F\u548C\u5206\u8FA8\u7387\u7EC4\u5408\u53D7\u6A21\u578B\u652F\u6301" : `\u6A21\u578B\u4E0D\u652F\u6301 ${input.duration} \u79D2 / ${input.resolution} \u7EC4\u5408`;
+  return [
+    check3("video_model_ready", modelReady, modelMessage),
+    check3("provider_ready", providerReady, providerMessage),
+    check3("mode_ready", modeReady, modeMessage),
+    check3("duration_resolution_ready", durationResolutionReady, durationResolutionMessage)
+  ];
+}
+async function inspectReferences(input, mode) {
+  const requiredCount = requiredReferenceCount(mode);
+  if (requiredCount === 0 && input.uploadData.length === 0) {
+    return check3("references_ready", true, "\u5F53\u524D\u6A21\u5F0F\u4E0D\u9700\u8981\u53C2\u8003\u7D20\u6750");
+  }
+  const storyboardIds = input.uploadData.filter((item) => item.sources === "storyboard").map((item) => item.id);
+  const assetIds = input.uploadData.filter((item) => item.sources === "assets").map((item) => item.id);
+  const unsupported = input.uploadData.filter((item) => !["storyboard", "assets"].includes(item.sources));
+  const [storyboards, assets] = await Promise.all([
+    storyboardIds.length ? utils_default.db("o_storyboard").whereIn("id", storyboardIds).select("id", "filePath", "projectId", "scriptId") : Promise.resolve([]),
+    assetIds.length ? utils_default.db("o_assets").leftJoin("o_image", "o_assets.imageId", "o_image.id").whereIn("o_assets.id", assetIds).select("o_assets.id", "o_assets.projectId", "o_image.filePath") : Promise.resolve([])
+  ]);
+  const validStoryboardIds = new Set(
+    storyboards.filter((item) => item.filePath && item.projectId === input.projectId && item.scriptId === input.scriptId).map((item) => item.id)
+  );
+  const validAssetIds = new Set(
+    assets.filter((item) => item.filePath && item.projectId === input.projectId).map((item) => item.id)
+  );
+  const missing = input.uploadData.filter(
+    (item) => item.sources === "storyboard" && !validStoryboardIds.has(item.id) || item.sources === "assets" && !validAssetIds.has(item.id)
+  );
+  const validKeys = new Set(
+    input.uploadData.filter(
+      (item) => item.sources === "storyboard" && validStoryboardIds.has(item.id) || item.sources === "assets" && validAssetIds.has(item.id)
+    ).map((item) => `${item.sources}:${item.id}`)
+  );
+  const validCount = validKeys.size;
+  const enough = validCount >= requiredCount;
+  const ok = unsupported.length === 0 && missing.length === 0 && enough;
+  if (unsupported.length) return check3("references_ready", false, "\u5B58\u5728\u4E0D\u652F\u6301\u7684\u53C2\u8003\u7D20\u6750\u6765\u6E90");
+  if (missing.length) return check3("references_ready", false, `\u6709 ${missing.length} \u4E2A\u53C2\u8003\u7D20\u6750\u4E0D\u5B58\u5728\u3001\u672A\u751F\u6210\u6216\u4E0D\u5C5E\u4E8E\u5F53\u524D\u9879\u76EE`);
+  if (!enough) return check3("references_ready", false, `\u5F53\u524D\u6A21\u5F0F\u81F3\u5C11\u9700\u8981 ${requiredCount} \u4E2A\u6709\u6548\u53C2\u8003\u7D20\u6750\uFF0C\u73B0\u6709 ${validCount} \u4E2A`);
+  return check3("references_ready", true, `\u5DF2\u627E\u5230 ${validCount} \u4E2A\u6709\u6548\u53C2\u8003\u7D20\u6750`);
+}
+async function getActiveTasks(input, context2) {
+  let pending = context2.activeTasksByProject.get(input.projectId);
+  if (!pending) {
+    pending = generationTaskRepository.list({ projectId: input.projectId, type: "video.generate", limit: 100 }).then((result) => result.data);
+    context2.activeTasksByProject.set(input.projectId, pending);
+  }
+  return pending;
+}
+async function inspectVideoGenerationReadiness(input, context2 = createInspectionContext()) {
+  const mode = parseMode(input.mode);
+  const resourceKey = `video:${input.projectId}:${input.scriptId}:${input.trackId}`;
+  const activeTask2 = (await getActiveTasks(input, context2)).find(
+    (task) => task.resourceKey === resourceKey && !["cancelled", "succeeded", "failed"].includes(task.status)
+  );
+  const checks = [
+    ...await inspectScope(input),
+    check3("prompt_ready", Boolean(input.prompt.trim()), input.prompt.trim() ? "\u89C6\u9891\u63D0\u793A\u8BCD\u53EF\u7528" : "\u89C6\u9891\u63D0\u793A\u8BCD\u4E3A\u7A7A"),
+    check3("duration_ready", input.duration > 0, input.duration > 0 ? "\u955C\u5934\u65F6\u957F\u5DF2\u914D\u7F6E" : "\u955C\u5934\u65F6\u957F\u5FC5\u987B\u5927\u4E8E 0"),
+    await inspectReferences(input, mode),
+    ...await inspectModel(input, mode, context2),
+    check3(
+      "no_active_video_task",
+      !activeTask2,
+      activeTask2 ? `\u5F53\u524D\u955C\u5934\u5DF2\u6709\u8FDB\u884C\u4E2D\u7684\u89C6\u9891\u4EFB\u52A1\uFF08${activeTask2.status}\uFF09` : "\u5F53\u524D\u955C\u5934\u6CA1\u6709\u8FDB\u884C\u4E2D\u7684\u89C6\u9891\u4EFB\u52A1"
+    )
+  ];
+  return { trackId: input.trackId, ready: checks.every((item) => item.ok), checks };
+}
+async function inspectVideoGenerationBatchReadiness(inputs) {
+  const context2 = createInspectionContext();
+  return Promise.all(inputs.map((input) => inspectVideoGenerationReadiness(input, context2)));
+}
+function readinessFailureMessage(result) {
+  return result.checks.filter((item) => !item.ok && item.key !== "no_active_video_task").map((item) => item.message).join("\uFF1B");
+}
+var init_video_readiness = __esm({
+  "src/services/video-readiness.ts"() {
+    "use strict";
+    init_utils3();
+    init_repository();
+  }
+});
+
 // src/services/task-engine/enqueueVideo.ts
 async function enqueueVideoGeneration(input) {
   const resourceKey = `video:${input.projectId}:${input.scriptId}:${input.trackId}`;
@@ -255057,6 +255237,11 @@ async function enqueueVideoGeneration(input) {
   if (active) {
     const payload2 = active.payload;
     return { task: active, videoId: payload2.videoId, deduped: true };
+  }
+  const readiness = await inspectVideoGenerationReadiness(input);
+  if (!readiness.ready) {
+    const message = readinessFailureMessage(readiness);
+    throw new Error(message || "\u5F53\u524D\u955C\u5934\u5DF2\u6709\u8FDB\u884C\u4E2D\u7684\u89C6\u9891\u4EFB\u52A1");
   }
   const costReservation = await prepareCostReservation({
     projectId: input.projectId,
@@ -255125,6 +255310,7 @@ var init_enqueueVideo = __esm({
     init_utils3();
     init_repository();
     init_budget();
+    init_video_readiness();
   }
 });
 
@@ -255232,18 +255418,63 @@ var init_checkVideoPrompt = __esm({
   }
 });
 
+// src/routes/production/workbench/checkVideoReadiness.ts
+var import_express86, router86, trackSchema, checkVideoReadiness_default;
+var init_checkVideoReadiness = __esm({
+  "src/routes/production/workbench/checkVideoReadiness.ts"() {
+    "use strict";
+    import_express86 = __toESM(require_express2());
+    init_zod();
+    init_responseFormat();
+    init_middleware();
+    init_video_readiness();
+    router86 = import_express86.default.Router();
+    trackSchema = external_exports.object({
+      uploadData: external_exports.array(external_exports.object({ id: external_exports.number(), sources: external_exports.string() })),
+      trackId: external_exports.number(),
+      prompt: external_exports.string(),
+      duration: external_exports.number()
+    });
+    checkVideoReadiness_default = router86.post(
+      "/",
+      validateFields({
+        projectId: external_exports.number(),
+        scriptId: external_exports.number(),
+        trackData: external_exports.array(trackSchema).min(1),
+        model: external_exports.string(),
+        mode: external_exports.union([external_exports.string(), external_exports.array(external_exports.string())]),
+        resolution: external_exports.string()
+      }),
+      async (req, res) => {
+        const { projectId, scriptId, trackData, model, mode, resolution } = req.body;
+        const tracks = await inspectVideoGenerationBatchReadiness(
+          trackData.map((track) => ({
+            projectId,
+            scriptId,
+            ...track,
+            model,
+            mode,
+            resolution
+          }))
+        );
+        res.status(200).send(success3({ ready: tracks.every((track) => track.ready), tracks }));
+      }
+    );
+  }
+});
+
 // src/routes/production/workbench/checkVideoStateList.ts
-var import_express86, router86, checkVideoStateList_default;
+var import_express87, router87, checkVideoStateList_default;
 var init_checkVideoStateList = __esm({
   "src/routes/production/workbench/checkVideoStateList.ts"() {
     "use strict";
-    import_express86 = __toESM(require_express2());
+    import_express87 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router86 = import_express86.default.Router();
-    checkVideoStateList_default = router86.post(
+    router87 = import_express87.default.Router();
+    checkVideoStateList_default = router87.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -255269,17 +255500,17 @@ var init_checkVideoStateList = __esm({
 });
 
 // src/routes/production/workbench/deleteTrack.ts
-var import_express87, router87, deleteTrack_default;
+var import_express88, router88, deleteTrack_default;
 var init_deleteTrack = __esm({
   "src/routes/production/workbench/deleteTrack.ts"() {
     "use strict";
-    import_express87 = __toESM(require_express2());
+    import_express88 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router87 = import_express87.default.Router();
-    deleteTrack_default = router87.post(
+    router88 = import_express88.default.Router();
+    deleteTrack_default = router88.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -255297,17 +255528,17 @@ var init_deleteTrack = __esm({
 });
 
 // src/routes/production/workbench/delVideo.ts
-var import_express88, router88, delVideo_default;
+var import_express89, router89, delVideo_default;
 var init_delVideo = __esm({
   "src/routes/production/workbench/delVideo.ts"() {
     "use strict";
-    import_express88 = __toESM(require_express2());
+    import_express89 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router88 = import_express88.default.Router();
-    delVideo_default = router88.post(
+    router89 = import_express89.default.Router();
+    delVideo_default = router89.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -255325,18 +255556,18 @@ var init_delVideo = __esm({
 });
 
 // src/routes/production/workbench/generateVideo.ts
-var import_express89, router89, generateVideo_default;
+var import_express90, router90, generateVideo_default;
 var init_generateVideo = __esm({
   "src/routes/production/workbench/generateVideo.ts"() {
     "use strict";
-    import_express89 = __toESM(require_express2());
+    import_express90 = __toESM(require_express2());
     init_zod();
     init_dist_node();
     init_responseFormat();
     init_middleware();
     init_enqueueVideo();
-    router89 = import_express89.default.Router();
-    generateVideo_default = router89.post(
+    router90 = import_express90.default.Router();
+    generateVideo_default = router90.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -255381,19 +255612,19 @@ var init_generateVideo = __esm({
 });
 
 // src/routes/production/workbench/generateVideoPrompt.ts
-var import_express90, import_promises10, import_path13, router90, generateVideoPrompt_default;
+var import_express91, import_promises10, import_path13, router91, generateVideoPrompt_default;
 var init_generateVideoPrompt = __esm({
   "src/routes/production/workbench/generateVideoPrompt.ts"() {
     "use strict";
-    import_express90 = __toESM(require_express2());
+    import_express91 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     import_promises10 = __toESM(require("fs/promises"));
     import_path13 = __toESM(require("path"));
-    router90 = import_express90.default.Router();
-    generateVideoPrompt_default = router90.post(
+    router91 = import_express91.default.Router();
+    generateVideoPrompt_default = router91.post(
       "/",
       validateFields({
         trackId: external_exports.number(),
@@ -255550,17 +255781,17 @@ var init_generateVideoPrompt = __esm({
 });
 
 // src/routes/production/workbench/getAudioBindAssetsList.ts
-var import_express91, router91, getAudioBindAssetsList_default;
+var import_express92, router92, getAudioBindAssetsList_default;
 var init_getAudioBindAssetsList = __esm({
   "src/routes/production/workbench/getAudioBindAssetsList.ts"() {
     "use strict";
-    import_express91 = __toESM(require_express2());
+    import_express92 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router91 = import_express91.default.Router();
-    getAudioBindAssetsList_default = router91.post(
+    router92 = import_express92.default.Router();
+    getAudioBindAssetsList_default = router92.post(
       "/",
       validateFields({
         assetsIds: external_exports.array(external_exports.number())
@@ -255594,17 +255825,17 @@ var init_getAudioBindAssetsList = __esm({
 });
 
 // src/routes/production/workbench/getFileUrl.ts
-var import_express92, router92, getFileUrl_default;
+var import_express93, router93, getFileUrl_default;
 var init_getFileUrl = __esm({
   "src/routes/production/workbench/getFileUrl.ts"() {
     "use strict";
-    import_express92 = __toESM(require_express2());
+    import_express93 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router92 = import_express92.default.Router();
-    getFileUrl_default = router92.post(
+    router93 = import_express93.default.Router();
+    getFileUrl_default = router93.post(
       "/",
       validateFields({
         items: external_exports.array(external_exports.object({
@@ -255638,17 +255869,17 @@ var init_getFileUrl = __esm({
 });
 
 // src/routes/production/workbench/getGenerateData.ts
-var import_express93, router93, getGenerateData_default;
+var import_express94, router94, getGenerateData_default;
 var init_getGenerateData = __esm({
   "src/routes/production/workbench/getGenerateData.ts"() {
     "use strict";
-    import_express93 = __toESM(require_express2());
+    import_express94 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router93 = import_express93.default.Router();
-    getGenerateData_default = router93.post(
+    router94 = import_express94.default.Router();
+    getGenerateData_default = router94.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -255817,17 +256048,17 @@ var init_getGenerateData = __esm({
 });
 
 // src/routes/production/workbench/getVideoList.ts
-var import_express94, router94, getVideoList_default;
+var import_express95, router95, getVideoList_default;
 var init_getVideoList = __esm({
   "src/routes/production/workbench/getVideoList.ts"() {
     "use strict";
-    import_express94 = __toESM(require_express2());
+    import_express95 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router94 = import_express94.default.Router();
-    getVideoList_default = router94.post(
+    router95 = import_express95.default.Router();
+    getVideoList_default = router95.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -255856,17 +256087,17 @@ var init_getVideoList = __esm({
 });
 
 // src/routes/production/workbench/selectVideo.ts
-var import_express95, router95, selectVideo_default;
+var import_express96, router96, selectVideo_default;
 var init_selectVideo = __esm({
   "src/routes/production/workbench/selectVideo.ts"() {
     "use strict";
-    import_express95 = __toESM(require_express2());
+    import_express96 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router95 = import_express95.default.Router();
-    selectVideo_default = router95.post(
+    router96 = import_express96.default.Router();
+    selectVideo_default = router96.post(
       "/",
       validateFields({
         trackId: external_exports.number(),
@@ -255884,17 +256115,17 @@ var init_selectVideo = __esm({
 });
 
 // src/routes/production/workbench/updateVideoDuration.ts
-var import_express96, router96, updateVideoDuration_default;
+var import_express97, router97, updateVideoDuration_default;
 var init_updateVideoDuration = __esm({
   "src/routes/production/workbench/updateVideoDuration.ts"() {
     "use strict";
-    import_express96 = __toESM(require_express2());
+    import_express97 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router96 = import_express96.default.Router();
-    updateVideoDuration_default = router96.post(
+    router97 = import_express97.default.Router();
+    updateVideoDuration_default = router97.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -255912,17 +256143,17 @@ var init_updateVideoDuration = __esm({
 });
 
 // src/routes/production/workbench/updateVideoPrompt.ts
-var import_express97, router97, updateVideoPrompt_default;
+var import_express98, router98, updateVideoPrompt_default;
 var init_updateVideoPrompt = __esm({
   "src/routes/production/workbench/updateVideoPrompt.ts"() {
     "use strict";
-    import_express97 = __toESM(require_express2());
+    import_express98 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router97 = import_express97.default.Router();
-    updateVideoPrompt_default = router97.post(
+    router98 = import_express98.default.Router();
+    updateVideoPrompt_default = router98.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -255940,19 +256171,19 @@ var init_updateVideoPrompt = __esm({
 });
 
 // src/routes/project/addDirectorManual.ts
-var import_express98, import_fs8, import_path14, router98, addDirectorManual_default;
+var import_express99, import_fs8, import_path14, router99, addDirectorManual_default;
 var init_addDirectorManual = __esm({
   "src/routes/project/addDirectorManual.ts"() {
     "use strict";
-    import_express98 = __toESM(require_express2());
+    import_express99 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs8 = __toESM(require("fs"));
     import_path14 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router98 = import_express98.default.Router();
-    addDirectorManual_default = router98.post(
+    router99 = import_express99.default.Router();
+    addDirectorManual_default = router99.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -256030,17 +256261,17 @@ var init_addDirectorManual = __esm({
 });
 
 // src/routes/project/addProject.ts
-var import_express99, router99, addProject_default;
+var import_express100, router100, addProject_default;
 var init_addProject = __esm({
   "src/routes/project/addProject.ts"() {
     "use strict";
-    import_express99 = __toESM(require_express2());
+    import_express100 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router99 = import_express99.default.Router();
-    addProject_default = router99.post(
+    router100 = import_express100.default.Router();
+    addProject_default = router100.post(
       "/",
       validateFields({
         projectType: external_exports.string(),
@@ -256080,19 +256311,19 @@ var init_addProject = __esm({
 });
 
 // src/routes/project/addVisualManual.ts
-var import_express100, import_fs9, import_path15, router100, addVisualManual_default;
+var import_express101, import_fs9, import_path15, router101, addVisualManual_default;
 var init_addVisualManual = __esm({
   "src/routes/project/addVisualManual.ts"() {
     "use strict";
-    import_express100 = __toESM(require_express2());
+    import_express101 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs9 = __toESM(require("fs"));
     import_path15 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router100 = import_express100.default.Router();
-    addVisualManual_default = router100.post(
+    router101 = import_express101.default.Router();
+    addVisualManual_default = router101.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -256179,18 +256410,18 @@ var init_addVisualManual = __esm({
 });
 
 // src/routes/project/deleteDirectorManual.ts
-var import_express101, import_promises11, router101, deleteDirectorManual_default;
+var import_express102, import_promises11, router102, deleteDirectorManual_default;
 var init_deleteDirectorManual = __esm({
   "src/routes/project/deleteDirectorManual.ts"() {
     "use strict";
-    import_express101 = __toESM(require_express2());
+    import_express102 = __toESM(require_express2());
     init_utils3();
     import_promises11 = __toESM(require("node:fs/promises"));
     init_zod();
     init_responseFormat();
     init_middleware();
-    router101 = import_express101.default.Router();
-    deleteDirectorManual_default = router101.post(
+    router102 = import_express102.default.Router();
+    deleteDirectorManual_default = router102.post(
       "/",
       validateFields({
         name: external_exports.string()
@@ -256222,18 +256453,18 @@ var init_deleteDirectorManual = __esm({
 });
 
 // src/routes/project/deleteVisualManual.ts
-var import_express102, import_promises12, router102, deleteVisualManual_default;
+var import_express103, import_promises12, router103, deleteVisualManual_default;
 var init_deleteVisualManual = __esm({
   "src/routes/project/deleteVisualManual.ts"() {
     "use strict";
-    import_express102 = __toESM(require_express2());
+    import_express103 = __toESM(require_express2());
     init_utils3();
     import_promises12 = __toESM(require("node:fs/promises"));
     init_zod();
     init_responseFormat();
     init_middleware();
-    router102 = import_express102.default.Router();
-    deleteVisualManual_default = router102.post(
+    router103 = import_express103.default.Router();
+    deleteVisualManual_default = router103.post(
       "/",
       validateFields({
         name: external_exports.string()
@@ -256265,17 +256496,17 @@ var init_deleteVisualManual = __esm({
 });
 
 // src/routes/project/delProject.ts
-var import_express103, router103, delProject_default;
+var import_express104, router104, delProject_default;
 var init_delProject = __esm({
   "src/routes/project/delProject.ts"() {
     "use strict";
-    import_express103 = __toESM(require_express2());
+    import_express104 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router103 = import_express103.default.Router();
-    delProject_default = router103.post(
+    router104 = import_express104.default.Router();
+    delProject_default = router104.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -256345,19 +256576,19 @@ var init_delProject = __esm({
 });
 
 // src/routes/project/editDirectorlManual.ts
-var import_express104, import_fs10, import_path16, router104, editDirectorlManual_default;
+var import_express105, import_fs10, import_path16, router105, editDirectorlManual_default;
 var init_editDirectorlManual = __esm({
   "src/routes/project/editDirectorlManual.ts"() {
     "use strict";
-    import_express104 = __toESM(require_express2());
+    import_express105 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs10 = __toESM(require("fs"));
     import_path16 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router104 = import_express104.default.Router();
-    editDirectorlManual_default = router104.post(
+    router105 = import_express105.default.Router();
+    editDirectorlManual_default = router105.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -256437,17 +256668,17 @@ ${item.data}` : item.data;
 });
 
 // src/routes/project/editProject.ts
-var import_express105, router105, editProject_default;
+var import_express106, router106, editProject_default;
 var init_editProject = __esm({
   "src/routes/project/editProject.ts"() {
     "use strict";
-    import_express105 = __toESM(require_express2());
+    import_express106 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router105 = import_express105.default.Router();
-    editProject_default = router105.post(
+    router106 = import_express106.default.Router();
+    editProject_default = router106.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -256485,19 +256716,19 @@ var init_editProject = __esm({
 });
 
 // src/routes/project/editVisualManual.ts
-var import_express106, import_fs11, import_path17, router106, editVisualManual_default;
+var import_express107, import_fs11, import_path17, router107, editVisualManual_default;
 var init_editVisualManual = __esm({
   "src/routes/project/editVisualManual.ts"() {
     "use strict";
-    import_express106 = __toESM(require_express2());
+    import_express107 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs11 = __toESM(require("fs"));
     import_path17 = __toESM(require("path"));
     init_middleware();
     init_zod();
-    router106 = import_express106.default.Router();
-    editVisualManual_default = router106.post(
+    router107 = import_express107.default.Router();
+    editVisualManual_default = router107.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -256586,17 +256817,17 @@ ${item.data}` : item.data;
 });
 
 // src/routes/project/getModelDetails.ts
-var import_express107, router107, getModelDetails_default;
+var import_express108, router108, getModelDetails_default;
 var init_getModelDetails = __esm({
   "src/routes/project/getModelDetails.ts"() {
     "use strict";
-    import_express107 = __toESM(require_express2());
+    import_express108 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router107 = import_express107.default.Router();
-    getModelDetails_default = router107.post(
+    router108 = import_express108.default.Router();
+    getModelDetails_default = router108.post(
       "/",
       validateFields({
         key: external_exports.enum(["scriptAgent", "productionAgent"])
@@ -256615,15 +256846,15 @@ var init_getModelDetails = __esm({
 });
 
 // src/routes/project/getProject.ts
-var import_express108, router108, getProject_default;
+var import_express109, router109, getProject_default;
 var init_getProject = __esm({
   "src/routes/project/getProject.ts"() {
     "use strict";
-    import_express108 = __toESM(require_express2());
+    import_express109 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router108 = import_express108.default.Router();
-    getProject_default = router108.post("/", async (req, res) => {
+    router109 = import_express109.default.Router();
+    getProject_default = router109.post("/", async (req, res) => {
       const data = await utils_default.db("o_project").select("*");
       res.status(200).send(success3(data));
     });
@@ -256652,16 +256883,16 @@ async function readAllImages(imagesDir) {
     return [];
   }
 }
-var import_express109, import_fs12, import_path18, router109, DATA_MAP, getVisualManual_default;
+var import_express110, import_fs12, import_path18, router110, DATA_MAP, getVisualManual_default;
 var init_getVisualManual = __esm({
   "src/routes/project/getVisualManual.ts"() {
     "use strict";
-    import_express109 = __toESM(require_express2());
+    import_express110 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs12 = __toESM(require("fs"));
     import_path18 = __toESM(require("path"));
-    router109 = import_express109.default.Router();
+    router110 = import_express110.default.Router();
     DATA_MAP = [
       { label: "README", value: "README" },
       { label: "\u524D\u7F00", value: "prefix" },
@@ -256676,7 +256907,7 @@ var init_getVisualManual = __esm({
       { label: "\u6280\u6CD5-\u5BFC\u6F14\u89C4\u5212", value: "director_planning_style", subDir: "driector_skills" },
       { label: "\u6280\u6CD5-\u5206\u955C\u8868\u8BBE\u8BA1", value: "director_storyboard_table_style", subDir: "driector_skills" }
     ];
-    getVisualManual_default = router109.post("/", async (req, res) => {
+    getVisualManual_default = router110.post("/", async (req, res) => {
       try {
         const artPromptsDir = utils_default.getPath(["skills", "art_skills"]);
         const styleDirs = import_fs12.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
@@ -256738,22 +256969,22 @@ async function readAllImages2(imagesDir) {
     return [];
   }
 }
-var import_express110, import_fs13, import_path19, router110, DATA_MAP2, queryDirectorManual_default;
+var import_express111, import_fs13, import_path19, router111, DATA_MAP2, queryDirectorManual_default;
 var init_queryDirectorManual = __esm({
   "src/routes/project/queryDirectorManual.ts"() {
     "use strict";
-    import_express110 = __toESM(require_express2());
+    import_express111 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     import_fs13 = __toESM(require("fs"));
     import_path19 = __toESM(require("path"));
-    router110 = import_express110.default.Router();
+    router111 = import_express111.default.Router();
     DATA_MAP2 = [
       { label: "README", value: "README" },
       { label: "\u5BFC\u6F14\u89C4\u5212", value: "director_planning_narrative", subDir: "driector_skills" },
       { label: "\u5206\u955C\u8868", value: "director_storyboard_table_narrative", subDir: "driector_skills" }
     ];
-    queryDirectorManual_default = router110.post("/", async (req, res) => {
+    queryDirectorManual_default = router111.post("/", async (req, res) => {
       try {
         const artPromptsDir = utils_default.getPath(["skills", "story_skills"]);
         const styleDirs = import_fs13.default.readdirSync(artPromptsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
@@ -256794,19 +257025,19 @@ var init_queryDirectorManual = __esm({
 });
 
 // src/routes/project/visualManual.ts
-var import_express111, import_fs14, import_path20, router111, visualManual_default;
+var import_express112, import_fs14, import_path20, router112, visualManual_default;
 var init_visualManual = __esm({
   "src/routes/project/visualManual.ts"() {
     "use strict";
-    import_express111 = __toESM(require_express2());
+    import_express112 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_getPath();
     import_fs14 = __toESM(require("fs"));
     import_path20 = __toESM(require("path"));
-    router111 = import_express111.default.Router();
-    visualManual_default = router111.post(
+    router112 = import_express112.default.Router();
+    visualManual_default = router112.post(
       "/",
       validateFields({
         type: external_exports.string()
@@ -256840,17 +257071,17 @@ var init_visualManual = __esm({
 });
 
 // src/routes/script/addScript.ts
-var import_express112, router112, addScript_default;
+var import_express113, router113, addScript_default;
 var init_addScript = __esm({
   "src/routes/script/addScript.ts"() {
     "use strict";
-    import_express112 = __toESM(require_express2());
+    import_express113 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router112 = import_express112.default.Router();
-    addScript_default = router112.post(
+    router113 = import_express113.default.Router();
+    addScript_default = router113.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -256886,17 +257117,17 @@ var init_addScript = __esm({
 });
 
 // src/routes/script/batchAddScript.ts
-var import_express113, router113, batchAddScript_default;
+var import_express114, router114, batchAddScript_default;
 var init_batchAddScript = __esm({
   "src/routes/script/batchAddScript.ts"() {
     "use strict";
-    import_express113 = __toESM(require_express2());
+    import_express114 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router113 = import_express113.default.Router();
-    batchAddScript_default = router113.post(
+    router114 = import_express114.default.Router();
+    batchAddScript_default = router114.post(
       "/",
       validateFields({
         data: external_exports.array(
@@ -256926,17 +257157,17 @@ var init_batchAddScript = __esm({
 });
 
 // src/routes/script/delScript.ts
-var import_express114, router114, delScript_default;
+var import_express115, router115, delScript_default;
 var init_delScript = __esm({
   "src/routes/script/delScript.ts"() {
     "use strict";
-    import_express114 = __toESM(require_express2());
+    import_express115 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router114 = import_express114.default.Router();
-    delScript_default = router114.post(
+    router115 = import_express115.default.Router();
+    delScript_default = router115.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -256972,17 +257203,17 @@ var init_delScript = __esm({
 });
 
 // src/routes/script/exportScript.ts
-var import_express115, import_compressing2, router115, exportScript_default;
+var import_express116, import_compressing2, router116, exportScript_default;
 var init_exportScript = __esm({
   "src/routes/script/exportScript.ts"() {
     "use strict";
-    import_express115 = __toESM(require_express2());
+    import_express116 = __toESM(require_express2());
     init_utils3();
     init_zod();
     import_compressing2 = __toESM(require_compressing());
     init_middleware();
-    router115 = import_express115.default.Router();
-    exportScript_default = router115.post(
+    router116 = import_express116.default.Router();
+    exportScript_default = router116.post(
       "/",
       validateFields({
         id: external_exports.array(external_exports.number())
@@ -257004,17 +257235,17 @@ var init_exportScript = __esm({
 });
 
 // src/routes/script/extractAssets.ts
-var import_express116, router116, extractAssets_default;
+var import_express117, router117, extractAssets_default;
 var init_extractAssets = __esm({
   "src/routes/script/extractAssets.ts"() {
     "use strict";
-    import_express116 = __toESM(require_express2());
+    import_express117 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_extraction();
-    router116 = import_express116.default.Router();
-    extractAssets_default = router116.post(
+    router117 = import_express117.default.Router();
+    extractAssets_default = router117.post(
       "/",
       validateFields({
         scriptIds: external_exports.array(external_exports.number().int().positive()).min(1).max(5e3),
@@ -257034,17 +257265,17 @@ var init_extractAssets = __esm({
 });
 
 // src/routes/script/getAiRegex.ts
-var import_express117, router117, getAiRegex_default;
+var import_express118, router118, getAiRegex_default;
 var init_getAiRegex = __esm({
   "src/routes/script/getAiRegex.ts"() {
     "use strict";
-    import_express117 = __toESM(require_express2());
+    import_express118 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router117 = import_express117.default.Router();
-    getAiRegex_default = router117.post(
+    router118 = import_express118.default.Router();
+    getAiRegex_default = router118.post(
       "/",
       validateFields({
         content: external_exports.string()
@@ -257076,17 +257307,17 @@ var init_getAiRegex = __esm({
 });
 
 // src/routes/script/getScrptApi.ts
-var import_express118, router118, getScrptApi_default;
+var import_express119, router119, getScrptApi_default;
 var init_getScrptApi = __esm({
   "src/routes/script/getScrptApi.ts"() {
     "use strict";
-    import_express118 = __toESM(require_express2());
+    import_express119 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router118 = import_express118.default.Router();
-    getScrptApi_default = router118.post(
+    router119 = import_express119.default.Router();
+    getScrptApi_default = router119.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -257512,16 +257743,16 @@ var init_importNovel = __esm({
 });
 
 // src/routes/script/importNovel.ts
-var import_express119, router119, sourceSchema, importNovel_default;
+var import_express120, router120, sourceSchema, importNovel_default;
 var init_importNovel2 = __esm({
   "src/routes/script/importNovel.ts"() {
     "use strict";
-    import_express119 = __toESM(require_express2());
+    import_express120 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_importNovel();
-    router119 = import_express119.default.Router();
+    router120 = import_express120.default.Router();
     sourceSchema = external_exports.discriminatedUnion("mode", [
       external_exports.object({ mode: external_exports.literal("json"), content: external_exports.string().trim().min(2).max(25 * 1024 * 1024) }),
       external_exports.object({
@@ -257532,7 +257763,7 @@ var init_importNovel2 = __esm({
         apiToken: external_exports.string().max(1e4).optional()
       })
     ]);
-    router119.post(
+    router120.post(
       "/preview",
       validateFields({ projectId: external_exports.number().int().positive(), source: sourceSchema }),
       async (req, res) => {
@@ -257544,7 +257775,7 @@ var init_importNovel2 = __esm({
         }
       }
     );
-    router119.post(
+    router120.post(
       "/commit",
       validateFields({
         projectId: external_exports.number().int().positive(),
@@ -257560,22 +257791,22 @@ var init_importNovel2 = __esm({
         }
       }
     );
-    importNovel_default = router119;
+    importNovel_default = router120;
   }
 });
 
 // src/routes/script/pollScriptAssets.ts
-var import_express120, router120, pollScriptAssets_default;
+var import_express121, router121, pollScriptAssets_default;
 var init_pollScriptAssets = __esm({
   "src/routes/script/pollScriptAssets.ts"() {
     "use strict";
-    import_express120 = __toESM(require_express2());
+    import_express121 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router120 = import_express120.default.Router();
-    pollScriptAssets_default = router120.post(
+    router121 = import_express121.default.Router();
+    pollScriptAssets_default = router121.post(
       "/",
       validateFields({
         ids: external_exports.array(external_exports.number())
@@ -257590,17 +257821,17 @@ var init_pollScriptAssets = __esm({
 });
 
 // src/routes/script/updateScript.ts
-var import_express121, router121, updateScript_default;
+var import_express122, router122, updateScript_default;
 var init_updateScript = __esm({
   "src/routes/script/updateScript.ts"() {
     "use strict";
-    import_express121 = __toESM(require_express2());
+    import_express122 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router121 = import_express121.default.Router();
-    updateScript_default = router121.post(
+    router122 = import_express122.default.Router();
+    updateScript_default = router122.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -257634,17 +257865,17 @@ var init_updateScript = __esm({
 });
 
 // src/routes/scriptAgent/getPlanData.ts
-var import_express122, router122, getPlanData_default;
+var import_express123, router123, getPlanData_default;
 var init_getPlanData = __esm({
   "src/routes/scriptAgent/getPlanData.ts"() {
     "use strict";
-    import_express122 = __toESM(require_express2());
+    import_express123 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router122 = import_express122.default.Router();
-    getPlanData_default = router122.post(
+    router123 = import_express123.default.Router();
+    getPlanData_default = router123.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -257681,17 +257912,17 @@ var init_getPlanData = __esm({
 });
 
 // src/routes/scriptAgent/setPlanData.ts
-var import_express123, router123, setPlanData_default;
+var import_express124, router124, setPlanData_default;
 var init_setPlanData = __esm({
   "src/routes/scriptAgent/setPlanData.ts"() {
     "use strict";
-    import_express123 = __toESM(require_express2());
+    import_express124 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router123 = import_express123.default.Router();
-    setPlanData_default = router123.post(
+    router124 = import_express124.default.Router();
+    setPlanData_default = router124.post(
       "/",
       validateFields({
         projectId: external_exports.number(),
@@ -257724,17 +257955,17 @@ var init_setPlanData = __esm({
 });
 
 // src/routes/scriptAgent/updateData.ts
-var import_express124, router124, updateData_default;
+var import_express125, router125, updateData_default;
 var init_updateData = __esm({
   "src/routes/scriptAgent/updateData.ts"() {
     "use strict";
-    import_express124 = __toESM(require_express2());
+    import_express125 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router124 = import_express124.default.Router();
-    updateData_default = router124.post(
+    router125 = import_express125.default.Router();
+    updateData_default = router125.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -257761,17 +257992,17 @@ var init_updateData = __esm({
 });
 
 // src/routes/setting/about/checkUpdate.ts
-var import_express125, import_fs15, import_path21, router125, APP_VERSION2, checkUpdate_default;
+var import_express126, import_fs15, import_path21, router126, APP_VERSION2, checkUpdate_default;
 var init_checkUpdate = __esm({
   "src/routes/setting/about/checkUpdate.ts"() {
     "use strict";
-    import_express125 = __toESM(require_express2());
+    import_express126 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
     import_fs15 = __toESM(require("fs"));
     import_path21 = __toESM(require("path"));
-    router125 = import_express125.default.Router();
+    router126 = import_express126.default.Router();
     APP_VERSION2 = (() => {
       if (true) {
         return "1.1.8";
@@ -257780,7 +258011,7 @@ var init_checkUpdate = __esm({
       const pkg = JSON.parse(import_fs15.default.readFileSync(pkgPath, "utf8"));
       return pkg.version;
     })();
-    checkUpdate_default = router125.post(
+    checkUpdate_default = router126.post(
       "/",
       validateFields({
         source: external_exports.enum(["toonflow", "github", "gitee", "atomgit"]),
@@ -257822,11 +258053,11 @@ var init_checkUpdate = __esm({
 });
 
 // src/routes/setting/about/downloadApp.ts
-var import_express126, import_fs16, import_compressing3, router126, downloadApp_default;
+var import_express127, import_fs16, import_compressing3, router127, downloadApp_default;
 var init_downloadApp = __esm({
   "src/routes/setting/about/downloadApp.ts"() {
     "use strict";
-    import_express126 = __toESM(require_express2());
+    import_express127 = __toESM(require_express2());
     init_zod();
     init_middleware();
     init_utils3();
@@ -257834,8 +258065,8 @@ var init_downloadApp = __esm({
     init_axios2();
     import_compressing3 = __toESM(require_compressing());
     init_responseFormat();
-    router126 = import_express126.default.Router();
-    downloadApp_default = router126.post(
+    router127 = import_express127.default.Router();
+    downloadApp_default = router127.post(
       "/",
       validateFields({
         url: zod_default.url(),
@@ -257863,17 +258094,17 @@ var init_downloadApp = __esm({
 });
 
 // src/routes/setting/agentDeploy/agentSetKey.ts
-var import_express127, router127, agentSetKey_default;
+var import_express128, router128, agentSetKey_default;
 var init_agentSetKey = __esm({
   "src/routes/setting/agentDeploy/agentSetKey.ts"() {
     "use strict";
-    import_express127 = __toESM(require_express2());
+    import_express128 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router127 = import_express127.default.Router();
-    agentSetKey_default = router127.post(
+    router128 = import_express128.default.Router();
+    agentSetKey_default = router128.post(
       "/",
       validateFields({
         key: external_exports.string().optional()
@@ -257922,17 +258153,17 @@ var init_agentSetKey = __esm({
 });
 
 // src/routes/setting/agentDeploy/deployAgentModel.ts
-var import_express128, router128, deployAgentModel_default;
+var import_express129, router129, deployAgentModel_default;
 var init_deployAgentModel = __esm({
   "src/routes/setting/agentDeploy/deployAgentModel.ts"() {
     "use strict";
-    import_express128 = __toESM(require_express2());
+    import_express129 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router128 = import_express128.default.Router();
-    deployAgentModel_default = router128.post(
+    router129 = import_express129.default.Router();
+    deployAgentModel_default = router129.post(
       "/",
       validateFields({
         items: external_exports.array(
@@ -257961,15 +258192,15 @@ var init_deployAgentModel = __esm({
 });
 
 // src/routes/setting/agentDeploy/getAgentDeploy.ts
-var import_express129, router129, getAgentDeploy_default;
+var import_express130, router130, getAgentDeploy_default;
 var init_getAgentDeploy = __esm({
   "src/routes/setting/agentDeploy/getAgentDeploy.ts"() {
     "use strict";
-    import_express129 = __toESM(require_express2());
+    import_express130 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router129 = import_express129.default.Router();
-    getAgentDeploy_default = router129.post("/", async (req, res) => {
+    router130 = import_express130.default.Router();
+    getAgentDeploy_default = router130.post("/", async (req, res) => {
       const allData = await utils_default.db("o_agentDeploy").leftJoin("o_vendorConfig", "o_vendorConfig.id", "o_agentDeploy.vendorId").select("o_agentDeploy.*");
       const qrdinaryData = allData.filter((item) => !item.key?.includes(":"));
       const advancedData = allData.filter((item) => item.key?.includes(":") || item.key == "universalAi");
@@ -257979,15 +258210,15 @@ var init_getAgentDeploy = __esm({
 });
 
 // src/routes/setting/agentDeploy/getAgentUseMode.ts
-var import_express130, router130, getAgentUseMode_default;
+var import_express131, router131, getAgentUseMode_default;
 var init_getAgentUseMode = __esm({
   "src/routes/setting/agentDeploy/getAgentUseMode.ts"() {
     "use strict";
-    import_express130 = __toESM(require_express2());
+    import_express131 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router130 = import_express130.default.Router();
-    getAgentUseMode_default = router130.get("/", async (req, res) => {
+    router131 = import_express131.default.Router();
+    getAgentUseMode_default = router131.get("/", async (req, res) => {
       const useMode = await utils_default.db("o_setting").where("key", "agentUseMode").first();
       console.log("%c Line:9 \u{1F353} useMode", "background:#33a5ff", useMode);
       res.status(200).send(success3(useMode?.value || "0"));
@@ -257996,17 +258227,17 @@ var init_getAgentUseMode = __esm({
 });
 
 // src/routes/setting/agentDeploy/updateAgentModel.ts
-var import_express131, router131, updateAgentModel_default;
+var import_express132, router132, updateAgentModel_default;
 var init_updateAgentModel = __esm({
   "src/routes/setting/agentDeploy/updateAgentModel.ts"() {
     "use strict";
-    import_express131 = __toESM(require_express2());
+    import_express132 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router131 = import_express131.default.Router();
-    updateAgentModel_default = router131.post(
+    router132 = import_express132.default.Router();
+    updateAgentModel_default = router132.post(
       "/",
       validateFields({
         id: external_exports.number(),
@@ -258028,17 +258259,17 @@ var init_updateAgentModel = __esm({
 });
 
 // src/routes/setting/agentDeploy/updateUseMode.ts
-var import_express132, router132, updateUseMode_default;
+var import_express133, router133, updateUseMode_default;
 var init_updateUseMode = __esm({
   "src/routes/setting/agentDeploy/updateUseMode.ts"() {
     "use strict";
-    import_express132 = __toESM(require_express2());
+    import_express133 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router132 = import_express132.default.Router();
-    updateUseMode_default = router132.post(
+    router133 = import_express133.default.Router();
+    updateUseMode_default = router133.post(
       "/",
       validateFields({
         agentUseMode: external_exports.string()
@@ -258055,16 +258286,16 @@ var init_updateUseMode = __esm({
 });
 
 // src/routes/setting/dbConfig/clearData.ts
-var import_express133, router133, clearData_default;
+var import_express134, router134, clearData_default;
 var init_clearData = __esm({
   "src/routes/setting/dbConfig/clearData.ts"() {
     "use strict";
-    import_express133 = __toESM(require_express2());
+    import_express134 = __toESM(require_express2());
     init_responseFormat();
     init_db();
     init_initDB();
-    router133 = import_express133.default.Router();
-    clearData_default = router133.get("/", async (req, res) => {
+    router134 = import_express134.default.Router();
+    clearData_default = router134.get("/", async (req, res) => {
       try {
         const tables = await db.raw(
           `SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'knex_%'`
@@ -258084,15 +258315,15 @@ var init_clearData = __esm({
 });
 
 // src/routes/setting/dbConfig/clearTable.ts
-var import_express134, router134, clearTable_default;
+var import_express135, router135, clearTable_default;
 var init_clearTable = __esm({
   "src/routes/setting/dbConfig/clearTable.ts"() {
     "use strict";
-    import_express134 = __toESM(require_express2());
+    import_express135 = __toESM(require_express2());
     init_responseFormat();
     init_db();
-    router134 = import_express134.default.Router();
-    clearTable_default = router134.post("/", async (req, res) => {
+    router135 = import_express135.default.Router();
+    clearTable_default = router135.post("/", async (req, res) => {
       try {
         const { tableName } = req.body;
         if (!tableName || typeof tableName !== "string") {
@@ -258115,15 +258346,15 @@ var init_clearTable = __esm({
 });
 
 // src/routes/setting/dbConfig/dbInfo.ts
-var import_express135, router135, dbInfo_default;
+var import_express136, router136, dbInfo_default;
 var init_dbInfo = __esm({
   "src/routes/setting/dbConfig/dbInfo.ts"() {
     "use strict";
-    import_express135 = __toESM(require_express2());
+    import_express136 = __toESM(require_express2());
     init_responseFormat();
     init_db();
-    router135 = import_express135.default.Router();
-    dbInfo_default = router135.get("/", async (req, res) => {
+    router136 = import_express136.default.Router();
+    dbInfo_default = router136.get("/", async (req, res) => {
       try {
         const tables = await db.raw(
           `SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'knex_%'`
@@ -258145,15 +258376,15 @@ var init_dbInfo = __esm({
 });
 
 // src/routes/setting/dbConfig/exportData.ts
-var import_express136, router136, exportData_default;
+var import_express137, router137, exportData_default;
 var init_exportData = __esm({
   "src/routes/setting/dbConfig/exportData.ts"() {
     "use strict";
-    import_express136 = __toESM(require_express2());
+    import_express137 = __toESM(require_express2());
     init_responseFormat();
     init_db();
-    router136 = import_express136.default.Router();
-    exportData_default = router136.get("/", async (req, res) => {
+    router137 = import_express137.default.Router();
+    exportData_default = router137.get("/", async (req, res) => {
       try {
         const tables = await db.raw(
           `SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'knex_%'`
@@ -258177,16 +258408,16 @@ var init_exportData = __esm({
 });
 
 // src/routes/setting/dbConfig/importData.ts
-var import_express137, router137, importData_default;
+var import_express138, router138, importData_default;
 var init_importData = __esm({
   "src/routes/setting/dbConfig/importData.ts"() {
     "use strict";
-    import_express137 = __toESM(require_express2());
+    import_express138 = __toESM(require_express2());
     init_responseFormat();
     init_db();
     init_initDB();
-    router137 = import_express137.default.Router();
-    importData_default = router137.post("/", async (req, res) => {
+    router138 = import_express138.default.Router();
+    importData_default = router138.post("/", async (req, res) => {
       try {
         const { tables: importTables } = req.body;
         if (!importTables || typeof importTables !== "object") {
@@ -258225,15 +258456,15 @@ var init_importData = __esm({
 });
 
 // src/routes/setting/dev/getSwitchAiDevTool.ts
-var import_express138, router138, getSwitchAiDevTool_default;
+var import_express139, router139, getSwitchAiDevTool_default;
 var init_getSwitchAiDevTool = __esm({
   "src/routes/setting/dev/getSwitchAiDevTool.ts"() {
     "use strict";
-    import_express138 = __toESM(require_express2());
+    import_express139 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router138 = import_express138.default.Router();
-    getSwitchAiDevTool_default = router138.get("/", async (req, res) => {
+    router139 = import_express139.default.Router();
+    getSwitchAiDevTool_default = router139.get("/", async (req, res) => {
       const switchAiDevTool = await utils_default.db("o_setting").where("key", "switchAiDevTool").first();
       res.status(200).send(success3(switchAiDevTool?.value || "0"));
     });
@@ -258241,17 +258472,17 @@ var init_getSwitchAiDevTool = __esm({
 });
 
 // src/routes/setting/dev/updateSwitchAiDevTool.ts
-var import_express139, router139, updateSwitchAiDevTool_default;
+var import_express140, router140, updateSwitchAiDevTool_default;
 var init_updateSwitchAiDevTool = __esm({
   "src/routes/setting/dev/updateSwitchAiDevTool.ts"() {
     "use strict";
-    import_express139 = __toESM(require_express2());
+    import_express140 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router139 = import_express139.default.Router();
-    updateSwitchAiDevTool_default = router139.post(
+    router140 = import_express140.default.Router();
+    updateSwitchAiDevTool_default = router140.post(
       "/",
       validateFields({
         switchAiDevTool: external_exports.string()
@@ -258332,14 +258563,14 @@ var init_report = __esm({
 });
 
 // src/routes/setting/diagnostics/export.ts
-var import_express140, router140, export_default;
+var import_express141, router141, export_default;
 var init_export = __esm({
   "src/routes/setting/diagnostics/export.ts"() {
     "use strict";
-    import_express140 = __toESM(require_express2());
+    import_express141 = __toESM(require_express2());
     init_report();
-    router140 = import_express140.default.Router();
-    export_default = router140.post("/", async (_req, res) => {
+    router141 = import_express141.default.Router();
+    export_default = router141.post("/", async (_req, res) => {
       const report = await buildDiagnosticReport();
       const date6 = (/* @__PURE__ */ new Date()).toISOString().replace(/[:.]/g, "-");
       res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -258350,19 +258581,19 @@ var init_export = __esm({
 });
 
 // src/routes/setting/fileManagement/openFolder.ts
-var import_express141, import_child_process, router141, openFolder_default;
+var import_express142, import_child_process, router142, openFolder_default;
 var init_openFolder = __esm({
   "src/routes/setting/fileManagement/openFolder.ts"() {
     "use strict";
-    import_express141 = __toESM(require_express2());
+    import_express142 = __toESM(require_express2());
     init_zod();
     import_child_process = require("child_process");
     init_responseFormat();
     init_middleware();
     init_getPath();
     init_utils3();
-    router141 = import_express141.default.Router();
-    openFolder_default = router141.post(
+    router142 = import_express142.default.Router();
+    openFolder_default = router142.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -258387,14 +258618,14 @@ var init_openFolder = __esm({
 });
 
 // src/routes/setting/getTextModel.ts
-var import_express142, router142, getTextModel_default;
+var import_express143, router143, getTextModel_default;
 var init_getTextModel = __esm({
   "src/routes/setting/getTextModel.ts"() {
     "use strict";
-    import_express142 = __toESM(require_express2());
+    import_express143 = __toESM(require_express2());
     init_responseFormat();
-    router142 = import_express142.default.Router();
-    getTextModel_default = router142.post(
+    router143 = import_express143.default.Router();
+    getTextModel_default = router143.post(
       "/",
       async (req, res) => {
         res.status(200).send(success3("123"));
@@ -258404,15 +258635,15 @@ var init_getTextModel = __esm({
 });
 
 // src/routes/setting/loginConfig/getUser.ts
-var import_express143, router143, getUser_default;
+var import_express144, router144, getUser_default;
 var init_getUser = __esm({
   "src/routes/setting/loginConfig/getUser.ts"() {
     "use strict";
-    import_express143 = __toESM(require_express2());
+    import_express144 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router143 = import_express143.default.Router();
-    getUser_default = router143.get("/", async (req, res) => {
+    router144 = import_express144.default.Router();
+    getUser_default = router144.get("/", async (req, res) => {
       const data = await utils_default.db("o_user").select("id", "name", "must_change_password as mustChangePassword").first();
       res.status(200).send(success3(data));
     });
@@ -258420,18 +258651,18 @@ var init_getUser = __esm({
 });
 
 // src/routes/setting/loginConfig/updateUserPwd.ts
-var import_express144, router144, updateUserPwd_default;
+var import_express145, router145, updateUserPwd_default;
 var init_updateUserPwd = __esm({
   "src/routes/setting/loginConfig/updateUserPwd.ts"() {
     "use strict";
-    import_express144 = __toESM(require_express2());
+    import_express145 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
     init_password();
-    router144 = import_express144.default.Router();
-    updateUserPwd_default = router144.post(
+    router145 = import_express145.default.Router();
+    updateUserPwd_default = router145.post(
       "/",
       validateFields({
         name: external_exports.string(),
@@ -258452,15 +258683,15 @@ var init_updateUserPwd = __esm({
 });
 
 // src/routes/setting/memoryConfig/delAllMemory.ts
-var import_express145, router145, delAllMemory_default;
+var import_express146, router146, delAllMemory_default;
 var init_delAllMemory = __esm({
   "src/routes/setting/memoryConfig/delAllMemory.ts"() {
     "use strict";
-    import_express145 = __toESM(require_express2());
+    import_express146 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router145 = import_express145.default.Router();
-    delAllMemory_default = router145.post("/", async (req, res) => {
+    router146 = import_express146.default.Router();
+    delAllMemory_default = router146.post("/", async (req, res) => {
       await utils_default.db("memories").del();
       res.status(200).send(success3(true));
     });
@@ -258468,15 +258699,15 @@ var init_delAllMemory = __esm({
 });
 
 // src/routes/setting/memoryConfig/getMemory.ts
-var import_express146, router146, getMemory_default2;
+var import_express147, router147, getMemory_default2;
 var init_getMemory2 = __esm({
   "src/routes/setting/memoryConfig/getMemory.ts"() {
     "use strict";
-    import_express146 = __toESM(require_express2());
+    import_express147 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router146 = import_express146.default.Router();
-    getMemory_default2 = router146.get("/", async (req, res) => {
+    router147 = import_express147.default.Router();
+    getMemory_default2 = router147.get("/", async (req, res) => {
       const settingData = await utils_default.db("o_setting").whereIn("key", [
         "messagesPerSummary",
         "shortTermLimit",
@@ -258506,17 +258737,17 @@ var init_getMemory2 = __esm({
 });
 
 // src/routes/setting/memoryConfig/sureMemory.ts
-var import_express147, router147, sureMemory_default;
+var import_express148, router148, sureMemory_default;
 var init_sureMemory = __esm({
   "src/routes/setting/memoryConfig/sureMemory.ts"() {
     "use strict";
-    import_express147 = __toESM(require_express2());
+    import_express148 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router147 = import_express147.default.Router();
-    sureMemory_default = router147.post(
+    router148 = import_express148.default.Router();
+    sureMemory_default = router148.post(
       "/",
       validateFields({
         messagesPerSummary: external_exports.number(),
@@ -258553,17 +258784,17 @@ var init_sureMemory = __esm({
 });
 
 // src/routes/setting/modelMap/bindingPrompt.ts
-var import_express148, router148, bindingPrompt_default;
+var import_express149, router149, bindingPrompt_default;
 var init_bindingPrompt = __esm({
   "src/routes/setting/modelMap/bindingPrompt.ts"() {
     "use strict";
-    import_express148 = __toESM(require_express2());
+    import_express149 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
-    router148 = import_express148.default.Router();
-    bindingPrompt_default = router148.post(
+    router149 = import_express149.default.Router();
+    bindingPrompt_default = router149.post(
       "/",
       validateFields({
         vendorId: external_exports.string(),
@@ -258587,19 +258818,19 @@ var init_bindingPrompt = __esm({
 });
 
 // src/routes/setting/modelMap/deletePrompt.ts
-var import_express149, import_promises14, import_path22, router149, deletePrompt_default;
+var import_express150, import_promises14, import_path22, router150, deletePrompt_default;
 var init_deletePrompt = __esm({
   "src/routes/setting/modelMap/deletePrompt.ts"() {
     "use strict";
-    import_express149 = __toESM(require_express2());
+    import_express150 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
     import_promises14 = __toESM(require("fs/promises"));
     import_path22 = __toESM(require("path"));
-    router149 = import_express149.default.Router();
-    deletePrompt_default = router149.post(
+    router150 = import_express150.default.Router();
+    deletePrompt_default = router150.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -258625,15 +258856,15 @@ var init_deletePrompt = __esm({
 });
 
 // src/routes/setting/modelMap/getImageAndVideoModel.ts
-var import_express150, router150, getImageAndVideoModel_default;
+var import_express151, router151, getImageAndVideoModel_default;
 var init_getImageAndVideoModel = __esm({
   "src/routes/setting/modelMap/getImageAndVideoModel.ts"() {
     "use strict";
-    import_express150 = __toESM(require_express2());
+    import_express151 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router150 = import_express150.default.Router();
-    getImageAndVideoModel_default = router150.post("/", async (req, res) => {
+    router151 = import_express151.default.Router();
+    getImageAndVideoModel_default = router151.post("/", async (req, res) => {
       const dataList = await utils_default.db("o_vendorConfig").select("id").where("enable", 1);
       if (!dataList || dataList.length === 0) {
         return res.status(404).send({ error: "\u6A21\u578B\u672A\u627E\u5230" });
@@ -258663,18 +258894,18 @@ var init_getImageAndVideoModel = __esm({
 });
 
 // src/routes/setting/modelMap/getPromptList.ts
-var import_express151, import_fast_glob3, import_promises15, import_path23, router151, getPromptList_default;
+var import_express152, import_fast_glob3, import_promises15, import_path23, router152, getPromptList_default;
 var init_getPromptList = __esm({
   "src/routes/setting/modelMap/getPromptList.ts"() {
     "use strict";
-    import_express151 = __toESM(require_express2());
+    import_express152 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     import_fast_glob3 = __toESM(require_out4());
     import_promises15 = __toESM(require("fs/promises"));
     import_path23 = __toESM(require("path"));
-    router151 = import_express151.default.Router();
-    getPromptList_default = router151.get("/", async (req, res) => {
+    router152 = import_express152.default.Router();
+    getPromptList_default = router152.get("/", async (req, res) => {
       const modelPromptRoot = utils_default.getPath(["modelPrompt"]);
       const entries = await (0, import_fast_glob3.default)("**/*.md", {
         cwd: modelPromptRoot.replace(/\\/g, "/"),
@@ -258695,19 +258926,19 @@ var init_getPromptList = __esm({
 });
 
 // src/routes/setting/modelMap/savePrompt.ts
-var import_express152, import_promises16, import_path24, router152, savePrompt_default;
+var import_express153, import_promises16, import_path24, router153, savePrompt_default;
 var init_savePrompt = __esm({
   "src/routes/setting/modelMap/savePrompt.ts"() {
     "use strict";
-    import_express152 = __toESM(require_express2());
+    import_express153 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
     import_promises16 = __toESM(require("fs/promises"));
     import_path24 = __toESM(require("path"));
-    router152 = import_express152.default.Router();
-    savePrompt_default = router152.post(
+    router153 = import_express153.default.Router();
+    savePrompt_default = router153.post(
       "/",
       validateFields({
         name: external_exports.string().min(1),
@@ -258728,19 +258959,19 @@ var init_savePrompt = __esm({
 });
 
 // src/routes/setting/modelMap/updatePrompt.ts
-var import_express153, import_promises17, import_path25, router153, updatePrompt_default;
+var import_express154, import_promises17, import_path25, router154, updatePrompt_default;
 var init_updatePrompt = __esm({
   "src/routes/setting/modelMap/updatePrompt.ts"() {
     "use strict";
-    import_express153 = __toESM(require_express2());
+    import_express154 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
     init_zod();
     init_middleware();
     import_promises17 = __toESM(require("fs/promises"));
     import_path25 = __toESM(require("path"));
-    router153 = import_express153.default.Router();
-    updatePrompt_default = router153.post(
+    router154 = import_express154.default.Router();
+    updatePrompt_default = router154.post(
       "/",
       validateFields({
         name: external_exports.string().min(1),
@@ -258769,15 +259000,15 @@ var init_updatePrompt = __esm({
 });
 
 // src/routes/setting/promptManage/getPrompt.ts
-var import_express154, router154, getPrompt_default;
+var import_express155, router155, getPrompt_default;
 var init_getPrompt = __esm({
   "src/routes/setting/promptManage/getPrompt.ts"() {
     "use strict";
-    import_express154 = __toESM(require_express2());
+    import_express155 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router154 = import_express154.default.Router();
-    getPrompt_default = router154.post("/", async (req, res) => {
+    router155 = import_express155.default.Router();
+    getPrompt_default = router155.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_prompt").select("*");
       const data = await Promise.all(
         list2.map(async (item) => {
@@ -258793,17 +259024,17 @@ var init_getPrompt = __esm({
 });
 
 // src/routes/setting/promptManage/updatePrompt.ts
-var import_express155, router155, updatePrompt_default2;
+var import_express156, router156, updatePrompt_default2;
 var init_updatePrompt2 = __esm({
   "src/routes/setting/promptManage/updatePrompt.ts"() {
     "use strict";
-    import_express155 = __toESM(require_express2());
+    import_express156 = __toESM(require_express2());
     init_utils3();
     init_zod();
     init_responseFormat();
     init_middleware();
-    router155 = import_express155.default.Router();
-    updatePrompt_default2 = router155.post(
+    router156 = import_express156.default.Router();
+    updatePrompt_default2 = router156.post(
       "/",
       validateFields({
         id: external_exports.number()
@@ -258820,11 +259051,11 @@ var init_updatePrompt2 = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillContent.ts
-var import_express156, import_path26, fs35, router156, getSkillContent_default;
+var import_express157, import_path26, fs35, router157, getSkillContent_default;
 var init_getSkillContent = __esm({
   "src/routes/setting/skillManagement/getSkillContent.ts"() {
     "use strict";
-    import_express156 = __toESM(require_express2());
+    import_express157 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
@@ -258832,8 +259063,8 @@ var init_getSkillContent = __esm({
     init_utils3();
     import_path26 = __toESM(require("path"));
     fs35 = __toESM(require("fs"));
-    router156 = import_express156.default.Router();
-    getSkillContent_default = router156.post(
+    router157 = import_express157.default.Router();
+    getSkillContent_default = router157.post(
       "/",
       validateFields({
         path: external_exports.string()
@@ -258853,16 +259084,16 @@ var init_getSkillContent = __esm({
 });
 
 // src/routes/setting/skillManagement/getSkillList.ts
-var import_express157, import_fast_glob4, router157, getSkillList_default;
+var import_express158, import_fast_glob4, router158, getSkillList_default;
 var init_getSkillList = __esm({
   "src/routes/setting/skillManagement/getSkillList.ts"() {
     "use strict";
-    import_express157 = __toESM(require_express2());
+    import_express158 = __toESM(require_express2());
     init_responseFormat();
     import_fast_glob4 = __toESM(require_out4());
     init_utils3();
-    router157 = import_express157.default.Router();
-    getSkillList_default = router157.post("/", async (req, res) => {
+    router158 = import_express158.default.Router();
+    getSkillList_default = router158.post("/", async (req, res) => {
       const skillsRoot = utils_default.getPath(["skills"]);
       const entries = await (0, import_fast_glob4.default)("**/*.md", {
         cwd: skillsRoot.replace(/\\/g, "/"),
@@ -258874,11 +259105,11 @@ var init_getSkillList = __esm({
 });
 
 // src/routes/setting/skillManagement/saveSkillContent.ts
-var import_express158, import_path27, fs36, router158, saveSkillContent_default;
+var import_express159, import_path27, fs36, router159, saveSkillContent_default;
 var init_saveSkillContent = __esm({
   "src/routes/setting/skillManagement/saveSkillContent.ts"() {
     "use strict";
-    import_express158 = __toESM(require_express2());
+    import_express159 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
@@ -258886,8 +259117,8 @@ var init_saveSkillContent = __esm({
     init_utils3();
     import_path27 = __toESM(require("path"));
     fs36 = __toESM(require("fs"));
-    router158 = import_express158.default.Router();
-    saveSkillContent_default = router158.post(
+    router159 = import_express159.default.Router();
+    saveSkillContent_default = router159.post(
       "/",
       validateFields({
         path: external_exports.string(),
@@ -258911,17 +259142,17 @@ var init_saveSkillContent = __esm({
 });
 
 // src/routes/setting/vendorConfig/addVendor.ts
-var import_express159, import_sucrase4, router159, vendorConfigSchema, addVendor_default;
+var import_express160, import_sucrase4, router160, vendorConfigSchema, addVendor_default;
 var init_addVendor = __esm({
   "src/routes/setting/vendorConfig/addVendor.ts"() {
     "use strict";
-    import_express159 = __toESM(require_express2());
+    import_express160 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     import_sucrase4 = __toESM(require_dist5());
-    router159 = import_express159.default.Router();
+    router160 = import_express160.default.Router();
     vendorConfigSchema = external_exports.object({
       id: external_exports.string(),
       author: external_exports.string(),
@@ -258973,7 +259204,7 @@ var init_addVendor = __esm({
         ])
       )
     });
-    addVendor_default = router159.post(
+    addVendor_default = router160.post(
       "/",
       validateFields({
         tsCode: external_exports.string()
@@ -259025,17 +259256,17 @@ ${issueLines.join("\n")}`));
 });
 
 // src/routes/setting/vendorConfig/addVendorModel.ts
-var import_express160, router160, addVendorModel_default;
+var import_express161, router161, addVendorModel_default;
 var init_addVendorModel = __esm({
   "src/routes/setting/vendorConfig/addVendorModel.ts"() {
     "use strict";
-    import_express160 = __toESM(require_express2());
+    import_express161 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router160 = import_express160.default.Router();
-    addVendorModel_default = router160.post(
+    router161 = import_express161.default.Router();
+    addVendorModel_default = router161.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -259089,19 +259320,19 @@ var init_addVendorModel = __esm({
 });
 
 // src/routes/setting/vendorConfig/deleteVendor.ts
-var import_express161, import_path28, import_fs17, router161, deleteVendor_default;
+var import_express162, import_path28, import_fs17, router162, deleteVendor_default;
 var init_deleteVendor = __esm({
   "src/routes/setting/vendorConfig/deleteVendor.ts"() {
     "use strict";
-    import_express161 = __toESM(require_express2());
+    import_express162 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     import_path28 = __toESM(require("path"));
     import_fs17 = __toESM(require("fs"));
     init_utils3();
     init_zod();
-    router161 = import_express161.default.Router();
-    deleteVendor_default = router161.post(
+    router162 = import_express162.default.Router();
+    deleteVendor_default = router162.post(
       "/",
       validateFields({
         id: external_exports.string()
@@ -259121,17 +259352,17 @@ var init_deleteVendor = __esm({
 });
 
 // src/routes/setting/vendorConfig/delVendorModel.ts
-var import_express162, router162, delVendorModel_default;
+var import_express163, router163, delVendorModel_default;
 var init_delVendorModel = __esm({
   "src/routes/setting/vendorConfig/delVendorModel.ts"() {
     "use strict";
-    import_express162 = __toESM(require_express2());
+    import_express163 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router162 = import_express162.default.Router();
-    delVendorModel_default = router162.post(
+    router163 = import_express163.default.Router();
+    delVendorModel_default = router163.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -259157,17 +259388,17 @@ var init_delVendorModel = __esm({
 });
 
 // src/routes/setting/vendorConfig/enableVendor.ts
-var import_express163, router163, enableVendor_default;
+var import_express164, router164, enableVendor_default;
 var init_enableVendor = __esm({
   "src/routes/setting/vendorConfig/enableVendor.ts"() {
     "use strict";
-    import_express163 = __toESM(require_express2());
+    import_express164 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router163 = import_express163.default.Router();
-    enableVendor_default = router163.post(
+    router164 = import_express164.default.Router();
+    enableVendor_default = router164.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -259183,16 +259414,16 @@ var init_enableVendor = __esm({
 });
 
 // src/routes/setting/vendorConfig/getCodeByLink.ts
-var import_express164, router164, getCodeByLink_default;
+var import_express165, router165, getCodeByLink_default;
 var init_getCodeByLink = __esm({
   "src/routes/setting/vendorConfig/getCodeByLink.ts"() {
     "use strict";
-    import_express164 = __toESM(require_express2());
+    import_express165 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_zod();
-    router164 = import_express164.default.Router();
-    getCodeByLink_default = router164.post(
+    router165 = import_express165.default.Router();
+    getCodeByLink_default = router165.post(
       "/",
       validateFields({
         link: external_exports.string()
@@ -259207,15 +259438,15 @@ var init_getCodeByLink = __esm({
 });
 
 // src/routes/setting/vendorConfig/getVendorList.ts
-var import_express165, router165, getVendorList_default;
+var import_express166, router166, getVendorList_default;
 var init_getVendorList = __esm({
   "src/routes/setting/vendorConfig/getVendorList.ts"() {
     "use strict";
-    import_express165 = __toESM(require_express2());
+    import_express166 = __toESM(require_express2());
     init_responseFormat();
     init_utils3();
-    router165 = import_express165.default.Router();
-    getVendorList_default = router165.post("/", async (req, res) => {
+    router166 = import_express166.default.Router();
+    getVendorList_default = router166.post("/", async (req, res) => {
       const data = await utils_default.db("o_vendorConfig").select("*");
       const list2 = (await Promise.all(
         data.map(async (item) => {
@@ -259245,18 +259476,18 @@ var init_getVendorList = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest.ts
-var import_express166, router166, modelTest_default;
+var import_express167, router167, modelTest_default;
 var init_modelTest = __esm({
   "src/routes/setting/vendorConfig/modelTest.ts"() {
     "use strict";
-    import_express166 = __toESM(require_express2());
+    import_express167 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     init_dist22();
-    router166 = import_express166.default.Router();
-    modelTest_default = router166.post(
+    router167 = import_express167.default.Router();
+    modelTest_default = router167.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -259349,17 +259580,17 @@ var init_modelTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/imageTest.ts
-var import_express167, router167, imageTest_default;
+var import_express168, router168, imageTest_default;
 var init_imageTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/imageTest.ts"() {
     "use strict";
-    import_express167 = __toESM(require_express2());
+    import_express168 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router167 = import_express167.default.Router();
-    imageTest_default = router167.post(
+    router168 = import_express168.default.Router();
+    imageTest_default = router168.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -259396,18 +259627,18 @@ var init_imageTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/textTest.ts
-var import_express168, router168, textTest_default;
+var import_express169, router169, textTest_default;
 var init_textTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/textTest.ts"() {
     "use strict";
-    import_express168 = __toESM(require_express2());
+    import_express169 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     init_dist22();
-    router168 = import_express168.default.Router();
-    textTest_default = router168.post(
+    router169 = import_express169.default.Router();
+    textTest_default = router169.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -259459,17 +259690,17 @@ var init_textTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/modelTest/videoTest.ts
-var import_express169, router169, videoTest_default;
+var import_express170, router170, videoTest_default;
 var init_videoTest = __esm({
   "src/routes/setting/vendorConfig/modelTest/videoTest.ts"() {
     "use strict";
-    import_express169 = __toESM(require_express2());
+    import_express170 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router169 = import_express169.default.Router();
-    videoTest_default = router169.post(
+    router170 = import_express170.default.Router();
+    videoTest_default = router170.post(
       "/",
       validateFields({
         modelName: external_exports.string(),
@@ -259535,18 +259766,18 @@ var init_videoTest = __esm({
 });
 
 // src/routes/setting/vendorConfig/updateCode.ts
-var import_express170, import_sucrase5, router170, vendorConfigSchema2, updateCode_default;
+var import_express171, import_sucrase5, router171, vendorConfigSchema2, updateCode_default;
 var init_updateCode = __esm({
   "src/routes/setting/vendorConfig/updateCode.ts"() {
     "use strict";
-    import_express170 = __toESM(require_express2());
+    import_express171 = __toESM(require_express2());
     init_serialize_error();
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
     import_sucrase5 = __toESM(require_dist5());
-    router170 = import_express170.default.Router();
+    router171 = import_express171.default.Router();
     vendorConfigSchema2 = external_exports.object({
       id: external_exports.string(),
       author: external_exports.string(),
@@ -259598,7 +259829,7 @@ var init_updateCode = __esm({
         ])
       )
     });
-    updateCode_default = router170.post(
+    updateCode_default = router171.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -259635,17 +259866,17 @@ var init_updateCode = __esm({
 });
 
 // src/routes/setting/vendorConfig/updateVendorInputs.ts
-var import_express171, router171, updateVendorInputs_default;
+var import_express172, router172, updateVendorInputs_default;
 var init_updateVendorInputs = __esm({
   "src/routes/setting/vendorConfig/updateVendorInputs.ts"() {
     "use strict";
-    import_express171 = __toESM(require_express2());
+    import_express172 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router171 = import_express171.default.Router();
-    updateVendorInputs_default = router171.post(
+    router172 = import_express172.default.Router();
+    updateVendorInputs_default = router172.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -259663,17 +259894,17 @@ var init_updateVendorInputs = __esm({
 });
 
 // src/routes/setting/vendorConfig/upVendorModel.ts
-var import_express172, router172, upVendorModel_default;
+var import_express173, router173, upVendorModel_default;
 var init_upVendorModel = __esm({
   "src/routes/setting/vendorConfig/upVendorModel.ts"() {
     "use strict";
-    import_express172 = __toESM(require_express2());
+    import_express173 = __toESM(require_express2());
     init_responseFormat();
     init_middleware();
     init_utils3();
     init_zod();
-    router172 = import_express172.default.Router();
-    upVendorModel_default = router172.post(
+    router173 = import_express173.default.Router();
+    upVendorModel_default = router173.post(
       "/",
       validateFields({
         id: external_exports.string(),
@@ -259732,15 +259963,15 @@ var init_upVendorModel = __esm({
 });
 
 // src/routes/task/getProject.ts
-var import_express173, router173, getProject_default2;
+var import_express174, router174, getProject_default2;
 var init_getProject2 = __esm({
   "src/routes/task/getProject.ts"() {
     "use strict";
-    import_express173 = __toESM(require_express2());
+    import_express174 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router173 = import_express173.default.Router();
-    getProject_default2 = router173.post("/", async (req, res) => {
+    router174 = import_express174.default.Router();
+    getProject_default2 = router174.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_project").select("id", "name").groupBy("name");
       const data = list2.filter((item) => item.name);
       res.status(200).send(success3(data));
@@ -259749,17 +259980,17 @@ var init_getProject2 = __esm({
 });
 
 // src/routes/task/getTaskApi.ts
-var import_express174, router174, getTaskApi_default;
+var import_express175, router175, getTaskApi_default;
 var init_getTaskApi = __esm({
   "src/routes/task/getTaskApi.ts"() {
     "use strict";
-    import_express174 = __toESM(require_express2());
+    import_express175 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_zod();
-    router174 = import_express174.default.Router();
-    getTaskApi_default = router174.post(
+    router175 = import_express175.default.Router();
+    getTaskApi_default = router175.post(
       "/",
       validateFields({
         state: external_exports.string().optional().nullable(),
@@ -259800,15 +260031,15 @@ var init_getTaskApi = __esm({
 });
 
 // src/routes/task/getTaskCategories.ts
-var import_express175, router175, getTaskCategories_default;
+var import_express176, router176, getTaskCategories_default;
 var init_getTaskCategories = __esm({
   "src/routes/task/getTaskCategories.ts"() {
     "use strict";
-    import_express175 = __toESM(require_express2());
+    import_express176 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
-    router175 = import_express175.default.Router();
-    getTaskCategories_default = router175.post("/", async (req, res) => {
+    router176 = import_express176.default.Router();
+    getTaskCategories_default = router176.post("/", async (req, res) => {
       const list2 = await utils_default.db("o_tasks").select("taskClass").groupBy("taskClass");
       const data = list2.filter((item) => item.taskClass);
       res.status(200).send(success3(data));
@@ -259817,17 +260048,17 @@ var init_getTaskCategories = __esm({
 });
 
 // src/routes/task/taskDetails.ts
-var import_express176, router176, taskDetails_default;
+var import_express177, router177, taskDetails_default;
 var init_taskDetails = __esm({
   "src/routes/task/taskDetails.ts"() {
     "use strict";
-    import_express176 = __toESM(require_express2());
+    import_express177 = __toESM(require_express2());
     init_utils3();
     init_responseFormat();
     init_middleware();
     init_zod();
-    router176 = import_express176.default.Router();
-    taskDetails_default = router176.post(
+    router177 = import_express177.default.Router();
+    taskDetails_default = router177.post(
       "/",
       validateFields({
         taskId: external_exports.number()
@@ -259842,15 +260073,15 @@ var init_taskDetails = __esm({
 });
 
 // src/routes/test/test.ts
-var import_express177, import_fs18, router177, test_default;
+var import_express178, import_fs18, router178, test_default;
 var init_test = __esm({
   "src/routes/test/test.ts"() {
     "use strict";
-    import_express177 = __toESM(require_express2());
+    import_express178 = __toESM(require_express2());
     init_utils3();
     import_fs18 = __toESM(require("fs"));
-    router177 = import_express177.default.Router();
-    test_default = router177.get("/", async (req, res) => {
+    router178 = import_express178.default.Router();
+    test_default = router178.get("/", async (req, res) => {
       return res.send("ok");
       const test2 = await utils_default.db("o_vendorConfig").select("*");
       import_fs18.default.writeFileSync("test.json", JSON.stringify(test2, null, 2));
@@ -259860,24 +260091,24 @@ var init_test = __esm({
 });
 
 // src/routes/voiceStudio/casts.ts
-var import_express178, router178, casts_default;
+var import_express179, router179, casts_default;
 var init_casts = __esm({
   "src/routes/voiceStudio/casts.ts"() {
     "use strict";
-    import_express178 = __toESM(require_express2());
+    import_express179 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_repository2();
-    router178 = import_express178.default.Router();
-    router178.post(
+    router179 = import_express179.default.Router();
+    router179.post(
       "/list",
       validateFields({ projectId: external_exports.number().int().positive() }),
       async (req, res) => {
         res.status(200).send(success3(await voiceStudioRepository.listVoiceCasts(req.body.projectId)));
       }
     );
-    router178.post(
+    router179.post(
       "/upsert",
       validateFields({
         id: external_exports.string().uuid().optional(),
@@ -259898,32 +260129,32 @@ var init_casts = __esm({
         res.status(200).send(success3(await voiceStudioRepository.upsertVoiceCast(req.body)));
       }
     );
-    casts_default = router178;
+    casts_default = router179;
   }
 });
 
 // src/routes/voiceStudio/cues.ts
-var import_express179, router179, filters2, cues_default;
+var import_express180, router180, filters2, cues_default;
 var init_cues = __esm({
   "src/routes/voiceStudio/cues.ts"() {
     "use strict";
-    import_express179 = __toESM(require_express2());
+    import_express180 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_repository2();
-    router179 = import_express179.default.Router();
+    router180 = import_express180.default.Router();
     filters2 = {
       projectId: external_exports.number().int().positive(),
       scriptId: external_exports.number().int().positive().optional()
     };
-    router179.post("/list", validateFields(filters2), async (req, res) => {
+    router180.post("/list", validateFields(filters2), async (req, res) => {
       res.status(200).send(success3(await voiceStudioRepository.listCues(req.body)));
     });
-    router179.post("/rebuild", validateFields(filters2), async (req, res) => {
+    router180.post("/rebuild", validateFields(filters2), async (req, res) => {
       res.status(200).send(success3(await voiceStudioRepository.rebuildCues(req.body)));
     });
-    router179.post(
+    router180.post(
       "/update",
       validateFields({
         id: external_exports.string().uuid(),
@@ -259938,7 +260169,7 @@ var init_cues = __esm({
         res.status(200).send(success3(await voiceStudioRepository.updateCue(req.body)));
       }
     );
-    router179.post(
+    router180.post(
       "/export",
       validateFields({ ...filters2, format: external_exports.enum(["srt", "vtt"]) }),
       async (req, res) => {
@@ -259946,7 +260177,7 @@ var init_cues = __esm({
         res.status(200).send(success3({ format: req.body.format, content }));
       }
     );
-    cues_default = router179;
+    cues_default = router180;
   }
 });
 
@@ -260053,20 +260284,20 @@ var init_enqueueUtteranceTts = __esm({
 });
 
 // src/routes/voiceStudio/utterances.ts
-var import_express180, router180, utteranceKinds, utterances_default;
+var import_express181, router181, utteranceKinds, utterances_default;
 var init_utterances = __esm({
   "src/routes/voiceStudio/utterances.ts"() {
     "use strict";
-    import_express180 = __toESM(require_express2());
+    import_express181 = __toESM(require_express2());
     init_zod();
     init_responseFormat();
     init_middleware();
     init_repository2();
     init_enqueueUtteranceTts();
     init_db();
-    router180 = import_express180.default.Router();
+    router181 = import_express181.default.Router();
     utteranceKinds = ["dialogue", "narration", "chorus"];
-    router180.post(
+    router181.post(
       "/import",
       validateFields({
         projectId: external_exports.number().int().positive(),
@@ -260077,7 +260308,7 @@ var init_utterances = __esm({
         res.status(200).send(success3(await voiceStudioRepository.importScript(req.body)));
       }
     );
-    router180.post(
+    router181.post(
       "/list",
       validateFields({
         projectId: external_exports.number().int().positive(),
@@ -260088,7 +260319,7 @@ var init_utterances = __esm({
         res.status(200).send(success3(await voiceStudioRepository.listUtterances(req.body)));
       }
     );
-    router180.post(
+    router181.post(
       "/update",
       validateFields({
         id: external_exports.string().uuid(),
@@ -260105,7 +260336,7 @@ var init_utterances = __esm({
         res.status(200).send(success3(await voiceStudioRepository.updateUtterance(req.body)));
       }
     );
-    router180.post(
+    router181.post(
       "/generate",
       validateFields({
         projectId: external_exports.number().int().positive(),
@@ -260120,7 +260351,7 @@ var init_utterances = __esm({
         }
       }
     );
-    router180.post(
+    router181.post(
       "/batchGenerate",
       validateFields({
         projectId: external_exports.number().int().positive(),
@@ -260149,7 +260380,7 @@ var init_utterances = __esm({
         }
       }
     );
-    utterances_default = router180;
+    utterances_default = router181;
   }
 });
 
@@ -260247,6 +260478,7 @@ var init_router = __esm({
     init_batchGeneratePrompt();
     init_batchGenerateVideo();
     init_checkVideoPrompt();
+    init_checkVideoReadiness();
     init_checkVideoStateList();
     init_deleteTrack();
     init_delVideo();
@@ -260428,6 +260660,7 @@ var init_router = __esm({
       app2.use("/api/production/workbench/batchGeneratePrompt", batchGeneratePrompt_default);
       app2.use("/api/production/workbench/batchGenerateVideo", batchGenerateVideo_default);
       app2.use("/api/production/workbench/checkVideoPrompt", checkVideoPrompt_default);
+      app2.use("/api/production/workbench/checkVideoReadiness", checkVideoReadiness_default);
       app2.use("/api/production/workbench/checkVideoStateList", checkVideoStateList_default);
       app2.use("/api/production/workbench/deleteTrack", deleteTrack_default);
       app2.use("/api/production/workbench/delVideo", delVideo_default);
@@ -260578,7 +260811,7 @@ if (!env) {
 }
 
 // src/app.ts
-var import_express181 = __toESM(require_express2());
+var import_express182 = __toESM(require_express2());
 
 // node_modules/socket.io/wrapper.mjs
 var import_dist = __toESM(require_dist3(), 1);
@@ -263741,7 +263974,7 @@ async function stopGenerationTaskEngine() {
 }
 
 // src/app.ts
-var app = (0, import_express181.default)();
+var app = (0, import_express182.default)();
 var server = import_node_http.default.createServer(app);
 async function checkPermissions() {
   if (!isEletron()) return true;
@@ -263779,8 +264012,8 @@ async function startServe(randomPort = false) {
   (0, import_express_ws.default)(app);
   app.use((0, import_morgan.default)("dev"));
   app.use((0, import_cors.default)({ origin: "*" }));
-  app.use(import_express181.default.json({ limit: "100mb" }));
-  app.use(import_express181.default.urlencoded({ extended: true, limit: "100mb" }));
+  app.use(import_express182.default.json({ limit: "100mb" }));
+  app.use(import_express182.default.urlencoded({ extended: true, limit: "100mb" }));
   const ossDir = utils_default.getPath("oss");
   if (!import_fs19.default.existsSync(ossDir)) {
     import_fs19.default.mkdirSync(ossDir, { recursive: true });
@@ -263807,7 +264040,7 @@ async function startServe(randomPort = false) {
           sizeSubDir = `${percentMatch[1]}p`;
           sizeOpts = { type: "percentage", value: pct };
         } else {
-          import_express181.default.static(ossDir, { acceptRanges: false })(req, res, next);
+          import_express182.default.static(ossDir, { acceptRanges: false })(req, res, next);
           return;
         }
         const ext = import_path29.default.extname(req.path);
@@ -263818,14 +264051,14 @@ async function startServe(randomPort = false) {
           if (thumbnailPath) {
             res.sendFile(thumbnailPath);
           } else {
-            import_express181.default.static(ossDir, { acceptRanges: false })(req, res, next);
+            import_express182.default.static(ossDir, { acceptRanges: false })(req, res, next);
           }
         });
         return;
       }
       next();
     },
-    import_express181.default.static(ossDir, { acceptRanges: false })
+    import_express182.default.static(ossDir, { acceptRanges: false })
   );
   const skillsDir = utils_default.getPath("skills");
   if (!import_fs19.default.existsSync(skillsDir)) {
@@ -263837,18 +264070,18 @@ async function startServe(randomPort = false) {
     (req, res, next) => {
       /\.(jpe?g|png|gif|webp|svg|ico|bmp)$/i.test(req.path) ? next() : res.status(403).end();
     },
-    import_express181.default.static(skillsDir, { acceptRanges: false })
+    import_express182.default.static(skillsDir, { acceptRanges: false })
   );
   const assetsDir = utils_default.getPath("assets");
   if (!import_fs19.default.existsSync(assetsDir)) {
     import_fs19.default.mkdirSync(assetsDir, { recursive: true });
   }
   console.log("\u6587\u4EF6\u76EE\u5F55:", assetsDir);
-  app.use("/assets", import_express181.default.static(assetsDir, { acceptRanges: false }));
+  app.use("/assets", import_express182.default.static(assetsDir, { acceptRanges: false }));
   const webDir = utils_default.getPath("web");
   if (import_fs19.default.existsSync(webDir)) {
     console.log("\u9759\u6001\u7F51\u7AD9\u76EE\u5F55:", webDir);
-    app.use(import_express181.default.static(webDir, { acceptRanges: false }));
+    app.use(import_express182.default.static(webDir, { acceptRanges: false }));
   } else {
     console.warn("\u9759\u6001\u7F51\u7AD9\u76EE\u5F55\u4E0D\u5B58\u5728:", webDir);
   }
@@ -263868,8 +264101,8 @@ async function startServe(randomPort = false) {
       return res.status(401).send({ message: "\u65E0\u6548\u7684token" });
     }
   });
-  const router181 = await Promise.resolve().then(() => (init_router(), router_exports));
-  await router181.default(app);
+  const router182 = await Promise.resolve().then(() => (init_router(), router_exports));
+  await router182.default(app);
   app.use((_, res, next) => {
     return res.status(404).send({ message: "API 404 Not Found" });
   });

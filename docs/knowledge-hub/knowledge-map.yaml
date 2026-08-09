@@ -13,6 +13,7 @@
         { "type": "uses", "target": "feature.asset-consistency" },
         { "type": "uses", "target": "feature.infinite-canvas" },
         { "type": "uses", "target": "feature.durable-video-tasks" },
+        { "type": "uses", "target": "feature.video-readiness-gate" },
         { "type": "uses", "target": "feature.durable-image-tasks" },
         { "type": "uses", "target": "feature.durable-script-asset-extraction" },
         { "type": "uses", "target": "feature.ai-novel-import" },
@@ -112,6 +113,23 @@
       ],
       "introduced_in": "toon-custom/c4a5c5a0",
       "last_verified_commit": "toon-custom/e345aac7"
+    },
+    {
+      "id": "feature.video-readiness-gate",
+      "type": "feature",
+      "name": "视频生成准备度门禁",
+      "summary": "在预算预留和供应商提交前检查提示词、参考素材、模型模式、时长分辨率、供应商配置与活动任务",
+      "user_entry": { "page": "制作工作台 / 视频生成", "action": "点击单条或批量生成，查看未通过的镜头和原因" },
+      "source_paths": ["src/services/video-readiness.ts", "src/routes/production/workbench/checkVideoReadiness.ts", "src/services/task-engine/enqueueVideo.ts", "frontend/src/views/production/components/workbench/generate"],
+      "api": ["POST /api/production/workbench/checkVideoReadiness", "POST /api/production/workbench/generateVideo", "POST /api/production/workbench/batchGenerateVideo"],
+      "tables": ["o_project", "o_script", "o_videoTrack", "o_storyboard", "o_assets", "o_vendorConfig", "generation_tasks"],
+      "relations": [
+        { "type": "protects", "target": "feature.durable-video-tasks" },
+        { "type": "documented_by", "target": "document.feature-catalog" },
+        { "type": "inspired_by", "target": "document.upstream-watch" }
+      ],
+      "introduced_in": "toon-custom/video-readiness-2026-08-09",
+      "last_verified_commit": "toon-custom/video-readiness-2026-08-09"
     },
     {
       "id": "feature.durable-script-asset-extraction",

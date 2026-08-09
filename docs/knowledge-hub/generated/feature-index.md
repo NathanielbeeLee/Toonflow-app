@@ -8,6 +8,7 @@
 | 无限画布生产工作台 | 以可缩放、可平移、可拖动节点的空间界面串联剧本、导演计划、资产、分镜和视频工作台 | feature.infinite-canvas |
 | 持久视频任务 | 单条/批量视频生成持久化、有限并发、去重、取消，并对支持的供应商恢复远端轮询 | feature.durable-video-tasks |
 | 持久图片任务 | 批量/单张资产图、分镜图和图片画布节点逐项持久化、去重、限流，并按付费边界恢复 | feature.durable-image-tasks |
+| 视频生成准备度门禁 | 在预算预留和供应商提交前检查提示词、参考素材、模型模式、时长分辨率、供应商配置与活动任务 | feature.video-readiness-gate |
 | 持久剧本资产提取 | 按当前项目和所选剧本持久执行资产提取，限制模型关联 ID，并按付费边界安全恢复 | feature.durable-script-asset-extraction |
 | AI Novel 成品版本化导入 | 从小说章节或成品短剧 JSON 预览、选择并按外部 ID 幂等导入 Toonflow 剧本 | feature.ai-novel-import |
 | 供应商与模型限流 | 按供应商、模型和任务通道执行最大并发、RPM 与冷却时间规则 | feature.provider-limits |
