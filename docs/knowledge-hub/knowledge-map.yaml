@@ -128,8 +128,8 @@
         { "type": "documented_by", "target": "document.feature-catalog" },
         { "type": "inspired_by", "target": "document.upstream-watch" }
       ],
-      "introduced_in": "toon-custom/video-readiness-2026-08-09",
-      "last_verified_commit": "toon-custom/video-readiness-2026-08-09"
+      "introduced_in": "toon-custom/80c728d4",
+      "last_verified_commit": "toon-custom/80c728d4"
     },
     {
       "id": "feature.durable-script-asset-extraction",

@@ -301,7 +301,7 @@
 
 参考扫描：原 7 个登记来源中仅 huobao-drama 从 `7e821576` 更新到 `a1b8220f`；新登记 Jellyfish `a9678194`、wind-comic `0bcae297`、LocalMiniDrama `05f90fb9`、drama-skills `7f0b6b06` 和 capsule-cinema `182e8777`。完整决策见 `docs/upstream-watch/reports/2026-08-09.md`。
 
-落地提交：待本轮功能提交后回填。
+落地提交：`80c728d4`。
 
 - 参考 Jellyfish“先回答镜头能否生成以及缺少什么”的产品原则，在 Toonflow 中独立实现 TypeScript 视频生成准备度服务，没有复制其 Python/FastAPI 源码或引入运行依赖。
 - 单条和批量生成前检查项目/剧本/镜头归属、提示词、时长、参考素材落盘、模型/模式、供应商启用和必填配置、时长分辨率组合及活动任务，并按镜头显示失败原因。
